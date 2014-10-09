@@ -1,0 +1,33 @@
+---
+driver_config:
+  openstack_username: <%= ENV['OS_USERNAME'] %>
+  openstack_api_key: <%= ENV['OS_PASSWORD'] %>
+  openstack_auth_url: <%= "#{ENV['OS_AUTH_URL']}/tokens" %>
+  key_name: <%= ENV['OS_SSH_KEYPAIR'] %>
+  private_key_path: <%= ENV['OS_PRIVATE_SSH_KEY'] %>
+  public_key_path: <%= ENV['OS_PUBLIC_SSH_KEY'] %>
+  openstack_tenant: <%= ENV['OS_TENANT_NAME'] %>
+  floating_ip_pool: <%= ENV['OS_FLOATING_IP_POOL'] %>
+  flavor_ref: <%= ENV['OS_FLAVOR_REF'] %>
+  # Only use the following if you need to open up firewall ports
+  security_groups:
+    - <%= ENV['OS_SECURITY_GROUP_NO_FIREWALL'] %>
+
+provisioner:
+  name: chef_solo
+  data_bags_path: test/integration/default/data_bags
+  encrypted_data_bag_secret_key_path: test/integration/default/encrypted_data_bag_secret
+  attributes:
+
+platforms:
+  - name: centos-6.5
+    driver_plugin: openstack
+    driver_config:
+      username: centos
+      image_ref: "CentOS 6.5"
+
+suites:
+  - name: default
+    run_list:
+      - recipe[osl-jenkins::default]
+    attributes:
