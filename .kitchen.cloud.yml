@@ -15,9 +15,8 @@ driver_config:
 
 provisioner:
   name: chef_solo
-  data_bags_path: test/integration/default/data_bags
-  encrypted_data_bag_secret_key_path: test/integration/default/encrypted_data_bag_secret
-  attributes:
+  data_bags_path: test/integration/data_bags
+  encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
 
 platforms:
   - name: centos-6.5
@@ -29,5 +28,30 @@ platforms:
 suites:
   - name: default
     run_list:
+      - recipe[jenkins::java]
+      - recipe[jenkins::master]
+      - recipe[osl-apache::default]
+      - recipe[certificate::manage_by_attributes]
       - recipe[osl-jenkins::default]
     attributes:
+      osl-apache:
+        hostname: "test-jenkins.example.org"
+        recipes:
+          - "default"
+          - "mod_ssl"
+          - "mod_rewrite"
+          - "mod_proxy"
+          - "mod_proxy_http"
+      jenkins:
+        master:
+          install_method: "war"
+          version: "1.555"
+          checksum: "31f5c2a3f7e843f7051253d640f07f7c24df5e9ec271de21e92dac0d7ca19431"
+      certificate:
+        -
+          snakeoil:
+            cert_path: /etc/pki/tls
+            cert_file: test-jenkins.example.org.pem
+            key_file: test-jenkins.example.org.key
+            owner: apache
+            group: apache
