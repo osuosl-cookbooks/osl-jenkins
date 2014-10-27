@@ -33,6 +33,7 @@ suites:
       - recipe[osl-apache::default]
       - recipe[certificate::manage_by_attributes]
       - recipe[osl-jenkins::default]
+      - recipe[osl-jenkins::_test_hostsfile]
     attributes:
       osl-apache:
         hostname: "test-jenkins.example.org"

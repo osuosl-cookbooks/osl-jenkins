@@ -36,8 +36,3 @@ apache_app node['osl-apache']['hostname'] do
     ]
     site_enable true
 end
-
-hostsfile_entry '127.0.0.1' do
-    hostname node['osl-apache']['hostname']
-    action :append
-end
