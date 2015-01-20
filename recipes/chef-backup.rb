@@ -19,6 +19,7 @@
 
 chef_gem 'knife-backup' do
     action :install
+    version '0.0.10'
 end
 
 directory '/var/chef-backup-for-rdiff' do
