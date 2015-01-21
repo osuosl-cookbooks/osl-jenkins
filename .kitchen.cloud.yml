@@ -15,8 +15,6 @@ driver_config:
 
 provisioner:
   name: chef_solo
-  #data_bags_path: test/integration/default/data_bags
-  #encrypted_data_bag_secret_key_path: test/integration/default/encrypted_data_bag_secret
   attributes:
 
 platforms:
