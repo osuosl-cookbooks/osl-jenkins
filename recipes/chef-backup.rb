@@ -18,11 +18,11 @@
 #
 
 chef_gem 'knife-backup' do
-    action :install
-    version '0.0.10'
+  action :install
+  version '0.0.10'
 end
 
 directory '/var/chef-backup-for-rdiff' do
-    owner node['jenkins']['master']['user']
-    group node['jenkins']['master']['group']
+  owner node['jenkins']['master']['user']
+  group node['jenkins']['master']['group']
 end
