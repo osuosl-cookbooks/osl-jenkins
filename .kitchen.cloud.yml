@@ -31,7 +31,7 @@ suites:
     attributes:
   - name: chef_backup
     run_list:
-      - recipe[osl-jenkins::chef-backup]
+      - recipe[osl-jenkins::chef_backup]
     attributes:
       jenkins:
          master:

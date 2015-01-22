@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: osl-jenkins
-# Recipe:: chef-backup
+# Recipe:: chef_backup
 #
 # Copyright 2014, Oregon State University
 #
