@@ -54,3 +54,8 @@ suites:
   - name: ftp
     run_list:
       - recipe[osl-jenkins::ftp]
+  - name: cookbook-uploader
+    run_list:
+      - recipe[java]
+      - recipe[jenkins::master]
+      - recipe[osl-jenkins::cookbook-uploader]
