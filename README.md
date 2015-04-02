@@ -51,6 +51,13 @@ Just include `osl-jenkins` in your node's `run_list`:
 }
 ```
 
+#### osl-jenkins::chef_backup
+Manages dependencies for the `chef-backup` Jenkins job.
+
+Installs the `knife-backup` gem for use by the chef\_client, and ensures
+the `/var/chef-backup-for-rdiff` directory exists and is owned by the
+jenkins master user and group.
+
 Contributing
 ------------
 TODO: (optional) If this is a public cookbook, detail the process for contributing. If this is a private cookbook, remove this section.

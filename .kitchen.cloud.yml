@@ -15,19 +15,24 @@ driver_config:
 
 provisioner:
   name: chef_solo
-  data_bags_path: test/integration/default/data_bags
-  encrypted_data_bag_secret_key_path: test/integration/default/encrypted_data_bag_secret
   attributes:
 
 platforms:
-  - name: centos-6.5
+  - name: centos-6.6
     driver_plugin: openstack
     driver_config:
       username: centos
-      image_ref: "CentOS 6.5"
+      image_ref: "CentOS 6.6"
 
 suites:
   - name: default
     run_list:
       - recipe[osl-jenkins::default]
+  - name: chef_backup
+    run_list:
+      - recipe[osl-jenkins::chef_backup]
     attributes:
+      jenkins:
+         master:
+           user: 'centos'
+           group: 'centos'
