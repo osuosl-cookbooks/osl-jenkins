@@ -63,6 +63,13 @@ Installs the `knife-backup` gem for use by the chef\_client, and ensures
 the `/var/chef-backup-for-rdiff` directory exists and is owned by the
 jenkins master user and group.
 
+#### osl-jenkins::credentials
+Manages the jenkins user and configures the
+`node.run_state[:jenkins_private_key]`.
+
+Adds the jenkins user 'jenkins' and looks for an ssh-keypair in the
+databag: ssh-keys/osl-jenkins.
+
 Contributing
 ------------
 TODO: (optional) If this is a public cookbook, detail the process for contributing. If this is a private cookbook, remove this section.
