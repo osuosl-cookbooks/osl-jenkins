@@ -1,13 +1,16 @@
 osl-jenkins CHANGELOG
 =====================
 
-This file is used to list changes made in each version of the osl-jenkins cookbook.
+This file is used to list changes made in each version of the
+osl-jenkins cookbook.
+
+0.2.0
+-----
+- Adds chef\_backup recipe for installing the ``knife-backup`` plugin
+  and managing the ``/var/chef-backup-for-rdiff`` directory.
+- CentOS image updated to 6.6 in test-kitchen cloud config.
+- Initial Rubocop config added.
 
 0.1.0
 -----
-- [your_name] - Initial release of osl-jenkins
-
-- - -
-Check the [Markdown Syntax Guide](http://daringfireball.net/projects/markdown/syntax) for help with Markdown.
-
-The [Github Flavored Markdown page](http://github.github.com/github-flavored-markdown/) describes the differences between markdown on github and standard markdown.
+- Initial release of osl-jenkins
