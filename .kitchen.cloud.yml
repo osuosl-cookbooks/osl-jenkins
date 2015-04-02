@@ -32,6 +32,10 @@ suites:
       - recipe[osl-jenkins::master]
       - recipe[jenkins::java]
       - recipe[jenkins::master]
+  - name: haproxy
+    run_list:
+      - recipe[osl-jenkins::haproxy]
+    attributes:
   - name: chef_backup
     run_list:
       - recipe[osl-jenkins::chef_backup]

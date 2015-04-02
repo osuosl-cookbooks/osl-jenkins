@@ -39,6 +39,11 @@ Usage
 #### osl-jenkins::default
 TODO: Write usage instructions for each cookbook.
 
+#### osl-jenkins::haproxy
+
+Set default haproxy attributes required for proxying HTTPS
+traffic to and from Jenkins.
+
 e.g.
 Just include `osl-jenkins` in your node's `run_list`:
 
