@@ -14,8 +14,7 @@ driver_config:
     - <%= ENV['OS_SECURITY_GROUP_NO_FIREWALL'] %>
 
 provisioner:
-  name: chef_solo
-  attributes:
+  name: chef_zero
 
 platforms:
   - name: centos-6.6
@@ -28,6 +27,11 @@ suites:
   - name: default
     run_list:
       - recipe[osl-jenkins::default]
+  - name: master
+    run_list:
+      - recipe[osl-jenkins::master]
+      - recipe[jenkins::java]
+      - recipe[jenkins::master]
   - name: chef_backup
     run_list:
       - recipe[osl-jenkins::chef_backup]
