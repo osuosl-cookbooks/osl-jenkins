@@ -38,6 +38,7 @@ suites:
     run_list:
       - recipe[certificate::manage_by_attributes]
       - recipe[osl-jenkins::haproxy]
+      - recipe[osl-haproxy::default]
     attributes:
       certificate:
         -
