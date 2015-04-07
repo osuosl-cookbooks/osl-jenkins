@@ -27,8 +27,6 @@ node.default['haproxy']['ssl_incoming_port'] = \
   'ciphers ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:' \
   'ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:!MD5:!DSS no-sslv3'
 
-node.default['haproxy']['ssl_httpchk'] = false
-
 node.default['haproxy']['members'] = [
   {
     'hostname' => 'jenkins',
