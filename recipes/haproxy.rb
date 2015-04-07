@@ -19,7 +19,7 @@
 
 node.default['haproxy']['enable_ssl'] = true
 
-node.default['haproxy']['frontend_max_connections'] = '2000 \n' \
+node.default['haproxy']['frontend_max_connections'] = "2000 \n" \
   '  redirect scheme https if !{ ssl_fc }'
 
 node.default['haproxy']['ssl_incoming_port'] = '443 ssl crt ' \
