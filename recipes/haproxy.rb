@@ -17,16 +17,19 @@
 # limitations under the License.
 #
 
-haproxy = node.default['haproxy']
+node.default['haproxy']['enable_ssl'] = true
 
-haproxy['enable_ssl'] = true
-haproxy['frontend_max_connections'] = '2000 \n' \
+node.default['haproxy']['frontend_max_connections'] = '2000 \n' \
   '  redirect scheme https if !{ ssl_fc }'
-haproxy['ssl_incoming_port'] = '443 ssl crt /etc/pki/tls/wildcard.pem ' \
+
+node.default['haproxy']['ssl_incoming_port'] = '443 ssl crt ' \
+  '/etc/pki/tls/wildcard.pem ' \
   'ciphers ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:' \
   'ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:!MD5:!DSS no-sslv3'
-haproxy['ssl_httpchk'] = false
-haproxy['members'] = [
+
+node.default['haproxy']['ssl_httpchk'] = false
+
+node.default['haproxy']['members'] = [
   {
     'hostname' => 'jenkins',
     'ipaddress' => '127.0.0.1',
