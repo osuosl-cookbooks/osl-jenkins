@@ -17,10 +17,5 @@
 # limitations under the License.
 #
 
-node.default['jenkins']['master']['install_method'] = 'war'
-node.default['jenkins']['master']['version'] = '1.557'
-node.default['jenkins']['master']['source'] = 'http://mirrors.jenkins-ci.org' \
-  "/war/#{node['jenkins']['master']['version']}/jenkins.war"
-node.default['jenkins']['master']['checksum'] = '4507a49529d15985562dfa50ca' \
-  '36e61949f62e5ae100652cb0d49f98ce83db79'
+node.default['jenkins']['master']['version'] = '1.608-1.1'
 node.default['jenkins']['master']['listen_address'] = '127.0.0.1'
