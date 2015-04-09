@@ -17,7 +17,11 @@
 # limitations under the License.
 #
 
-jenkins = encrypted_data_bag_item('ssh-keys', 'osl-jenkins')
+begin
+  jenkins = encrypted_data_bag_item('ssh-keys', 'osl-jenkins')
+rescue
+  raise 'Could not retrieve ssh-keys from the osl-jenkins data bag'
+end
 
 jenkins_user 'jenkins' do
     public_keys [jenkins['id_rsa.pub']]
