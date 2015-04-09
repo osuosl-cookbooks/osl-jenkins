@@ -64,11 +64,12 @@ the `/var/chef-backup-for-rdiff` directory exists and is owned by the
 jenkins master user and group.
 
 #### osl-jenkins::credentials
-Manages the jenkins user and configures the
-`node.run_state[:jenkins_private_key]`.
+Manages the ssh-keys for jenkins masters. ssh-keys are expected to be
+stored in an encrypted databag `ssh-keys/osl-jenkins` with the
+attributes:
 
-Adds the jenkins user 'jenkins' and looks for an ssh-keypair in the
-databag: ssh-keys/osl-jenkins.
+- id\_rsa.pub - public RSA key
+- id\_rsa - private RSA key
 
 Contributing
 ------------
