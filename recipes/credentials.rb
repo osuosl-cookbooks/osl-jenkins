@@ -2,7 +2,7 @@
 # Cookbook Name:: osl-jenkins
 # Recipe:: default
 #
-# Copyright 2014, Oregon State University
+# Copyright 2015, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ rescue
 end
 
 jenkins_user 'jenkins' do
-    public_keys [jenkins['id_rsa.pub']]
+  public_keys [jenkins['id_rsa.pub']]
 end
 
-node.run_state[:jenkins_private_key] = jenkins['id_rsa']
+node.run_state['jenkins_private_key'] = jenkins['id_rsa']
