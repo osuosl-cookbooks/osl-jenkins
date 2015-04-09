@@ -4,6 +4,11 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+0.3.0
+-----
+- Adds the master recipe for setting the package version
+  and listening for requests on localhost.
+
 0.2.0
 -----
 - Adds chef\_backup recipe for installing the ``knife-backup`` plugin
