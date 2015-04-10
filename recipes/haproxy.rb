@@ -20,12 +20,14 @@
 node.default['haproxy']['enable_ssl'] = true
 
 node.default['haproxy']['frontend_max_connections'] = '2000' \
-  "\n  redirect scheme https if !{ ssl_fc }"
+  "\n  redirect scheme https if !{ ssl_fc }" \
+  "\n  reqadd X-Forwarded-Proto:\\ http"
 
 node.default['haproxy']['ssl_incoming_port'] = \
   '443 ssl crt /etc/pki/tls/wildcard.pem ' \
   'ciphers ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:' \
-  'ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:!MD5:!DSS no-sslv3'
+  'ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:!MD5:!DSS no-sslv3' \
+  "\n  reqadd X-Forwarded-Proto:\\ https"
 
 node.default['haproxy']['members'] = [
   {
