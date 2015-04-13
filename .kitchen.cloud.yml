@@ -14,7 +14,7 @@ driver_config:
     - <%= ENV['OS_SECURITY_GROUP_NO_FIREWALL'] %>
 
 provisioner:
-  name: chef_solo
+  name: chef_zero
 
 platforms:
   - name: centos-6.6
@@ -27,6 +27,13 @@ suites:
   - name: default
     run_list:
       - recipe[osl-jenkins::default]
+  - name: credentials
+    data_bags_path: test/integration/data_bags
+    encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
+    run_list:
+      - recipe[jenkins::java]
+      - recipe[jenkins::master]
+      - recipe[osl-jenkins::credentials]
   - name: master
     run_list:
       - recipe[osl-jenkins::master]
