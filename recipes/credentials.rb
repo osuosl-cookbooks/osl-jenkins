@@ -17,7 +17,12 @@
 # limitations under the License.
 #
 
-jenkins = encrypted_data_bag_item('ssh-keys', 'osl-jenkins')
+begin
+  jenkins = ::Chef::EncryptedDataBagItem.load('ssh-keys', 'osl-jenkins')
+rescue
+  raise 'Error loading data bag item: osl-jenkins. Data bag or data bag item' \
+        ' does not exist.'
+end
 
 jenkins_user 'jenkins' do
   public_keys [jenkins['id_rsa.pub']]
