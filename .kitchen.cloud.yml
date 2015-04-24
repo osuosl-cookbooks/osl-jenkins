@@ -56,3 +56,6 @@ suites:
          master:
            user: 'centos'
            group: 'centos'
+  - name: chef_ci_cookbook_template
+    run_list:
+      - recipe[osl-jenkins::chef_ci_cookbook_template]
