@@ -24,8 +24,17 @@ rescue
         ' does not exist.'
 end
 
-jenkins_user 'jenkins' do
+# User required for talking with CLI
+jenkins_user 'alfred' do
   public_keys [jenkins['id_rsa.pub']]
 end
 
+# Jenkins LWRPs rely on using the Jenkins CLI. The CLI requires an
+# private key in order to securly talk to slaves.
 node.run_state['jenkins_private_key'] = jenkins['id_rsa']
+
+# Credentials required to connect to Slaves
+jenkins_credentials 'alfred' do
+  description 'default'
+  private_key jenkins['id_rsa']
+end
