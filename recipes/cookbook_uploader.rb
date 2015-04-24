@@ -17,7 +17,8 @@
 # limitations under the License.
 #
 
-secrets = Chef::EncryptedDataBagItem.load(node['osl-jenkins']['databag'], 'secrets')
+secrets = Chef::EncryptedDataBagItem.load(node['osl-jenkins']['databag'],
+                                          'secrets')
 repos = collect_github_repositories(secrets, 'osuosl-cookbooks')
 repos.each do |repo|
   xml = ::File.join(Chef::Config[:file_cache_path], repo, 'config.xml')
@@ -33,4 +34,3 @@ repos.each do |repo|
     action [:create, :enable]
   end
 end
-
