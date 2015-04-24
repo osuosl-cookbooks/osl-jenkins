@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: osl-jenkins
-# Recipe:: chef_ci
+# Recipe:: chef_ci_cookbook_template
 #
 # Copyright 2015 Oregon State University
 # 
