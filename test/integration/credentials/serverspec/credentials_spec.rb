@@ -2,7 +2,12 @@ require 'serverspec'
 
 set :backend, :exec
 
-describe file('/var/lib/jenkins/users/jenkins/config.xml') do
+describe file('/var/lib/jenkins/credentials.xml') do
+  it { should be_file }
+  it { should contain '<username>alfred</username>' }
+end
+
+describe file('/var/lib/jenkins/users/alfred/config.xml') do
   it { should be_file }
   it do
     should contain 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC2aaJit5+siL2HWkho' \

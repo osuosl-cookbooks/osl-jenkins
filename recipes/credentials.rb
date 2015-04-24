@@ -34,7 +34,7 @@ end
 node.run_state['jenkins_private_key'] = jenkins['id_rsa']
 
 # Credentials required to connect to Slaves
-jenkins_credentials 'alfred' do
+jenkins_private_key_credentials 'alfred' do
   description 'default'
   private_key jenkins['id_rsa']
 end
