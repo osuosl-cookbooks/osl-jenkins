@@ -23,5 +23,5 @@ end
 
 chef_gem 'rubocop' do
   action :install
-  version '0.27.1'
+  version '0.30.1'
 end

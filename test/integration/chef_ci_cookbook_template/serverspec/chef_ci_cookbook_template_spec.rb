@@ -14,5 +14,5 @@ describe package('foodcritic') do
 end
 
 describe package('rubocop') do
-  it { should be_installed.by('gem').with_version('0.27.1') }
+  it { should be_installed.by('gem').with_version('0.30.1') }
 end
