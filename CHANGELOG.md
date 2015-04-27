@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+0.4.0
+-----
+- Adds the haproxy recipe for setting haproxy attributes.
+
 0.3.0
 -----
 - Adds the master recipe for setting the package version
