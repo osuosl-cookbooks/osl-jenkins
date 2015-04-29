@@ -66,7 +66,7 @@ jenkins master user and group.
 #### osl-jenkins::chef_ci_cookbook_template
 Manages dependencies for the `chef-ci-cookbook-template` Jenkins job.
 
-Installs `foodcritic` and `rubocop` as chef gems.
+Uses the `chef-dk::default` recipe to install `chefdk`.
 
 Contributing
 ------------

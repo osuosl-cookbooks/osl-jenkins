@@ -16,12 +16,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-chef_gem 'foodcritic' do
-  action :install
-  version '4.0.0'
-end
-
-chef_gem 'rubocop' do
-  action :install
-  version '0.30.1'
-end
+include_recipe 'chef-dk::default'

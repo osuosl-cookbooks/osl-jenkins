@@ -2,17 +2,14 @@ require 'serverspec'
 
 set :backend, :exec
 
-RSpec.configure do |config|
-  config.before(:all) do
-    config.path = '/opt/chef/embedded/bin:/usr/local/sbin:
-                   /usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
-  end
+describe package('chefdk') do
+  it { should be_installed }
 end
 
-describe package('foodcritic') do
-  it { should be_installed.by('gem').with_version('4.0.0') }
+describe command('foodcritic --version') do
+  its(:stdout) { should match /foodcritic 4.0.0/ }
 end
 
-describe package('rubocop') do
-  it { should be_installed.by('gem').with_version('0.30.1') }
+describe command('rubocop --version') do
+  its(:stdout) { should match /0.28.0/ }
 end
