@@ -8,3 +8,4 @@ version          '0.4.0'
 
 depends          'jenkins'
 depends          'osl-haproxy'
+depends          'chef-dk'

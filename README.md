@@ -63,6 +63,11 @@ Installs the `knife-backup` gem for use by the chef\_client, and ensures
 the `/var/chef-backup-for-rdiff` directory exists and is owned by the
 jenkins master user and group.
 
+#### osl-jenkins::chef_ci_cookbook_template
+Manages dependencies for the `chef-ci-cookbook-template` Jenkins job.
+
+Uses the `chef-dk::default` recipe to install `chefdk`.
+
 Contributing
 ------------
 TODO: (optional) If this is a public cookbook, detail the process for contributing. If this is a private cookbook, remove this section.

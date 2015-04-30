@@ -9,4 +9,6 @@ cookbook 'osl-haproxy', git: 'git@github.com:osuosl-cookbooks/osl-haproxy'
 cookbook 'resource_from_hash',
          git: 'git@github.com:osuosl-cookbooks/resource_from_hash'
 
+cookbook 'chef-dk', '~> 3.0.0'
+
 metadata
