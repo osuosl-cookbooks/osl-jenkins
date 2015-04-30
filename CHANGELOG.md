@@ -4,6 +4,11 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+0.5.0
+-----
+- Adds the chef\_ci\_cookbook\_template recipe for installing `chefdk`.
+- Dependency on the `chef-dk` cookbook added.
+
 0.4.0
 -----
 - Adds the haproxy recipe for setting haproxy attributes.
