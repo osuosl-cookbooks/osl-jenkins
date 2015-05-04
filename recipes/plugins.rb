@@ -17,5 +17,8 @@
 # limitations under the License.
 #
 
-node.default['jenkins']['master']['version'] = '1.608-1.1'
-node.default['jenkins']['master']['listen_address'] = '127.0.0.1'
+node['osl-jenkins']['plugins'].each do |plugin|
+  jenkins_plugin plugin do
+    notifies :restart, 'service[jenkins]'
+  end
+end

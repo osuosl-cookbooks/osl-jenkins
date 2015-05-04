@@ -59,3 +59,9 @@ suites:
   - name: chef_ci_cookbook_template
     run_list:
       - recipe[osl-jenkins::chef_ci_cookbook_template]
+  - name: plugins
+    run_list:
+      - recipe[osl-jenkins::master]
+      - recipe[jenkins::java]
+      - recipe[jenkins::master]
+      - recipe[jenkins::plugins]
