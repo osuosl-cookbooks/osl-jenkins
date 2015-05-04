@@ -64,4 +64,4 @@ suites:
       - recipe[osl-jenkins::master]
       - recipe[jenkins::java]
       - recipe[jenkins::master]
-      - recipe[jenkins::plugins]
+      - recipe[osl-jenkins::plugins]
