@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: osl-jenkins
-# Recipe:: master
+# Recipe:: plugins
 #
 # Copyright 2015, Oregon State University
 #
