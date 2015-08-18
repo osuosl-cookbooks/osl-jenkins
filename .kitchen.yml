@@ -20,3 +20,9 @@ suites:
          master:
            user: 'centos'
            group: 'centos'
+  - name: plugins
+    run_list:
+      - recipe[osl-jenkins::master]
+      - recipe[jenkins::java]
+      - recipe[jenkins::master]
+      - recipe[osl-jenkins::plugins]
