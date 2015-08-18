@@ -26,7 +26,7 @@ user 'alfred' do
   supports manage_home: true
   gid 'alfred'
   system true
-  shell '/usr/bin/sh'
+  shell '/bin/bash'
   home '/home/alfred'
   action :create
 end
