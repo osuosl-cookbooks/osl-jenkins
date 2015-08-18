@@ -21,10 +21,13 @@ include_recipe 'java'
 group 'alfred' do
   action :create
 end
+
 user 'alfred' do
-  comment 'Alfred user for Jenkins'
+  supports manage_home: true
   gid 'alfred'
-  manage_home true
+  system true
+  shell '/usr/bin/sh'
+  home '/home/alfred'
   action :create
 end
 
@@ -33,9 +36,5 @@ ohai 'reload_passwd' do
   plugin 'etc'
 end.run_action(:reload)
 
+node.default['ssh_keys']['alfred'] = 'alfred'
 include_recipe 'ssh-keys'
-# how do I specify a key?
-
-include_recipe 'java'
-# will install OpenJDK 6 by default, can specify an alternate Java flavor
-# as an attribute
