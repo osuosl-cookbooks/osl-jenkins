@@ -16,3 +16,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+include_recipe 'java'
+
+group 'alfred' do
+  action :create
+end
+user 'alfred' do
+  comment 'Alfred user for Jenkins'
+  gid 'alfred'
+  manage_home true
+  action :create
+end
+
+ohai 'reload_passwd' do
+  action :nothing
+  plugin 'etc'
+end.run_action(:reload)
+
+include_recipe 'ssh-keys'
+# how do I specify a key?
+
+include_recipe 'java'
+# will install OpenJDK 6 by default, can specify an alternate Java flavor
+# as an attribute
