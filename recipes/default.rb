@@ -31,6 +31,7 @@ user 'alfred' do
   action :create
 end
 
+# This is necessary due to a bug in the upstream "ssh_keys" cookbook
 ohai 'reload_passwd' do
   action :nothing
   plugin 'etc'
