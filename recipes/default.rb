@@ -16,3 +16,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+include_recipe 'java'
+
+group 'alfred' do
+  action :create
+end
+
+user 'alfred' do
+  supports manage_home: true
+  gid 'alfred'
+  system true
+  shell '/bin/bash'
+  home '/home/alfred'
+  action :create
+end
+
+# This is necessary due to a bug in the upstream "ssh_keys" cookbook
+ohai 'reload_passwd' do
+  action :nothing
+  plugin 'etc'
+end.run_action(:reload)
+
+node.default['ssh_keys']['alfred'] = 'alfred'
+include_recipe 'ssh-keys'
