@@ -73,3 +73,6 @@ suites:
       - recipe[jenkins::java]
       - recipe[jenkins::master]
       - recipe[osl-jenkins::plugins]
+  - name: ftp
+    run_list:
+    - recipe[osl-jenkins::ftp]
