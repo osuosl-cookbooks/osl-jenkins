@@ -6,9 +6,9 @@ description      'Installs/Configures osl-jenkins'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          '0.5.1'
 
-depends          'jenkins'
-depends          'osl-haproxy'
 depends          'chef-dk'
 depends          'java'
+depends          'jenkins'
+depends          'osl-haproxy'
 depends          'ssh-keys'
 depends          'sudo'
