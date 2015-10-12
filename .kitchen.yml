@@ -51,3 +51,6 @@ suites:
   - name: chef_ci_cookbook_template
     run_list:
       - recipe[osl-jenkins::chef_ci_cookbook_template]
+  - name: ftp
+    run_list:
+    - recipe[osl-jenkins::ftp]
