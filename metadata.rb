@@ -12,3 +12,6 @@ depends          'jenkins'
 depends          'osl-haproxy'
 depends          'ssh-keys'
 depends          'sudo'
+
+supports         'centos', '~> 6'
+supports         'centos', '~> 7'

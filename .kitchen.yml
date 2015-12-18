@@ -1,15 +1,8 @@
 ---
-driver:
-  name: vagrant
-
 provisioner:
   name: chef_solo
   encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
   data_bags_path: test/integration/data_bags
-
-platforms:
-  - name: centos-6.7
-  - name: centos-7.1
 
 suites:
   - name: default
@@ -21,15 +14,15 @@ suites:
       - recipe[jenkins::java]
       - recipe[jenkins::master]
   - name: haproxy
+    encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     run_list:
       - recipe[certificate::manage_by_attributes]
       - recipe[osl-jenkins::haproxy]
       - recipe[osl-haproxy::default]
     attributes:
       certificate:
-        -
-          snakeoil:
-            cert_path: /etc/pki/tls
+        - snakeoil:
+            cert_path: "/etc/pki/tls"
             cert_file: wildcard.pem
             key_file: wildcard.key
             chain_file: wildcard-bundle.crt
@@ -39,18 +32,18 @@ suites:
       - recipe[osl-jenkins::chef_backup]
     attributes:
       jenkins:
-         master:
-           user: 'centos'
-           group: 'centos'
+        master:
+          user: centos
+          group: centos
+  - name: chef_ci_cookbook_template
+    run_list:
+      - recipe[osl-jenkins::chef_ci_cookbook_template]
   - name: plugins
     run_list:
       - recipe[osl-jenkins::master]
       - recipe[jenkins::java]
       - recipe[jenkins::master]
       - recipe[osl-jenkins::plugins]
-  - name: chef_ci_cookbook_template
-    run_list:
-      - recipe[osl-jenkins::chef_ci_cookbook_template]
   - name: ftp
     run_list:
-    - recipe[osl-jenkins::ftp]
+      - recipe[osl-jenkins::ftp]
