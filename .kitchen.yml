@@ -56,6 +56,8 @@ suites:
       - recipe[osl-jenkins::ftp]
   - name: cookbook-uploader
     run_list:
-      - recipe[java]
+      - recipe[osl-jenkins::master]
+      - recipe[jenkins::java]
       - recipe[jenkins::master]
-      - recipe[osl-jenkins::cookbook-uploader]
+      - recipe[osl-jenkins::cookbook_uploader]
+    provisioner: chef_zero
