@@ -13,5 +13,5 @@ depends          'osl-haproxy'
 depends          'ssh-keys'
 depends          'sudo'
 
-supports         'centos', '~> 6'
-supports         'centos', '~> 7'
+supports         'centos', '~> 6.0'
+supports         'centos', '~> 7.0'
