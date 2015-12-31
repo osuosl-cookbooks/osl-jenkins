@@ -17,6 +17,12 @@
 # limitations under the License.
 #
 
+# We need git stuff
+package 'git'
+jenkins_plugin 'git' do
+  notifies :restart, 'service[jenkins]'
+end
+
 org = node['osl-jenkins']['org']
 secrets = Chef::EncryptedDataBagItem.load(node['osl-jenkins']['databag'],
                                           'secrets')
