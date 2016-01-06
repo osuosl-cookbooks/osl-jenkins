@@ -17,16 +17,20 @@
 # limitations under the License.
 #
 
-# We need git stuff
+# We need git stuff, plus build-token-root for triggering from Github PRs
 package 'git'
-jenkins_plugin 'git' do
-  notifies :restart, 'service[jenkins]'
+%w(git build-token-root).each do |p|
+  jenkins_plugin p do
+    notifies :restart, 'service[jenkins]'
+  end
 end
 
 org = node['osl-jenkins']['org']
 secrets = Chef::EncryptedDataBagItem.load(node['osl-jenkins']['databag'],
                                           'secrets')
-repos = collect_github_repositories(secrets, org)
+#repos = collect_github_repositories(secrets, org)
+repos = ['lanparty'] # For testing
+#repos = [] # For testing
 repos.each do |repo|
   xml = ::File.join(Chef::Config[:file_cache_path], org, repo, 'config.xml')
   d = ::File.dirname(xml)
@@ -45,3 +49,7 @@ repos.each do |repo|
     action [:create, :enable]
   end
 end
+
+# TODO: Watch github PRs, and if someone says "bump minor" or something, merge
+# the PR (if it's possible to merge without conflicts), edit metadata.rb, tag
+# it, push again, and upload it to the chef server.

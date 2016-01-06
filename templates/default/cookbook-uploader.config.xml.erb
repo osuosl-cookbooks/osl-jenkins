@@ -60,8 +60,7 @@
   <builders>
     <hudson.tasks.Shell>
       <command>export KNIFE_USER=&apos;jenkins&apos;
-pwd
-knife cookbook upload -o ../ $(grep ^name metadata.rb| awk &apos;{print $2;}&apos; | tr -d \&apos;) --freeze</command>
+pwd</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers/>
