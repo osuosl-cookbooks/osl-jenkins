@@ -6,10 +6,10 @@ def collect_github_repositories(token = {}, org = nil)
 
   require 'octokit'
 
-  client = Octokit::Client.new(token)
-  client.auto_paginate = true
+  github = Octokit::Client.new(token)
+  github.auto_paginate = true
 
-  client.org_repos(org).map(&:name)
+  github.org_repos(org).map(&:name)
 end
 
 def set_up_github_push(token = {}, orgname = nil, reponame = nil)
@@ -21,26 +21,35 @@ def set_up_github_push(token = {}, orgname = nil, reponame = nil)
   require 'octokit'
   require 'pp'
 
-  client = Octokit::Client.new(token)
+  github = Octokit::Client.new(token)
 
   repopath = "#{orgname}/#{reponame}"
-  repo = client.repo(repopath)
-  pp(repo.hooks)
-  repo.hooks
-  client.create_hook(
-    repopath,
-    'jenkins_autobump',
-    {
-      :url => 'http://something.com/webhook',
-      :content_type => 'json'
-    },
-    {
-      :events => ['push', 'pull_request'],
-      :active => true
-    }
-  )
+  hooks = github.hooks(repopath)
+  type = 'web'
+  events = ['issue_comment']
+  content_type = 'form'
+  unless hooks.detect do |h|
+      h['name'] == type &&
+      h['events'] == events &&
+      h['config']['content_type'] == content_type
+    end
+
+    github.create_hook(
+      repopath,
+      type,
+      {
+        :url => "https://#{node['jenkins']['master']['host']}" \
+                ":#{node['jenkins']['master']['port']}",
+        :content_type => content_type
+      },
+      {
+        :events => events,
+        :active => true
+      }
+    )
+  end
 end
 
-set_up_github_push({ access_token: '' },
-                   'osuosl-cookbooks',
-                   'lanparty')
+#set_up_github_push({ access_token: '' },
+#                   'osuosl-cookbooks',
+#                   'lanparty')
