@@ -54,9 +54,10 @@ suites:
   - name: ftp
     run_list:
       - recipe[osl-jenkins::ftp]
-  # In order properly test Github integration, you must export the GITHUB_TOKEN
-  # env var in your shell before you converge this suite.  You'll need to use
-  # an account that has permission to create webhooks.
+  # In order properly test Github integration, you must export the GITHUB_USER
+  # and GITHUB_TOKEN env vars in your shell before you converge this suite.
+  # You'll need to use an account/token that has permission to pull/push
+  # private repos and create webhooks.
   - name: cookbook-uploader
     run_list:
       - recipe[osl-jenkins::master]
@@ -69,5 +70,10 @@ suites:
         - no-firewall
     attributes:
       osl-jenkins:
-        credentials:
-          github_token: <%= ENV['GITHUB_TOKEN'] %>
+        cookbook_uploader:
+          credentials:
+            github_user: <%= ENV['GITHUB_USER'] %>
+            github_token: <%= ENV['GITHUB_TOKEN'] %>
+      jenkins:
+        master:
+          listen_address: '0.0.0.0'

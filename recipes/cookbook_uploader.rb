@@ -25,12 +25,60 @@ package 'git'
   end
 end
 
-org = node['osl-jenkins']['org']
-secrets = Chef::EncryptedDataBagItem.load(node['osl-jenkins']['databag'],
-                                          'secrets')
+org = node['osl-jenkins']['cookbook_uploader']['org']
+
+# This secrets hash is passed to Octokit later, which requires the key for the
+# token to be named `access_token`.  The `user` field is used for Git pull/push
+# over https in conjuction with the token, rather than an SSH key.
+begin
+  secrets = Chef::EncryptedDataBagItem.load(
+    node['osl-jenkins']['cookbook_uploader']['databag'],
+    node['osl-jenkins']['cookbook_uploader']['secrets_item']
+  )
+#TODO: Rescue a specific exception?
+rescue
+  Chef::Log.warn(
+    'Unable to load databag ' \
+    "'#{node['osl-jenkins']['cookbook_uploader']['databag']}:" \
+    "#{node['osl-jenkins']['cookbook_uploader']['secrets_item']}'; " \
+    'falling back to attributes.'
+  )
+  secrets = {
+    'access_token' =>
+      node['osl-jenkins']['cookbook_uploader']['credentials']['github_user'],
+    'user' =>
+      node['osl-jenkins']['cookbook_uploader']['credentials']['github_token']
+  }
+end
+
+#TODO: Remove after done testing?
+# Create a Git credentials file so we can access repos using our API token.
+# This obviates the need for an ssh key.
+git_credentials_path = ::File.join('/home',
+                                   node['jenkins']['master']['user'],
+                                   '.git-credentials')
+file git_credentials_path do
+  content "https://#{secrets['user']}:#{secrets['access_token']}@github.com"
+  mode '0400'
+  owner node['jenkins']['master']['user']
+  group node['jenkins']['master']['group']
+end
+
+# Copy over the github_pr_comment_trigger script
+github_pr_comment_trigger_path = \
+  ::File.join(node['osl-jenkins']['cookbook_uploader']['scripts_path'],
+              'github_pr_comment_trigger.rb')
+cookbook_file github_pr_comment_trigger_path do
+  source 'github_pr_comment_trigger.rb'
+  mode '0550'
+  owner node['jenkins']['master']['user']
+  group node['jenkins']['master']['group']
+end
+
+execute_shell = "chef exec ruby '#{github_pr_comment_trigger_path}'"
+
 #repos = collect_github_repositories(secrets, org)
 repos = ['lanparty'] # For testing
-#repos = [] # For testing
 repos.each do |repo|
   xml = ::File.join(Chef::Config[:file_cache_path], org, repo, 'config.xml')
   d = ::File.dirname(xml)
@@ -41,15 +89,12 @@ repos.each do |repo|
     source 'cookbook-uploader.config.xml.erb'
     variables(
       org: org,
-      repo: repo
+      repo: repo,
+      execute_shell: execute_shell
     )
   end
-  jenkins_job repo do
+  jenkins_job "cookbook-uploader-#{org}-#{repo}" do
     config xml
     action [:create, :enable]
   end
 end
-
-# TODO: Watch github PRs, and if someone says "bump minor" or something, merge
-# the PR (if it's possible to merge without conflicts), edit metadata.rb, tag
-# it, push again, and upload it to the chef server.
