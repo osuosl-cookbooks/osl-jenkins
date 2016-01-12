@@ -28,25 +28,23 @@ def set_up_github_push(token = {}, orgname = nil, reponame = nil)
   type = 'web'
   events = ['issue_comment']
   content_type = 'form'
-  unless hooks.detect do |h|
-      h['name'] == type &&
-      h['events'] == events &&
-      h['config']['content_type'] == content_type
-    end
 
-    github.create_hook(
-      repopath,
-      type,
-      {
-        :url => "https://#{node['jenkins']['master']['host']}" \
-                ":#{node['jenkins']['master']['port']}",
-        :content_type => content_type
-      },
-      {
-        :events => events,
-        :active => true
-      }
-    )
+  github.create_hook(
+    repopath,
+    type,
+    {
+      :url => "https://#{node['jenkins']['master']['host']}" \
+              ":#{node['jenkins']['master']['port']}",
+      :content_type => content_type
+    },
+    {
+      :events => events,
+      :active => true
+    }
+  ) unless hooks.detect do |h|
+    h['name'] == type &&
+    h['events'] == events &&
+    h['config']['content_type'] == content_type
   end
 end
 
