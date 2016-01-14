@@ -49,9 +49,16 @@ rescue
     'access_token' =>
       node['osl-jenkins']['cookbook_uploader']['credentials']['github_token'],
     'trigger_token' =>
-      node['osl-jenkins']['cookbook_uploader']['credentials']['trigger_token']
+      node['osl-jenkins']['cookbook_uploader']['credentials']['trigger_token'],
+    'jenkins_user' =>
+      node['osl-jenkins']['cookbook_uploader']['credentials']['jenkins_user'],
+    'jenkins_pass' =>
+      node['osl-jenkins']['cookbook_uploader']['credentials']['jenkins_pass']
   }
 end
+
+node.run_state[:jenkins_username] = secrets['jenkins_user']
+node.run_state[:jenkins_password] = secrets['jenkins_pass']
 
 #TODO: Remove after done testing?
 # Create a Git credentials file so we can access repos using our API token.

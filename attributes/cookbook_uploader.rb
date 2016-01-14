@@ -11,3 +11,6 @@ default['osl-jenkins']['cookbook_uploader']['scripts_path'] = \
 # for testing. In production, store credentials in the secrets databag.
 default['osl-jenkins']['cookbook_uploader']['credentials']['github_user'] = ''
 default['osl-jenkins']['cookbook_uploader']['credentials']['github_token'] = ''
+default['osl-jenkins']['cookbook_uploader']['credentials']['trigger_token'] = ''
+default['osl-jenkins']['cookbook_uploader']['credentials']['jenkins_user'] = ''
+default['osl-jenkins']['cookbook_uploader']['credentials']['jenkins_pass'] = ''

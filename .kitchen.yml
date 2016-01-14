@@ -58,6 +58,11 @@ suites:
   # and GITHUB_TOKEN env vars in your shell before you converge this suite.
   # You'll need to use an account/token that has permission to pull/push
   # private repos and create webhooks.
+  # Also, choose a random TRIGGER_TOKEN.
+  # Oh, and after you converge once, you need to enable user/pass security in
+  # order to get remotely triggered builds to work, but this prevents the
+  # jenkins cookbook from updating jobs, so you need to create a user and
+  # export the JENKINS_USER and JENKINS_PASS env vars too.
   - name: cookbook-uploader
     run_list:
       - recipe[osl-jenkins::master]
@@ -75,6 +80,8 @@ suites:
             github_user: <%= ENV['GITHUB_USER'] %>
             github_token: <%= ENV['GITHUB_TOKEN'] %>
             trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
+            jenkins_user: <%= ENV['JENKINS_USER'] %>
+            jenkins_pass: <%= ENV['JENKINS_PASS'] %>
       jenkins:
         master:
           listen_address: '0.0.0.0'
