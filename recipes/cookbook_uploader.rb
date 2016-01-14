@@ -25,7 +25,7 @@ package 'git'
   end
 end
 
-org = node['osl-jenkins']['cookbook_uploader']['org']
+orgname = node['osl-jenkins']['cookbook_uploader']['org']
 
 # This secrets hash is passed to Octokit later, which requires the key for the
 # token to be named `access_token`.  The `user` field is used for Git pull/push
@@ -44,10 +44,12 @@ rescue
     'falling back to attributes.'
   )
   secrets = {
-    'access_token' =>
-      node['osl-jenkins']['cookbook_uploader']['credentials']['github_user'],
     'user' =>
-      node['osl-jenkins']['cookbook_uploader']['credentials']['github_token']
+      node['osl-jenkins']['cookbook_uploader']['credentials']['github_user'],
+    'access_token' =>
+      node['osl-jenkins']['cookbook_uploader']['credentials']['github_token'],
+    'trigger_token' =>
+      node['osl-jenkins']['cookbook_uploader']['credentials']['trigger_token']
   }
 end
 
@@ -57,6 +59,9 @@ end
 git_credentials_path = ::File.join('/home',
                                    node['jenkins']['master']['user'],
                                    '.git-credentials')
+directory ::File.dirname(git_credentials_path) do
+  recursive true
+end
 file git_credentials_path do
   content "https://#{secrets['user']}:#{secrets['access_token']}@github.com"
   mode '0400'
@@ -68,6 +73,9 @@ end
 github_pr_comment_trigger_path = \
   ::File.join(node['osl-jenkins']['cookbook_uploader']['scripts_path'],
               'github_pr_comment_trigger.rb')
+directory ::File.dirname(github_pr_comment_trigger_path) do
+  recursive true
+end
 cookbook_file github_pr_comment_trigger_path do
   source 'github_pr_comment_trigger.rb'
   mode '0550'
@@ -75,26 +83,26 @@ cookbook_file github_pr_comment_trigger_path do
   group node['jenkins']['master']['group']
 end
 
-execute_shell = "chef exec ruby '#{github_pr_comment_trigger_path}'"
+execute_shell = "echo $payload > chef exec ruby '#{github_pr_comment_trigger_path}'"
 
-#repos = collect_github_repositories(secrets, org)
+#repos = collect_github_repositories(secrets, orgname)
 repos = ['lanparty'] # For testing
 repos.each do |repo|
-  xml = ::File.join(Chef::Config[:file_cache_path], org, repo, 'config.xml')
-  d = ::File.dirname(xml)
-  directory d do
+  xml = ::File.join(Chef::Config[:file_cache_path], orgname, repo, 'config.xml')
+  directory ::File.dirname(xml) do
     recursive true
   end
   template xml do
     source 'cookbook-uploader.config.xml.erb'
     variables(
-      org: org,
-      repo: repo,
+      trigger_token: trigger_token,
       execute_shell: execute_shell
     )
   end
-  jenkins_job "cookbook-uploader-#{org}-#{repo}" do
+  jobname = "cookbook-uploader-#{orgname}-#{repo}"
+  jenkins_job jobname do
     config xml
     action [:create, :enable]
   end
+  #set_up_github_push(secrets['access_token'], orgname, reponame, jobname, secrets['trigger_token'])
 end

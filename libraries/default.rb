@@ -1,4 +1,4 @@
-def collect_github_repositories(token = {}, org = nil)
+def collect_github_repositories(token = {}, org)
   if ::ObjectSpace.const_defined?('Chef')
     # Chef exists! Lets make sure Octokit is installed.
     chef_gem 'octokit'
@@ -12,7 +12,7 @@ def collect_github_repositories(token = {}, org = nil)
   github.org_repos(org).map(&:name)
 end
 
-def set_up_github_push(token = {}, orgname = nil, reponame = nil)
+def set_up_github_push(token = {}, orgname, reponame, jobname, trigger_token)
   if ::ObjectSpace.const_defined?('Chef')
     # Chef exists! Lets make sure Octokit is installed.
     chef_gem 'octokit'
@@ -28,20 +28,34 @@ def set_up_github_push(token = {}, orgname = nil, reponame = nil)
   type = 'web'
   events = ['issue_comment']
   content_type = 'form'
+  url = "https://#{node['jenkins']['master']['host']}" \
+    ":#{node['jenkins']['master']['port']}/job/#{jobname}/" \
+    "buildWithParameters?token=#{trigger_token}"
 
-  hook_exists = hooks.detect do |h|
+  # Get all hooks that we may have created in the past
+  existing_hooks = hooks.select do |h|
     h['name'] == type &&
     h['events'] == events &&
     h['config']['content_type'] == content_type
   end
 
-  unless hook_exists
+  # If the hook exists and is outdated, delete it.
+  current_hook_exists = false
+  existing_hooks.each do |h|
+    if h['url'] != url
+      github.delete_hook(repopath, h['id'])
+    else
+      current_hook_exists = true
+    end
+  end
+
+  # Create a new hook unless an up-to-date one already exists
+  unless current_hook_exists
     github.create_hook(
       repopath,
       type,
       {
-        :url => "https://#{node['jenkins']['master']['host']}" \
-                ":#{node['jenkins']['master']['port']}",
+        :url => url,
         :content_type => content_type
       },
       {
@@ -51,7 +65,3 @@ def set_up_github_push(token = {}, orgname = nil, reponame = nil)
     )
   end
 end
-
-#set_up_github_push({ access_token: '' },
-#                   'osuosl-cookbooks',
-#                   'lanparty')

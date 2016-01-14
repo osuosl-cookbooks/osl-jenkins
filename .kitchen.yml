@@ -74,6 +74,7 @@ suites:
           credentials:
             github_user: <%= ENV['GITHUB_USER'] %>
             github_token: <%= ENV['GITHUB_TOKEN'] %>
+            trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
       jenkins:
         master:
           listen_address: '0.0.0.0'
