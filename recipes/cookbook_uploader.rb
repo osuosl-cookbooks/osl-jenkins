@@ -95,7 +95,7 @@ repos.each do |repo|
   template xml do
     source 'cookbook-uploader.config.xml.erb'
     variables(
-      trigger_token: trigger_token,
+      trigger_token: secrets['trigger_token'],
       execute_shell: execute_shell
     )
   end
