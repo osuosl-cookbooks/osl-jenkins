@@ -79,7 +79,7 @@ end
 git_config_path = ::File.join(node['jenkins']['master']['home'],
                                    '.gitconfig')
 file git_config_path do
-  content '[credential]\n    helper = store'
+  content "[credential]\n    helper = store"
   mode '0664'
   owner node['jenkins']['master']['user']
   group node['jenkins']['master']['group']
