@@ -10,7 +10,6 @@ require 'json'
 require 'octokit'
 require 'pp'
 
-GIT_BRANCH = 'master'
 METADATA_FILE = 'metadata.rb'
 COMMAND = '!bump'
 LEVELS = {
@@ -53,10 +52,11 @@ unless pr.mergeable
 end
 
 # Merge the PR
+git_branch = pr['base']['ref']
 pr.merge_pull_request
 git = Git.open('.')
-git.branch(GIT_BRANCH).checkout
-git.pull(git.remote('origin'), GIT_BRANCH)
+git.branch(git_branch).checkout
+git.pull(git.remote('origin'), git_branch)
 
 # Update the CHANGELOG.md?
 
@@ -77,13 +77,14 @@ git.commit("Automatic #{level}-level version bump to v#{version} by Jenkins")
 git.tag("v#{version}")
 
 # Push back to Github
-git.push(git.remote('origin'), GIT_BRANCH, tags: true)
+git.push(git.remote('origin'), git_branch, tags: true)
 
 # Upload to the Chef server
+puts "Uploading #{reponame} cookbook to the Chef server..."
 #`knife cookbook upload -o ../ #{reponame} --freeze`
 
 # Close the PR
-message = "Jenkins has merged this PR into `#{GIT_BRANCH}` and has " \
+message = "Jenkins has merged this PR into `#{git_branch}` and has " \
   "automatically performed a #{level}-level version bump to v#{version}.  " \
   'Have a nice day!'
 pr.create_pull_request_comment(message)
