@@ -1,9 +1,8 @@
 #!/usr/bin/env ruby
 
 # Takes a JSON payload from a Github PR issue webhook from stdin, reads the
-# comment, and if it matches `!bump (major|minor|patch)?` (defaults to
-# `minor`), merges the PR, bumps the Chef cookbook's metadata.rb, creates a
-# version tag, and pushes up.
+# comment, and if it matches `!bump (major|minor|patch)`, merges the PR, bumps
+# the Chef cookbook's metadata.rb, creates a version tag, and pushes up.
 
 require 'git'
 require 'json'
@@ -22,12 +21,12 @@ d = JSON.load(STDIN.read)
 
 # Check if we got a valid request and get the bump level
 comment = d.fetch('comment', {}).fetch('body', '')
-match = comment.match(/^#{COMMAND}( (#{LEVELS.keys.join('|')}))?$/, 2)
+match = comment.match(/^#{COMMAND} (#{LEVELS.keys.join('|')})$/, 2)
 if match.nil?
   # Exit because it wasn't a valid bump request
   exit 0
 end
-level = match[2] || 'minor'
+level = match[1]
 
 # Make sure the issue is a PR
 unless d['issue'].key?('pull_request')
