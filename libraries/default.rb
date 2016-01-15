@@ -1,4 +1,4 @@
-def collect_github_repositories(token, org)
+def collect_github_repositories(github_token, org)
   if ::ObjectSpace.const_defined?('Chef')
     # Chef exists! Lets make sure Octokit is installed.
     chef_gem 'octokit'
@@ -6,14 +6,14 @@ def collect_github_repositories(token, org)
 
   require 'octokit'
 
-  github = Octokit::Client.new(token)
+  github = Octokit::Client.new(access_token: github_token)
   github.auto_paginate = true
 
   github.org_repos(org).map(&:name)
 end
 
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-def set_up_github_push(token, orgname, reponame, jobname, trigger_token)
+def set_up_github_push(github_token, orgname, reponame, jobname, trigger_token)
   if ::ObjectSpace.const_defined?('Chef')
     # Chef exists! Lets make sure Octokit is installed.
     chef_gem 'octokit'
@@ -22,7 +22,7 @@ def set_up_github_push(token, orgname, reponame, jobname, trigger_token)
   require 'octokit'
   require 'pp'
 
-  github = Octokit::Client.new(token)
+  github = Octokit::Client.new(access_token: github_token)
 
   repopath = "#{orgname}/#{reponame}"
   hooks = github.hooks(repopath)

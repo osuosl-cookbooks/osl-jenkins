@@ -27,9 +27,8 @@ end
 
 orgname = node['osl-jenkins']['cookbook_uploader']['org']
 
-# This secrets hash is passed to Octokit later, which requires the key for the
-# token to be named `access_token`.  The `user` field is used for Git pull/push
-# over https in conjuction with the token, rather than an SSH key.
+# Note: The `github_user` field is used for Git pull/push over https in
+# conjuction with the token, rather than an SSH key.
 begin
   secrets = Chef::EncryptedDataBagItem.load(
     node['osl-jenkins']['cookbook_uploader']['databag'],
@@ -43,18 +42,7 @@ rescue
     "#{node['osl-jenkins']['cookbook_uploader']['secrets_item']}'; " \
     'falling back to attributes.'
   )
-  secrets = {
-    'user' =>
-      node['osl-jenkins']['cookbook_uploader']['credentials']['github_user'],
-    'access_token' =>
-      node['osl-jenkins']['cookbook_uploader']['credentials']['github_token'],
-    'trigger_token' =>
-      node['osl-jenkins']['cookbook_uploader']['credentials']['trigger_token'],
-    'jenkins_user' =>
-      node['osl-jenkins']['cookbook_uploader']['credentials']['jenkins_user'],
-    'jenkins_pass' =>
-      node['osl-jenkins']['cookbook_uploader']['credentials']['jenkins_pass']
-  }
+  secrets = node['osl-jenkins']['cookbook_uploader']['credentials']
 end
 
 node.run_state[:jenkins_username] = secrets['jenkins_user']
@@ -69,7 +57,8 @@ directory ::File.dirname(git_credentials_path) do
   recursive true
 end
 file git_credentials_path do
-  content "https://#{secrets['user']}:#{secrets['access_token']}@github.com"
+  content "https://#{secrets['github_user']}:" \
+    "#{secrets['github_token']}@github.com"
   mode '0400'
   owner node['jenkins']['master']['user']
   group node['jenkins']['master']['group']
@@ -124,7 +113,7 @@ reponames.each do |reponame|
     action [:create, :enable]
   end
   set_up_github_push(
-    secrets['access_token'],
+    secrets['github_token'],
     orgname,
     reponame,
     jobname,
