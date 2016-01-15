@@ -9,20 +9,20 @@ require 'json'
 require 'octokit'
 require 'pp'
 
-METADATA_FILE = 'metadata.rb'
-COMMAND = '!bump'
+METADATA_FILE = 'metadata.rb'.freeze
+COMMAND = '!bump'.freeze
 LEVELS = {
   'major' => 0,
   'minor' => 1,
   'patch' => 2
-}
+}.freeze
 
 # Given a version string of the form 'x.x.x' and a level 0, 1, or 2, increments
 # the specified level and returns the new version string.
 def inc_version(v, level)
   v = v.split('.')
   v[level] = v[level].to_i.next.to_s
-  v = v.join('.')
+  v.join('.')
 end
 
 d = JSON.load(STDIN.read)
@@ -90,7 +90,7 @@ git.push(git.remote('origin'), git_branch, tags: true)
 
 # Upload to the Chef server
 puts "Uploading #{reponame} cookbook to the Chef server..."
-#`knife cookbook upload -o ../ #{reponame} --freeze`
+# `knife cookbook upload -o ../ #{reponame} --freeze`
 
 # Close the PR
 message = "Jenkins has merged this PR into `#{git_branch}` and has " \
