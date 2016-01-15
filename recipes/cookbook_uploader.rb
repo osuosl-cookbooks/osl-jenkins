@@ -63,8 +63,7 @@ node.run_state[:jenkins_password] = secrets['jenkins_pass']
 #TODO: Remove after done testing?
 # Create a Git credentials file so we can access repos using our API token.
 # This obviates the need for an ssh key.
-git_credentials_path = ::File.join('/home',
-                                   node['jenkins']['master']['user'],
+git_credentials_path = ::File.join(node['jenkins']['master']['home'],
                                    '.git-credentials')
 directory ::File.dirname(git_credentials_path) do
   recursive true
@@ -72,6 +71,16 @@ end
 file git_credentials_path do
   content "https://#{secrets['user']}:#{secrets['access_token']}@github.com"
   mode '0400'
+  owner node['jenkins']['master']['user']
+  group node['jenkins']['master']['group']
+end
+
+# Also make a git config so that the credentials file actually gets used.
+git_config_path = ::File.join(node['jenkins']['master']['home'],
+                                   '.gitconfig')
+file git_config_path do
+  content '[credential]\n    helper = store'
+  mode '0664'
   owner node['jenkins']['master']['user']
   group node['jenkins']['master']['group']
 end
