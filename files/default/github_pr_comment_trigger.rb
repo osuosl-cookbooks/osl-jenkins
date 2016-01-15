@@ -77,7 +77,6 @@ git.commit("Automatic #{level}-level version bump to v#{version} by Jenkins")
 git.tag("v#{version}")
 
 # Push back to Github
-git.push(git.remote('origin'), GIT_BRANCH)
 git.push(git.remote('origin'), GIT_BRANCH, tags: true)
 
 # Upload to the Chef server
