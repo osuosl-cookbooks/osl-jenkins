@@ -17,6 +17,14 @@ LEVELS = {
   'patch' => 2
 }
 
+# Given a version string of the form 'x.x.x' and a level 0, 1, or 2, increments
+# the specified level and returns the new version string.
+def inc_version(v, level)
+  v = v.split('.')
+  v[level] = v[level].to_i.next.to_s
+  v = v.join('.')
+end
+
 d = JSON.load(STDIN.read)
 
 # Check if we got a valid request and get the bump level
@@ -60,13 +68,15 @@ git.pull(git.remote('origin'), git_branch)
 # Update the CHANGELOG.md?
 
 # Bump the cookbook version in metadata.rb
+# Match the line that looks like `version   "1.2.3"`
 version_regex = /^(version\s+)(["'])(\d+\.\d+\.\d+)\2$/
 md = ::File.read(METADATA_FILE).gsub(version_regex) do
-  m = Regexp.last_match # rubocop:disable Lint/UselessAssignment
-  version = m(3).split('.')
-  version[LEVELS[level]] = version[LEVELS[level]].to_i.next.to_s
-  version = version.join('.')
-  "#{m(1)}#{m(2)}#{version}#{m(2)}"
+  key = Regexp.last_match(1) # The "version" key and some whitespace
+  quote = Regexp.last_match(2) # The type of quotation mark used, e.g. " vs '
+  version = inc_version(Regexp.last_match(3), LEVELS[level])
+  # Reconstruct the version line by using the new version with the same spacing
+  # and quotation mark types as before
+  "#{key}#{quote}#{version}#{quote}"
 end
 ::File.write(METADATA_FILE, md)
 git.add(all: true)
