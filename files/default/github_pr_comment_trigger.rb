@@ -80,11 +80,11 @@ end
 ::File.write(METADATA_FILE, md)
 
 # Update the CHANGELOG.md with the PR's title
-entry = "#{version} #{Time.now.strftime('%Y-%m-%d')}"
-entry += '\n' + '-'*entry.length
+entry = "#{version} (#{Time.now.strftime('%Y-%m-%d')})"
+entry += "\n" + '-'*entry.length
 entry += "\n- #{d['issue']['title']}\n\n"
 # Inject the new entry above the first one we find
-cl = ::File.read(CHANGELOG_FILE).sub(/^(\d+\.\d+\.\d+)/, "#{entry}\1")
+cl = ::File.read(CHANGELOG_FILE).sub(/^(\d+\.\d+\.\d+)/, entry + '\1')
 ::File.write(CHANGELOG_FILE, cl)
 
 # Commit changes
