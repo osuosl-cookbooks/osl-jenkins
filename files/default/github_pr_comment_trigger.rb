@@ -10,6 +10,7 @@ require 'octokit'
 require 'pp'
 
 METADATA_FILE = 'metadata.rb'.freeze
+CHANGELOG_FILE = 'CHANGELOG.md'.freeze
 COMMAND = '!bump'.freeze
 LEVELS = {
   'major' => 0,
@@ -65,8 +66,6 @@ git = Git.open('.')
 git.branch(git_branch).checkout
 git.pull(git.remote('origin'), git_branch)
 
-# Update the CHANGELOG.md?
-
 # Bump the cookbook version in metadata.rb
 # Match the line that looks like `version   "1.2.3"`
 version_regex = /^(version\s+)(["'])(\d+\.\d+\.\d+)\2$/
@@ -79,6 +78,16 @@ md = ::File.read(METADATA_FILE).gsub(version_regex) do
   "#{key}#{quote}#{version}#{quote}"
 end
 ::File.write(METADATA_FILE, md)
+
+# Update the CHANGELOG.md with the PR's title
+entry = "#{version} #{Time.now.strftime('%Y-%m-%d')}"
+entry += '\n' + '-'*entry.length
+entry += "\n- #{d['issue']['title']}\n\n"
+# Inject the new entry above the first one we find
+cl = ::File.read(CHANGELOG_FILE).sub(/^(\d+\.\d+\.\d+)/, "#{entry}\1")
+::File.write(CHANGELOG_FILE, cl)
+
+# Commit changes
 git.add(all: true)
 git.commit("Automatic #{level}-level version bump to v#{version} by Jenkins")
 
