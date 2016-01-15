@@ -19,7 +19,7 @@
 
 # We need git stuff, plus build-token-root for triggering from Github PRs
 package 'git'
-%w(git build-token-root).each do |p|
+%w(git github build-token-root).each do |p|
   jenkins_plugin p do
     notifies :restart, 'service[jenkins]'
   end
@@ -92,21 +92,22 @@ end
 
 execute_shell = "echo $payload > chef exec ruby '#{github_pr_comment_trigger_path}'"
 
-#repos = collect_github_repositories(secrets, orgname)
-repos = ['lanparty'] # For testing
-repos.each do |repo|
-  xml = ::File.join(Chef::Config[:file_cache_path], orgname, repo, 'config.xml')
+#reponames = collect_github_repositories(secrets, orgname)
+reponames = ['lanparty'] # For testing
+reponames.each do |reponame|
+  xml = ::File.join(Chef::Config[:file_cache_path], orgname, reponame, 'config.xml')
   directory ::File.dirname(xml) do
     recursive true
   end
   template xml do
     source 'cookbook-uploader.config.xml.erb'
     variables(
+      github_url: "https://github.com/#{orgname}/#{reponame}",
       trigger_token: secrets['trigger_token'],
       execute_shell: execute_shell
     )
   end
-  jobname = "cookbook-uploader-#{orgname}-#{repo}"
+  jobname = "cookbook-uploader-#{orgname}-#{reponame}"
   jenkins_job jobname do
     config xml
     action [:create, :enable]
