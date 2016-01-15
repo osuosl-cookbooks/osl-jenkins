@@ -35,7 +35,7 @@ begin
     node['osl-jenkins']['cookbook_uploader']['databag'],
     node['osl-jenkins']['cookbook_uploader']['secrets_item']
   )
-#TODO: Rescue a specific exception?
+# TODO: Rescue a specific exception?
 rescue
   Chef::Log.warn(
     'Unable to load databag ' \
@@ -60,7 +60,7 @@ end
 node.run_state[:jenkins_username] = secrets['jenkins_user']
 node.run_state[:jenkins_password] = secrets['jenkins_pass']
 
-#TODO: Remove after done testing?
+# TODO: Remove after done testing?
 # Create a Git credentials file so we can access repos using our API token.
 # This obviates the need for an ssh key.
 git_credentials_path = ::File.join(node['jenkins']['master']['home'],
@@ -77,7 +77,7 @@ end
 
 # Also make a git config so that the credentials file actually gets used.
 git_config_path = ::File.join(node['jenkins']['master']['home'],
-                                   '.gitconfig')
+                              '.gitconfig')
 file git_config_path do
   content "[credential]\n    helper = store"
   mode '0664'
@@ -99,12 +99,14 @@ cookbook_file github_pr_comment_trigger_path do
   group node['jenkins']['master']['group']
 end
 
-execute_shell = "echo $payload > chef exec ruby '#{github_pr_comment_trigger_path}'"
+execute_shell = \
+  "echo $payload > chef exec ruby '#{github_pr_comment_trigger_path}'"
 
-#reponames = collect_github_repositories(secrets, orgname)
+# reponames = collect_github_repositories(secrets, orgname)
 reponames = ['lanparty'] # For testing
 reponames.each do |reponame|
-  xml = ::File.join(Chef::Config[:file_cache_path], orgname, reponame, 'config.xml')
+  xml = ::File.join(Chef::Config[:file_cache_path],
+                    orgname, reponame, 'config.xml')
   directory ::File.dirname(xml) do
     recursive true
   end
@@ -121,5 +123,11 @@ reponames.each do |reponame|
     config xml
     action [:create, :enable]
   end
-  #set_up_github_push(secrets['access_token'], orgname, reponame, jobname, secrets['trigger_token'])
+  set_up_github_push(
+    secrets['access_token'],
+    orgname,
+    reponame,
+    jobname,
+    secrets['trigger_token']
+  )
 end

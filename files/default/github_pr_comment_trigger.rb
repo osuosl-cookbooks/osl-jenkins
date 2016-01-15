@@ -81,7 +81,7 @@ end
 
 # Update the CHANGELOG.md with the PR's title
 entry = "#{version} (#{Time.now.strftime('%Y-%m-%d')})"
-entry += "\n" + '-'*entry.length
+entry += "\n" + '-' * entry.length
 entry += "\n- #{d['issue']['title']}\n\n"
 # Inject the new entry above the first one we find
 cl = ::File.read(CHANGELOG_FILE).sub(/^(\d+\.\d+\.\d+)/, entry + '\1')
