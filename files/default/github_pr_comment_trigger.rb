@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!/opt/chef/embedded/bin/ruby
 
 # Takes a JSON payload from a Github PR issue webhook from stdin, reads the
 # comment, and if it matches `!bump (major|minor|patch)`, merges the PR, bumps

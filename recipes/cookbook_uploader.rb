@@ -74,6 +74,11 @@ file git_config_path do
   group node['jenkins']['master']['group']
 end
 
+# Install necessary gems
+%w(git octokit).each do |g|
+  chef_gem g
+end
+
 # Copy over the github_pr_comment_trigger script
 github_pr_comment_trigger_path = \
   ::File.join(node['osl-jenkins']['cookbook_uploader']['scripts_path'],
@@ -88,8 +93,7 @@ cookbook_file github_pr_comment_trigger_path do
   group node['jenkins']['master']['group']
 end
 
-execute_shell = \
-  "echo $payload > chef exec ruby '#{github_pr_comment_trigger_path}'"
+execute_shell = "echo $payload | #{github_pr_comment_trigger_path}"
 
 # reponames = collect_github_repositories(secrets, orgname)
 reponames = ['lanparty'] # For testing

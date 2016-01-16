@@ -12,6 +12,10 @@ def collect_github_repositories(github_token, org)
   github.org_repos(org).map(&:name)
 end
 
+def public_address
+  node.fetch('cloud', {}).fetch('public_ipv4', nil) || node['fqdn']
+end
+
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 def set_up_github_push(github_token, orgname, reponame, jobname, trigger_token)
   if ::ObjectSpace.const_defined?('Chef')
@@ -29,9 +33,8 @@ def set_up_github_push(github_token, orgname, reponame, jobname, trigger_token)
   type = 'web'
   events = ['issue_comment']
   content_type = 'form'
-  url = "https://#{node['jenkins']['master']['host']}" \
-    ":#{node['jenkins']['master']['port']}/job/#{jobname}/" \
-    "buildWithParameters?token=#{trigger_token}"
+  url = "https://#{public_address}/job/#{jobname}" \
+    "/buildWithParameters?token=#{trigger_token}"
 
   # Get all hooks that we may have created in the past
   # rubocop:disable Style/MultilineOperationIndentation
@@ -46,7 +49,7 @@ def set_up_github_push(github_token, orgname, reponame, jobname, trigger_token)
   current_hook_exists = false
   existing_hooks.each do |h|
     if h['url'] != url
-      github.delete_hook(repopath, h['id'])
+      github.remove_hook(repopath, h['id'])
     else
       current_hook_exists = true
     end
