@@ -45,32 +45,22 @@ def set_up_github_push(github_token, orgname, reponame, jobname, trigger_token)
   end
   # rubocop:enable Style/MultilineOperationIndentation
 
-  # If the hook exists and is outdated, delete it.
-  current_hook_exists = false
-  existing_hooks.each do |h|
-    if h['url'] != url
-      github.remove_hook(repopath, h['id'])
-    else
-      current_hook_exists = true
+  hook_config = {
+    url: url,
+    content_type: content_type
+  }
+  hook_options = {
+    events: events,
+    active: true
+  }
+
+  # Create a hook if none exist, or update the existing one(s).
+  if existing_hooks.empty?
+    github.create_hook(repopath, type, hook_config, hook_options)
+  else
+    existing_hooks.each do |h|
+      github.edit_hook(repopath, h['id'], type, hook_config, hook_options)
     end
   end
-
-  # Create a new hook unless an up-to-date one already exists
-  # rubocop:disable Style/BracesAroundHashParameters
-  unless current_hook_exists
-    github.create_hook(
-      repopath,
-      type,
-      {
-        url: url,
-        content_type: content_type
-      },
-      {
-        events: events,
-        active: true
-      }
-    )
-  end
-  # rubocop:enable Style/BracesAroundHashParameters
 end
 # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
