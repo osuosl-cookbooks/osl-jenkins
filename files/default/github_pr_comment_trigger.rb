@@ -30,9 +30,9 @@ d = JSON.load(STDIN.read)
 
 # Check if we got a valid request and get the bump level
 comment = d.fetch('comment', {}).fetch('body', '')
-match = comment.match(/^#{COMMAND} (#{LEVELS.keys.join('|')})$/, 2)
+match = comment.match(/^#{COMMAND} (#{LEVELS.keys.join('|')})$/)
 if match.nil?
-  # Exit because it wasn't a valid bump request
+  puts 'Exiting because comment was not a bump request'
   exit 0
 end
 level = match[1]
@@ -68,6 +68,7 @@ git.pull(git.remote('origin'), git_branch)
 
 # Bump the cookbook version in metadata.rb
 # Match the line that looks like `version   "1.2.3"`
+version = '' # Get the version variable in scope
 version_regex = /^(version\s+)(["'])(\d+\.\d+\.\d+)\2$/
 md = ::File.read(METADATA_FILE).gsub(version_regex) do
   key = Regexp.last_match(1) # The "version" key and some whitespace
@@ -92,7 +93,7 @@ git.add(all: true)
 git.commit("Automatic #{level}-level version bump to v#{version} by Jenkins")
 
 # Create a version tag
-git.tag("v#{version}")
+git.add_tag("v#{version}")
 
 # Push back to Github
 git.push(git.remote('origin'), git_branch, tags: true)
