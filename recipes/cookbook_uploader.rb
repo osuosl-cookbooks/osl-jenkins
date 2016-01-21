@@ -49,8 +49,8 @@ rescue
 end
 
 # This is necessary in order to create Jenkins jobs with security enabled.
-node.run_state[:jenkins_username] = secrets['jenkins_user']
-node.run_state[:jenkins_password] = secrets['jenkins_pass']
+node.run_state['jenkins_username'] = secrets['jenkins_user']
+node.run_state['jenkins_password'] = secrets['jenkins_pass']
 
 # TODO: Remove after done testing?
 # Create a Git credentials file so we can access repos using our API token.
