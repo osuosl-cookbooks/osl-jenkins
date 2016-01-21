@@ -105,8 +105,9 @@ end
 
 execute_shell = "echo $payload | #{github_pr_comment_trigger_path}"
 
-# reponames = collect_github_repositories(secrets, orgname)
-reponames = ['lanparty'] # For testing
+reponames = ['osl-jenkins']['cookbook_uploader']['override_repos'] ||
+            collect_github_repositories(secrets, orgname)
+
 reponames.each do |reponame|
   xml = ::File.join(Chef::Config[:file_cache_path],
                     orgname, reponame, 'config.xml')

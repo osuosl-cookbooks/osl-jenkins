@@ -80,6 +80,8 @@ suites:
     attributes:
       osl-jenkins:
         cookbook_uploader:
+          override_repos:
+            - lanparty
           github_insecure_hook: true
           credentials:
             github_user: <%= ENV['GITHUB_USER'] %>

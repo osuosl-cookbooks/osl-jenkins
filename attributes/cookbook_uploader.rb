@@ -1,4 +1,6 @@
 default['osl-jenkins']['cookbook_uploader']['org'] = 'osuosl-cookbooks'
+# Use the following list of repo names rather than searching the given org.
+default['osl-jenkins']['cookbook_uploader']['override_repos'] = None
 default['osl-jenkins']['cookbook_uploader']['secrets_databag'] = 'osl_jenkins'
 default['osl-jenkins']['cookbook_uploader']['secrets_item'] = 'github_secrets'
 default['osl-jenkins']['cookbook_uploader']['scripts_path'] = \
