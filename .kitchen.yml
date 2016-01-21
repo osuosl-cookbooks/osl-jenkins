@@ -80,6 +80,7 @@ suites:
     attributes:
       osl-jenkins:
         cookbook_uploader:
+          github_insecure_hook: true
           credentials:
             github_user: <%= ENV['GITHUB_USER'] %>
             github_token: <%= ENV['GITHUB_TOKEN'] %>

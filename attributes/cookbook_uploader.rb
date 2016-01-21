@@ -3,6 +3,7 @@ default['osl-jenkins']['cookbook_uploader']['secrets_databag'] = 'osl_jenkins'
 default['osl-jenkins']['cookbook_uploader']['secrets_item'] = 'github_secrets'
 default['osl-jenkins']['cookbook_uploader']['scripts_path'] = \
   ::File.join(node['jenkins']['master']['home'], 'bin')
+default['osl-jenkins']['cookbook_uploader']['github_insecure_hook'] = false
 
 # It's not secure to store these as attributes; these are only here for
 # documentation and are usually set by test kitchen from environment variables

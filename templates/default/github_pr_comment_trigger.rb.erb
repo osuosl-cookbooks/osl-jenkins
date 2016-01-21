@@ -7,7 +7,7 @@
 require 'git'
 require 'json'
 require 'octokit'
-require 'pp'
+require 'pp' # TODO: Remove pp after done debugging
 
 METADATA_FILE = 'metadata.rb'.freeze
 CHANGELOG_FILE = 'CHANGELOG.md'.freeze
@@ -44,10 +44,11 @@ unless d['issue'].key?('pull_request')
 end
 
 # Make sure the PR isn't already merged
-github = Octokit::Client.new(access_token: ENV['GITHUB_TOKEN'])
+github = Octokit::Client.new(access_token: '<%= @github_token %>')
 reponame = d['repository']['name']
 repopath = d['repository']['full_name']
-pr = github.pull_request(repopath, d['issue']['number'])
+issuenumber = d['issue']['number']
+pr = github.pull_request(repopath, issuenumber)
 if pr.merged
   puts 'Error: Cannot merge PR because it has already been merged.'
   exit 1
@@ -60,9 +61,14 @@ unless pr.mergeable
 end
 
 # Merge the PR
-git_branch = pr['base']['ref']
-pr.merge_pull_request
+github.merge_pull_request(repopath, issuenumber)
+
+# Pull the updated target branch down
+Git.configure do |config|
+  config.binary_path = '<%= @git_path %>'
+end
 git = Git.open('.')
+git_branch = pr['base']['ref']
 git.branch(git_branch).checkout
 git.pull(git.remote('origin'), git_branch)
 
@@ -85,7 +91,7 @@ entry = "#{version} (#{Time.now.strftime('%Y-%m-%d')})"
 entry += "\n" + '-' * entry.length
 entry += "\n- #{d['issue']['title']}\n\n"
 # Inject the new entry above the first one we find
-cl = ::File.read(CHANGELOG_FILE).sub(/^(\d+\.\d+\.\d+)/, entry + '\1')
+cl = ::File.read(CHANGELOG_FILE).sub(/^(.*\d+\.\d+\.\d+)/, entry + '\1')
 ::File.write(CHANGELOG_FILE, cl)
 
 # Commit changes
@@ -106,5 +112,4 @@ puts "Uploading #{reponame} cookbook to the Chef server..."
 message = "Jenkins has merged this PR into `#{git_branch}` and has " \
   "automatically performed a #{level}-level version bump to v#{version}.  " \
   'Have a nice day!'
-pr.create_pull_request_comment(message)
-pr.close_pull_request
+github.add_comment(repopath, issuenumber, message)

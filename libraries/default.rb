@@ -47,7 +47,9 @@ def set_up_github_push(github_token, orgname, reponame, jobname, trigger_token)
 
   hook_config = {
     url: url,
-    content_type: content_type
+    content_type: content_type,
+    insecure_ssl:
+      node['osl-jenkins']['cookbook_uploader']['github_insecure_hook']
   }
   hook_options = {
     events: events,

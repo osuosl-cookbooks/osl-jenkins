@@ -17,8 +17,11 @@
 # limitations under the License.
 #
 
-# We need git stuff, plus build-token-root for triggering from Github PRs
-package 'git'
+# CentOS 6 packages Git 1.7.1, but we need at least Git 1.7.9 for the
+# .git-credentials file to work; git_client defaults to installing Git 1.9.5.
+include_recipe 'git::source'
+
+# We need git plugins, plus build-token-root for triggering from Github PRs.
 %w(git github build-token-root).each do |p|
   jenkins_plugin p do
     notifies :restart, 'service[jenkins]'
@@ -64,11 +67,13 @@ file git_credentials_path do
   group node['jenkins']['master']['group']
 end
 
-# Also make a git config so that the credentials file actually gets used.
+# Make a git config
 git_config_path = ::File.join(node['jenkins']['master']['home'],
                               '.gitconfig')
 file git_config_path do
-  content "[credential]\n    helper = store"
+  content "[push]\n    default = current\n" \
+          "[user]\n    name = JenkinsCI\n" \
+          "[credential]\n    helper = store"
   mode '0664'
   owner node['jenkins']['master']['user']
   group node['jenkins']['master']['group']
@@ -86,11 +91,15 @@ github_pr_comment_trigger_path = \
 directory ::File.dirname(github_pr_comment_trigger_path) do
   recursive true
 end
-cookbook_file github_pr_comment_trigger_path do
-  source 'github_pr_comment_trigger.rb'
+template github_pr_comment_trigger_path do
+  source 'github_pr_comment_trigger.rb.erb'
   mode '0550'
   owner node['jenkins']['master']['user']
   group node['jenkins']['master']['group']
+  variables(
+    git_path: ::File.join(node['git']['prefix'], 'bin', 'git'),
+    github_token: secrets['github_token']
+  )
 end
 
 execute_shell = "echo $payload | #{github_pr_comment_trigger_path}"
