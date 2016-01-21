@@ -48,6 +48,7 @@ rescue
   secrets = node['osl-jenkins']['cookbook_uploader']['credentials']
 end
 
+# This is necessary in order to create Jenkins jobs with security enabled.
 node.run_state[:jenkins_username] = secrets['jenkins_user']
 node.run_state[:jenkins_password] = secrets['jenkins_pass']
 
