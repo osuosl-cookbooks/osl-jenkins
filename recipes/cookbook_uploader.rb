@@ -29,6 +29,7 @@ include_recipe 'git::source'
 end
 
 orgname = node['osl-jenkins']['cookbook_uploader']['org']
+chefrepo = node['osl-jenkins']['cookbook_uploader']['chef_repo']
 
 # Note: The `github_user` field is used for Git pull/push over https in
 # conjuction with the token, rather than an SSH key.
@@ -85,29 +86,30 @@ end
   chef_gem g
 end
 
-# Copy over the github_pr_comment_trigger script
-github_pr_comment_trigger_path = \
-  ::File.join(node['osl-jenkins']['cookbook_uploader']['scripts_path'],
-              'github_pr_comment_trigger.rb')
-directory ::File.dirname(github_pr_comment_trigger_path) do
+# Copy over scripts for Jenkins to run
+scripts_path = node['osl-jenkins']['cookbook_uploader']['scripts_path']
+directory scripts_path do
   recursive true
 end
-template github_pr_comment_trigger_path do
-  source 'github_pr_comment_trigger.rb.erb'
-  mode '0550'
-  owner node['jenkins']['master']['user']
-  group node['jenkins']['master']['group']
-  variables(
-    git_path: ::File.join(node['git']['prefix'], 'bin', 'git'),
-    github_token: secrets['github_token']
-  )
+%(github_pr_comment_trigger.rb bump_environments.rb).each do |s|
+  template ::File.join(scripts_path, s) do
+    source "#{s}.erb"
+    mode '0550'
+    owner node['jenkins']['master']['user']
+    group node['jenkins']['master']['group']
+    variables(
+      git_path: ::File.join(node['git']['prefix'], 'bin', 'git'),
+      github_token: secrets['github_token'],
+      org_name: orgname
+    )
+  end
 end
 
-execute_shell = "echo $payload | #{github_pr_comment_trigger_path}"
-
+# Create cookbook-uploader jobs for each repo
+execute_shell = 'echo $payload | ' \
+  ::File.join(scripts_path, 'github_pr_comment_trigger.rb')
 reponames = ['osl-jenkins']['cookbook_uploader']['override_repos'] ||
             collect_github_repositories(secrets, orgname)
-
 reponames.each do |reponame|
   xml = ::File.join(Chef::Config[:file_cache_path],
                     orgname, reponame, 'config.xml')
@@ -134,4 +136,25 @@ reponames.each do |reponame|
     jobname,
     secrets['trigger_token']
   )
+end
+
+# Also create a job for bumping versions in environments
+execute_shell = "#{::File.join(scripts_path, 'bump_environments.rb')}"
+xml = ::File.join(Chef::Config[:file_cache_path],
+                  chefrepo, 'config.xml')
+directory ::File.dirname(xml) do
+  recursive true
+end
+template xml do
+  source 'environment-bumper.config.xml.erb'
+  variables(
+    github_url: "https://github.com/#{chefrepo}",
+    trigger_token: secrets['trigger_token'],
+    execute_shell: execute_shell
+  )
+end
+jobname = "environment-bumper-#{chefrepo}"
+jenkins_job jobname do
+  config xml
+  action [:create, :enable]
 end
