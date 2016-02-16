@@ -22,3 +22,6 @@ node.override['yum-cron']['yum_parameter'] = '-x jenkins'
 
 node.default['jenkins']['master']['version'] = '1.643-1.1'
 node.default['jenkins']['master']['listen_address'] = '127.0.0.1'
+
+# depends for sphinx compilation
+package 'graphviz'
