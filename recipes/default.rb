@@ -16,6 +16,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+# jenkins 1.612 and above requires java 7
+node.default['java']['jdk_version'] = '7'
+
 include_recipe 'java'
 
 group 'alfred' do
