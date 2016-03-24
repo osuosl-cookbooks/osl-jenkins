@@ -2,7 +2,7 @@ require 'serverspec'
 
 set :backend, :exec
 
-describe package('java-1.7.0-openjdk') do
+describe package('java-1.8.0-openjdk') do
   it { should be_installed }
 end
 
