@@ -28,14 +28,14 @@ package 'graphviz'
 
 node.default['java']['jdk_version'] = '8'
 
-node.default['certificate'] = [ {
+node.default['certificate'] = [{
   'wildcard' => {
     'cert_file' => 'wildcard.pem',
     'key_file' => 'wildcard.key',
     'chain_file' => 'wildcard-bundle.crt',
-    'combined_file' =>  true
+    'combined_file' => true
   }
-} ]
+}]
 
 include_recipe 'java'
 include_recipe 'jenkins::master'
