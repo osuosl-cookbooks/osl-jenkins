@@ -44,4 +44,5 @@ include_recipe 'osl-jenkins::haproxy'
 include_recipe 'osl-haproxy::default'
 include_recipe 'git'
 include_recipe 'osl-jenkins::chef_ci_cookbook_template'
-include_recipe 'python'
+
+python_runtime '2'

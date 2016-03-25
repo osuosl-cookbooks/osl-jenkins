@@ -12,7 +12,7 @@ depends          'jenkins'
 depends          'osl-haproxy'
 depends          'ssh-keys'
 depends          'certificate'
-depends          'python'
+depends          'poise-python'
 depends          'git'
 depends          'sudo'
 
