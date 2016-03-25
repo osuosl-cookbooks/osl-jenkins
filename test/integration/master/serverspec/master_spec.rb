@@ -2,10 +2,16 @@ require 'serverspec'
 
 set :backend, :exec
 
-describe package('jenkins') do
-  it { should be_installed.with_version('1.643-1.1') }
+describe package('java-1.8.0-openjdk') do
+  it { should be_installed }
 end
 
-describe port('8080') do
-  it { should be_listening }
+describe package('jenkins') do
+  it { should be_installed.with_version('1.654-1.1') }
+end
+
+%w(80 443 8080).each do |p|
+  describe port(p) do
+    it { should be_listening }
+  end
 end

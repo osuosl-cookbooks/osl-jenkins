@@ -25,3 +25,23 @@ node.default['jenkins']['master']['listen_address'] = '127.0.0.1'
 
 # depends for sphinx compilation
 package 'graphviz'
+
+node.default['java']['jdk_version'] = '8'
+
+node.default['certificate'] = [ {
+  'wildcard' => {
+    'cert_file' => 'wildcard.pem',
+    'key_file' => 'wildcard.key',
+    'chain_file' => 'wildcard-bundle.crt',
+    'combined_file' =>  true
+  }
+} ]
+
+include_recipe 'java'
+include_recipe 'jenkins::master'
+include_recipe 'certificate::manage_by_attributes'
+include_recipe 'osl-jenkins::haproxy'
+include_recipe 'osl-haproxy::default'
+include_recipe 'git'
+include_recipe 'osl-jenkins::chef_ci_cookbook_template'
+include_recipe 'python'
