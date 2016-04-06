@@ -17,7 +17,7 @@ def public_address
 end
 
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-def set_up_github_push(github_token, orgname, reponame, jobname, trigger_token)
+def set_up_github_push(github_token, org_name, repo_name, job_name, trigger_token)
   if ::ObjectSpace.const_defined?('Chef')
     # Chef exists! Lets make sure Octokit is installed.
     chef_gem 'octokit'
@@ -28,12 +28,12 @@ def set_up_github_push(github_token, orgname, reponame, jobname, trigger_token)
 
   github = Octokit::Client.new(access_token: github_token)
 
-  repopath = "#{orgname}/#{reponame}"
-  hooks = github.hooks(repopath)
+  repo_path = "#{org_name}/#{repo_name}"
+  hooks = github.hooks(repo_path)
   type = 'web'
   events = ['issue_comment']
   content_type = 'form'
-  url = "https://#{public_address}/job/#{jobname}" \
+  url = "https://#{public_address}/job/#{job_name}" \
     "/buildWithParameters?token=#{trigger_token}"
 
   # Get all hooks that we may have created in the past
@@ -58,10 +58,10 @@ def set_up_github_push(github_token, orgname, reponame, jobname, trigger_token)
 
   # Create a hook if none exist, or update the existing one(s).
   if existing_hooks.empty?
-    github.create_hook(repopath, type, hook_config, hook_options)
+    github.create_hook(repo_path, type, hook_config, hook_options)
   else
     existing_hooks.each do |h|
-      github.edit_hook(repopath, h['id'], type, hook_config, hook_options)
+      github.edit_hook(repo_path, h['id'], type, hook_config, hook_options)
     end
   end
 end

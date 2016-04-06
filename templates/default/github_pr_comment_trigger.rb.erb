@@ -45,10 +45,10 @@ end
 
 # Make sure the PR isn't already merged
 github = Octokit::Client.new(access_token: '<%= @github_token %>')
-reponame = d['repository']['name']
-repopath = d['repository']['full_name']
-issuenumber = d['issue']['number']
-pr = github.pull_request(repopath, issuenumber)
+repo_name = d['repository']['name']
+repo_path = d['repository']['full_name']
+issue_number = d['issue']['number']
+pr = github.pull_request(repo_path, issue_number)
 if pr.merged
   puts 'Error: Cannot merge PR because it has already been merged.'
   exit 1
@@ -61,7 +61,7 @@ unless pr.mergeable
 end
 
 # Merge the PR
-github.merge_pull_request(repopath, issuenumber)
+github.merge_pull_request(repo_path, issue_number)
 
 # Pull the updated target branch down
 Git.configure do |config|
@@ -105,11 +105,11 @@ git.add_tag("v#{version}")
 git.push(git.remote('origin'), git_branch, tags: true)
 
 # Upload to the Chef server
-puts "Uploading #{reponame} cookbook to the Chef server..."
-# `knife cookbook upload -o ../ #{reponame} --freeze`
+puts "Uploading #{repo_name} cookbook to the Chef server..."
+# `knife cookbook upload -o ../ #{repo_name} --freeze`
 
 # Close the PR
 message = "Jenkins has merged this PR into `#{git_branch}` and has " \
   "automatically performed a #{level}-level version bump to v#{version}.  " \
   'Have a nice day!'
-github.add_comment(repopath, issuenumber, message)
+github.add_comment(repo_path, issue_number, message)

@@ -1,9 +1,9 @@
 #!/opt/chef/embedded/bin/ruby
 
-# Given a cookbook name, a version to bump environments to, and a
-# comma-separated list of environments passed as environment variables, bumps
-# the cookbook to the given version in each of the environments (or all of them
-# if no environments are specified) and creates a PR for it on Github.
+# Given a chef repo name, a cookbook name, a version to bump environments to,
+# and a comma-separated list of environments passed as environment variables,
+# bumps the cookbook to the given version in each of the environments (or all
+# of them if no environments are specified) and creates a PR for it on Github.
 
 require 'git'
 require 'json'
@@ -12,7 +12,8 @@ require 'pp' # TODO: Remove pp after done debugging
 
 # TODO: Validate input
 
-orgname = '<%= @org_name %>'
+org_name = '<%= @org_name %>'
+chef_repo = ENV['chef_repo']
 cookbook = ENV['cookbook']
 version = ENV['version']
 
@@ -45,7 +46,7 @@ git.push(git.remote('origin'), git_branch, tags: true)
 
 # Create the PR
 github = Octokit::Client.new(access_token: '<%= @github_token %>')
-repopath = "#{orgname}/#{cookbook}"
+repo_path = "#{org_name}/#{chef_repo}"
 title = "Bump '#{cookbook}' cookbook to version #{version}"
 body = "This automatically generated PR bumps the '#{cookbook}' cookbook " \
   "to version #{version} in "
@@ -54,4 +55,4 @@ if all_envs
 else
   body += "the following environments:\n```#{env_names.join("\n")}```"
 end
-github.create_pull_request(repopath, 'master', git_branch, title, body)
+github.create_pull_request(repo_path, 'master', git_branch, title, body)
