@@ -13,7 +13,7 @@ require 'pp' # TODO: Remove pp after done debugging
 # TODO: Validate input
 
 org_name = '<%= @org_name %>'
-chef_repo = ENV['chef_repo']
+chef_repo = '<%= @chef_repo %>'
 cookbook = ENV['cookbook']
 version = ENV['version']
 

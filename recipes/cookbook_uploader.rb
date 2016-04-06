@@ -91,7 +91,7 @@ scripts_path = node['osl-jenkins']['cookbook_uploader']['scripts_path']
 directory scripts_path do
   recursive true
 end
-%(github_pr_comment_trigger.rb bump_environments.rb).each do |s|
+%w(github_pr_comment_trigger.rb bump_environments.rb).each do |s|
   template ::File.join(scripts_path, s) do
     source "#{s}.erb"
     mode '0550'
@@ -107,10 +107,12 @@ end
 end
 
 # Create cookbook-uploader jobs for each repo
-execute_shell = 'echo $payload | ' \
+execute_shell = 'echo $payload | ' +
   ::File.join(scripts_path, 'github_pr_comment_trigger.rb')
-repo_names = ['osl-jenkins']['cookbook_uploader']['override_repos'] ||
-            collect_github_repositories(secrets, org_name)
+repo_names = node['osl-jenkins']['cookbook_uploader']['override_repos']
+if repo_names.nil? or repo_names.empty?
+  repo_names = collect_github_repositories(secrets, org_name)
+end
 repo_names.each do |repo_name|
   xml = ::File.join(Chef::Config[:file_cache_path],
                     org_name, repo_name, 'config.xml')
