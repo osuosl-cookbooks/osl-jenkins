@@ -156,7 +156,7 @@ template xml do
     execute_shell: execute_shell
   )
 end
-job_name = "environment-bumper-#{chef_repo}"
+job_name = "environment-bumper-#{chef_repo.gsub('/', '-')}"
 jenkins_job job_name do
   config xml
   action [:create, :enable]
