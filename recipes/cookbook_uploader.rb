@@ -17,12 +17,13 @@
 # limitations under the License.
 #
 
-# CentOS 6 packages Git 1.7.1, but we need at least Git 1.7.9 for the
-# .git-credentials file to work; git_client defaults to installing Git 1.9.5.
-include_recipe 'git::source'
-
-# We need git plugins, plus build-token-root for triggering from Github PRs.
-%w(git github build-token-root).each do |p|
+# git and github: for git
+# build-token-root: for triggering from Github PRs
+# text-finder: for marking unstable builds (used in this case to mark builds
+#   where no action was taken)
+# parameterized-trigger: for triggering other jobs (e.g. the environment-bumper
+#   job) with parameters
+%w(git github build-token-root text-finder parameterized-trigger ).each do |p|
   jenkins_plugin p do
     notifies :restart, 'service[jenkins]'
   end
@@ -30,6 +31,11 @@ end
 
 org_name = node['osl-jenkins']['cookbook_uploader']['org']
 chef_repo = node['osl-jenkins']['cookbook_uploader']['chef_repo']
+
+# A build is triggered on every Github comment, but will only succeed if the
+# comment was a bump request.  This message is displayed if the comment was not
+# a bump request and the build will be marked as unstable.
+non_bump_message = 'Exiting because comment was not a bump request'
 
 # Note: The `github_user` field is used for Git pull/push over https in
 # conjuction with the token, rather than an SSH key.
@@ -101,7 +107,8 @@ end
       git_path: ::File.join(node['git']['prefix'], 'bin', 'git'),
       github_token: secrets['github_token'],
       org_name: org_name,
-      chef_repo: chef_repo
+      chef_repo: chef_repo,
+      non_bump_message: non_bump_message
     )
   end
 end
@@ -124,7 +131,8 @@ repo_names.each do |repo_name|
     variables(
       github_url: "https://github.com/#{org_name}/#{repo_name}",
       trigger_token: secrets['trigger_token'],
-      execute_shell: execute_shell
+      execute_shell: execute_shell,
+      non_bump_message: non_bump_message
     )
   end
   job_name = "cookbook-uploader-#{org_name}-#{repo_name}"

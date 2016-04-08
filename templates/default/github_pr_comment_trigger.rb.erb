@@ -3,6 +3,13 @@
 # Takes a JSON payload from a Github PR issue webhook from stdin, reads the
 # comment, and if it matches `!bump (major|minor|patch)`, merges the PR, bumps
 # the Chef cookbook's metadata.rb, creates a version tag, and pushes up.
+#
+# Additionally, will pass environments to bump to the environment bumper job if
+# a comma-delimited list of environments (or a * for all of them) is appended
+# to the !bump command, e.g.
+#   !bump patch *
+#   !bump minor production
+#   !bump major dev,staging
 
 require 'git'
 require 'json'
@@ -30,12 +37,13 @@ d = JSON.load(STDIN.read)
 
 # Check if we got a valid request and get the bump level
 comment = d.fetch('comment', {}).fetch('body', '')
-match = comment.match(/^#{COMMAND} (#{LEVELS.keys.join('|')})$/)
+match = comment.match(/^#{COMMAND} (#{LEVELS.keys.join('|')})( \S+(,\S+)*)?$/)
 if match.nil?
-  puts 'Exiting because comment was not a bump request'
+  puts '<%= @non_bump_message %>'
   exit 0
 end
 level = match[1]
+envs = match[2].strip()
 
 # Make sure the issue is a PR
 unless d['issue'].key?('pull_request')
@@ -113,3 +121,8 @@ message = "Jenkins has merged this PR into `#{git_branch}` and has " \
   "automatically performed a #{level}-level version bump to v#{version}.  " \
   'Have a nice day!'
 github.add_comment(repo_path, issue_number, message)
+
+# Set environment variables for the environment bumper job to use
+ENV['cookbook'] = repo_name
+ENV['version'] = version
+ENV['envs'] = envs

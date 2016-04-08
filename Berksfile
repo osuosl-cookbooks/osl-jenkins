@@ -10,5 +10,7 @@ cookbook 'resource_from_hash',
          git: 'git@github.com:osuosl-cookbooks/resource_from_hash'
 
 cookbook 'chef-dk', '~> 3.0.0'
+cookbook 'git', '>= 4.3.7'
+cookbook 'iptables', '< 2.2.0'
 
 metadata

@@ -42,7 +42,14 @@ include_recipe 'jenkins::master'
 include_recipe 'certificate::manage_by_attributes'
 include_recipe 'osl-jenkins::haproxy'
 include_recipe 'osl-haproxy::default'
-include_recipe 'git'
+
+# CentOS 6 packages Git 1.7.1, but we need at least Git 1.7.9 for the
+# .git-credentials file to work (needed for the cookbook_uploader recipe), and
+# the Jenkins git plugin recommends 1.8.x. So we use 1.8.5.5, the latest 1.8.x.
+node.set['git']['version'] = '1.8.5.5'
+node.set['git']['checksum'] = '106b480e2b3ae8b02e5b6b099d7a4049f2b1128659ac81f317267d2ed134679f'
+include_recipe 'git::source'
+
 include_recipe 'osl-jenkins::chef_ci_cookbook_template'
 
 python_runtime '2'
