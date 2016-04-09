@@ -50,6 +50,11 @@ node.set['git']['version'] = '1.8.5.5'
 node.set['git']['checksum'] = '106b480e2b3ae8b02e5b6b099d7a4049f2b1128659ac81f317267d2ed134679f'
 include_recipe 'git::source'
 
+# Also create a symlink since not everywhere has /usr/local/bin in their PATH.
+link '/usr/bin/git' do
+  to '/usr/local/bin/git'
+end
+
 include_recipe 'osl-jenkins::chef_ci_cookbook_template'
 
 python_runtime '2'

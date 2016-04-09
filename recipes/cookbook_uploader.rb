@@ -23,7 +23,7 @@
 #   where no action was taken)
 # parameterized-trigger: for triggering other jobs (e.g. the environment-bumper
 #   job) with parameters
-%w(git github build-token-root text-finder parameterized-trigger ).each do |p|
+%w(git github build-token-root parameterized-trigger text-finder).each do |p|
   jenkins_plugin p do
     notifies :restart, 'service[jenkins]'
   end
@@ -115,7 +115,8 @@ end
 
 # Create cookbook-uploader jobs for each repo
 execute_shell = 'echo $payload | ' +
-  ::File.join(scripts_path, 'github_pr_comment_trigger.rb')
+  ::File.join(scripts_path, 'github_pr_comment_trigger.rb') +
+  ' > envvars'
 repo_names = node['osl-jenkins']['cookbook_uploader']['override_repos']
 if repo_names.nil? or repo_names.empty?
   repo_names = collect_github_repositories(secrets, org_name)

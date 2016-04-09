@@ -57,11 +57,12 @@
       <configs>
         <hudson.plugins.parameterizedtrigger.BuildTriggerConfig>
           <configs>
-            <hudson.plugins.parameterizedtrigger.PredefinedBuildParameters>
-              <properties>cookbook=$cookbook
-version=$version
-envs=$envs</properties>
-            </hudson.plugins.parameterizedtrigger.PredefinedBuildParameters>
+            <hudson.plugins.parameterizedtrigger.FileBuildParameters>
+              <propertiesFile>envvars</propertiesFile>
+              <failTriggerOnMissing>false</failTriggerOnMissing>
+              <useMatrixChild>false</useMatrixChild>
+              <onlyExactRuns>false</onlyExactRuns>
+            </hudson.plugins.parameterizedtrigger.FileBuildParameters>
           </configs>
           <projects>environment-bumper-osuosl-chef-repo</projects>
           <condition>SUCCESS</condition>
