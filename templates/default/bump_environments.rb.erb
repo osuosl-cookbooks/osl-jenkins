@@ -43,7 +43,7 @@ chef_env_files.each do |f|
   if data['cookbook_versions'].include?(cookbook)
     data['cookbook_versions'][cookbook] = "= #{version}"
   end
-  File.write(f, JSON.pretty_generate(data) + '\n')
+  File.write(f, JSON.pretty_generate(data) + "\n")
 end
 
 # Commit and push our changes
