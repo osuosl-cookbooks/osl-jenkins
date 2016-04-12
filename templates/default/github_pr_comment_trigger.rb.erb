@@ -39,6 +39,7 @@ d = JSON.load(STDIN.read)
 comment = d.fetch('comment', {}).fetch('body', '')
 match = comment.match(/^#{COMMAND} (#{LEVELS.keys.join('|')})( \S+(,\S+)*)?$/)
 if match.nil?
+  # This isn't an error, we just don't need to do anything, so we exit with a 0.
   $stderr.puts '<%= @non_bump_message %>'
   exit 0
 end
@@ -47,8 +48,7 @@ envs = match[2].strip()
 
 # Make sure the issue is a PR
 unless d['issue'].key?('pull_request')
-  $stderr.puts 'Error: Cannot merge issue; can only merge PRs.'
-  exit 1
+  abort 'Error: Cannot merge issue; can only merge PRs.'
 end
 
 # Make sure the PR isn't already merged
@@ -58,14 +58,12 @@ repo_path = d['repository']['full_name']
 issue_number = d['issue']['number']
 pr = github.pull_request(repo_path, issue_number)
 if pr.merged
-  $stderr.puts 'Error: Cannot merge PR because it has already been merged.'
-  exit 1
+  abort 'Error: Cannot merge PR because it has already been merged.'
 end
 
 # Make sure the PR can be merged without conflicts
 unless pr.mergeable
-  $stderr.puts 'Error: Cannot merge PR because it would create merge conflicts.'
-  exit 1
+  abort 'Error: Cannot merge PR because it would create merge conflicts.'
 end
 
 # Merge the PR
