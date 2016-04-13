@@ -35,7 +35,7 @@ chef_repo = node['osl-jenkins']['cookbook_uploader']['chef_repo']
 # A build is triggered on every Github comment, but will only succeed if the
 # comment was a bump request.  This message is displayed if the comment was not
 # a bump request and the build will be marked as unstable.
-non_bump_message = 'Exiting because comment was not a bump request'
+non_bump_message = 'Exiting because comment was not a bump request'.freeze
 
 # Note: The `github_user` field is used for Git pull/push over https in
 # conjuction with the token, rather than an SSH key.
@@ -115,10 +115,10 @@ end
 
 # Create cookbook-uploader jobs for each repo
 execute_shell = 'echo $payload | ' +
-  ::File.join(scripts_path, 'github_pr_comment_trigger.rb') +
-  ' > envvars'
+                ::File.join(scripts_path, 'github_pr_comment_trigger.rb') +
+                ' > envvars'
 repo_names = node['osl-jenkins']['cookbook_uploader']['override_repos']
-if repo_names.nil? or repo_names.empty?
+if repo_names.nil? || repo_names.empty?
   repo_names = collect_github_repositories(secrets, org_name)
 end
 repo_names.each do |repo_name|
@@ -151,7 +151,7 @@ repo_names.each do |repo_name|
 end
 
 # Also create a job for bumping versions in environments
-execute_shell = "#{::File.join(scripts_path, 'bump_environments.rb')}"
+execute_shell = ::File.join(scripts_path, 'bump_environments.rb')
 xml = ::File.join(Chef::Config[:file_cache_path],
                   chef_repo, 'config.xml')
 directory ::File.dirname(xml) do
@@ -165,7 +165,7 @@ template xml do
     execute_shell: execute_shell
   )
 end
-job_name = "environment-bumper-#{chef_repo.gsub('/', '-')}"
+job_name = "environment-bumper-#{chef_repo.tr('/', '-')}"
 jenkins_job job_name do
   config xml
   action [:create, :enable]

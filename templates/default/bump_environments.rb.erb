@@ -12,7 +12,6 @@ require 'pp' # TODO: Remove pp after done debugging
 
 # TODO: Validate input
 
-org_name = '<%= @org_name %>'
 chef_repo = '<%= @chef_repo %>'
 cookbook = ENV['cookbook']
 version = ENV['version']
@@ -22,7 +21,7 @@ chef_envs = ENV['envs'].split(',')
 # If no envs are specified, bump all of them
 if chef_envs.include?('*')
   all_envs = true
-  chef_env_files = Dir::glob('environments/*.json')
+  chef_env_files = Dir.glob('environments/*.json')
   chef_envs = chef_env_files.map { |f| f.slice(%r{environments/(.*)\.json}, 1) }
 else
   chef_env_files = chef_envs.map { |e| "environments/#{e}.json" }
@@ -51,8 +50,9 @@ git.add(all: true)
 begin
   git.commit("Automatic version bump to v#{version} by Jenkins")
 rescue Git::GitExecuteError
+  $stdout.puts 'Unable to commit; were any changes actually made?'
 end
-git.push(git.remote('origin'), git_branch, {tags: true, force: true})
+git.push(git.remote('origin'), git_branch, tags: true, force: true)
 
 # Create the PR
 github = Octokit::Client.new(access_token: '<%= @github_token %>')

@@ -44,7 +44,7 @@ if match.nil?
   exit 0
 end
 level = match[1]
-envs = match[2].strip()
+envs = match[2].strip
 
 # Make sure the issue is a PR
 unless d['issue'].key?('pull_request')
@@ -57,9 +57,7 @@ repo_name = d['repository']['name']
 repo_path = d['repository']['full_name']
 issue_number = d['issue']['number']
 pr = github.pull_request(repo_path, issue_number)
-if pr.merged
-  abort 'Error: Cannot merge PR because it has already been merged.'
-end
+abort 'Error: Cannot merge PR because it has already been merged.' if pr.merged
 
 # Make sure the PR can be merged without conflicts
 unless pr.mergeable

@@ -17,7 +17,8 @@ def public_address
 end
 
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-def set_up_github_push(github_token, org_name, repo_name, job_name, trigger_token)
+def set_up_github_push(github_token, org_name, repo_name, job_name,
+                       trigger_token)
   if ::ObjectSpace.const_defined?('Chef')
     # Chef exists! Lets make sure Octokit is installed.
     chef_gem 'octokit'

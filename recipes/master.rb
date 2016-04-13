@@ -47,7 +47,8 @@ include_recipe 'osl-haproxy::default'
 # .git-credentials file to work (needed for the cookbook_uploader recipe), and
 # the Jenkins git plugin recommends 1.8.x. So we use 1.8.5.5, the latest 1.8.x.
 node.set['git']['version'] = '1.8.5.5'
-node.set['git']['checksum'] = '106b480e2b3ae8b02e5b6b099d7a4049f2b1128659ac81f317267d2ed134679f'
+node.set['git']['checksum'] = '106b480e2b3ae8b02e5b6b099d7a4049' \
+                              'f2b1128659ac81f317267d2ed134679f'
 include_recipe 'git::source'
 
 # Also create a symlink since not everywhere has /usr/local/bin in their PATH.
