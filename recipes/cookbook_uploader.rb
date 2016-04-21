@@ -104,6 +104,10 @@ end
     owner node['jenkins']['master']['user']
     group node['jenkins']['master']['group']
     variables(
+      authorized_users:
+        node['osl-jenkins']['cookbook_uploader']['authorized_users'],
+      authorized_orgs:
+        node['osl-jenkins']['cookbook_uploader']['authorized_orgs'],
       git_path: ::File.join(node['git']['prefix'], 'bin', 'git'),
       github_token: secrets['github_token'],
       org_name: org_name,

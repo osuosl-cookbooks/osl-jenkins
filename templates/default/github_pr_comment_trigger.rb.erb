@@ -24,6 +24,8 @@ LEVELS = {
   'minor' => 1,
   'patch' => 2
 }.freeze
+AUTHORIZED_USERS = <%= @authorized_users %>.freeze
+AUTHORIZED_ORGS = <%= @authorized_orgs %>.freeze
 
 # Given a version string of the form 'x.x.x' and a level 0, 1, or 2, increments
 # the specified level and returns the new version string.
@@ -62,6 +64,17 @@ abort 'Error: Cannot merge PR because it has already been merged.' if pr.merged
 # Make sure the PR can be merged without conflicts
 unless pr.mergeable
   abort 'Error: Cannot merge PR because it would create merge conflicts.'
+end
+
+# Make sure the commenter has permission to perform the merge. The user has
+# permission if their username is in AUTHORIZED_USERS or if one of the
+# organizations they are in is in AUTHORIZED_ORGS. If both AUTHORIZED_USERS and
+# AUTHORIZED_ORGS are empty, then everyone has permission.
+user = d['user']['login']
+unless (AUTHORIZED_USERS.empty && AUTHORIZED_ORGS.empty?) ||
+       AUTHORIZED_USERS.include?(user) ||
+       !(AUTHORIZED_ORGS & github.organizations(user)).empty?
+  abort "Error: Cannot merge PR because user '#{user}' is not authorized."
 end
 
 # Merge the PR
