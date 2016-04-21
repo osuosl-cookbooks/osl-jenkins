@@ -68,6 +68,35 @@ Manages dependencies for the `chef-ci-cookbook-template` Jenkins job.
 
 Uses the `chef-dk::default` recipe to install `chefdk`.
 
+#### osl-jenkins::cookbook_uploader
+Automates the merging, version updating, changelog updating, tagging, and
+uploading of Chef cookbooks, and optionally also creates GitHub PRs for
+updating Chef environments to use the new versions.
+
+To set up:
+    - Specify a GitHub organization that contains your cookbooks
+      (`node['osl-jenkins']['cookbook_uploader']['org']`, e.g.
+      `osuosl-cookbooks`)
+    - Specify a GitHub repo that contains your chef-repo
+      (`node['osl-jenkins']['cookbook_uploader']['chef_repo']` e.g.
+      `osuosl/chef-repo`)
+    - Create an encrypted data bag that contains a GitHub username and API
+      token.  You also need a random trigger token string (that GitHub will use
+      to authenticate itself to Jenkins to trigger jobs) and a Jenkins username
+      and password for the cookbook itself to access Jenkins through (if the
+      Jenkins instance has security enabled).  For example:
+
+      ```
+      {
+        "github_user": "githubuser",
+        "github_token": "githubtoken",
+        "trigger_token": "triggertoken",
+        "jenkins_user": "jenkinsuser",
+        "jenkins_pass": "jenkinspass"
+      }
+      ```
+    - Add `osl-jenkins::cookbook_uploader` to the node's `run_list`
+
 Contributing
 ------------
 TODO: (optional) If this is a public cookbook, detail the process for contributing. If this is a private cookbook, remove this section.

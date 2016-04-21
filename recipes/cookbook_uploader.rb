@@ -19,10 +19,10 @@
 
 # git and github: for git
 # build-token-root: for triggering from Github PRs
-# text-finder: for marking unstable builds (used in this case to mark builds
-#   where no action was taken)
 # parameterized-trigger: for triggering other jobs (e.g. the environment-bumper
 #   job) with parameters
+# text-finder: for marking unstable builds (used in this case to mark builds
+#   where no action was taken)
 %w(git github build-token-root parameterized-trigger text-finder).each do |p|
   jenkins_plugin p do
     notifies :restart, 'service[jenkins]'
