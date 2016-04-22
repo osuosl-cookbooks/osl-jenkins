@@ -52,7 +52,7 @@ end
 d = JSON.load(STDIN.read)
 
 # Only trigger on comment creation, not comment deletion or editing.
-unless d['action'].key?('created')
+unless d['action'] == 'created'
   # This isn't an error, we just don't need to do anything, so we exit with a 0.
   $stderr.puts '<%= @non_bump_message %>'
   exit 0
@@ -67,7 +67,8 @@ if match.nil?
   exit 0
 end
 level = match[1]
-envs = match[2].strip
+envs = match[2]
+envs.strip! if !envs.nil?
 
 # Make sure the issue is a PR
 unless d['issue'].key?('pull_request')
@@ -154,5 +155,9 @@ message = "Jenkins has merged this PR into `#{git_branch}` and has " \
   'Have a nice day!'
 github.add_comment(repo_path, issue_number, message)
 
-# Return some environment variables for the environment bumper job to use
-puts "cookbook=#{repo_name}\nversion=#{version}\nenvs=#{envs}"
+# Return some environment variables for the Chef environment bumper job to use.
+# If we got no envs, the file won't be created and the job won't be triggered.
+unless envs.nil?
+  File.write('envvars',
+             "cookbook=#{repo_name}\nversion=#{version}\nenvs=#{envs}")
+end
