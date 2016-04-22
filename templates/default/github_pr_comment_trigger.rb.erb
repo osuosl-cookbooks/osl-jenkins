@@ -51,6 +51,13 @@ end
 
 d = JSON.load(STDIN.read)
 
+# Only trigger on comment creation, not comment deletion or editing.
+unless d['action'].key?('created')
+  # This isn't an error, we just don't need to do anything, so we exit with a 0.
+  $stderr.puts '<%= @non_bump_message %>'
+  exit 0
+end
+
 # Check if we got a valid request and get the bump level
 comment = d.fetch('comment', {}).fetch('body', '')
 match = comment.match(/^#{COMMAND} (#{LEVELS.keys.join('|')})( \S+(,\S+)*)?$/)
