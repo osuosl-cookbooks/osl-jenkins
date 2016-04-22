@@ -9,6 +9,7 @@ default['osl-jenkins']['cookbook_uploader']['scripts_path'] = \
 default['osl-jenkins']['cookbook_uploader']['github_insecure_hook'] = false
 default['osl-jenkins']['cookbook_uploader']['authorized_users'] = []
 default['osl-jenkins']['cookbook_uploader']['authorized_orgs'] = []
+default['osl-jenkins']['cookbook_uploader']['authorized_teams'] = []
 
 # It's not secure to store these as attributes; these are only here for
 # documentation and are usually set by test kitchen from environment variables

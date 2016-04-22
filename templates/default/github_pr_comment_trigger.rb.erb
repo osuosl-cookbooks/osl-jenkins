@@ -26,6 +26,20 @@ LEVELS = {
 }.freeze
 AUTHORIZED_USERS = <%= @authorized_users %>.freeze
 AUTHORIZED_ORGS = <%= @authorized_orgs %>.freeze
+AUTHORIZED_TEAMS = <%= @authorized_teams %>.freeze
+
+# Given a GitHub client, a GitHub username, and a GitHub team (of the form
+# "$ORGNAME/$TEAMNAME"), returns whether the given user is a member of the
+# given team.
+def team_member?(github, team, user)
+  org_name, team_name = team.split('/')
+  team_id = github.organization_teams(org_name).find { |t| t.name.casecmp(team_name) }.id
+  begin
+    github.team_membership(team_id, user)
+  rescue Octokit::NotFound
+    false
+  end
+end
 
 # Given a version string of the form 'x.x.x' and a level 0, 1, or 2, increments
 # the specified level and returns the new version string.
@@ -67,13 +81,15 @@ unless pr.mergeable
 end
 
 # Make sure the commenter has permission to perform the merge. The user has
-# permission if their username is in AUTHORIZED_USERS or if one of the
-# organizations they are in is in AUTHORIZED_ORGS. If both AUTHORIZED_USERS and
-# AUTHORIZED_ORGS are empty, then everyone has permission.
-user = d['user']['login']
-unless (AUTHORIZED_USERS.empty && AUTHORIZED_ORGS.empty?) ||
+# permission if their username is in AUTHORIZED_USERS, if one of the
+# organizations they are in is in AUTHORIZED_ORGS, or if one of the teams they
+# are in is in AUTHORIZED_TEAMS. If AUTHORIZED_USERS, AUTHORIZED_ORGS, and
+# AUTHORIZED_TEAMS are all empty, then everyone has permission.
+user = d['comment']['user']['login']
+unless (AUTHORIZED_USERS.empty? && AUTHORIZED_ORGS.empty? && AUTHORIZED_TEAMS.empty?) ||
        AUTHORIZED_USERS.include?(user) ||
-       !(AUTHORIZED_ORGS & github.organizations(user)).empty?
+       AUTHORIZED_ORGS.detect { |o| github.organization_member?(o, user) } ||
+       AUTHORIZED_TEAMS.detect { |t| team_member?(github, t, user) }
   abort "Error: Cannot merge PR because user '#{user}' is not authorized."
 end
 

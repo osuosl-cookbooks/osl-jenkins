@@ -101,6 +101,8 @@ suites:
             trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
             jenkins_user: <%= ENV['JENKINS_USER'] %>
             jenkins_pass: <%= ENV['JENKINS_PASS'] %>
+          authorized_teams:
+            - "osuosl-cookbooks/staff"
       jenkins:
         master:
           listen_address: '0.0.0.0'
