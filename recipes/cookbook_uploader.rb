@@ -44,7 +44,6 @@ begin
     node['osl-jenkins']['cookbook_uploader']['databag'],
     node['osl-jenkins']['cookbook_uploader']['secrets_item']
   )
-# TODO: Rescue a specific exception?
 rescue
   Chef::Log.warn(
     'Unable to load databag ' \
@@ -59,7 +58,6 @@ end
 node.run_state['jenkins_username'] = secrets['jenkins_user']
 node.run_state['jenkins_password'] = secrets['jenkins_pass']
 
-# TODO: Remove after done testing?
 # Create a Git credentials file so we can access repos using our API token.
 # This obviates the need for an ssh key.
 git_credentials_path = ::File.join(node['jenkins']['master']['home'],
