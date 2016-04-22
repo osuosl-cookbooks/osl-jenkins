@@ -32,7 +32,9 @@ AUTHORIZED_TEAMS = <%= @authorized_teams %>.freeze
 # given team.
 def team_member?(github, team, user)
   org_name, team_name = team.split('/')
-  team_id = github.organization_teams(org_name).find { |t| t.name.casecmp(team_name) }.id
+  team_id = github.organization_teams(org_name).find do |t|
+    t.name.casecmp(team_name)
+  end.id
   begin
     github.team_membership(team_id, user)
   rescue Octokit::NotFound
@@ -67,7 +69,7 @@ if match.nil?
 end
 level = match[1]
 envs = match[2]
-envs.strip! if !envs.nil?
+envs.strip! unless envs.nil?
 
 # Make sure the issue is a PR
 unless d['issue'].key?('pull_request')
@@ -93,7 +95,9 @@ end
 # are in is in AUTHORIZED_TEAMS. If AUTHORIZED_USERS, AUTHORIZED_ORGS, and
 # AUTHORIZED_TEAMS are all empty, then everyone has permission.
 user = d['comment']['user']['login']
-unless (AUTHORIZED_USERS.empty? && AUTHORIZED_ORGS.empty? && AUTHORIZED_TEAMS.empty?) ||
+unless (AUTHORIZED_USERS.empty? &&
+       AUTHORIZED_ORGS.empty? &&
+       AUTHORIZED_TEAMS.empty?) ||
        AUTHORIZED_USERS.include?(user) ||
        AUTHORIZED_ORGS.detect { |o| github.organization_member?(o, user) } ||
        AUTHORIZED_TEAMS.detect { |t| team_member?(github, t, user) }

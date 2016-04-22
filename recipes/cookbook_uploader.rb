@@ -87,7 +87,7 @@ end
 
 # Install necessary gems
 %w(git octokit).each do |g|
-  chef_gem g do
+  chef_gem g do # ~FC009
     compile_time true
   end
 end
