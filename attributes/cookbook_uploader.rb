@@ -3,7 +3,7 @@ default['osl-jenkins']['cookbook_uploader']['chef_repo'] = 'osuosl/chef-repo'
 # Use the following list of repo names rather than searching the given org.
 default['osl-jenkins']['cookbook_uploader']['override_repos'] = nil
 default['osl-jenkins']['cookbook_uploader']['secrets_databag'] = 'osl_jenkins'
-default['osl-jenkins']['cookbook_uploader']['secrets_item'] = 'github_secrets'
+default['osl-jenkins']['cookbook_uploader']['secrets_item'] = 'secrets'
 default['osl-jenkins']['cookbook_uploader']['scripts_path'] = \
   ::File.join(node['jenkins']['master']['home'], 'bin')
 default['osl-jenkins']['cookbook_uploader']['github_insecure_hook'] = false

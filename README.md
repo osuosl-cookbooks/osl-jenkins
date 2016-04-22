@@ -80,11 +80,12 @@ To set up:
     - Specify a GitHub repo that contains your chef-repo
       (`node['osl-jenkins']['cookbook_uploader']['chef_repo']` e.g.
       `osuosl/chef-repo`)
-    - Create an encrypted data bag that contains a GitHub username and API
-      token.  You also need a random trigger token string (that GitHub will use
-      to authenticate itself to Jenkins to trigger jobs) and a Jenkins username
-      and password for the cookbook itself to access Jenkins through (if the
-      Jenkins instance has security enabled).  For example:
+    - Create an encrypted data bag (in `osl_jenkins/secrets` by default) that
+      contains a GitHub username and API token.  You also need a random trigger
+      token string (that GitHub will use to authenticate itself to Jenkins to
+      trigger jobs) and a Jenkins username and password for the cookbook itself
+      to access Jenkins through (if the Jenkins instance has security enabled).
+      For example:
 
       ```
       {
