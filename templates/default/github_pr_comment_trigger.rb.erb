@@ -161,6 +161,6 @@ github.add_comment(repo_path, issue_number, message)
 # Return some environment variables for the Chef environment bumper job to use.
 # If we got no envs, the file won't be created and the job won't be triggered.
 unless envs.nil?
-  File.write('envvars',
+  ::File.write('envvars',
              "cookbook=#{repo_name}\nversion=#{version}\nenvs=#{envs}")
 end
