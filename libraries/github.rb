@@ -1,7 +1,9 @@
 def collect_github_repositories(github_token, org)
   if ::ObjectSpace.const_defined?('Chef')
     # Chef exists! Lets make sure Octokit is installed.
-    chef_gem 'octokit'
+    chef_gem 'octokit' do
+      compile_time true
+    end
   end
 
   require 'octokit'
@@ -17,7 +19,9 @@ def set_up_github_push(github_token, org_name, repo_name, job_name,
                        trigger_token)
   if ::ObjectSpace.const_defined?('Chef')
     # Chef exists! Lets make sure Octokit is installed.
-    chef_gem 'octokit'
+    chef_gem 'octokit' do
+      compile_time true
+    end
   end
 
   require 'octokit'
