@@ -25,7 +25,6 @@ def set_up_github_push(github_token, org_name, repo_name, job_name,
   end
 
   require 'octokit'
-  require 'pp'
 
   github = Octokit::Client.new(access_token: github_token)
 
