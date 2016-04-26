@@ -1,9 +1,6 @@
 def collect_github_repositories(github_token, org)
-  if ::ObjectSpace.const_defined?('Chef')
-    # Chef exists! Lets make sure Octokit is installed.
-    chef_gem 'octokit' do
-      compile_time true
-    end
+  chef_gem 'octokit' do
+    compile_time true
   end
 
   require 'octokit'
@@ -17,11 +14,8 @@ end
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 def set_up_github_push(github_token, org_name, repo_name, job_name,
                        trigger_token)
-  if ::ObjectSpace.const_defined?('Chef')
-    # Chef exists! Lets make sure Octokit is installed.
-    chef_gem 'octokit' do
-      compile_time true
-    end
+  chef_gem 'octokit' do
+    compile_time true
   end
 
   require 'octokit'
