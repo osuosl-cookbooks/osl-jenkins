@@ -49,7 +49,7 @@ git.add(all: true)
 begin
   git.commit("Automatic version bump to v#{version} by Jenkins")
 rescue Git::GitExecuteError
-  $stdout.puts 'Unable to commit; were any changes actually made?'
+  $stderr.puts 'Unable to commit; were any changes actually made?'
 end
 git.push(git.remote('origin'), git_branch, tags: true, force: true)
 
