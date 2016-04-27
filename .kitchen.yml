@@ -95,6 +95,7 @@ suites:
           override_repos:
             - lanparty
           github_insecure_hook: true
+          do_not_upload_cookbooks: true
           credentials:
             github_user: <%= ENV['GITHUB_USER'] %>
             github_token: <%= ENV['GITHUB_TOKEN'] %>

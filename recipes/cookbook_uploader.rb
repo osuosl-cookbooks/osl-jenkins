@@ -121,7 +121,9 @@ end
       github_token: secrets['github_token'],
       org_name: org_name,
       chef_repo: chef_repo,
-      non_bump_message: non_bump_message
+      non_bump_message: non_bump_message,
+      do_not_upload_cookbooks:
+        node['osl-jenkins']['cookbook_uploader']['do_not_upload_cookbooks']
     )
   end
 end

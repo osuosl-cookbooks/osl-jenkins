@@ -7,6 +7,7 @@ default['osl-jenkins']['cookbook_uploader']['secrets_item'] = 'secrets'
 default['osl-jenkins']['cookbook_uploader']['scripts_path'] = \
   ::File.join(node['jenkins']['master']['home'], 'bin')
 default['osl-jenkins']['cookbook_uploader']['github_insecure_hook'] = false
+default['osl-jenkins']['cookbook_uploader']['do_not_upload_cookbooks'] = false
 default['osl-jenkins']['cookbook_uploader']['authorized_users'] = []
 default['osl-jenkins']['cookbook_uploader']['authorized_orgs'] = []
 default['osl-jenkins']['cookbook_uploader']['authorized_teams'] = []
