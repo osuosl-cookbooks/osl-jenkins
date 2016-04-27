@@ -44,14 +44,21 @@ begin
     node['osl-jenkins']['cookbook_uploader']['databag'],
     node['osl-jenkins']['cookbook_uploader']['secrets_item']
   )
-rescue
-  Chef::Log.warn(
-    'Unable to load databag ' \
-    "'#{node['osl-jenkins']['cookbook_uploader']['databag']}:" \
-    "#{node['osl-jenkins']['cookbook_uploader']['secrets_item']}'; " \
-    'falling back to attributes.'
-  )
-  secrets = node['osl-jenkins']['cookbook_uploader']['credentials']
+rescue Net::HTTPServerException => e
+  databag = "#{node['osl-jenkins']['cookbook_uploader']['databag']}:" +
+            node['osl-jenkins']['cookbook_uploader']['secrets_item']
+  if e.response.code == '404'
+    Chef::Log.warn(
+      "Could not find databag '#{databag}'; falling back to default attributes."
+    )
+    secrets = node['osl-jenkins']['cookbook_uploader']['credentials']
+  else
+    Chef::Log.fatal(
+      "Unable to load databag '#{databag}'; exiting. " \
+      'Please fix the databag and try again.'
+    )
+    raise
+  end
 end
 
 # This is necessary in order to create Jenkins jobs with security enabled.
