@@ -33,7 +33,7 @@ AUTHORIZED_TEAMS = <%= @authorized_teams %>.freeze
 def team_member?(github, team, user)
   org_name, team_name = team.split('/')
   team_id = github.organization_teams(org_name).find do |t|
-    t.name.casecmp(team_name)
+    t.name.casecmp(team_name) == 0
   end.id
   begin
     github.team_membership(team_id, user)
