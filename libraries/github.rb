@@ -1,5 +1,5 @@
 def collect_github_repositories(github_token, org)
-  chef_gem 'octokit' do
+  chef_gem 'octokit' do # ~FC009
     compile_time true
   end
 
@@ -14,7 +14,7 @@ end
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 def set_up_github_push(github_token, org_name, repo_name, job_name,
                        trigger_token)
-  chef_gem 'octokit' do
+  chef_gem 'octokit' do # ~FC009
     compile_time true
   end
 
