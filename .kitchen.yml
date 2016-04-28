@@ -104,6 +104,13 @@ suites:
             jenkins_pass: <%= ENV['JENKINS_PASS'] %>
           authorized_teams:
             - "osuosl-cookbooks/staff"
+          default_environments:
+            - production
+            - dev
+            - workstation
+            - openstack_production
+            - openstack_staging
+            - phpbb
       jenkins:
         master:
           listen_address: '0.0.0.0'

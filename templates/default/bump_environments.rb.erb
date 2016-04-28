@@ -11,14 +11,25 @@ require 'octokit'
 
 # TODO: Validate input
 
-chef_repo = '<%= @chef_repo %>'
+DEFAULT_CHEF_ENVS = <%= @default_environments %>.freeze
+DEFAULT_CHEF_ENVS_WORD = '<%= @default_environments_word %>'.freeze
+ALL_CHEF_ENVS_WORD = '<%= @all_environments_word %>'.freeze
+CHEF_REPO = '<%= @chef_repo %>'.freeze
+
 cookbook = ENV['cookbook']
 version = ENV['version']
 
 # Only bump in the chef environments specified
 chef_envs = ENV['envs'].split(',')
-# If no envs are specified, bump all of them
-if chef_envs.include?('*')
+
+# If 'default environments' word is found, replace it with the default envs.
+if chef_envs.include?(DEFAULT_CHEF_ENVS_WORD)
+  chef_envs.delete(DEFAULT_CHEF_ENVS_WORD)
+  chef_envs += DEFAULT_CHEF_ENVS
+end
+
+# If 'all environments' word is found, bump all environments.
+if chef_envs.include?(ALL_CHEF_ENVS_WORD)
   all_envs = true
   chef_env_files = Dir.glob('environments/*.json')
   chef_envs = chef_env_files.map { |f| f.slice(%r{environments/(.*)\.json}, 1) }
@@ -32,7 +43,8 @@ Git.configure do |config|
 end
 git = Git.open('.')
 git.branch('master').checkout
-git_branch = "jenkins/bump-#{cookbook}-to-#{version}-in-#{chef_envs.join(',')}"
+chef_envs_string = all_envs ? 'all-envs' : chef_envs.join(',')
+git_branch = "jenkins/bump-#{cookbook}-to-#{version}-in-#{chef_envs_string}"
 git.branch(git_branch).checkout
 
 # Replace the old versions with the new versions
@@ -63,4 +75,4 @@ if all_envs
 else
   body += "the following environments:\n```\n#{chef_envs.join("\n")}\n```"
 end
-github.create_pull_request(chef_repo, 'master', git_branch, title, body)
+github.create_pull_request(CHEF_REPO, 'master', git_branch, title, body)

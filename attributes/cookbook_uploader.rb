@@ -11,6 +11,9 @@ default['osl-jenkins']['cookbook_uploader']['do_not_upload_cookbooks'] = false
 default['osl-jenkins']['cookbook_uploader']['authorized_users'] = []
 default['osl-jenkins']['cookbook_uploader']['authorized_orgs'] = []
 default['osl-jenkins']['cookbook_uploader']['authorized_teams'] = []
+default['osl-jenkins']['cookbook_uploader']['default_environments'] = []
+default['osl-jenkins']['cookbook_uploader']['default_environments_word'] = '~'
+default['osl-jenkins']['cookbook_uploader']['all_environments_word'] = '*'
 
 # It's not secure to store these as attributes; these are only here for
 # documentation and are usually set by test kitchen from environment variables

@@ -119,8 +119,13 @@ end
         node['osl-jenkins']['cookbook_uploader']['authorized_teams'],
       git_path: ::File.join(node['git']['prefix'], 'bin', 'git'),
       github_token: secrets['github_token'],
-      org_name: org_name,
       chef_repo: chef_repo,
+      default_environments:
+        node['osl-jenkins']['cookbook_uploader']['default_environments'],
+      default_environments_word:
+        node['osl-jenkins']['cookbook_uploader']['default_environments_word'],
+      all_environments_word:
+        node['osl-jenkins']['cookbook_uploader']['all_environments_word'],
       non_bump_message: non_bump_message,
       do_not_upload_cookbooks:
         node['osl-jenkins']['cookbook_uploader']['do_not_upload_cookbooks']
@@ -176,7 +181,11 @@ template xml do
   variables(
     github_url: "https://github.com/#{chef_repo}",
     trigger_token: secrets['trigger_token'],
-    execute_shell: execute_shell
+    execute_shell: execute_shell,
+    default_environments_word:
+      node['osl-jenkins']['cookbook_uploader']['default_environments_word'],
+    all_environments_word:
+      node['osl-jenkins']['cookbook_uploader']['all_environments_word']
   )
 end
 job_name = "environment-bumper-#{chef_repo.tr('/', '-')}"
