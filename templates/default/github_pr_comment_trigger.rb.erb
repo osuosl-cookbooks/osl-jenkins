@@ -48,7 +48,7 @@ end
 def inc_version(v, level)
   v = v.split('.')
   v[level] = v[level].to_i.next.to_s
-  (level+1...3).each { |i| v[i] = '0' }
+  (level + 1...3).each { |i| v[i] = '0' }
   v.join('.')
 end
 
@@ -164,5 +164,5 @@ github.add_comment(repo_path, issue_number, message)
 # If we got no envs, the file won't be created and the job won't be triggered.
 unless envs.nil?
   ::File.write('envvars',
-             "cookbook=#{repo_name}\nversion=#{version}\nenvs=#{envs}")
+               "cookbook=#{repo_name}\nversion=#{version}\nenvs=#{envs}")
 end
