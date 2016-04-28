@@ -165,7 +165,8 @@ repo_names.each do |repo_name|
     org_name,
     repo_name,
     job_name,
-    secrets['trigger_token']
+    secrets['trigger_token'],
+    node['osl-jenkins']['cookbook_uploader']['github_insecure_hook']
   )
 end
 

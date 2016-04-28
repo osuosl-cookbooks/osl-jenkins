@@ -1,4 +1,10 @@
-def collect_github_repositories(github_token, org)
+# Given a GitHub organization name and a GitHub API token with access to view
+# the repositories in that org, returns a list of all repo names in the org.
+#
+# @param github_token [String] GitHub API token with permissions to view
+#   repositories on the given repo.
+# @param org_name [String] Name of GitHub organization.
+def collect_github_repositories(github_token, org_name)
   chef_gem 'octokit' do # ~FC009
     compile_time true
   end
@@ -8,12 +14,26 @@ def collect_github_repositories(github_token, org)
   github = Octokit::Client.new(access_token: github_token)
   github.auto_paginate = true
 
-  github.org_repos(org).map(&:name)
+  github.org_repos(org_name).map(&:name)
 end
 
-# rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+# Sets up a GitHub trigger for the Jenkins cookbook uploader job.  It will
+# trigger whenever a comment is made on a PR/issue and will send a JSON payload
+# of the comment to the specified Jenkins job, using the given trigger token to
+# authenticate with Jenkins (otherwise, the trigger would be ignored).
+#
+# @param github_token [String] GitHub API token with permissions to create
+#   hooks on the given repo.
+# @param org_name [String] Name of GitHub organization.
+# @param repo_name [String] Name of GitHub repo within the organization.
+# @param job_name [String] Name of the Jenkins job to trigger.
+# @param trigger_token [String] A trigger token to authenticate with Jenkins.
+# @param insecure_hook [Boolean] Whether to allow triggering Jenkins over
+#   insecure connection (useful for testing).
+#
+# rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/ParameterLists
 def set_up_github_push(github_token, org_name, repo_name, job_name,
-                       trigger_token)
+                       trigger_token, insecure_hook)
   chef_gem 'octokit' do # ~FC009
     compile_time true
   end
@@ -42,8 +62,7 @@ def set_up_github_push(github_token, org_name, repo_name, job_name,
   hook_config = {
     url: url,
     content_type: content_type,
-    insecure_ssl:
-      node['osl-jenkins']['cookbook_uploader']['github_insecure_hook']
+    insecure_ssl: insecure_hook
   }
   hook_options = {
     events: events,
