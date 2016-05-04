@@ -164,5 +164,8 @@ github.add_comment(repo_path, issue_number, message)
 # If we got no envs, the file won't be created and the job won't be triggered.
 unless envs.nil?
   ::File.write('envvars',
-               "cookbook=#{repo_name}\nversion=#{version}\nenvs=#{envs}")
+               "cookbook=#{repo_name}\n" \
+               "version=#{version}\n" \
+               "envs=#{envs}\n" \
+               "pr_link=#{d['issue']['html_url']}")
 end

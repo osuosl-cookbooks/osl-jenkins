@@ -25,6 +25,11 @@
           <description>A comma-delimited list of chef environments to bump in; a '<%= @all_environments_word %>' will bump all environments, while a '<%= @default_environments_word %>' will expand to the default set of environments (configurable via attributes).  Only environments with the cookbook already frozen will be modified.</description>
           <defaultValue></defaultValue>
         </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>pr_link</name>
+          <description>A link to the PR that originally triggered this job, if applicable.</description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
       </parameterDefinitions>
     </hudson.model.ParametersDefinitionProperty>
   </properties>
