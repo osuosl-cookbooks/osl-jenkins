@@ -4,10 +4,12 @@
 # and a comma-separated list of environments passed as environment variables,
 # bumps the cookbook to the given version in each of the environments (or all
 # of them if no environments are specified) and creates a PR for it on Github.
+# Also optionally takes a link to the PR that triggered the version bump.
 
 require 'git'
 require 'json'
 require 'octokit'
+require 'set'
 
 # TODO: Validate input
 
@@ -21,7 +23,7 @@ version = ENV['version']
 pr_link = ENV['pr_link']
 
 # Only bump in the chef environments specified
-chef_envs = ENV['envs'].split(',')
+chef_envs = ENV['envs'].split(',').to_set
 
 # If 'default environments' word is found, replace it with the default envs.
 if chef_envs.include?(DEFAULT_CHEF_ENVS_WORD)
@@ -29,11 +31,16 @@ if chef_envs.include?(DEFAULT_CHEF_ENVS_WORD)
   chef_envs += DEFAULT_CHEF_ENVS
 end
 
+# Only note that we're using the defaults if we're using nothing else.
+is_default_envs = chef_envs == DEFAULT_CHEF_ENVS.to_set
+
 # If 'all environments' word is found, bump all environments.
 if chef_envs.include?(ALL_CHEF_ENVS_WORD)
-  all_envs = true
+  is_all_envs = true
   chef_env_files = Dir.glob('environments/*.json')
-  chef_envs = chef_env_files.map { |f| f.slice(%r{environments/(.*)\.json}, 1) }
+  chef_envs = chef_env_files.map do |f|
+    f.slice(%r{environments/(.*)\.json}, 1)
+  end.to_set
 else
   chef_env_files = chef_envs.map { |e| "environments/#{e}.json" }
 end
@@ -44,8 +51,16 @@ Git.configure do |config|
 end
 git = Git.open('.')
 git.branch('master').checkout
-chef_envs_string = all_envs ? 'all-envs' : chef_envs.join(',')
-git_branch = "jenkins/bump-#{cookbook}-to-#{version}-in-#{chef_envs_string}"
+branch_hash = if is_all_envs
+                'in-all-envs'
+              elsif is_default_envs
+                'in-default-envs'
+              else
+                ''
+              end
+# Add a 10-digit hash of the version and envs so the branch names are unique.
+branch_hash += "-#{(chef_envs.to_a << version).join(',').hash % 10_000_000_000}"
+git_branch = "jenkins/bump-#{cookbook}-to-#{version}-#{branch_hash}"
 git.branch(git_branch).checkout
 
 # Replace the old versions with the new versions
@@ -71,10 +86,14 @@ github = Octokit::Client.new(access_token: '<%= @github_token %>')
 title = "Bump '#{cookbook}' cookbook to version #{version}"
 body = "This automatically generated PR bumps the '#{cookbook}' cookbook " \
   "to version #{version} in "
-if all_envs
+if is_all_envs
   body += 'all environments.'
+elsif is_default_envs
+  body += 'the default set of environments:' \
+          "\n```\n#{chef_envs.to_a.join("\n")}\n```"
 else
-  body += "the following environments:\n```\n#{chef_envs.join("\n")}\n```"
+  body += 'the following environments:' \
+          "\n```\n#{chef_envs.to_a.join("\n")}\n```"
 end
 unless pr_link.nil? || pr_link.empty?
   body += "\nThis new version includes the changes from this PR: #{pr_link}."
