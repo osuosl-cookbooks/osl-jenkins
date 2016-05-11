@@ -109,14 +109,20 @@ end
 # Merge the PR
 github.merge_pull_request(repo_path, issue_number)
 
-# Pull the updated target branch down
+# Delete the old branch
+pr_branch = pr['head']['ref']
+github.delete_branch(repo_path, pr_branch)
+
+# Set up the git gem
 Git.configure do |config|
   config.binary_path = '<%= @git_path %>'
 end
 git = Git.open('.')
-git_branch = pr['base']['ref']
-git.branch(git_branch).checkout
-git.pull(git.remote('origin'), git_branch)
+
+# Pull the updated base branch down
+base_branch = pr['base']['ref']
+git.branch(base_branch).checkout
+git.pull(git.remote('origin'), base_branch)
 
 # Bump the cookbook version in metadata.rb
 # Match the line that looks like `version   "1.2.3"`
@@ -148,14 +154,14 @@ git.commit("Automatic #{level}-level version bump to v#{version} by Jenkins")
 git.add_tag("v#{version}")
 
 # Push back to Github
-git.push(git.remote('origin'), git_branch, tags: true)
+git.push(git.remote('origin'), base_branch, tags: true)
 
 # Upload to the Chef server, freezing, ignoring dependencies
 $stderr.puts "Uploading #{repo_name} cookbook to the Chef server..."
 `berks upload #{repo_name}` unless <%= @do_not_upload_cookbooks %>
 
 # Close the PR
-message = "Jenkins has merged this PR into `#{git_branch}` and has " \
+message = "Jenkins has merged this PR into `#{base_branch}` and has " \
   "automatically performed a #{level}-level version bump to v#{version}.  " \
   'Have a nice day!'
 github.add_comment(repo_path, issue_number, message)
