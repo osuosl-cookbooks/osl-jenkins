@@ -52,15 +52,15 @@ end
 git = Git.open('.')
 git.branch('master').checkout
 branch_hash = if is_all_envs
-                'in-all-envs'
+                'all-envs'
               elsif is_default_envs
-                'in-default-envs'
+                'default-envs'
               else
                 ''
               end
-# Add a 10-digit hash of the version and envs so the branch names are unique.
-branch_hash += "-#{(chef_envs.to_a << version).join(',').hash % 10_000_000_000}"
-git_branch = "jenkins/bump-#{cookbook}-to-#{version}-#{branch_hash}"
+# Add a 5-digit hash of the version and envs so the branch names are unique.
+branch_hash += "-#{(chef_envs.to_a << version).join(',').hash % 100_000}"
+git_branch = "jenkins/#{cookbook}-#{version}-#{branch_hash}"
 git.branch(git_branch).checkout
 
 # Replace the old versions with the new versions
