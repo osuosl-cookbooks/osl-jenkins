@@ -17,6 +17,8 @@
 # limitations under the License.
 #
 
+include_recipe 'osl-jenkins::master'
+
 # git and github: for git
 # build-token-root: for triggering from Github PRs
 # parameterized-trigger: for triggering other jobs (e.g. the environment-bumper

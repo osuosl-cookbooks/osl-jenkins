@@ -78,12 +78,6 @@ suites:
   - name: cookbook-uploader
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     run_list:
-      - recipe[osl-jenkins::master]
-      - recipe[jenkins::java]
-      - recipe[jenkins::master]
-      - recipe[certificate::manage_by_attributes]
-      - recipe[osl-jenkins::haproxy]
-      - recipe[osl-haproxy::default]
       - recipe[osl-jenkins::cookbook_uploader]
     provisioner: chef_zero
     driver:
