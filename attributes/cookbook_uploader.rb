@@ -3,11 +3,11 @@
 ###
 
 # String; name of GitHub organization that contains your cookbooks.
-default['osl-jenkins']['cookbook_uploader']['org'] = 'osuosl-cookbooks'
+default['osl-jenkins']['cookbook_uploader']['org'] = ''
 
 # String; full name of GitHub repo that acts as the chef-repo, prefixed with
 # the organization name and a slash, e.g. 'myorg/chef-repo'.
-default['osl-jenkins']['cookbook_uploader']['chef_repo'] = 'osuosl/chef-repo'
+default['osl-jenkins']['cookbook_uploader']['chef_repo'] = ''
 
 # Array<String>; List of GitHub users that are allowed to use the !bump
 # command. If a user is in this list, they have permission regardless of the
@@ -24,6 +24,9 @@ default['osl-jenkins']['cookbook_uploader']['authorized_orgs'] = []
 # 'myorg/myteam'. Case-sensitive. If a user is a member of any team in this
 # list, they have permission regardless of the user or org lists.
 default['osl-jenkins']['cookbook_uploader']['authorized_teams'] = []
+
+# WARNING: If no authorized users, orgs, or teams are set, then permissions are
+# disabled and *anyone* can trigger bumps.
 
 # Array<String>; A set of Chef environments that usually need to be bumped when
 # using the !bump command. This set can be called rather than listing
@@ -75,7 +78,8 @@ default['osl-jenkins']['cookbook_uploader']['credentials']['jenkins_pass'] = ''
 default['osl-jenkins']['cookbook_uploader']['secrets_databag'] = 'osl_jenkins'
 
 # String; The name of the databag item to use.
-default['osl-jenkins']['cookbook_uploader']['secrets_item'] = 'secrets'
+default['osl-jenkins']['cookbook_uploader']['secrets_item'] = \
+  'cookbook_uploader_secrets'
 
 # String; The path in which to store scripts used by the Jenkins jobs.
 default['osl-jenkins']['cookbook_uploader']['scripts_path'] = \

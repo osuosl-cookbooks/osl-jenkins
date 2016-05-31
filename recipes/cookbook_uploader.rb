@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: osl-jenkins
-# Recipe:: cookbook-uploader
+# Recipe:: cookbook_uploader
 #
 # Copyright (C) 2015 Oregon State University
 #

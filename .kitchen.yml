@@ -78,7 +78,7 @@ suites:
   - name: cookbook-uploader
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     run_list:
-      - recipe[osl-jenkins::cookbook_uploader]
+      - recipe[osl-jenkins::osl_cookbook_uploader]
     provisioner: chef_zero
     driver:
       security_groups:
@@ -96,15 +96,6 @@ suites:
             trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
             jenkins_user: <%= ENV['JENKINS_USER'] %>
             jenkins_pass: <%= ENV['JENKINS_PASS'] %>
-          authorized_teams:
-            - "osuosl-cookbooks/staff"
-          default_environments:
-            - production
-            - dev
-            - workstation
-            - openstack_production
-            - openstack_staging
-            - phpbb
       jenkins:
         master:
           listen_address: '0.0.0.0'
