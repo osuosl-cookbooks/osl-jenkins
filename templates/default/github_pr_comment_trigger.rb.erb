@@ -114,9 +114,6 @@ pr_branch = pr['head']['ref']
 github.delete_branch(repo_path, pr_branch)
 
 # Set up the git gem
-Git.configure do |config|
-  config.binary_path = '<%= @git_path %>'
-end
 git = Git.open('.')
 
 # Pull the updated base branch down

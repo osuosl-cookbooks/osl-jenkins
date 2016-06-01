@@ -119,7 +119,6 @@ end
         node['osl-jenkins']['cookbook_uploader']['authorized_orgs'],
       authorized_teams:
         node['osl-jenkins']['cookbook_uploader']['authorized_teams'],
-      git_path: ::File.join(node['git']['prefix'], 'bin', 'git'),
       github_token: secrets['github_token'],
       chef_repo: chef_repo,
       default_environments:
