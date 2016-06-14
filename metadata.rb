@@ -7,6 +7,7 @@ long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          '0.6.1'
 
 depends          'chef-dk'
+depends          'git', '~> 4.3'
 depends          'java'
 depends          'jenkins'
 depends          'osl-haproxy'
