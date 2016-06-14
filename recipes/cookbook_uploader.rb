@@ -43,7 +43,7 @@ non_bump_message = 'Exiting because comment was not a bump request'.freeze
 # conjuction with the token, rather than an SSH key.
 begin
   secrets = Chef::EncryptedDataBagItem.load(
-    node['osl-jenkins']['cookbook_uploader']['databag'],
+    node['osl-jenkins']['cookbook_uploader']['secrets_databag'],
     node['osl-jenkins']['cookbook_uploader']['secrets_item']
   )
 rescue Net::HTTPServerException => e
