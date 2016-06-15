@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+0.7.17 (2016-06-15)
+-------------------
+- Enable all repos for github
+
 0.7.16 (2016-06-15)
 -------------------
 - Remove envvars
