@@ -29,7 +29,4 @@ node.set['osl-jenkins']['cookbook_uploader']['authorized_teams'] = \
 node.set['osl-jenkins']['cookbook_uploader']['default_environments'] = \
   %w(production dev workstation openstack_production openstack_staging phpbb)
 
-node.set['osl-jenkins']['cookbook_uploader']['override_repos'] = \
-  %w(lanparty osl-jenkins)
-
 include_recipe 'osl-jenkins::cookbook_uploader'
