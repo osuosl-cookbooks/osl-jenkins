@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+0.7.12 (2016-06-15)
+-------------------
+- Update depends
+
 0.7.10 (2016-06-15)
 -------------------
 - Set roam to false for jobs
