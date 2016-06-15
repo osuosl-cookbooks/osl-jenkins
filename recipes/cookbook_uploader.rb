@@ -138,7 +138,7 @@ execute_shell = 'echo $payload | ' +
                 ::File.join(scripts_path, 'github_pr_comment_trigger.rb')
 repo_names = node['osl-jenkins']['cookbook_uploader']['override_repos']
 if repo_names.nil? || repo_names.empty?
-  repo_names = collect_github_repositories(secrets, org_name)
+  repo_names = collect_github_repositories(secrets['github_token'], org_name)
 end
 repo_names.each do |repo_name|
   xml = ::File.join(Chef::Config[:file_cache_path],
