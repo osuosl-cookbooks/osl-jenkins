@@ -22,6 +22,9 @@ end
 # of the comment to the specified Jenkins job, using the given trigger token to
 # authenticate with Jenkins (otherwise, the trigger would be ignored).
 #
+# @param auth_user [String] Jenkins user for authentication with Jenkins server
+# @param auth_token [String] Jenkins user api token for authentication with
+#   Jenkins server
 # @param github_token [String] GitHub API token with permissions to create
 #   hooks on the given repo.
 # @param org_name [String] Name of GitHub organization.
@@ -32,8 +35,9 @@ end
 #   insecure connection (useful for testing).
 #
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/ParameterLists
-def set_up_github_push(github_token, org_name, repo_name, job_name,
-                       trigger_token, insecure_hook)
+def set_up_github_push(auth_user = nil, auth_token = nil, github_token,
+                       org_name, repo_name, job_name, trigger_token,
+                       insecure_hook)
   chef_gem 'octokit' do # ~FC009
     compile_time true
   end
@@ -47,8 +51,10 @@ def set_up_github_push(github_token, org_name, repo_name, job_name,
   type = 'web'
   events = ['issue_comment']
   content_type = 'form'
-  url = "https://#{public_address}/job/#{job_name}" \
-    "/buildWithParameters?token=#{trigger_token}"
+  url = 'https://'
+  url.concat("#{auth_user}:#{auth_token}@") if auth_user && auth_token
+  url.concat("#{public_address}/job/#{job_name}" \
+    "/buildWithParameters?token=#{trigger_token}")
 
   # Get all hooks that we may have created in the past
   # rubocop:disable Style/MultilineOperationIndentation
