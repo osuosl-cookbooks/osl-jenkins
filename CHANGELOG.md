@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+0.7.16 (2016-06-15)
+-------------------
+- Remove envvars
+
 0.7.15 (2016-06-15)
 -------------------
 - Fix berkshelf
