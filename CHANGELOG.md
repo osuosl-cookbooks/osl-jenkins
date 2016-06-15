@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+0.7.3 (2016-06-15)
+------------------
+- Minor fixes for production jenkins instance
+
 0.5.0
 -----
 - Adds the chef\_ci\_cookbook\_template recipe for installing `chefdk`.
