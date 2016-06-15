@@ -155,7 +155,10 @@ git.push(git.remote('origin'), base_branch, tags: true)
 
 # Upload to the Chef server, freezing, ignoring dependencies
 $stderr.puts "Uploading #{repo_name} cookbook to the Chef server..."
-`berks upload #{repo_name}` unless <%= @do_not_upload_cookbooks %>
+unless <%= @do_not_upload_cookbooks %>
+  `berks install`
+  `berks upload #{repo_name}`
+end
 
 # Close the PR
 message = "Jenkins has merged this PR into `#{base_branch}` and has " \
