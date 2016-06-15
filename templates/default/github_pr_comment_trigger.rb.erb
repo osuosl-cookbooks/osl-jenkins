@@ -156,7 +156,7 @@ git.push(git.remote('origin'), base_branch, tags: true)
 # Upload to the Chef server, freezing, ignoring dependencies
 $stderr.puts "Uploading #{repo_name} cookbook to the Chef server..."
 unless <%= @do_not_upload_cookbooks %>
-  `berks update`
+  `berks install`
   `berks upload #{repo_name}`
 end
 
