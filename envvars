@@ -1,4 +1,0 @@
-cookbook=osl-jenkins
-version=0.7.10
-envs=~
-pr_link=https://github.com/osuosl-cookbooks/osl-jenkins/pull/24
