@@ -27,6 +27,6 @@ node.set['osl-jenkins']['cookbook_uploader']['authorized_orgs'] = []
 node.set['osl-jenkins']['cookbook_uploader']['authorized_teams'] = \
   ['osuosl-cookbooks/staff']
 node.set['osl-jenkins']['cookbook_uploader']['default_environments'] = \
-  %w(production dev workstation openstack_production openstack_staging phpbb)
+  %w(production workstation openstack_production openstack_staging phpbb)
 
 include_recipe 'osl-jenkins::cookbook_uploader'
