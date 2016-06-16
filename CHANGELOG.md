@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+0.7.21 (2016-06-16)
+-------------------
+- Revert "Revert "Make sure to update master branch before creating bra…
+
 0.7.20 (2016-06-16)
 -------------------
 - Remove dev environment from default envs
