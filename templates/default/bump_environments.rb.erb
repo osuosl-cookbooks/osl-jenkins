@@ -48,8 +48,6 @@ end
 # Create a new branch
 git = Git.open('.')
 git.branch('master').checkout
-# Make sure to update repo before creating the branch
-git.pull('origin', 'master')
 branch_hash = if is_all_envs
                 'all-envs'
               elsif is_default_envs
