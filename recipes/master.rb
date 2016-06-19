@@ -28,6 +28,11 @@ package 'graphviz'
 
 node.default['java']['jdk_version'] = '8'
 
+# Manually set the jenkins java attribute to stop jenkins being restarted
+# every chef run due to logic in
+# https://github.com/chef-cookbooks/jenkins/blob/master/attributes/default.rb#L45-L53
+node.set['jenkins']['java'] = 'java'
+
 node.default['certificate'] = [{
   'wildcard' => {
     'cert_file' => 'wildcard.pem',
