@@ -5,10 +5,6 @@
 #   repositories on the given repo.
 # @param org_name [String] Name of GitHub organization.
 def collect_github_repositories(github_token, org_name)
-  chef_gem 'octokit' do # ~FC009
-    compile_time true
-  end
-
   require 'octokit'
 
   github = Octokit::Client.new(access_token: github_token)
@@ -38,10 +34,6 @@ end
 def set_up_github_push(github_token, org_name, repo_name, job_name,
                        trigger_token, insecure_hook, auth_user = nil,
                        auth_token = nil)
-  chef_gem 'octokit' do # ~FC009
-    compile_time true
-  end
-
   require 'octokit'
 
   github = Octokit::Client.new(access_token: github_token)
