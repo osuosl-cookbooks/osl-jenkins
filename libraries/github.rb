@@ -35,9 +35,9 @@ end
 #   insecure connection (useful for testing).
 #
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/ParameterLists
-def set_up_github_push(auth_user = nil, auth_token = nil, github_token,
-                       org_name, repo_name, job_name, trigger_token,
-                       insecure_hook)
+def set_up_github_push(github_token, org_name, repo_name, job_name,
+                       trigger_token, insecure_hook, auth_user = nil,
+                       auth_token = nil)
   chef_gem 'octokit' do # ~FC009
     compile_time true
   end
