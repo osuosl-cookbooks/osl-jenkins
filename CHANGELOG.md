@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+0.7.24 (2016-07-19)
+-------------------
+- Remove extra gem install of octokit
+
 0.7.23 (2016-07-19)
 -------------------
 - Lock version per plugin
