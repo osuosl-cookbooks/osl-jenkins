@@ -19,14 +19,22 @@
 
 include_recipe 'osl-jenkins::master'
 
+# Lock version per plugin so it doesn't install latest on every run.
 # git and github: for git
 # build-token-root: for triggering from Github PRs
 # parameterized-trigger: for triggering other jobs (e.g. the environment-bumper
 #   job) with parameters
 # text-finder: for marking unstable builds (used in this case to mark builds
 #   where no action was taken)
-%w(git github build-token-root parameterized-trigger text-finder).each do |p|
+{
+  'git' => '2.5.2',
+  'github' => '1.19.1',
+  'build-token-root' => '1.4',
+  'parameterized-trigger' => '2.30',
+  'text-finder' => '1.10'
+}.each do |p, v|
   jenkins_plugin p do
+    version v
     notifies :restart, 'service[jenkins]'
   end
 end
