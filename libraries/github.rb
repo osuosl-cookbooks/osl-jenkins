@@ -22,9 +22,6 @@ end
 # of the comment to the specified Jenkins job, using the given trigger token to
 # authenticate with Jenkins (otherwise, the trigger would be ignored).
 #
-# @param auth_user [String] Jenkins user for authentication with Jenkins server
-# @param auth_token [String] Jenkins user api token for authentication with
-#   Jenkins server
 # @param github_token [String] GitHub API token with permissions to create
 #   hooks on the given repo.
 # @param org_name [String] Name of GitHub organization.
@@ -33,11 +30,14 @@ end
 # @param trigger_token [String] A trigger token to authenticate with Jenkins.
 # @param insecure_hook [Boolean] Whether to allow triggering Jenkins over
 #   insecure connection (useful for testing).
+# @param auth_user [String] Jenkins user for authentication with Jenkins server
+# @param auth_token [String] Jenkins user api token for authentication with
+#   Jenkins server
 #
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/ParameterLists
-def set_up_github_push(auth_user = nil, auth_token = nil, github_token,
-                       org_name, repo_name, job_name, trigger_token,
-                       insecure_hook)
+def set_up_github_push(github_token, org_name, repo_name, job_name,
+                       trigger_token, insecure_hook, auth_user = nil,
+                       auth_token = nil)
   chef_gem 'octokit' do # ~FC009
     compile_time true
   end
