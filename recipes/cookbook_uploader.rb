@@ -169,14 +169,14 @@ repo_names.each do |repo_name|
     action [:create, :enable]
   end
   set_up_github_push(
-    secrets['jenkins_user'],
-    secrets['jenkins_api_token'],
     secrets['github_token'],
     org_name,
     repo_name,
     job_name,
     secrets['trigger_token'],
-    node['osl-jenkins']['cookbook_uploader']['github_insecure_hook']
+    node['osl-jenkins']['cookbook_uploader']['github_insecure_hook'],
+    secrets['jenkins_user'],
+    secrets['jenkins_api_token']
   )
 end
 
