@@ -72,7 +72,7 @@ rescue Net::HTTPServerException => e
 end
 
 # This is necessary in order to create Jenkins jobs with security enabled.
-node.run_state['jenkins_private_key'] = secrets['jenkins_private_key']
+node.run_state[:jenkins_private_key] = secrets['jenkins_private_key'] # ~FC001
 
 # Create a Git credentials file so we can access repos using our API token.
 # This obviates the need for an ssh key.
