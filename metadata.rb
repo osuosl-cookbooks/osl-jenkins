@@ -5,6 +5,8 @@ license          'Apache 2.0'
 description      'Installs/Configures osl-jenkins'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          '0.7.22'
+issues_url       'https://github.com/osuosl-cookbooks/osl-jenkins/issues'
+source_url       'https://github.com/osuosl-cookbooks/osl-jenkins'
 
 depends          'chef-dk'
 depends          'git', '~> 4.3'
