@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+0.7.23 (2016-07-19)
+-------------------
+- Lock version per plugin
+
 0.7.22 (2016-06-19)
 -------------------
 - Manually set jenkins java path to stop restarts during chef runs
