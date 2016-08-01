@@ -6,10 +6,6 @@ describe package('chefdk') do
   it { should be_installed }
 end
 
-describe command('foodcritic --version') do
-  its(:stdout) { should match(/foodcritic 4.0.0/) }
-end
-
-describe command('rubocop --version') do
-  its(:stdout) { should match(/0.28.0/) }
+describe command('chef --version') do
+  its(:stdout) { should match(/0\.14\.25/) }
 end
