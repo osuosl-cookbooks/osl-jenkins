@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+0.7.25 (2016-08-03)
+-------------------
+- Set chefdk version on jenkins to 0.14.25
+
 0.7.24 (2016-07-19)
 -------------------
 - Remove extra gem install of octokit
