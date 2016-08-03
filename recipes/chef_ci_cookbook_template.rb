@@ -16,4 +16,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+node.default['chef_dk']['version'] = '0.14.25'
+
 include_recipe 'chef-dk::default'
