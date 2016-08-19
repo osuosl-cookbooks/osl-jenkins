@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+0.7.26 (2016-08-19)
+-------------------
+- Use knife cookbook upload instead of berkshelf
+
 0.7.25 (2016-08-03)
 -------------------
 - Set chefdk version on jenkins to 0.14.25
