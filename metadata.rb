@@ -8,7 +8,7 @@ version          '0.7.26'
 issues_url       'https://github.com/osuosl-cookbooks/osl-jenkins/issues'
 source_url       'https://github.com/osuosl-cookbooks/osl-jenkins'
 
-depends          'chef-dk'
+depends          'base', '>= 1.8.0'
 depends          'git', '~> 4.3'
 depends          'java'
 depends          'jenkins', '~> 2.4.0'

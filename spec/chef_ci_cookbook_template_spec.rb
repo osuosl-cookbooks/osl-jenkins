@@ -7,12 +7,8 @@ describe 'osl-jenkins::chef_ci_cookbook_template' do
         ChefSpec::SoloRunner.new(CENTOS_6_OPTS).converge(described_recipe)
       end
 
-      it 'should set chefdk version to 0.14.25' do
-        expect(chef_run.node['chef_dk']['version']).to eq('0.14.25')
-      end
-
       it do
-        expect(chef_run).to install_chef_dk('chef_dk').with(version: '0.14.25')
+        expect(chef_run).to include_recipe('base::chefdk')
       end
     end
   end
