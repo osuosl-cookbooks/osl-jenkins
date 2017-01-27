@@ -147,3 +147,23 @@ suites:
             key_file: wildcard.key
             chain_file: wildcard-bundle.crt
             combined_file: true
+  - name: bumpzone
+    encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
+    run_list:
+      - recipe[osl-jenkins::bumpzone]
+    provisioner: chef_zero
+    driver:
+      security_groups:
+        - default
+        - github
+    attributes:
+      jenkins:
+        master:
+          listen_address: '0.0.0.0'
+      certificate:
+        - snakeoil:
+            cert_path: "/etc/pki/tls"
+            cert_file: wildcard.pem
+            key_file: wildcard.key
+            chain_file: wildcard-bundle.crt
+            combined_file: true
