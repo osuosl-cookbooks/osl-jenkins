@@ -6,8 +6,9 @@ describe 'osl-jenkins::bumpzone' do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(p).converge(described_recipe)
       end
-      it 'converges successfully' do
-        expect { chef_run }.to_not raise_error
+      it do
+        expect(chef_run).to create_template(::File.join(Chef::Config[:file_cache_path], 'bumpzone', 'config.xml'))
+          .with(variables: { github_url: 'foo', github_clone_url: 'bar' })
       end
     end
   end

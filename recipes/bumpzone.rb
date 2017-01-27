@@ -61,3 +61,28 @@ end
     notifies :restart, 'service[jenkins]'
   end
 end
+
+secrets = credential_secrets
+git_cred = secrets['git']['bumpzone']
+jenkins_cred = secrets['jenkins']['bumpzone']
+
+xml = ::File.join(Chef::Config[:file_cache_path], 'bumpzone', 'config.xml')
+
+directory ::File.dirname(xml) do
+  recursive true
+end
+
+template xml do
+  source 'bumpzone.config.xml.erb'
+  mode 0440
+  variables(
+    github_url: bumpzone['github_url'],
+    trigger_token: jenkins_cred['trigger_token'],
+    github_token: git_cred['token']
+  )
+end
+
+jenkins_job 'bumpzone' do
+  config xml
+  action [:create, :enable]
+end

@@ -157,6 +157,17 @@ suites:
         - default
         - github
     attributes:
+      osl-jenkins:
+        bumpzone:
+          github_url: 'https://github.com/osuosl/zonefiles-test.git'
+        credentials:
+          bumpzone:
+            git:
+              user: <%= ENV['GITHUB_USER'] %>
+              token: <%= ENV['GITHUB_TOKEN'] %>
+              url: 'https://github.com/osuosl/zonefiles-test.git'
+            jenkins:
+              trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
       jenkins:
         master:
           listen_address: '0.0.0.0'
