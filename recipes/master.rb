@@ -23,9 +23,6 @@ node.override['yum-cron']['yum_parameter'] = '-x jenkins'
 node.default['jenkins']['master']['version'] = '1.654-1.1'
 node.default['jenkins']['master']['listen_address'] = '127.0.0.1'
 
-# depends for sphinx compilation
-package 'graphviz'
-
 node.default['java']['jdk_version'] = '8'
 
 # Manually set the jenkins java attribute to stop jenkins being restarted
@@ -57,6 +54,7 @@ if platform_family?('rhel')
     node.set['git']['version'] = '1.8.5.5'
     node.set['git']['checksum'] = '106b480e2b3ae8b02e5b6b099d7a4049' \
                                   'f2b1128659ac81f317267d2ed134679f'
+    include_recipe 'build-essential'
     include_recipe 'git::source'
 
     # Also create a symlink for when /usr/local/bin isn't in PATH.
@@ -68,7 +66,3 @@ if platform_family?('rhel')
     include_recipe 'git::package'
   end
 end
-
-include_recipe 'osl-jenkins::chef_ci_cookbook_template'
-
-python_runtime '2'
