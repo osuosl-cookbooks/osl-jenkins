@@ -66,3 +66,35 @@ if platform_family?('rhel')
     include_recipe 'git::package'
   end
 end
+
+secrets = credential_secrets
+
+# Create a Git credentials file so we can access repos using our API token.
+# This obviates the need for an ssh key.
+git_credentials_path = ::File.join(node['jenkins']['master']['home'], '.git-credentials')
+
+directory ::File.dirname(git_credentials_path) do
+  recursive true
+end
+
+git_cred = []
+secrets['git'].each do |_k, v|
+  git_cred.push(v)
+end
+
+template git_credentials_path do
+  source 'git-credentials.erb'
+  mode '0400'
+  owner node['jenkins']['master']['user']
+  group node['jenkins']['master']['group']
+  variables(credentials: git_cred)
+end
+
+# Make a git config
+git_config_path = ::File.join(node['jenkins']['master']['home'], '.gitconfig')
+
+cookbook_file git_config_path do
+  source 'gitconfig'
+  owner node['jenkins']['master']['user']
+  group node['jenkins']['master']['group']
+end

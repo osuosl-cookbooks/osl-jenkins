@@ -47,59 +47,12 @@ chef_repo = node['osl-jenkins']['cookbook_uploader']['chef_repo']
 # a bump request and the build will be marked as unstable.
 non_bump_message = 'Exiting because comment was not a bump request'.freeze
 
-# Note: The `github_user` field is used for Git pull/push over https in
-# conjuction with the token, rather than an SSH key.
-begin
-  secrets = Chef::EncryptedDataBagItem.load(
-    node['osl-jenkins']['cookbook_uploader']['secrets_databag'],
-    node['osl-jenkins']['cookbook_uploader']['secrets_item']
-  )
-rescue Net::HTTPServerException => e
-  databag = "#{node['osl-jenkins']['cookbook_uploader']['databag']}:" +
-            node['osl-jenkins']['cookbook_uploader']['secrets_item']
-  if e.response.code == '404'
-    Chef::Log.warn(
-      "Could not find databag '#{databag}'; falling back to default attributes."
-    )
-    secrets = node['osl-jenkins']['cookbook_uploader']['credentials']
-  else
-    Chef::Log.fatal(
-      "Unable to load databag '#{databag}'; exiting. " \
-      'Please fix the databag and try again.'
-    )
-    raise
-  end
-end
+secrets = credential_secrets
+git_cred = secrets['git']['cookbook_uploader']
+jenkins_cred = secrets['jenkins']['cookbook_uploader']
 
 # This is necessary in order to create Jenkins jobs with security enabled.
 node.run_state[:jenkins_private_key] = secrets['jenkins_private_key'] # ~FC001
-
-# Create a Git credentials file so we can access repos using our API token.
-# This obviates the need for an ssh key.
-git_credentials_path = ::File.join(node['jenkins']['master']['home'],
-                                   '.git-credentials')
-directory ::File.dirname(git_credentials_path) do
-  recursive true
-end
-file git_credentials_path do
-  content "https://#{secrets['github_user']}:" \
-    "#{secrets['github_token']}@github.com"
-  mode '0400'
-  owner node['jenkins']['master']['user']
-  group node['jenkins']['master']['group']
-end
-
-# Make a git config
-git_config_path = ::File.join(node['jenkins']['master']['home'],
-                              '.gitconfig')
-file git_config_path do
-  content "[push]\n    default = current\n" \
-          "[user]\n    name = JenkinsCI\n" \
-          "[credential]\n    helper = store"
-  mode '0664'
-  owner node['jenkins']['master']['user']
-  group node['jenkins']['master']['group']
-end
 
 # Install necessary gems
 %w(git octokit).each do |g|
@@ -126,7 +79,7 @@ end
         node['osl-jenkins']['cookbook_uploader']['authorized_orgs'],
       authorized_teams:
         node['osl-jenkins']['cookbook_uploader']['authorized_teams'],
-      github_token: secrets['github_token'],
+      github_token: git_cred['token'],
       chef_repo: chef_repo,
       default_environments:
         node['osl-jenkins']['cookbook_uploader']['default_environments'],
@@ -145,7 +98,7 @@ end
 execute_shell = 'echo $payload | ' +
                 ::File.join(scripts_path, 'github_pr_comment_trigger.rb')
 repo_names = node['osl-jenkins']['cookbook_uploader']['override_repos']
-repo_names = collect_github_repositories(secrets['github_token'], org_name) if repo_names.nil? || repo_names.empty?
+repo_names = collect_github_repositories(git_cred['token'], org_name) if repo_names.nil? || repo_names.empty?
 repo_names.each do |repo_name|
   xml = ::File.join(Chef::Config[:file_cache_path],
                     org_name, repo_name, 'config.xml')
@@ -156,7 +109,7 @@ repo_names.each do |repo_name|
     source 'cookbook-uploader.config.xml.erb'
     variables(
       github_url: "https://github.com/#{org_name}/#{repo_name}",
-      trigger_token: secrets['trigger_token'],
+      trigger_token: jenkins_cred['trigger_token'],
       execute_shell: execute_shell,
       non_bump_message: non_bump_message
     )
@@ -167,14 +120,14 @@ repo_names.each do |repo_name|
     action [:create, :enable]
   end
   set_up_github_push(
-    secrets['github_token'],
+    git_cred['token'],
     org_name,
     repo_name,
     job_name,
-    secrets['trigger_token'],
+    jenkins_cred['trigger_token'],
     node['osl-jenkins']['cookbook_uploader']['github_insecure_hook'],
-    secrets['jenkins_user'],
-    secrets['jenkins_api_token']
+    jenkins_cred['user'],
+    jenkins_cred['password']
   )
 end
 
@@ -189,7 +142,7 @@ template xml do
   source 'environment-bumper.config.xml.erb'
   variables(
     github_url: "https://github.com/#{chef_repo}",
-    trigger_token: secrets['trigger_token'],
+    trigger_token: jenkins_cred['trigger_token'],
     execute_shell: execute_shell,
     default_environments_word:
       node['osl-jenkins']['cookbook_uploader']['default_environments_word'],

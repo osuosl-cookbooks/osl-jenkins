@@ -91,12 +91,17 @@ suites:
             - test-cookbook
           github_insecure_hook: true
           do_not_upload_cookbooks: true
-          credentials:
-            github_user: <%= ENV['GITHUB_USER'] %>
-            github_token: <%= ENV['GITHUB_TOKEN'] %>
-            trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
-            jenkins_user: <%= ENV['JENKINS_USER'] %>
-            jenkins_pass: <%= ENV['JENKINS_PASS'] %>
+        credentials:
+          git:
+            cookbook_uploader:
+              user: <%= ENV['GITHUB_USER'] %>
+              token: <%= ENV['GITHUB_TOKEN'] %>
+              url: 'github.com'
+          jenkins:
+            cookbook_uploader:
+              user: <%= ENV['JENKINS_USER'] %>
+              pass: <%= ENV['JENKINS_PASS'] %>
+              trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
       jenkins:
         master:
           listen_address: '0.0.0.0'
@@ -123,12 +128,17 @@ suites:
             - test-cookbook
           github_insecure_hook: true
           do_not_upload_cookbooks: true
-          credentials:
-            github_user: <%= ENV['GITHUB_USER'] %>
-            github_token: <%= ENV['GITHUB_TOKEN'] %>
-            trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
-            jenkins_user: <%= ENV['JENKINS_USER'] %>
-            jenkins_pass: <%= ENV['JENKINS_PASS'] %>
+        credentials:
+          git:
+            cookbook_uploader:
+              user: <%= ENV['GITHUB_USER'] %>
+              token: <%= ENV['GITHUB_TOKEN'] %>
+              url: 'github.com'
+          jenkins:
+            cookbook_uploader:
+              user: <%= ENV['JENKINS_USER'] %>
+              pass: <%= ENV['JENKINS_PASS'] %>
+              trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
       jenkins:
         master:
           listen_address: '0.0.0.0'
