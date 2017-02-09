@@ -67,27 +67,24 @@ if platform_family?('rhel')
   end
 end
 
+{
+  'credentials' => '2.1.11',
+  'credentials-binding' => '1.10'
+}.each do |p, v|
+  jenkins_plugin p do
+    version v
+    notifies :restart, 'service[jenkins]'
+  end
+end
+
 secrets = credential_secrets
 
-# Create a Git credentials file so we can access repos using our API token.
-# This obviates the need for an ssh key.
-git_credentials_path = ::File.join(node['jenkins']['master']['home'], '.git-credentials')
-
-directory ::File.dirname(git_credentials_path) do
-  recursive true
-end
-
-git_cred = []
-secrets['git'].each do |_k, v|
-  git_cred.push(v)
-end
-
-template git_credentials_path do
-  source 'git-credentials.erb'
-  mode '0400'
-  owner node['jenkins']['master']['user']
-  group node['jenkins']['master']['group']
-  variables(credentials: git_cred)
+# Add git credentials into Jenkins
+secrets['git'].each do |id, cred|
+  jenkins_password_credentials cred['user'] do
+    id id
+    password cred['token']
+  end
 end
 
 # Make a git config

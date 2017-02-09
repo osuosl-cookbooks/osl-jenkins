@@ -17,20 +17,6 @@ describe 'osl-jenkins::master' do
         end
       end
       it do
-        expect(chef_run).to create_directory('/var/lib/jenkins')
-          .with(recursive: true)
-      end
-      it do
-        expect(chef_run).to create_template('/var/lib/jenkins/.git-credentials')
-          .with(
-            source: 'git-credentials.erb',
-            mode: '0400',
-            owner: 'jenkins',
-            group: 'jenkins',
-            variables: { credentials: [] }
-          )
-      end
-      it do
         expect(chef_run).to create_cookbook_file('/var/lib/jenkins/.gitconfig')
           .with(
             source: 'gitconfig',
@@ -38,8 +24,44 @@ describe 'osl-jenkins::master' do
             group: 'jenkins'
           )
       end
-      it do
-        expect(chef_run).to create_template('/var/lib/jenkins/.git-credentials')
+      {
+        'credentials' => '2.1.11',
+        'credentials-binding' => '1.10'
+      }.each do |plugin, ver|
+        it do
+          expect(chef_run).to install_jenkins_plugin(plugin).with(version: ver)
+        end
+      end
+
+      context 'set secrets in attribute' do
+        cached(:chef_run) do
+          ChefSpec::SoloRunner.new(p) do |node|
+            node.set['osl-jenkins']['credentials']['git'] = {
+              'cookbook_uploader' => {
+                user: 'manatee',
+                token: 'token_password'
+              },
+              'bumpzone' => {
+                'user' => 'johndoe',
+                'token' => 'password'
+              }
+            }
+          end.converge(described_recipe)
+        end
+        it do
+          expect(chef_run).to create_jenkins_password_credentials('manatee')
+            .with(
+              id: 'cookbook_uploader',
+              password: 'token_password'
+            )
+        end
+        it do
+          expect(chef_run).to create_jenkins_password_credentials('johndoe')
+            .with(
+              id: 'bumpzone',
+              password: 'password'
+            )
+        end
       end
       context 'set secrets databag' do
         cached(:chef_run) do
@@ -52,24 +74,28 @@ describe 'osl-jenkins::master' do
               'git' => {
                 'cookbook_uploader' => {
                   'user' => 'manatee',
-                  'token' => 'token_password',
-                  'url' => 'github.com'
+                  'token' => 'token_password'
                 },
                 'bumpzone' => {
                   'user' => 'johndoe',
-                  'token' => 'password',
-                  'url' => 'github.com/osuosl'
+                  'token' => 'password'
                 }
               }
             )
         end
-        [
-          %r{^https://manatee:token_password@github.com$},
-          %r{^https://johndoe:password@github.com/osuosl$}
-        ].each do |line|
-          it do
-            expect(chef_run).to render_file('/var/lib/jenkins/.git-credentials').with_content(line)
-          end
+        it do
+          expect(chef_run).to create_jenkins_password_credentials('manatee')
+            .with(
+              id: 'cookbook_uploader',
+              password: 'token_password'
+            )
+        end
+        it do
+          expect(chef_run).to create_jenkins_password_credentials('johndoe')
+            .with(
+              id: 'bumpzone',
+              password: 'password'
+            )
         end
       end
       context 'non-404 databag response' do

@@ -96,7 +96,6 @@ suites:
             cookbook_uploader:
               user: <%= ENV['GITHUB_USER'] %>
               token: <%= ENV['GITHUB_TOKEN'] %>
-              url: 'github.com'
           jenkins:
             cookbook_uploader:
               user: <%= ENV['JENKINS_USER'] %>
@@ -133,7 +132,6 @@ suites:
             cookbook_uploader:
               user: <%= ENV['GITHUB_USER'] %>
               token: <%= ENV['GITHUB_TOKEN'] %>
-              url: 'github.com'
           jenkins:
             cookbook_uploader:
               user: <%= ENV['JENKINS_USER'] %>

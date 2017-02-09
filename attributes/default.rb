@@ -11,14 +11,11 @@
 #       SSH key. You can, however, use an API token in place of a password, and since we already have an API token, we
 #       just need to username to go with it.
 # token: (String) A GitHub API token that has read and write permissions to the repos it needs
-# url:  (String) Git https base url to use. If 'github.com' it means all of github, if 'github.com/osuosl' that means
-#       all repos under that org.
 #
 # default['osl-jenkins']['credentials']['git'] = {
 #   'cookbook_uploader' => {
 #     user: 'ramereth',
-#     token: 'token_password',
-#     url: 'github.com'
+#     token: 'token_password'
 #   }
 # }
 default['osl-jenkins']['credentials']['git'] = []

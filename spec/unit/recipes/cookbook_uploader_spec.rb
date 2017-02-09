@@ -17,8 +17,7 @@ describe 'osl-jenkins::cookbook_uploader' do
           node.set['osl-jenkins']['credentials']['git'] = {
             'cookbook_uploader' => {
               user: 'manatee',
-              token: 'token_password',
-              url: 'github.com'
+              token: 'token_password'
             }
           }
           node.set['osl-jenkins']['credentials']['jenkins'] = {
