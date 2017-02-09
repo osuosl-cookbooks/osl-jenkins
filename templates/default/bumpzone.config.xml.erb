@@ -22,7 +22,9 @@
     <configVersion>2</configVersion>
     <userRemoteConfigs>
       <hudson.plugins.git.UserRemoteConfig>
+        <refspec>+refs/heads/master:refs/remotes/origin/master</refspec>
         <url><%= @github_url %></url>
+        <credentialsId>bumpzone-github-token</credentialsId>
       </hudson.plugins.git.UserRemoteConfig>
     </userRemoteConfigs>
     <branches>
@@ -32,7 +34,11 @@
     </branches>
     <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
     <submoduleCfg class="list"/>
-    <extensions/>
+    <extensions>
+      <hudson.plugins.git.extensions.impl.LocalBranch>
+        <localBranch>master</localBranch>
+      </hudson.plugins.git.extensions.impl.LocalBranch>
+    </extensions>
   </scm>
   <canRoam>true</canRoam>
   <disabled>false</disabled>
@@ -43,8 +49,7 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>export GITHUB_TOKEN=&quot;<%= @github_token %>&quot;
-echo $payload | /var/lib/jenkins/bin/bumpzone.rb</command>
+      <command>echo $payload | /var/lib/jenkins/bin/bumpzone.rb</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers>
@@ -55,5 +60,15 @@ echo $payload | /var/lib/jenkins/bin/bumpzone.rb</command>
       <alsoCheckConsoleOutput>true</alsoCheckConsoleOutput>
     </hudson.plugins.textfinder.TextFinderPublisher>
   </publishers>
-  <buildWrappers/>
+  <buildWrappers>
+    <org.jenkinsci.plugins.credentialsbinding.impl.SecretBuildWrapper plugin="credentials-binding@1.10">
+      <bindings>
+        <org.jenkinsci.plugins.credentialsbinding.impl.UsernamePasswordMultiBinding>
+          <credentialsId>bumpzone-github-token</credentialsId>
+          <usernameVariable></usernameVariable>
+          <passwordVariable>GITHUB_TOKEN</passwordVariable>
+        </org.jenkinsci.plugins.credentialsbinding.impl.UsernamePasswordMultiBinding>
+      </bindings>
+    </org.jenkinsci.plugins.credentialsbinding.impl.SecretBuildWrapper>
+  </buildWrappers>
 </project>

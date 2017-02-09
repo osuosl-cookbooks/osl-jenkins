@@ -54,7 +54,9 @@ end
   'github' => '1.19.1',
   'build-token-root' => '1.4',
   'parameterized-trigger' => '2.30',
-  'text-finder' => '1.10'
+  'text-finder' => '1.10',
+  'credentials' => '2.1.11',
+  'credentials-binding' => '1.10'
 }.each do |p, v|
   jenkins_plugin p do
     version v
@@ -78,8 +80,13 @@ template xml do
   variables(
     github_url: bumpzone['github_url'],
     trigger_token: jenkins_cred['trigger_token'],
-    github_token: git_cred['token']
   )
+end
+
+jenkins_password_credentials git_cred['user'] do
+  id 'bumpzone-github-token'
+  description 'Bumpzone Github Token'
+  password git_cred['token']
 end
 
 jenkins_job 'bumpzone' do

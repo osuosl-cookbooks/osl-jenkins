@@ -161,12 +161,13 @@ suites:
         bumpzone:
           github_url: 'https://github.com/osuosl/zonefiles-test.git'
         credentials:
-          bumpzone:
-            git:
+          git:
+            bumpzone:
               user: <%= ENV['GITHUB_USER'] %>
               token: <%= ENV['GITHUB_TOKEN'] %>
-              url: 'https://github.com/osuosl/zonefiles-test.git'
-            jenkins:
+              url: 'github.com/osuosl/zonefiles-test.git'
+          jenkins:
+            bumpzone:
               trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
       jenkins:
         master:
