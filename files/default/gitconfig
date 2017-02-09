@@ -3,6 +3,7 @@
 [push]
     default = current
 [user]
-    name = JenkinsCI
+    name = Manatee
+    email = github@osuosl.org
 [credential]
     helper = store
