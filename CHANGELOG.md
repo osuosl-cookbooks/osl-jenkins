@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+0.8.0 (2017-02-10)
+------------------
+- Create recipe for jenkins1.o.o that replicates roles
+
 0.7.28 (2017-01-11)
 -------------------
 - Remove this version dep as it's causing issues in other places
