@@ -82,12 +82,45 @@ suites:
     provisioner: chef_zero
     driver:
       security_groups:
-        - no-firewall
+        - default
+        - github
     attributes:
       osl-jenkins:
         cookbook_uploader:
           override_repos:
-            - lanparty
+            - test-cookbook
+          github_insecure_hook: true
+          do_not_upload_cookbooks: true
+          credentials:
+            github_user: <%= ENV['GITHUB_USER'] %>
+            github_token: <%= ENV['GITHUB_TOKEN'] %>
+            trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
+            jenkins_user: <%= ENV['JENKINS_USER'] %>
+            jenkins_pass: <%= ENV['JENKINS_PASS'] %>
+      jenkins:
+        master:
+          listen_address: '0.0.0.0'
+      certificate:
+        - snakeoil:
+            cert_path: "/etc/pki/tls"
+            cert_file: wildcard.pem
+            key_file: wildcard.key
+            chain_file: wildcard-bundle.crt
+            combined_file: true
+  # See documentation from cookbook-uploader suite on how to run this suite
+  - name: jenkins1
+    encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
+    run_list:
+      - recipe[osl-jenkins::jenkins1]
+    driver:
+      security_groups:
+        - default
+        - github
+    attributes:
+      osl-jenkins:
+        cookbook_uploader:
+          override_repos:
+            - test-cookbook
           github_insecure_hook: true
           do_not_upload_cookbooks: true
           credentials:
