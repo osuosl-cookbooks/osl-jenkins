@@ -85,7 +85,7 @@ class BumpZone
       BumpZone.add_warning_msg("#{zone_file} has a max counter of #{Time.new.strftime('%Y%m%d99')}\n")
       return nil
     end
-    new_serial = 1 + cur_serial.to_i if new_serial <= cur_serial.to_i
+    new_serial = [cur_serial.to_i + 1, new_serial].max
     BumpZone.add_commit_msg("Bump #{filename} from #{cur_serial} to #{new_serial}\n")
     new_serial.to_i
   end
