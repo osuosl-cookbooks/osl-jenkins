@@ -114,8 +114,26 @@ describe BumpZone do
     it 'One line SOA' do
       expect(BumpZone.soa_oneline?(open_fixture('oneline-soa'))).to eq true
     end
+    it 'One line SOA (commented)' do
+      expect(BumpZone.soa_oneline?(open_fixture('oneline-soa-commented'))).to eq nil
+    end
+    it 'One line found (extra char)' do
+      expect(BumpZone.soa_oneline?(open_fixture('oneline-soa-extra-char'))).to eq true
+    end
+    it 'One line found (reverse DNS)' do
+      expect(BumpZone.soa_oneline?(open_fixture('oneline-soa-arpa'))).to eq true
+    end
     it 'Multiline SOA' do
       expect(BumpZone.soa_oneline?(open_fixture('multiline-soa'))).to eq false
+    end
+    it 'Multiline SOA (commented)' do
+      expect(BumpZone.soa_oneline?(open_fixture('multiline-soa-commented'))).to eq nil
+    end
+    it 'Multiline SOA (extra char)' do
+      expect(BumpZone.soa_oneline?(open_fixture('multiline-soa-extra-char'))).to eq false
+    end
+    it 'Multiline SOA (reverse DNS)' do
+      expect(BumpZone.soa_oneline?(open_fixture('multiline-soa-arpa'))).to eq false
     end
     it 'No SOA found' do
       expect(BumpZone.soa_oneline?(open_fixture('no-soa'))).to eq nil

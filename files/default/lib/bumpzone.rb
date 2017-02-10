@@ -8,8 +8,8 @@ class BumpZone
   @commit_msg = "\n\n"
   @warning_msg = "Warning:\n\n"
   @warning = false
-  ONELINE_REGEX = /([\w\d\.-_]+\s+[\d]+\s+IN\s+SOA.*[\w\d\.-_]+\s+)(\d{10})(\s+[\d]+\s+[\d]+\s+[\d]+\s+[\d]+)/
-  MULTILINE_REGEX = /([\w\d\.-_]+\s+IN\s+SOA\s+[\w\d\.-_]+\s+[\w\d\.-_]+\s+\(\n\s+)(\d{10})(.*\n.*\n.*\n.*\n.*\n\s+\))/
+  ONELINE_REGEX = /(^[\w\d\.\-]+\s+[\d]+\s+IN\s+SOA.*[\w\d\.\-]+\s+)(\d{10})(\s+[\d]+\s+[\d]+\s+[\d]+\s+[\d]+)/
+  MULTILINE_REGEX = /(^[\w\d\.\-]+\s+IN\s+SOA\s+[\w\d\.\-]+\s+[\w\d\.\-]+\s+\(\s?\n\s+)(\d{10})(.*\n.*\n.*\n.*\n.*\n\s+\))/
 
   class << self
     attr_reader :commit_msg
