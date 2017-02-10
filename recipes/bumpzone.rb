@@ -63,7 +63,6 @@ end
 end
 
 secrets = credential_secrets
-git_cred = secrets['git']['bumpzone']
 jenkins_cred = secrets['jenkins']['bumpzone']
 
 xml = ::File.join(Chef::Config[:file_cache_path], 'bumpzone', 'config.xml')
@@ -77,7 +76,7 @@ template xml do
   mode 0440
   variables(
     github_url: bumpzone['github_url'],
-    trigger_token: jenkins_cred['trigger_token'],
+    trigger_token: jenkins_cred['trigger_token']
   )
 end
 
