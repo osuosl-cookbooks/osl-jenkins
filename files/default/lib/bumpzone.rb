@@ -67,13 +67,11 @@ class BumpZone
     "#{before_serial}#{serial}#{after_serial}"
   end
 
-  def self.counter?(cur_serial)
+  def self.max_count?(cur_serial)
+    # Grab the last two digits of the serial which is the counter
     counter = cur_serial.to_s.match(/\d{2}$/)
-    if counter.to_s =~ /99/
-      true
-    else
-      false
-    end
+    # Check if we've reached 99 which is the max allowed in one day
+    counter.to_s.include? '99'
   end
 
   def self.new_serial(zone_file, filename)
@@ -84,7 +82,7 @@ class BumpZone
       return nil
     end
     new_serial = Time.new.strftime('%Y%m%d00').to_i
-    if BumpZone.counter?(cur_serial)
+    if BumpZone.max_count?(cur_serial)
       BumpZone.add_warning_msg("#{zone_file} has a max counter of #{Time.new.strftime('%Y%m%d99')}\n")
       return nil
     end

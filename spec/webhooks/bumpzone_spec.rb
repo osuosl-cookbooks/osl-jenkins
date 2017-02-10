@@ -126,12 +126,12 @@ describe BumpZone do
       expect(BumpZone.print_soa('before', 'serial', 'after')).to eq 'beforeserialafter'
     end
   end
-  context '#counter?' do
+  context '#max_count?' do
     it do
-      expect(BumpZone.counter?(00)).to eq false
+      expect(BumpZone.max_count?(00)).to eq false
     end
     it do
-      expect(BumpZone.counter?(99)).to eq true
+      expect(BumpZone.max_count?(99)).to eq true
     end
   end
   context '#new_serial' do
