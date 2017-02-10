@@ -24,7 +24,7 @@
       <hudson.plugins.git.UserRemoteConfig>
         <refspec>+refs/heads/master:refs/remotes/origin/master</refspec>
         <url><%= @github_url %></url>
-        <credentialsId>bumpzone-github-token</credentialsId>
+        <credentialsId>bumpzone</credentialsId>
       </hudson.plugins.git.UserRemoteConfig>
     </userRemoteConfigs>
     <branches>
@@ -64,7 +64,7 @@
     <org.jenkinsci.plugins.credentialsbinding.impl.SecretBuildWrapper plugin="credentials-binding@1.10">
       <bindings>
         <org.jenkinsci.plugins.credentialsbinding.impl.UsernamePasswordMultiBinding>
-          <credentialsId>bumpzone-github-token</credentialsId>
+          <credentialsId>bumpzone</credentialsId>
           <usernameVariable></usernameVariable>
           <passwordVariable>GITHUB_TOKEN</passwordVariable>
         </org.jenkinsci.plugins.credentialsbinding.impl.UsernamePasswordMultiBinding>

@@ -8,8 +8,7 @@ describe 'osl-jenkins::bumpzone' do
           node.set['osl-jenkins']['credentials']['git'] = {
             'bumpzone' => {
               user: 'manatee',
-              token: 'token_password',
-              url: 'github.com'
+              token: 'token_password'
             }
           }
           node.set['osl-jenkins']['credentials']['jenkins'] = {
@@ -57,7 +56,6 @@ describe 'osl-jenkins::bumpzone' do
             source: 'bumpzone.config.xml.erb',
             mode: 0440,
             variables: {
-              github_token: 'token_password',
               github_url: 'https://github.com/osuosl/zonefiles.git',
               trigger_token: 'trigger_token'
             }
