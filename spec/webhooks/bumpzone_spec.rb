@@ -118,7 +118,7 @@ describe BumpZone do
       expect(BumpZone.soa_oneline?(open_fixture('multiline-soa'))).to eq false
     end
     it 'No SOA found' do
-      expect(BumpZone.soa_oneline?(open_fixture('no-soa'))).to eq false
+      expect(BumpZone.soa_oneline?(open_fixture('no-soa'))).to eq nil
     end
   end
   context '#print_soa' do

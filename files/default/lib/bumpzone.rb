@@ -33,8 +33,6 @@ class BumpZone
       true
     elsif regex(zone, MULTILINE_REGEX)
       false
-    else
-      false
     end
   end
 
