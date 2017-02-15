@@ -27,6 +27,7 @@ node.default['osl-jenkins']['cookbook_uploader'].tap do |conf|
   )
   conf['org'] = 'osuosl-cookbooks'
 end
+node.default['osl-jenkins']['secrets_item'] = 'jenkins1'
 
 include_recipe 'osl-jenkins::master'
 include_recipe 'osl-jenkins::chef_ci_cookbook_template'

@@ -14,23 +14,29 @@ describe 'osl-jenkins::jenkins1' do
             'github_insecure_hook' => true,
             'do_not_upload_cookbooks' => true
           }
-          node.set['osl-jenkins']['credentials']['git'] = {
-            'cookbook_uploader' => {
-              user: 'manatee',
-              token: 'token_password'
-            }
-          }
-          node.set['osl-jenkins']['credentials']['jenkins'] = {
-            'cookbook_uploader' => {
-              user: 'manatee',
-              pass: 'password',
-              trigger_token: 'trigger_token'
-            }
-          }
         end.converge(described_recipe)
       end
       include_context 'common_stubs'
       include_context 'cookbook_uploader'
+      before do
+        allow(Chef::EncryptedDataBagItem).to receive(:load).with('osl_jenkins', 'jenkins1')
+          .and_return(
+            'jenkins_private_key' => 'private_key',
+            'git' => {
+              'cookbook_uploader' => {
+                'user' => 'manatee',
+                'token' => 'token_password'
+              }
+            },
+            'jenkins' => {
+              'cookbook_uploader' => {
+                'user' => 'manatee',
+                'pass' => 'password',
+                'trigger_token' => 'trigger_token'
+              }
+            }
+          )
+      end
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
       end
