@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+0.9.0 (2017-02-17)
+------------------
+- Move .git-credentials and jenkins credential management into master recipe
+
 0.8.0 (2017-02-10)
 ------------------
 - Create recipe for jenkins1.o.o that replicates roles
