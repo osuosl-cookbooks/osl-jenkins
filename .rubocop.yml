@@ -19,3 +19,14 @@ Style/WhileUntilModifier:
 
 Metrics/BlockLength:
   Enabled: false
+
+Style/MutableConstant:
+  Exclude:
+    - 'spec/spec_helper.rb'
+
+Metrics/AbcSize:
+  Exclude:
+    - 'libraries/default.rb'
+Metrics/MethodLength:
+  Exclude:
+    - 'libraries/default.rb'

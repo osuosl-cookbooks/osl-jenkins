@@ -1,25 +1,39 @@
 require 'chefspec'
 require 'chefspec/berkshelf'
+require_relative 'support/matchers'
 
 ChefSpec::Coverage.start! { add_filter 'osl-jenkins' }
 
 CENTOS_7_OPTS = {
   platform: 'centos',
-  version: '7.2.1511'
-}.freeze
+  version: '7.2.1511',
+  file_cache_path: '/var/chef/cache'
+}
 
 CENTOS_6_OPTS = {
   platform: 'centos',
-  version: '6.7'
-}.freeze
+  version: '6.7',
+  file_cache_path: '/var/chef/cache'
+}
 
 ALL_PLATFORMS = [
   CENTOS_6_OPTS,
   CENTOS_7_OPTS
-].freeze
+]
 
 RSpec.configure do |config|
   config.log_level = :fatal
+end
+
+shared_context 'common_stubs' do
+  before do
+    allow(Chef::EncryptedDataBagItem).to receive(:load)
+      .with('osl_jenkins', 'secrets')
+      .and_raise(Net::HTTPServerException.new(
+                   'osl_jenkins databag not found',
+                   Net::HTTPResponse.new('1.1', '404', '')
+      ))
+  end
 end
 
 shared_context 'cookbook_uploader' do

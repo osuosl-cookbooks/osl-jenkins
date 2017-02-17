@@ -34,53 +34,6 @@ default['osl-jenkins']['cookbook_uploader']['authorized_teams'] = []
 # which is '~' by default, e.g. '!bump patch ~'.
 default['osl-jenkins']['cookbook_uploader']['default_environments'] = []
 
-###
-### Attributes that you really should put in a databag instead:
-###
-
-# It's not secure to store the following as attributes; these are only here for
-# documentation and are usually set by test kitchen from environment variables
-# for testing. In production, store credentials in the secrets databag
-# specified below.
-
-# String; A GitHub API token that has read and write permissions to the
-# cookbook org, all repos within the org, and the chef-repo. Webhook creation
-# permissions are also required for all repos within the cookbook org.
-default['osl-jenkins']['cookbook_uploader']['credentials']['github_token'] = ''
-
-# String; The GitHub username of the user associated with the above API token.
-# This is necessary because regular git pull/push operations (as opposed to API
-# operations, which just require the token) require a username/password or SSH
-# key. You can, however, use an API token in place of a password, and since we
-# already have an API token, we just need to username to go with it.
-default['osl-jenkins']['cookbook_uploader']['credentials']['github_user'] = ''
-
-# String; A random string that is used to allow GitHub to send pushes to
-# Jenkins. Jenkins' job trigger URLs are publicly accessible, so Jenkins will
-# ignore POSTs to them unless the correct trigger_token is specified. You can
-# generate a random string easily with a command such as `pwgen -s 20 1`.
-default['osl-jenkins']['cookbook_uploader']['credentials']['trigger_token'] = ''
-
-# String; If Jenkins has username/password security enabled (as opposed to
-# being public and not requiring a login), you must specify a Jenkins user that
-# has permission to create jobs since the Jenkins cookbook uses the Jenkins API
-# locally to configure new jobs, and so needs credentials.
-default['osl-jenkins']['cookbook_uploader']['credentials']['jenkins_user'] = ''
-
-# String; The password associated with the above Jenkins user.
-default['osl-jenkins']['cookbook_uploader']['credentials']['jenkins_pass'] = ''
-
-###
-### Attributes that you probably don't need to change:
-###
-
-# String; The name of the databag to use.
-default['osl-jenkins']['cookbook_uploader']['secrets_databag'] = 'osl_jenkins'
-
-# String; The name of the databag item to use.
-default['osl-jenkins']['cookbook_uploader']['secrets_item'] = \
-  'cookbook_uploader_secrets'
-
 # String; The path in which to store scripts used by the Jenkins jobs.
 default['osl-jenkins']['cookbook_uploader']['scripts_path'] = \
   ::File.join(node['jenkins']['master']['home'], 'bin')

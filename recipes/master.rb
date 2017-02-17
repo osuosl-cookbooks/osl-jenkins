@@ -66,3 +66,32 @@ if platform_family?('rhel')
     include_recipe 'git::package'
   end
 end
+
+{
+  'credentials' => '2.1.11',
+  'credentials-binding' => '1.10'
+}.each do |p, v|
+  jenkins_plugin p do
+    version v
+    notifies :restart, 'service[jenkins]'
+  end
+end
+
+secrets = credential_secrets
+
+# Add git credentials into Jenkins
+secrets['git'].each do |id, cred|
+  jenkins_password_credentials cred['user'] do
+    id id
+    password cred['token']
+  end
+end
+
+# Make a git config
+git_config_path = ::File.join(node['jenkins']['master']['home'], '.gitconfig')
+
+cookbook_file git_config_path do
+  source 'gitconfig'
+  owner node['jenkins']['master']['user']
+  group node['jenkins']['master']['group']
+end
