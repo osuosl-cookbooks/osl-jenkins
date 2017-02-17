@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+0.9.3 (2017-02-17)
+------------------
+- Update README
+
 0.9.2 (2017-02-17)
 ------------------
 - Move jenkins_private_key to master recipe so it can be used elsewhere
