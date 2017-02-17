@@ -1,6 +1,7 @@
 osl-jenkins Cookbook
 ====================
-TODO: Enter the cookbook description here.
+
+Jenkins wrapper cookbook for OSL.
 
 e.g.
 This cookbook makes your favorite breakfast sandwich.
