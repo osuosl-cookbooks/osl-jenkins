@@ -127,7 +127,7 @@ repo_names.each do |repo_name|
     jenkins_cred['trigger_token'],
     node['osl-jenkins']['cookbook_uploader']['github_insecure_hook'],
     jenkins_cred['user'],
-    jenkins_cred['password']
+    jenkins_cred['api_token']
   )
 end
 

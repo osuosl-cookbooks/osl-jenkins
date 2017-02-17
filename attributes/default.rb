@@ -23,7 +23,7 @@ default['osl-jenkins']['credentials']['git'] = []
 # user: (String)  If Jenkins has username/password security enabled (as opposed to being public and not requiring a
 #                 login), you must specify a Jenkins user that has permission to create jobs since the Jenkins cookbook
 #                 uses the Jenkins API locally to configure new jobs, and so needs credentials.
-# pass: (String)  The password associated with the above Jenkins user.
+# api_token (String) Jenkins user api token for authentication with Jenkins server.
 # trigger_token: (String) A random string that is used to allow GitHub to send pushes to Jenkins. Jenkins' job trigger
 #                 URLs are publicly accessible, so Jenkins will ignore POSTs to them unless the correct trigger_token is
 #                 specified. You can generate a random string easily with a command such as `pwgen -s 20 1`.
@@ -31,7 +31,7 @@ default['osl-jenkins']['credentials']['git'] = []
 # default['osl-jenkins']['credentials']['jenkins'] = {
 #   'cookbook_uploader' => {
 #     user: 'jenkins',
-#     pass: 'jenkins_password',
+#     api_token: 'jenkins_api_token',
 #     trigger_token: 'trigger_token'
 #   }
 # }

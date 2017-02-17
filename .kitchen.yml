@@ -99,7 +99,7 @@ suites:
           jenkins:
             cookbook_uploader:
               user: <%= ENV['JENKINS_USER'] %>
-              pass: <%= ENV['JENKINS_PASS'] %>
+              api_token: <%= ENV['JENKINS_PASS'] %>
               trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
       jenkins:
         master:
@@ -135,7 +135,7 @@ suites:
           jenkins:
             cookbook_uploader:
               user: <%= ENV['JENKINS_USER'] %>
-              pass: <%= ENV['JENKINS_PASS'] %>
+              api_token: <%= ENV['JENKINS_PASS'] %>
               trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
       jenkins:
         master:
