@@ -51,9 +51,6 @@ secrets = credential_secrets
 git_cred = secrets['git']['cookbook_uploader']
 jenkins_cred = secrets['jenkins']['cookbook_uploader']
 
-# This is necessary in order to create Jenkins jobs with security enabled.
-node.run_state[:jenkins_private_key] = secrets['jenkins_private_key'] # ~FC001
-
 # Install necessary gems
 %w(git octokit).each do |g|
   chef_gem g do # ~FC009

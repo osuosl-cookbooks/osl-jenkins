@@ -79,6 +79,9 @@ end
 
 secrets = credential_secrets
 
+# This is necessary in order to create Jenkins jobs with security enabled.
+node.run_state[:jenkins_private_key] = secrets['jenkins_private_key'] # ~FC001
+
 # Add git credentials into Jenkins
 secrets['git'].each do |id, cred|
   jenkins_password_credentials cred['user'] do
