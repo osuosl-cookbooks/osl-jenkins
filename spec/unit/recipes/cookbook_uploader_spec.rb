@@ -23,7 +23,7 @@ describe 'osl-jenkins::cookbook_uploader' do
           node.set['osl-jenkins']['credentials']['jenkins'] = {
             'cookbook_uploader' => {
               user: 'manatee',
-              pass: 'password',
+              api_token: 'api_token',
               trigger_token: 'trigger_token'
             }
           }
