@@ -14,7 +14,7 @@ describe 'osl-jenkins::bumpzone' do
           node.set['osl-jenkins']['credentials']['jenkins'] = {
             'bumpzone' => {
               user: 'manatee',
-              pass: 'password',
+              api_token: 'api_token',
               trigger_token: 'trigger_token'
             }
           }
