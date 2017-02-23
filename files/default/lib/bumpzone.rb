@@ -38,12 +38,9 @@ class BumpZone
   end
 
   def self.pr_merged(json)
-    if json['action'] == 'closed' && json['pull_request']['merged'] == true
-      nil
-    else
-      puts 'Not a merged PR, skipping...'
-      exit 0
-    end
+    return unless json['action'] != 'closed' && json['pull_request']['merged'] != true
+    puts 'Not a merged PR, skipping...'
+    exit 0
   end
 
   def self.changed_files(json)
