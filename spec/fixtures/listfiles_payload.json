@@ -1,0 +1,14 @@
+[
+  {
+    "sha": "1e558a885e2aef6e09ca96cbb00a94788b503c76",
+    "filename": "db.osuosl.org",
+    "status": "modified",
+    "additions": 1,
+    "deletions": 1,
+    "changes": 2,
+    "blob_url": "https://github.com/osuosl/zonefiles-test/blob/2de52b4747a3e83f5a89aa71b16c9d33bb8042c7/db.osuosl.org",
+    "raw_url": "https://github.com/osuosl/zonefiles-test/raw/2de52b4747a3e83f5a89aa71b16c9d33bb8042c7/db.osuosl.org",
+    "contents_url": "https://api.github.com/repos/osuosl/zonefiles-test/contents/db.osuosl.org?ref=2de52b4747a3e83f5a89aa71b16c9d33bb8042c7",
+    "patch": "@@ -2,7 +2,7 @@\n *.sc.osuosl.org.\t3600\tIN\tCNAME\tfunnel.osuosl.org.\n *.staging.osuosl.org.\t600\tIN\tCNAME\tvip-lb1.osuosl.org.\n 1060.osuosl.org.\t86400\tIN\tCNAME\tftp.osuosl.org.\n-140-211-168-100-openstack.osuosl.org. 86400 IN A 140.211.168.100\n+140-211-168-100-openstack.osuosl.org. 86400 IN A 140.211.168.101\n 140-211-168-101-openstack.osuosl.org. 86400 IN A 140.211.168.101\n 140-211-168-102-openstack.osuosl.org. 86400 IN A 140.211.168.102\n 140-211-168-103-openstack.osuosl.org. 86400 IN A 140.211.168.103"
+  }
+]

@@ -1,0 +1,7 @@
+osu-osl.org     IN SOA  ns1.auth.osuosl.org. hostmaster.osuosl.org. ( 
+                2017011901 ; serial 
+                3600       ; refresh (1 hour) 
+                900        ; retry (15 minutes) 
+                604800     ; expire (1 week) 
+                86400      ; minimum (1 day) 
+                ) 

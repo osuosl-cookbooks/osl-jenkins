@@ -147,3 +147,36 @@ suites:
             key_file: wildcard.key
             chain_file: wildcard-bundle.crt
             combined_file: true
+  - name: bumpzone
+    encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
+    run_list:
+      - recipe[osl-jenkins::bumpzone]
+    provisioner: chef_zero
+    driver:
+      security_groups:
+        - default
+        - github
+    attributes:
+      osl-jenkins:
+        bumpzone:
+          github_url: 'https://github.com/osuosl/zonefiles-test.git'
+        credentials:
+          git:
+            bumpzone:
+              user: <%= ENV['GITHUB_USER'] %>
+              token: <%= ENV['GITHUB_TOKEN'] %>
+          jenkins:
+            bumpzone:
+              user: <%= ENV['JENKINS_USER'] %>
+              api_token: <%= ENV['JENKINS_PASS'] %>
+              trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
+      jenkins:
+        master:
+          listen_address: '0.0.0.0'
+      certificate:
+        - snakeoil:
+            cert_path: "/etc/pki/tls"
+            cert_file: wildcard.pem
+            key_file: wildcard.key
+            chain_file: wildcard-bundle.crt
+            combined_file: true

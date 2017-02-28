@@ -30,7 +30,7 @@ end
 # @param auth_token [String] Jenkins user api token for authentication with
 #   Jenkins server
 #
-# rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/ParameterLists
+# rubocop:disable Metrics/MethodLength, Metrics/ParameterLists
 def set_up_github_push(github_token, org_name, repo_name, job_name,
                        trigger_token, insecure_hook, auth_user = nil,
                        auth_token = nil)
