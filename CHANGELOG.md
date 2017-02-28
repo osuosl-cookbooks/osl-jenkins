@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+0.10.0 (2017-02-28)
+-------------------
+- Bind Serial Updater
+
 0.9.3 (2017-02-17)
 ------------------
 - Update README
