@@ -68,13 +68,16 @@ end
 secrets = credential_secrets
 jenkins_cred = secrets['jenkins']['bumpzone']
 
-xml = ::File.join(Chef::Config[:file_cache_path], 'bumpzone', 'config.xml')
+bumpzone_xml = ::File.join(Chef::Config[:file_cache_path], 'bumpzone', 'config.xml')
+update_zonefiles_xml = ::File.join(Chef::Config[:file_cache_path], 'update-zonefiles', 'config.xml')
 
-directory ::File.dirname(xml) do
-  recursive true
+[bumpzone_xml, update_zonefiles_xml].each do |d|
+  directory ::File.dirname(d) do
+    recursive true
+  end
 end
 
-template xml do
+template bumpzone_xml do
   source 'bumpzone.config.xml.erb'
   mode 0440
   variables(
@@ -83,7 +86,21 @@ template xml do
   )
 end
 
+template update_zonefiles_xml do
+  source 'update-zonefiles.config.xml.erb'
+  mode 0440
+  variables(
+    github_url: bumpzone['github_url'],
+    dns_master: bumpzone['dns_master']
+  )
+end
+
 jenkins_job 'bumpzone' do
-  config xml
+  config bumpzone_xml
+  action [:create, :enable]
+end
+
+jenkins_job 'update-zonefiles' do
+  config update_zonefiles_xml
   action [:create, :enable]
 end

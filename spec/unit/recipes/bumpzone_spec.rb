@@ -47,8 +47,13 @@ describe 'osl-jenkins::bumpzone' do
             mode: 0440
           )
       end
-      it do
-        expect(chef_run).to create_directory('/var/chef/cache/bumpzone').with(recursive: true)
+      %w(bumpzone update-zonefiles).each do |j|
+        it do
+          expect(chef_run).to create_directory("/var/chef/cache/#{j}").with(recursive: true)
+        end
+        it do
+          expect(chef_run).to create_jenkins_job(j).with(config: "/var/chef/cache/#{j}/config.xml")
+        end
       end
       it do
         expect(chef_run).to create_template('/var/chef/cache/bumpzone/config.xml')
@@ -62,7 +67,15 @@ describe 'osl-jenkins::bumpzone' do
           )
       end
       it do
-        expect(chef_run).to create_jenkins_job('bumpzone').with(config: '/var/chef/cache/bumpzone/config.xml')
+        expect(chef_run).to create_template('/var/chef/cache/update-zonefiles/config.xml')
+          .with(
+            source: 'update-zonefiles.config.xml.erb',
+            mode: 0440,
+            variables: {
+              github_url: 'https://github.com/osuosl/zonefiles.git',
+              dns_master: 'dns_master'
+            }
+          )
       end
     end
   end
