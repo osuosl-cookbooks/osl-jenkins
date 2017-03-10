@@ -29,23 +29,25 @@ describe 'osl-jenkins::bumpzone' do
           expect(chef_run).to create_directory(d).with(recursive: true)
         end
       end
-      it do
-        expect(chef_run).to create_cookbook_file('/var/lib/jenkins/bin/bumpzone.rb')
-          .with(
-            source: 'bin/bumpzone.rb',
-            owner: 'jenkins',
-            group: 'jenkins',
-            mode: 0550
-          )
-      end
-      it do
-        expect(chef_run).to create_cookbook_file('/var/lib/jenkins/lib/bumpzone.rb')
-          .with(
-            source: 'lib/bumpzone.rb',
-            owner: 'jenkins',
-            group: 'jenkins',
-            mode: 0440
-          )
+      %w(bumpzone.rb checkzone.rb).each do |f|
+        it do
+          expect(chef_run).to create_cookbook_file("/var/lib/jenkins/bin/#{f}")
+            .with(
+              source: "bin/#{f}",
+              owner: 'jenkins',
+              group: 'jenkins',
+              mode: 0550
+            )
+        end
+        it do
+          expect(chef_run).to create_cookbook_file("/var/lib/jenkins/lib/#{f}")
+            .with(
+              source: "lib/#{f}",
+              owner: 'jenkins',
+              group: 'jenkins',
+              mode: 0440
+            )
+        end
       end
       %w(bumpzone update-zonefiles).each do |j|
         it do

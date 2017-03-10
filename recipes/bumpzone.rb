@@ -35,18 +35,20 @@ end
   end
 end
 
-cookbook_file ::File.join(bumpzone['bin_path'], 'bumpzone.rb') do
-  source 'bin/bumpzone.rb'
-  owner node['jenkins']['master']['user']
-  group node['jenkins']['master']['group']
-  mode 0550
-end
+%w(bumpzone.rb checkzone.rb).each do |f|
+  cookbook_file ::File.join(bumpzone['bin_path'], f) do
+    source "bin/#{f}"
+    owner node['jenkins']['master']['user']
+    group node['jenkins']['master']['group']
+    mode 0550
+  end
 
-cookbook_file ::File.join(bumpzone['lib_path'], 'bumpzone.rb') do
-  source 'lib/bumpzone.rb'
-  owner node['jenkins']['master']['user']
-  group node['jenkins']['master']['group']
-  mode 0440
+  cookbook_file ::File.join(bumpzone['lib_path'], f) do
+    source "lib/#{f}"
+    owner node['jenkins']['master']['user']
+    group node['jenkins']['master']['group']
+    mode 0440
+  end
 end
 
 {
