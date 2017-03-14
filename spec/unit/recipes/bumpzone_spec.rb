@@ -24,6 +24,12 @@ describe 'osl-jenkins::bumpzone' do
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
       end
+      it do
+        expect(chef_run).to install_jenkins_plugin('matrix-project').with(version: '1.7.1')
+      end
+      it do
+        expect(chef_run.jenkins_plugin('matrix-project')).to notify('jenkins_command[safe-restart]')
+      end
       %w(/var/lib/jenkins/bin /var/lib/jenkins/lib).each do |d|
         it do
           expect(chef_run).to create_directory(d).with(recursive: true)
@@ -49,7 +55,10 @@ describe 'osl-jenkins::bumpzone' do
             )
         end
       end
-      %w(bumpzone update-zonefiles).each do |j|
+      it do
+        expect(chef_run).to install_package('bind')
+      end
+      %w(bumpzone checkzone update-zonefiles).each do |j|
         it do
           expect(chef_run).to create_directory("/var/chef/cache/#{j}").with(recursive: true)
         end
@@ -61,6 +70,17 @@ describe 'osl-jenkins::bumpzone' do
         expect(chef_run).to create_template('/var/chef/cache/bumpzone/config.xml')
           .with(
             source: 'bumpzone.config.xml.erb',
+            mode: 0440,
+            variables: {
+              github_url: 'https://github.com/osuosl/zonefiles.git',
+              trigger_token: 'trigger_token'
+            }
+          )
+      end
+      it do
+        expect(chef_run).to create_template('/var/chef/cache/checkzone/config.xml')
+          .with(
+            source: 'checkzone.config.xml.erb',
             mode: 0440,
             variables: {
               github_url: 'https://github.com/osuosl/zonefiles.git',

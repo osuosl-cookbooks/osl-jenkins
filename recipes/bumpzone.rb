@@ -56,6 +56,7 @@ end
   'token-macro' => '2.1',
   'git' => '3.2.0',
   'github' => '1.26.2',
+  'matrix-project' => '1.7.1',
   'build-token-root' => '1.4',
   'parameterized-trigger' => '2.33',
   'text-finder' => '1.10',
@@ -67,13 +68,16 @@ end
   end
 end
 
+package 'bind'
+
 secrets = credential_secrets
 jenkins_cred = secrets['jenkins']['bumpzone']
 
 bumpzone_xml = ::File.join(Chef::Config[:file_cache_path], 'bumpzone', 'config.xml')
+checkzone_xml = ::File.join(Chef::Config[:file_cache_path], 'checkzone', 'config.xml')
 update_zonefiles_xml = ::File.join(Chef::Config[:file_cache_path], 'update-zonefiles', 'config.xml')
 
-[bumpzone_xml, update_zonefiles_xml].each do |d|
+[bumpzone_xml, checkzone_xml, update_zonefiles_xml].each do |d|
   directory ::File.dirname(d) do
     recursive true
   end
@@ -81,6 +85,15 @@ end
 
 template bumpzone_xml do
   source 'bumpzone.config.xml.erb'
+  mode 0440
+  variables(
+    github_url: bumpzone['github_url'],
+    trigger_token: jenkins_cred['trigger_token']
+  )
+end
+
+template checkzone_xml do
+  source 'checkzone.config.xml.erb'
   mode 0440
   variables(
     github_url: bumpzone['github_url'],
@@ -99,6 +112,11 @@ end
 
 jenkins_job 'bumpzone' do
   config bumpzone_xml
+  action [:create, :enable]
+end
+
+jenkins_job 'checkzone' do
+  config checkzone_xml
   action [:create, :enable]
 end
 
