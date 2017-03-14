@@ -110,6 +110,11 @@ task snakeoil: snakeoil_file_path
 desc 'Create an Encrypted Databag Secret'
 task secret_file: encrypted_data_bag_secret_path
 
+desc 'Update Berkshelf'
+task :berks_update do
+    run_command('berks update')
+end
+
 require 'rubocop/rake_task'
 desc 'Run RuboCop (style) tests'
 RuboCop::RakeTask.new(:style)
@@ -125,6 +130,6 @@ task :unit do
 end
 
 desc 'Run all tests'
-task test: [:style, :lint, :unit]
+task test: [:berks_update, :style, :lint, :unit]
 
 task default: :test
