@@ -1,4 +1,5 @@
 source 'https://supermarket.chef.io'
+solver :ruby, :required
 
 cookbook 'base', git: 'git@github.com:osuosl-cookbooks/base'
 cookbook 'firewall', git: 'git@github.com:osuosl-cookbooks/firewall'
