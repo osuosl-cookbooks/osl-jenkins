@@ -46,6 +46,17 @@ describe 'osl-jenkins::master' do
                 'token' => 'password'
               }
             }
+            node.set['osl-jenkins']['credentials']['ssh'] = {
+              'alfred' => {
+                user: 'alfred',
+                private_key: 'private rsa key'
+              },
+              'alfred-passphrase' => {
+                user: 'alfred-passphrase',
+                private_key: 'private rsa key',
+                passphrase: 'password'
+              }
+            }
           end.converge(described_recipe)
         end
         it do
@@ -60,6 +71,20 @@ describe 'osl-jenkins::master' do
             .with(
               id: 'bumpzone',
               password: 'password'
+            )
+        end
+        it do
+          expect(chef_run).to create_jenkins_private_key_credentials('alfred')
+            .with(
+              private_key: 'private rsa key',
+              passphrase: nil
+            )
+        end
+        it do
+          expect(chef_run).to create_jenkins_private_key_credentials('alfred-passphrase')
+            .with(
+              private_key: 'private rsa key',
+              passphrase: 'password'
             )
         end
       end
@@ -80,6 +105,17 @@ describe 'osl-jenkins::master' do
                   'user' => 'johndoe',
                   'token' => 'password'
                 }
+              },
+              'ssh' => {
+                'alfred' => {
+                  'user' => 'alfred',
+                  'private_key' => 'private rsa key'
+                },
+                'alfred-passphrase' => {
+                  'user' => 'alfred-passphrase',
+                  'private_key' => 'private rsa key',
+                  'passphrase' => 'password'
+                }
               }
             )
         end
@@ -95,6 +131,20 @@ describe 'osl-jenkins::master' do
             .with(
               id: 'bumpzone',
               password: 'password'
+            )
+        end
+        it do
+          expect(chef_run).to create_jenkins_private_key_credentials('alfred')
+            .with(
+              private_key: 'private rsa key',
+              passphrase: nil
+            )
+        end
+        it do
+          expect(chef_run).to create_jenkins_private_key_credentials('alfred-passphrase')
+            .with(
+              private_key: 'private rsa key',
+              passphrase: 'password'
             )
         end
       end

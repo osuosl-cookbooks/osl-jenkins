@@ -90,6 +90,14 @@ secrets['git'].each do |id, cred|
   end
 end
 
+# Add ssh credentials into Jenkins
+secrets['ssh'].each do |_id, cred|
+  jenkins_private_key_credentials cred['user'] do
+    private_key cred['private_key']
+    passphrase cred['passphrase']
+  end
+end
+
 # Make a git config
 git_config_path = ::File.join(node['jenkins']['master']['home'], '.gitconfig')
 
