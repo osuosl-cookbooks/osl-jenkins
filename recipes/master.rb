@@ -83,7 +83,7 @@ secrets = credential_secrets
 node.run_state[:jenkins_private_key] = secrets['jenkins_private_key'] # ~FC001
 
 # Add git credentials into Jenkins
-secrets['git'].each do |id, cred|
+secrets['git'].to_a.each do |id, cred|
   jenkins_password_credentials cred['user'] do
     id id
     password cred['token']
@@ -91,7 +91,7 @@ secrets['git'].each do |id, cred|
 end
 
 # Add ssh credentials into Jenkins
-secrets['ssh'].each do |_id, cred|
+secrets['ssh'].to_a.each do |_id, cred|
   jenkins_private_key_credentials cred['user'] do
     private_key cred['private_key']
     passphrase cred['passphrase']
