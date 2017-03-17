@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+0.11.0 (2017-03-17)
+-------------------
+- Add ssh private key credential support
+
 0.10.0 (2017-02-28)
 -------------------
 - Bind Serial Updater
