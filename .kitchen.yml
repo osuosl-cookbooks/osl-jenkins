@@ -12,6 +12,12 @@ suites:
     run_list:
       - recipe[osl-jenkins::master]
     attributes:
+      osl-jenkins:
+        credentials:
+          ssh:
+            alfred:
+              user: 'alfred'
+              private_key: "-----BEGIN RSA PRIVATE KEY-----\nMIIBywIBAAJhAMSrk3a8XLZW0UdtDS49VdaPRskJtrCIPfJy9ZWMA5LyCob+e0DW\nRN33vA+x0wmw4hievTtpNDbntGpN+rnq5Xl/Nlpo+rxa+eLj3anU030gYYKFc0K0\nC7wu+EtZ6ZvKpQIDAQABAmA9cxKfTdl2C4hWVeeBZB627IuEcymG3PrmDy9Wq6nO\nNxw887SVHJ3l8OrsyHYVGBPwJXd2dfrFVwjdD6UeHXIqx2Lb9I1CzYVa7RkGL1ZU\nTAb1JdDf5vZFpELlkqczcp0CMQD2JfP/r55uRowVUs9+c7MN8J5Cg4YXDw6MQgpE\nE3+x92xM3TQzGM3PNeNpuby0fx8CMQDMiqsnoQQe8dEbAPetgBHZncA4TvS1w6KF\nq72HOwa2PW7DQXsiwuIN/wNhgALSMbsCMQCJJT5c8NnCMZZtbxVjLE3Qb4eOIb/9\naws9BLK5mW+llekGrp0d9yz8zdammrFUlBsCMF3qEZn5gVXf+/3lHNOp6Qg9OUPh\nZNSMRfQQHc6YmIVWgaPfTfVw+7AnddrvltwB/wIxAL+Q5ZXtglRrFFoYNdHplHb+\nBPgWsltlXXY1BmOEUWgAZLEs+tvSV8enIVlUSZ+Lxg==\n-----END RSA PRIVATE KEY-----"
       certificate:
         - snakeoil:
             cert_path: "/etc/pki/tls"

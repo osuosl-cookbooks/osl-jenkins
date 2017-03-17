@@ -20,6 +20,19 @@
 # }
 default['osl-jenkins']['credentials']['git'] = []
 
+# user: (String) The username jenkins should ssh as using this key
+# private_key: (String) An openssh private key
+# password: (String) A password for the private key (optional)
+#
+# default['osl-jenkins']['credentials']['ssh'] = {
+#   'cookbook_uploader' => {
+#     user: 'ramereth',
+#     private_key: 'private rsa key',
+#     passphrase: 'passphrase for rsa key'
+#   }
+# }
+default['osl-jenkins']['credentials']['ssh'] = []
+
 # user: (String)  If Jenkins has username/password security enabled (as opposed to being public and not requiring a
 #                 login), you must specify a Jenkins user that has permission to create jobs since the Jenkins cookbook
 #                 uses the Jenkins API locally to configure new jobs, and so needs credentials.
