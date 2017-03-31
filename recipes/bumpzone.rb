@@ -50,7 +50,7 @@ cookbook_file ::File.join(bumpzone['lib_path'], 'bumpzone.rb') do
 end
 
 {
-  'mailer' => '1.19',
+  'mailer' => '1.20',
   'token-macro' => '2.0',
   'git' => '3.1.0',
   'github' => '1.26.1',

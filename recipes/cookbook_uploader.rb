@@ -27,7 +27,7 @@ include_recipe 'osl-jenkins::master'
 # text-finder: for marking unstable builds (used in this case to mark builds
 #   where no action was taken)
 {
-  'mailer' => '1.19',
+  'mailer' => '1.20',
   'token-macro' => '2.0',
   'git' => '3.1.0',
   'github' => '1.26.1',

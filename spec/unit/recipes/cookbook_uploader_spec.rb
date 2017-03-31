@@ -35,7 +35,7 @@ describe 'osl-jenkins::cookbook_uploader' do
         expect { chef_run }.to_not raise_error
       end
       {
-        'mailer' => '1.19',
+        'mailer' => '1.20',
         'token-macro' => '2.0',
         'git' => '3.1.0',
         'github' => '1.26.1',
