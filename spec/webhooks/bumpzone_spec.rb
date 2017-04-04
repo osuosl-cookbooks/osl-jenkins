@@ -63,7 +63,7 @@ describe BumpZone do
     end
   end
   context '#changed_files' do
-    let(:github_mock) { double('Octokit', commits: [], issues: [], same_options?: false) }
+    let(:github_mock) { double('Octokit', commits: [], issues: [], same_options?: false, auto_paginate: true) }
     before :each do
       allow(Octokit::Client).to receive(:new) { github_mock }
     end
@@ -227,7 +227,7 @@ EOF
     end
   end
   context '#start' do
-    let(:github_mock) { double('Octokit', commits: [], issues: [], same_options?: false) }
+    let(:github_mock) { double('Octokit', commits: [], issues: [], same_options?: false, auto_paginate: true) }
     let(:git_mock) { double('Git::Base') }
     before :each do
       allow(Octokit::Client).to receive(:new) { github_mock }

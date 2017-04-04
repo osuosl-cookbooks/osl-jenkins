@@ -32,7 +32,7 @@ class CheckZone
   end
 
   def self.github_init(json)
-    @github = Octokit::Client.new(access_token: ENV['GITHUB_TOKEN'])
+    @github = Octokit::Client.new(access_token: ENV['GITHUB_TOKEN'], auto_paginate: true)
     @repo_path = json['repository']['full_name']
     @issue_number = json['number']
   end

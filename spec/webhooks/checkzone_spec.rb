@@ -30,7 +30,7 @@ RSpec.configure do |c|
 end
 
 describe CheckZone do
-  let(:github_mock) { double('Octokit', commits: [], issues: [], same_options?: false) }
+  let(:github_mock) { double('Octokit', commits: [], issues: [], same_options?: false, auto_paginate: true) }
   context '#reset' do
     it 'resets variables' do
       CheckZone.add_issue_msg('not here')

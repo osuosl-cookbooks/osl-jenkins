@@ -45,7 +45,7 @@ class BumpZone
   end
 
   def self.changed_files(json)
-    github = Octokit::Client.new(access_token: ENV['GITHUB_TOKEN'])
+    github = Octokit::Client.new(access_token: ENV['GITHUB_TOKEN'], auto_paginate: true)
     repo_path = json['repository']['full_name']
     issue_number = json['number']
     github.pull_request_files(repo_path, issue_number)
