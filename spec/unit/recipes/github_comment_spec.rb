@@ -55,7 +55,7 @@ describe 'osl-jenkins::github_comment' do
       {
         'git' => '3.2.0',
         'github' => '1.26.2',
-        'ghprb' => '1.35.0'
+        'ghprb' => '1.36.1'
       }.each do |plugin, ver|
         it do
           expect(chef_run).to install_jenkins_plugin(plugin).with(version: ver)
