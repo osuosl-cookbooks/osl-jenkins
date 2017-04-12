@@ -50,8 +50,8 @@ cookbook_file ::File.join(github_comment['lib_path'], 'github_comment.rb') do
 end
 
 {
-  'git' => '2.5.2',
-  'github' => '1.19.1',
+  'git' => '3.2.0',
+  'github' => '1.26.2',
   'ghprb' => '1.35.0'
 }.each do |p, v|
   jenkins_plugin p do

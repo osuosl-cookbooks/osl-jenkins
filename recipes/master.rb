@@ -72,8 +72,8 @@ jenkins_command 'safe-restart' do
 end
 
 {
-  'credentials' => '2.1.11',
-  'credentials-binding' => '1.10'
+  'credentials' => '2.1.13',
+  'credentials-binding' => '1.11'
 }.each do |p, v|
   jenkins_plugin p do
     version v

@@ -31,8 +31,8 @@ describe 'osl-jenkins::master' do
         expect(chef_run).to_not execute_jenkins_command('safe-restart')
       end
       {
-        'credentials' => '2.1.11',
-        'credentials-binding' => '1.10',
+        'credentials' => '2.1.13',
+        'credentials-binding' => '1.11',
         'ssh-credentials' => '1.12'
       }.each do |plugin, ver|
         it do

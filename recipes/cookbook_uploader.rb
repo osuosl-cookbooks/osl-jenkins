@@ -28,9 +28,9 @@ include_recipe 'osl-jenkins::master'
 #   where no action was taken)
 {
   'mailer' => '1.20',
-  'token-macro' => '2.0',
-  'git' => '3.1.0',
-  'github' => '1.26.1',
+  'token-macro' => '2.1',
+  'git' => '3.2.0',
+  'github' => '1.26.2',
   'build-token-root' => '1.4',
   'parameterized-trigger' => '2.33',
   'text-finder' => '1.10',
