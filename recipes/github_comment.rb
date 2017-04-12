@@ -52,7 +52,7 @@ end
 {
   'git' => '3.2.0',
   'github' => '1.26.2',
-  'ghprb' => '1.35.0'
+  'ghprb' => '1.36.1'
 }.each do |p, v|
   jenkins_plugin p do
     version v
