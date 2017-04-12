@@ -20,7 +20,7 @@
 # Don't automatically update jenkins
 node.override['yum-cron']['yum_parameter'] = '-x jenkins'
 
-node.default['jenkins']['master']['version'] = '1.654-1.1'
+node.default['jenkins']['master']['version'] = '2.46.1-1.1'
 node.default['jenkins']['master']['listen_address'] = '127.0.0.1'
 
 node.default['java']['jdk_version'] = '8'
@@ -67,14 +67,23 @@ if platform_family?('rhel')
   end
 end
 
+jenkins_command 'safe-restart' do
+  action :nothing
+end
+
 {
   'credentials' => '2.1.11',
   'credentials-binding' => '1.10'
 }.each do |p, v|
   jenkins_plugin p do
     version v
-    notifies :restart, 'service[jenkins]'
+    notifies :execute, 'jenkins_command[safe-restart]'
   end
+end
+
+jenkins_plugin 'ssh-credentials' do
+  version '1.12'
+  notifies :execute, 'jenkins_command[safe-restart]', :immediately
 end
 
 secrets = credential_secrets
@@ -83,16 +92,17 @@ secrets = credential_secrets
 node.run_state[:jenkins_private_key] = secrets['jenkins_private_key'] # ~FC001
 
 # Add git credentials into Jenkins
-secrets['git'].to_a.each do |id, cred|
+secrets['git'].to_a.each do |git_id, cred|
   jenkins_password_credentials cred['user'] do
-    id id
+    id git_id
     password cred['token']
   end
 end
 
 # Add ssh credentials into Jenkins
-secrets['ssh'].to_a.each do |_id, cred|
+secrets['ssh'].to_a.each do |ssh_id, cred|
   jenkins_private_key_credentials cred['user'] do
+    id ssh_id
     private_key cred['private_key']
     passphrase cred['passphrase']
   end

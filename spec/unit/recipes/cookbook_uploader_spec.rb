@@ -35,11 +35,14 @@ describe 'osl-jenkins::cookbook_uploader' do
         expect { chef_run }.to_not raise_error
       end
       {
-        'git' => '2.5.2',
-        'github' => '1.19.1',
+        'mailer' => '1.20',
+        'token-macro' => '2.0',
+        'git' => '3.1.0',
+        'github' => '1.26.1',
         'build-token-root' => '1.4',
-        'parameterized-trigger' => '2.30',
-        'text-finder' => '1.10'
+        'parameterized-trigger' => '2.33',
+        'text-finder' => '1.10',
+        'script-security' => '1.27'
       }.each do |plugin, ver|
         it do
           expect(chef_run).to install_jenkins_plugin(plugin).with(version: ver)
