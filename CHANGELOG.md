@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.0.2 (2017-04-12)
+------------------
+- Update ghprb plugin which supports Jenkins 2.0
+
 1.0.1 (2017-04-12)
 ------------------
 - Update pinned versions of various jenkins plugins
