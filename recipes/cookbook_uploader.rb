@@ -55,7 +55,7 @@ git_cred = secrets['git']['cookbook_uploader']
 jenkins_cred = secrets['jenkins']['cookbook_uploader']
 
 # Install necessary gems
-%w(git octokit).each do |g|
+%w(git octokit faraday-http-cache).each do |g|
   chef_gem g do # ~FC009
     compile_time true
   end

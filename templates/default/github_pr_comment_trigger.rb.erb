@@ -14,6 +14,7 @@
 require 'git'
 require 'json'
 require 'octokit'
+require 'faraday-http-cache'
 
 METADATA_FILE = 'metadata.rb'.freeze
 CHANGELOG_FILE = 'CHANGELOG.md'.freeze
@@ -26,6 +27,14 @@ LEVELS = {
 AUTHORIZED_USERS = <%= @authorized_users %>.freeze
 AUTHORIZED_ORGS = <%= @authorized_orgs %>.freeze
 AUTHORIZED_TEAMS = <%= @authorized_teams %>.freeze
+
+# Github API caching
+stack = Faraday::RackBuilder.new do |builder|
+  builder.use Faraday::HttpCache, serializer: Marshal, shared_cache: false
+  builder.use Octokit::Response::RaiseError
+  builder.adapter Faraday.default_adapter
+end
+Octokit.middleware = stack
 
 # Given a GitHub client, a GitHub username, and a GitHub team (of the form
 # "$ORGNAME/$TEAMNAME"), returns whether the given user is a member of the
