@@ -19,11 +19,12 @@ node.default['osl-jenkins']['cookbook_uploader'].tap do |conf|
   conf['authorized_teams'] = %w(osuosl-cookbooks/staff)
   conf['chef_repo'] = 'osuosl/chef-repo'
   conf['default_environments'] = %w(
-    production
-    workstation
-    openstack_production
-    openstack_staging
+    openstack_mitaka
+    phase_out_nginx
     phpbb
+    production
+    testing
+    workstation
   )
   conf['org'] = 'osuosl-cookbooks'
 end
