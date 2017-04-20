@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.1.0 (2017-04-20)
+------------------
+- Jenkins scripts and logic for automatically updating/checking the zonefiles
+
 1.0.3 (2017-04-13)
 ------------------
 - Update list of default environments the bump ~ command uses
