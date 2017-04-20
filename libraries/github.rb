@@ -1,3 +1,15 @@
+if defined?(Faraday::HttpCache)
+  require 'faraday-http-cache'
+
+  # Github API caching
+  stack = Faraday::RackBuilder.new do |builder|
+    builder.use Faraday::HttpCache, serializer: Marshal, shared_cache: false
+    builder.use Octokit::Response::RaiseError
+    builder.adapter Faraday.default_adapter
+  end
+  Octokit.middleware = stack
+end
+
 # Given a GitHub organization name and a GitHub API token with access to view
 # the repositories in that org, returns a list of all repo names in the org.
 #
@@ -6,7 +18,6 @@
 # @param org_name [String] Name of GitHub organization.
 def collect_github_repositories(github_token, org_name)
   require 'octokit'
-
   github = Octokit::Client.new(access_token: github_token)
   github.auto_paginate = true
 

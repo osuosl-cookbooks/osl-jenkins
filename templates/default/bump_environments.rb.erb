@@ -10,6 +10,15 @@ require 'git'
 require 'json'
 require 'octokit'
 require 'set'
+require 'faraday-http-cache'
+
+# Github API caching
+stack = Faraday::RackBuilder.new do |builder|
+  builder.use Faraday::HttpCache, serializer: Marshal, shared_cache: false
+  builder.use Octokit::Response::RaiseError
+  builder.adapter Faraday.default_adapter
+end
+Octokit.middleware = stack
 
 # TODO: Validate input
 

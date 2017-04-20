@@ -20,7 +20,7 @@ include_recipe 'osl-jenkins::master'
 bumpzone = node['osl-jenkins']['bumpzone']
 
 # Install necessary gems
-%w(git octokit).each do |g|
+%w(git octokit faraday-http-cache).each do |g|
   chef_gem g do # ~FC009
     compile_time true
   end

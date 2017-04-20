@@ -48,7 +48,7 @@ describe 'osl-jenkins::cookbook_uploader' do
           expect(chef_run).to install_jenkins_plugin(plugin).with(version: ver)
         end
       end
-      %w(git octokit).each do |g|
+      %w(git octokit faraday-http-cache).each do |g|
         it do
           expect(chef_run).to install_chef_gem(g).with(compile_time: true)
         end
