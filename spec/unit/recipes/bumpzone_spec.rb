@@ -24,31 +24,47 @@ describe 'osl-jenkins::bumpzone' do
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
       end
+      it do
+        expect(chef_run).to install_jenkins_plugin('matrix-project').with(version: '1.7.1')
+      end
+      it do
+        expect(chef_run.jenkins_plugin('matrix-project')).to notify('jenkins_command[safe-restart]')
+      end
       %w(/var/lib/jenkins/bin /var/lib/jenkins/lib).each do |d|
         it do
           expect(chef_run).to create_directory(d).with(recursive: true)
         end
       end
-      it do
-        expect(chef_run).to create_cookbook_file('/var/lib/jenkins/bin/bumpzone.rb')
-          .with(
-            source: 'bin/bumpzone.rb',
-            owner: 'jenkins',
-            group: 'jenkins',
-            mode: 0550
-          )
+      %w(bumpzone.rb checkzone.rb).each do |f|
+        it do
+          expect(chef_run).to create_cookbook_file("/var/lib/jenkins/bin/#{f}")
+            .with(
+              source: "bin/#{f}",
+              owner: 'jenkins',
+              group: 'jenkins',
+              mode: 0550
+            )
+        end
+        it do
+          expect(chef_run).to create_cookbook_file("/var/lib/jenkins/lib/#{f}")
+            .with(
+              source: "lib/#{f}",
+              owner: 'jenkins',
+              group: 'jenkins',
+              mode: 0440
+            )
+        end
       end
       it do
-        expect(chef_run).to create_cookbook_file('/var/lib/jenkins/lib/bumpzone.rb')
-          .with(
-            source: 'lib/bumpzone.rb',
-            owner: 'jenkins',
-            group: 'jenkins',
-            mode: 0440
-          )
+        expect(chef_run).to install_package('bind')
       end
-      it do
-        expect(chef_run).to create_directory('/var/chef/cache/bumpzone').with(recursive: true)
+      %w(bumpzone checkzone update-zonefiles).each do |j|
+        it do
+          expect(chef_run).to create_directory("/var/chef/cache/#{j}").with(recursive: true)
+        end
+        it do
+          expect(chef_run).to create_jenkins_job(j).with(config: "/var/chef/cache/#{j}/config.xml")
+        end
       end
       it do
         expect(chef_run).to create_template('/var/chef/cache/bumpzone/config.xml')
@@ -62,7 +78,26 @@ describe 'osl-jenkins::bumpzone' do
           )
       end
       it do
-        expect(chef_run).to create_jenkins_job('bumpzone').with(config: '/var/chef/cache/bumpzone/config.xml')
+        expect(chef_run).to create_template('/var/chef/cache/checkzone/config.xml')
+          .with(
+            source: 'checkzone.config.xml.erb',
+            mode: 0440,
+            variables: {
+              github_url: 'https://github.com/osuosl/zonefiles.git',
+              trigger_token: 'trigger_token'
+            }
+          )
+      end
+      it do
+        expect(chef_run).to create_template('/var/chef/cache/update-zonefiles/config.xml')
+          .with(
+            source: 'update-zonefiles.config.xml.erb',
+            mode: 0440,
+            variables: {
+              github_url: 'https://github.com/osuosl/zonefiles.git',
+              dns_master: 'dns_master'
+            }
+          )
       end
     end
   end

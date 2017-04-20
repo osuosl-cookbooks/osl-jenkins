@@ -1,0 +1,5 @@
+db.osuosl.org:24: unknown RR type 'AA'
+db.osuosl.org:25: unknown RR type 'AA'
+db.osuosl.org:26: unknown RR type 'AA'
+zone osuosl.org/IN: loading from master file db.osuosl.org failed: unknown class/type
+zone osuosl.org/IN: not loaded due to errors.
