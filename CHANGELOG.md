@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.1.2 (2017-04-27)
+------------------
+- Assign master node for bumpzone/checkzone jobs
+
 1.1.1 (2017-04-20)
 ------------------
 - Enable Octokit API caching
