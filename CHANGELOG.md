@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.1.3 (2017-05-02)
+------------------
+- Updating to 2.46.2
+
 1.1.2 (2017-04-27)
 ------------------
 - Assign master node for bumpzone/checkzone jobs
