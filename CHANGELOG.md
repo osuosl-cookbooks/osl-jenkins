@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.1.4 (2017-05-05)
+------------------
+- Set canRoam to false so assigned node works properly
+
 1.1.3 (2017-05-02)
 ------------------
 - Updating to 2.46.2
