@@ -174,12 +174,44 @@ suites:
           override_repos:
             - test-cookbook
           github_insecure_hook: true
-          credentials:
-            github_user: <%= ENV['GITHUB_USER'] %>
-            github_token: <%= ENV['GITHUB_TOKEN'] %>
-            trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
-            jenkins_user: <%= ENV['JENKINS_USER'] %>
-            jenkins_pass: <%= ENV['JENKINS_PASS'] %>
+        credentials:
+          git:
+            github_comment:
+              user: <%= ENV['GITHUB_USER'] %>
+              token: <%= ENV['GITHUB_TOKEN'] %>
+          jenkins:
+            github_comment:
+              user: <%= ENV['JENKINS_USER'] %>
+              api_token: <%= ENV['JENKINS_PASS'] %>
+              trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
+      jenkins:
+        master:
+          listen_address: '0.0.0.0'
+  - name: site_pr_builder
+    run_list:
+      - recipe[osl-jenkins::site_pr_builder]
+    encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
+    provisioner: chef_zero
+    driver:
+      security_groups:
+        - default
+        - github
+    attributes:
+      osl-jenkins:
+        github_comment:
+          override_repos:
+            - test-cookbook
+          github_insecure_hook: true
+        credentials:
+          git:
+            site_pr_builder:
+              user: <%= ENV['GITHUB_USER'] %>
+              token: <%= ENV['GITHUB_TOKEN'] %>
+          jenkins:
+            site_pr_builder:
+              user: <%= ENV['JENKINS_USER'] %>
+              api_token: <%= ENV['JENKINS_PASS'] %>
+              trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
       jenkins:
         master:
           listen_address: '0.0.0.0'
