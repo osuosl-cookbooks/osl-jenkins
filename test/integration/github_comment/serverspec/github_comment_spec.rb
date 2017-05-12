@@ -24,3 +24,8 @@ end
 describe 'github_comment' do
   it_behaves_like 'jenkins_server'
 end
+
+describe command('curl -k https://127.0.0.1/job/github_comment/ -o /dev/null -v 2>&1') do
+  its(:stdout) { should match(/X-Jenkins-Session:/) }
+  its(:exit_status) { should eq 0 }
+end
