@@ -53,7 +53,6 @@ describe 'osl-jenkins::github_comment' do
         end
       end
       {
-        'git' => '3.2.0',
         'github' => '1.26.2',
         'ghprb' => '1.36.1'
       }.each do |plugin, ver|
