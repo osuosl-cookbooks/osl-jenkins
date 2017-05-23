@@ -14,21 +14,5 @@ describe GithubComment do
 
       GithubComment.start
     end
-
-    it 'creates the directory' do
-      expect(chef_run).to create_directory('/var/chef/cache/github_comment').with(recursive: true)
-    end
-
-    it 'creates the github_comment jenkins job' do
-      expect(chef_run).to create_jenkins_job('github_comment').with(config: '/var/chef/cache/github_comment/config.xml')
-    end
-
-    it 'creates the github pr job config file' do
-      expect(chef_run).to create_template('/var/chef/cache/github_comment/config.xml')
-        .with(
-          source: 'github_comment.config.xml.erb',
-          mode: 0440
-        )
-    end
   end
 end
