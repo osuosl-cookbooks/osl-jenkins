@@ -60,13 +60,15 @@ describe 'osl-jenkins::github_comment' do
           expect(chef_run).to install_jenkins_plugin(plugin).with(version: ver)
         end
       end
-      
+
       it 'creates the directory' do
         expect(chef_run).to create_directory('/var/chef/cache/github_comment').with(recursive: true)
       end
 
       it 'creates the github_comment jenkins job' do
-        expect(chef_run).to create_jenkins_job('github_comment').with(config: '/var/chef/cache/github_comment/config.xml')
+        expect(chef_run).to create_jenkins_job('github_comment').with(
+          config: '/var/chef/cache/github_comment/config.xml'
+        )
       end
 
       it 'creates the github pr job config file' do
