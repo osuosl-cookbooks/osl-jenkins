@@ -51,8 +51,7 @@ end
 
 {
   'github' => '1.26.2',
-  'ghprb' => '1.36.1',
-  'credentials-binding' => '1.10'
+  'ghprb' => '1.36.1'
 }.each do |p, v|
   jenkins_plugin p do
     version v
