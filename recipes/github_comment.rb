@@ -50,7 +50,6 @@ cookbook_file ::File.join(github_comment['lib_path'], 'github_comment.rb') do
 end
 
 {
-  'git' => '3.2.0',
   'github' => '1.26.2',
   'ghprb' => '1.36.1'
 }.each do |p, v|
@@ -58,4 +57,20 @@ end
     version v
     notifies :restart, 'service[jenkins]'
   end
+end
+
+github_comment_xml = ::File.join(Chef::Config[:file_cache_path], 'github_comment', 'config.xml')
+
+directory ::File.dirname(github_comment_xml) do
+  recursive true
+end
+
+template github_comment_xml do
+  source 'github_comment.config.xml.erb'
+  mode 0440
+end
+
+jenkins_job 'github_comment' do
+  config github_comment_xml
+  action [:create, :enable]
 end
