@@ -27,7 +27,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     external-monitor-job:1.4
     ghprb:1.36.1
     git:3.2.0
-    git-client:2.4.1
+    git-client:2.4.6
     github:1.26.2
     github-api:1.85
     github-branch-source:2.0.5
@@ -69,7 +69,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     scm-api:2.1.1
     script-security:1.27
     ssh-agent:1.15
-    ssh-credentials:1.12
+    ssh-credentials:1.13
     ssh-slaves:1.16
     structs:1.6
     subversion:2.5.7
