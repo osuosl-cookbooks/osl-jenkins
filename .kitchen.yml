@@ -3,6 +3,14 @@ provisioner:
   name: chef_solo
   encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
   data_bags_path: test/integration/data_bags
+  attributes:
+    certificate:
+      - snakeoil:
+          cert_path: "/etc/pki/tls"
+          cert_file: wildcard.pem
+          key_file: wildcard.key
+          chain_file: wildcard-bundle.crt
+          combined_file: true
 
 suites:
   - name: default
@@ -54,8 +62,6 @@ suites:
   - name: plugins
     run_list:
       - recipe[osl-jenkins::master]
-      - recipe[jenkins::java]
-      - recipe[jenkins::master]
       - recipe[osl-jenkins::plugins]
   - name: ftp
     run_list:

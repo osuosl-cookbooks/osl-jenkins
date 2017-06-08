@@ -30,21 +30,6 @@ describe 'osl-jenkins::master' do
       it do
         expect(chef_run).to_not execute_jenkins_command('safe-restart')
       end
-      {
-        'credentials' => '2.1.13',
-        'credentials-binding' => '1.11',
-        'ssh-credentials' => '1.12'
-      }.each do |plugin, ver|
-        it do
-          expect(chef_run).to install_jenkins_plugin(plugin).with(version: ver)
-        end
-        it do
-          expect(chef_run.jenkins_plugin(plugin)).to notify('jenkins_command[safe-restart]')
-        end
-      end
-      it do
-        expect(chef_run.jenkins_plugin('ssh-credentials')).to notify('jenkins_command[safe-restart]').immediately
-      end
       context 'set secrets in attribute' do
         cached(:chef_run) do
           ChefSpec::SoloRunner.new(p) do |node|

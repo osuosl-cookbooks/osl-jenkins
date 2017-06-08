@@ -52,14 +52,6 @@ describe 'osl-jenkins::github_comment' do
           expect(chef_run).to install_chef_gem(g).with(compile_time: true)
         end
       end
-      {
-        'github' => '1.26.2',
-        'ghprb' => '1.36.1'
-      }.each do |plugin, ver|
-        it do
-          expect(chef_run).to install_jenkins_plugin(plugin).with(version: ver)
-        end
-      end
 
       it 'creates the directory' do
         expect(chef_run).to create_directory('/var/chef/cache/github_comment').with(recursive: true)

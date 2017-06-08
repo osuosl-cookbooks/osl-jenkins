@@ -19,29 +19,6 @@
 
 include_recipe 'osl-jenkins::master'
 
-# Lock version per plugin so it doesn't install latest on every run.
-# git and github: for git
-# build-token-root: for triggering from Github PRs
-# parameterized-trigger: for triggering other jobs (e.g. the environment-bumper
-#   job) with parameters
-# text-finder: for marking unstable builds (used in this case to mark builds
-#   where no action was taken)
-{
-  'mailer' => '1.20',
-  'token-macro' => '2.1',
-  'git' => '3.2.0',
-  'github' => '1.26.2',
-  'build-token-root' => '1.4',
-  'parameterized-trigger' => '2.33',
-  'text-finder' => '1.10',
-  'script-security' => '1.27'
-}.each do |p, v|
-  jenkins_plugin p do
-    version v
-    notifies :execute, 'jenkins_command[safe-restart]'
-  end
-end
-
 org_name = node['osl-jenkins']['cookbook_uploader']['org']
 chef_repo = node['osl-jenkins']['cookbook_uploader']['chef_repo']
 

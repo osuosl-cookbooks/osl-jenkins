@@ -49,16 +49,6 @@ cookbook_file ::File.join(github_comment['lib_path'], 'github_comment.rb') do
   mode 0440
 end
 
-{
-  'github' => '1.26.2',
-  'ghprb' => '1.36.1'
-}.each do |p, v|
-  jenkins_plugin p do
-    version v
-    notifies :restart, 'service[jenkins]'
-  end
-end
-
 github_comment_xml = ::File.join(Chef::Config[:file_cache_path], 'github_comment', 'config.xml')
 
 directory ::File.dirname(github_comment_xml) do

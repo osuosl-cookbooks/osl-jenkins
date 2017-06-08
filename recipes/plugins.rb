@@ -16,9 +16,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-node['osl-jenkins']['plugins'].each do |plugin|
-  jenkins_plugin plugin do
-    notifies :restart, 'service[jenkins]'
+node['osl-jenkins']['plugins'].each do |plugins_version|
+  p, v = plugins_version.split(':')
+  jenkins_plugin p do
+    version v
+    install_deps false
+    notifies :execute, 'jenkins_command[safe-restart]'
   end
 end
