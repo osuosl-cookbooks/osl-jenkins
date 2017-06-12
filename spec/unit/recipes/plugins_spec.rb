@@ -11,6 +11,21 @@ describe 'osl-jenkins::plugins' do
         expect { chef_run }.to_not raise_error
       end
       %w(
+        credentials:2.1.13
+        ssh-credentials:1.13
+      ).each do |plugins_version|
+        plugin, version = plugins_version.split(':')
+        it do
+          expect(chef_run).to install_jenkins_plugin(plugin).with(
+            version: version,
+            install_deps: false
+          )
+        end
+        it do
+          expect(chef_run.jenkins_plugin(plugin)).to notify('jenkins_command[safe-restart]').to(:execute).immediately
+        end
+      end
+      %w(
         ace-editor:1.1
         ant:1.2
         antisamy-markup-formatter:1.3
@@ -20,7 +35,6 @@ describe 'osl-jenkins::plugins' do
         build-token-root:1.4
         cloudbees-folder:6.0.3
         conditional-buildstep:1.3.1
-        credentials:2.1.13
         credentials-binding:1.11
         cvs:2.12
         display-url-api:1.1.1
@@ -72,7 +86,6 @@ describe 'osl-jenkins::plugins' do
         scm-api:2.1.1
         script-security:1.27
         ssh-agent:1.15
-        ssh-credentials:1.13
         ssh-slaves:1.16
         structs:1.6
         subversion:2.5.7

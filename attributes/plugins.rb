@@ -4,6 +4,10 @@
 #   plugin ->
 #     println ("${plugin.getShortName()}:${plugin.getVersion()}")
 # }
+default['osl-jenkins']['restart_plugins'] = %w(
+  credentials:2.1.13
+  ssh-credentials:1.13
+)
 default['osl-jenkins']['plugins'] = %w(
   ace-editor:1.1
   ant:1.2
@@ -14,7 +18,6 @@ default['osl-jenkins']['plugins'] = %w(
   build-token-root:1.4
   cloudbees-folder:6.0.3
   conditional-buildstep:1.3.1
-  credentials:2.1.13
   credentials-binding:1.11
   cvs:2.12
   display-url-api:1.1.1
@@ -66,7 +69,6 @@ default['osl-jenkins']['plugins'] = %w(
   scm-api:2.1.1
   script-security:1.27
   ssh-agent:1.15
-  ssh-credentials:1.13
   ssh-slaves:1.16
   structs:1.6
   subversion:2.5.7
