@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.3.0 (2017-06-13)
+------------------
+- Install plugins all from one recipe
+
 1.2.0 (2017-05-25)
 ------------------
 - Kennric/pr comment job
