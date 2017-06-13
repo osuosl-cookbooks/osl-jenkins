@@ -34,20 +34,6 @@ describe 'osl-jenkins::cookbook_uploader' do
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
       end
-      {
-        'mailer' => '1.20',
-        'token-macro' => '2.1',
-        'git' => '3.2.0',
-        'github' => '1.26.2',
-        'build-token-root' => '1.4',
-        'parameterized-trigger' => '2.33',
-        'text-finder' => '1.10',
-        'script-security' => '1.27'
-      }.each do |plugin, ver|
-        it do
-          expect(chef_run).to install_jenkins_plugin(plugin).with(version: ver)
-        end
-      end
       %w(git octokit faraday-http-cache).each do |g|
         it do
           expect(chef_run).to install_chef_gem(g).with(compile_time: true)

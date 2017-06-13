@@ -1,8 +1,19 @@
 ---
+driver:
+  flavor_ref: 'm1.medium'
+
 provisioner:
   name: chef_solo
   encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
   data_bags_path: test/integration/data_bags
+  attributes:
+    certificate:
+      - snakeoil:
+          cert_path: "/etc/pki/tls"
+          cert_file: wildcard.pem
+          key_file: wildcard.key
+          chain_file: wildcard-bundle.crt
+          combined_file: true
 
 suites:
   - name: default
@@ -18,13 +29,6 @@ suites:
             alfred:
               user: 'alfred'
               private_key: "-----BEGIN RSA PRIVATE KEY-----\nMIIBywIBAAJhAMSrk3a8XLZW0UdtDS49VdaPRskJtrCIPfJy9ZWMA5LyCob+e0DW\nRN33vA+x0wmw4hievTtpNDbntGpN+rnq5Xl/Nlpo+rxa+eLj3anU030gYYKFc0K0\nC7wu+EtZ6ZvKpQIDAQABAmA9cxKfTdl2C4hWVeeBZB627IuEcymG3PrmDy9Wq6nO\nNxw887SVHJ3l8OrsyHYVGBPwJXd2dfrFVwjdD6UeHXIqx2Lb9I1CzYVa7RkGL1ZU\nTAb1JdDf5vZFpELlkqczcp0CMQD2JfP/r55uRowVUs9+c7MN8J5Cg4YXDw6MQgpE\nE3+x92xM3TQzGM3PNeNpuby0fx8CMQDMiqsnoQQe8dEbAPetgBHZncA4TvS1w6KF\nq72HOwa2PW7DQXsiwuIN/wNhgALSMbsCMQCJJT5c8NnCMZZtbxVjLE3Qb4eOIb/9\naws9BLK5mW+llekGrp0d9yz8zdammrFUlBsCMF3qEZn5gVXf+/3lHNOp6Qg9OUPh\nZNSMRfQQHc6YmIVWgaPfTfVw+7AnddrvltwB/wIxAL+Q5ZXtglRrFFoYNdHplHb+\nBPgWsltlXXY1BmOEUWgAZLEs+tvSV8enIVlUSZ+Lxg==\n-----END RSA PRIVATE KEY-----"
-      certificate:
-        - snakeoil:
-            cert_path: "/etc/pki/tls"
-            cert_file: wildcard.pem
-            key_file: wildcard.key
-            chain_file: wildcard-bundle.crt
-            combined_file: true
 
   - name: haproxy
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
@@ -32,14 +36,6 @@ suites:
       - recipe[certificate::manage_by_attributes]
       - recipe[osl-jenkins::haproxy]
       - recipe[osl-haproxy::default]
-    attributes:
-      certificate:
-        - snakeoil:
-            cert_path: "/etc/pki/tls"
-            cert_file: wildcard.pem
-            key_file: wildcard.key
-            chain_file: wildcard-bundle.crt
-            combined_file: true
   - name: chef_backup
     run_list:
       - recipe[osl-jenkins::chef_backup]
@@ -54,8 +50,6 @@ suites:
   - name: plugins
     run_list:
       - recipe[osl-jenkins::master]
-      - recipe[jenkins::java]
-      - recipe[jenkins::master]
       - recipe[osl-jenkins::plugins]
   - name: ftp
     run_list:
@@ -110,13 +104,6 @@ suites:
       jenkins:
         master:
           listen_address: '0.0.0.0'
-      certificate:
-        - snakeoil:
-            cert_path: "/etc/pki/tls"
-            cert_file: wildcard.pem
-            key_file: wildcard.key
-            chain_file: wildcard-bundle.crt
-            combined_file: true
   # See documentation from cookbook-uploader suite on how to run this suite
   - name: jenkins1
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
@@ -146,13 +133,6 @@ suites:
       jenkins:
         master:
           listen_address: '0.0.0.0'
-      certificate:
-        - snakeoil:
-            cert_path: "/etc/pki/tls"
-            cert_file: wildcard.pem
-            key_file: wildcard.key
-            chain_file: wildcard-bundle.crt
-            combined_file: true
   - name: bumpzone
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     run_list:
@@ -179,13 +159,6 @@ suites:
       jenkins:
         master:
           listen_address: '0.0.0.0'
-      certificate:
-        - snakeoil:
-            cert_path: "/etc/pki/tls"
-            cert_file: wildcard.pem
-            key_file: wildcard.key
-            chain_file: wildcard-bundle.crt
-            combined_file: true
   - name: github_comment
     run_list:
       - recipe[osl-jenkins::github_comment]
@@ -210,10 +183,3 @@ suites:
       jenkins:
         master:
           listen_address: '0.0.0.0'
-      certificate:
-        - snakeoil:
-            cert_path: "/etc/pki/tls"
-            cert_file: wildcard.pem
-            key_file: wildcard.key
-            chain_file: wildcard-bundle.crt
-            combined_file: true

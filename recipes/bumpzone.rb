@@ -51,23 +51,6 @@ end
   end
 end
 
-{
-  'mailer' => '1.20',
-  'token-macro' => '2.1',
-  'git' => '3.2.0',
-  'github' => '1.26.2',
-  'matrix-project' => '1.7.1',
-  'build-token-root' => '1.4',
-  'parameterized-trigger' => '2.33',
-  'text-finder' => '1.10',
-  'script-security' => '1.27'
-}.each do |p, v|
-  jenkins_plugin p do
-    version v
-    notifies :execute, 'jenkins_command[safe-restart]'
-  end
-end
-
 package 'bind'
 
 secrets = credential_secrets

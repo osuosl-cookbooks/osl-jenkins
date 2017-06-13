@@ -24,12 +24,6 @@ describe 'osl-jenkins::bumpzone' do
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
       end
-      it do
-        expect(chef_run).to install_jenkins_plugin('matrix-project').with(version: '1.7.1')
-      end
-      it do
-        expect(chef_run.jenkins_plugin('matrix-project')).to notify('jenkins_command[safe-restart]')
-      end
       %w(/var/lib/jenkins/bin /var/lib/jenkins/lib).each do |d|
         it do
           expect(chef_run).to create_directory(d).with(recursive: true)

@@ -71,20 +71,7 @@ jenkins_command 'safe-restart' do
   action :nothing
 end
 
-{
-  'credentials' => '2.1.13',
-  'credentials-binding' => '1.11'
-}.each do |p, v|
-  jenkins_plugin p do
-    version v
-    notifies :execute, 'jenkins_command[safe-restart]'
-  end
-end
-
-jenkins_plugin 'ssh-credentials' do
-  version '1.12'
-  notifies :execute, 'jenkins_command[safe-restart]', :immediately
-end
+include_recipe 'osl-jenkins::plugins'
 
 secrets = credential_secrets
 
