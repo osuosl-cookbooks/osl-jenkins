@@ -11,7 +11,7 @@ describe 'osl-jenkins::master' do
         expect { chef_run }.to_not raise_error
       end
       it do
-        expect(chef_run).to install_package('jenkins').with(version: '2.46.2-1.1')
+        expect(chef_run).to install_package('jenkins').with(version: '2.46.3-1.1')
       end
       case p
       when CENTOS_6_OPTS
