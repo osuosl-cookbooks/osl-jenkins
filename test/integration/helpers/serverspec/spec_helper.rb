@@ -22,6 +22,6 @@ shared_examples_for 'jenkins_server' do
   end
 
   describe command('curl -k https://localhost/about/') do
-    its(:stdout) { should match(/Jenkins 2.46.2/) }
+    its(:stdout) { should match(/Jenkins 2.46.3/) }
   end
 end
