@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.5.1 (2017-06-28)
+------------------
+- Kennric/GitHub org fixes
+
 1.5.0 (2017-06-28)
 ------------------
 - Remove osl_cookbook_uploader / Add missing recipes to jenkins1
