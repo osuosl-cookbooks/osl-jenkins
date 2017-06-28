@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.5.2 (2017-06-28)
+------------------
+- Add gwm environment to default cookbook bumps
+
 1.5.1 (2017-06-28)
 ------------------
 - Kennric/GitHub org fixes
