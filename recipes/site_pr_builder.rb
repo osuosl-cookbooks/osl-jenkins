@@ -20,8 +20,10 @@ include_recipe 'osl-jenkins::github_comment'
 
 site_pr_builder = node['osl-jenkins']['site_pr_builder']
 
-site_pr_builder['sites_to_build'].each do |site, github_url|
-  job_name = site + '_pr_builder'
+site_pr_builder['sites_to_build'].each do |site, org|
+  job_name = "#{site}_pr_builder"
+  repo = "#{org}/#{site}"
+  github_url = "https://github.com/#{repo}"
   rsync_target = "/var/www/staging.osuosl.org/#{site}-$ghprbPullId"
   site_url = "http://#{site}-$ghprbPullId.staging.osuosl.org"
 
@@ -36,6 +38,7 @@ site_pr_builder['sites_to_build'].each do |site, github_url|
     mode 0440
     variables(
       name: site,
+      repo: repo
       github_url: github_url,
       site_url: site_url,
       rsync_target: rsync_target
