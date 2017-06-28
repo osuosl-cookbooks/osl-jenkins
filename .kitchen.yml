@@ -78,7 +78,7 @@ suites:
   - name: cookbook-uploader
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     run_list:
-      - recipe[osl-jenkins::osl_cookbook_uploader]
+      - recipe[osl-jenkins::cookbook_uploader]
     provisioner: chef_zero
     driver:
       security_groups:
@@ -87,6 +87,16 @@ suites:
     attributes:
       osl-jenkins:
         cookbook_uploader:
+          authorized_teams:
+            - 'osuosl-cookbooks/staff'
+          chef_repo: 'osuosl/chef-repo'
+          default_environments:
+            - openstack_mitaka
+            - phase_out_nginx
+            - phpbb
+            - production
+            - testing
+            - workstation
           override_repos:
             - test-cookbook
           github_insecure_hook: true
@@ -125,8 +135,29 @@ suites:
             cookbook_uploader:
               user: <%= ENV['GITHUB_USER'] %>
               token: <%= ENV['GITHUB_TOKEN'] %>
+            bumpzone:
+              user: <%= ENV['GITHUB_USER'] %>
+              token: <%= ENV['GITHUB_TOKEN'] %>
+            github_comment:
+              user: <%= ENV['GITHUB_USER'] %>
+              token: <%= ENV['GITHUB_TOKEN'] %>
+            site_pr_builder:
+              user: <%= ENV['GITHUB_USER'] %>
+              token: <%= ENV['GITHUB_TOKEN'] %>
           jenkins:
             cookbook_uploader:
+              user: <%= ENV['JENKINS_USER'] %>
+              api_token: <%= ENV['JENKINS_PASS'] %>
+              trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
+            bumpzone:
+              user: <%= ENV['JENKINS_USER'] %>
+              api_token: <%= ENV['JENKINS_PASS'] %>
+              trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
+            github_comment:
+              user: <%= ENV['JENKINS_USER'] %>
+              api_token: <%= ENV['JENKINS_PASS'] %>
+              trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
+            site_pr_builder:
               user: <%= ENV['JENKINS_USER'] %>
               api_token: <%= ENV['JENKINS_PASS'] %>
               trigger_token: <%= ENV['TRIGGER_TOKEN'] %>

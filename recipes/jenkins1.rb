@@ -32,7 +32,10 @@ node.default['osl-jenkins']['secrets_item'] = 'jenkins1'
 
 include_recipe 'osl-jenkins::master'
 include_recipe 'osl-jenkins::chef_ci_cookbook_template'
-include_recipe 'osl-jenkins::osl_cookbook_uploader'
+include_recipe 'osl-jenkins::cookbook_uploader'
+include_recipe 'osl-jenkins::github_comment'
+include_recipe 'osl-jenkins::bumpzone'
+include_recipe 'osl-jenkins::site_pr_builder'
 
 python_runtime '2'
 

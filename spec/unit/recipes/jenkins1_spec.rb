@@ -26,10 +26,28 @@ describe 'osl-jenkins::jenkins1' do
               'cookbook_uploader' => {
                 'user' => 'manatee',
                 'token' => 'token_password'
+              },
+              'bumpzone' => {
+                'user' => 'manatee',
+                'token' => 'token_password'
+              },
+              'github_comment' => {
+                'user' => 'manatee',
+                'token' => 'token_password'
               }
             },
             'jenkins' => {
               'cookbook_uploader' => {
+                'user' => 'manatee',
+                'pass' => 'password',
+                'trigger_token' => 'trigger_token'
+              },
+              'bumpzone' => {
+                'user' => 'manatee',
+                'api_token' => 'api_token',
+                'trigger_token' => 'trigger_token'
+              },
+              'github_comment' => {
                 'user' => 'manatee',
                 'pass' => 'password',
                 'trigger_token' => 'trigger_token'
