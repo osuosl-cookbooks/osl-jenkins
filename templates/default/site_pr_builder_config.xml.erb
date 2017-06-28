@@ -111,7 +111,7 @@ exec scripts/build.sh
           <configs>
             <hudson.plugins.parameterizedtrigger.PredefinedBuildParameters>
               <properties>
-repo=<%= @name %>
+repo=<%= @repo %>
 pr_id=$ghprbPullId
 message=This PR has been automatically built and can be viewed here: http://<%= @name %>-$ghprbPullId.staging.osuosl.org
               </properties>
