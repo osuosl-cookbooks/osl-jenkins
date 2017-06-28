@@ -38,7 +38,7 @@ site_pr_builder['sites_to_build'].each do |site, org|
     mode 0440
     variables(
       name: site,
-      repo: repo
+      repo: repo,
       github_url: github_url,
       site_url: site_url,
       rsync_target: rsync_target
