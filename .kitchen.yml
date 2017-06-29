@@ -250,11 +250,3 @@ suites:
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     run_list:
       - recipe[osl-jenkins::powerci]
-    attributes:
-      certificate:
-        - snakeoil:
-            cert_path: "/etc/pki/tls"
-            cert_file: power-ci.pem
-            key_file: power-ci.key
-            chain_file: power-ci-bundle.crt
-            combined_file: true

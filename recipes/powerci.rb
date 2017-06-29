@@ -17,77 +17,13 @@
 # limitations under the License.
 #
 
-# Don't automatically update jenkins
-node.override['yum-cron']['yum_parameter'] = '-x jenkins'
-
-node.default['jenkins']['master']['version'] = '2.46.3-1.1'
-node.default['jenkins']['master']['listen_address'] = '127.0.0.1'
-
-node.default['java']['jdk_version'] = '8'
-
-# Manually set the jenkins java attribute to stop jenkins being restarted
-# every chef run due to logic in
-# https://github.com/chef-cookbooks/jenkins/blob/master/attributes/default.rb#L45-L53
-node.set['jenkins']['java'] = 'java'
-
-node.default['certificate'] = [{
-  'power-ci' => {
-    'cert_file' => 'power-ci.pem',
-    'key_file' => 'power-ci.key',
-    'chain_file' => 'power-ci-bundle.crt',
-    'combined_file' => true
-  }
-}]
-
-include_recipe 'java'
-include_recipe 'jenkins::master'
-include_recipe 'certificate::manage_by_attributes'
-
-# haproxy settings
-node.default['haproxy']['enable_ssl'] = true
-
-node.default['haproxy']['frontend_max_connections'] = '2000' \
-  "\n  redirect scheme https if !{ ssl_fc }"
-
-node.default['haproxy']['ssl_incoming_port'] = \
-  '443 ssl crt /etc/pki/tls/power-ci.pem ' \
-  'ciphers ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:' \
-  'ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:!MD5:!DSS no-sslv3'
-
-node.default['haproxy']['members'] = [
+node.override['haproxy']['members'] = [
   {
     'hostname' => 'power-ci',
     'ipaddress' => '127.0.0.1',
     'port' => '8080'
   }
 ]
-include_recipe 'osl-haproxy::default'
-
-if platform_family?('rhel')
-  if node['platform_version'].to_i <= 6
-    # CentOS 6 packages Git 1.7.1, but we need at least Git 1.7.9 for the
-    # .git-credentials file to work (needed for the cookbook_uploader recipe),
-    # and the Jenkins git plugin recommends 1.8.x. So we use 1.8.5.5, the
-    # latest 1.8.x.
-    node.set['git']['version'] = '1.8.5.5'
-    node.set['git']['checksum'] = '106b480e2b3ae8b02e5b6b099d7a4049' \
-                                  'f2b1128659ac81f317267d2ed134679f'
-    include_recipe 'build-essential'
-    include_recipe 'git::source'
-
-    # Also create a symlink for when /usr/local/bin isn't in PATH.
-    link '/usr/bin/git' do
-      to '/usr/local/bin/git'
-    end
-  else
-    # For CentOS 7 and up, the packaged version is new enough.
-    include_recipe 'git::package'
-  end
-end
-
-jenkins_command 'safe-restart' do
-  action :nothing
-end
 
 node.default['osl-jenkins']['restart_plugins'] = %w(
   credentials:2.1.13
@@ -162,4 +98,5 @@ node.default['osl-jenkins']['plugins'] = %w(
   pipeline-stage-view:2.6
   git-server:1.7
 )
-include_recipe 'osl-jenkins::plugins'
+
+include_recipe 'osl-jenkins::master'
