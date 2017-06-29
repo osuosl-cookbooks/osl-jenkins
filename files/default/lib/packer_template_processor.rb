@@ -31,3 +31,14 @@ def find_dependent_templates(composing_script)
   end
   return dependent_templates
 end
+
+# Takes github payload and extracts filenames from it
+# to further process
+
+def github_payload_processor(payload)
+  # if template files in payload
+    # add them to the openstack_taster queue
+  # if scripts in the payload
+    # find the dependent templates (apart from the ones already added)
+    # add them to the openstack_taster queue
+end
