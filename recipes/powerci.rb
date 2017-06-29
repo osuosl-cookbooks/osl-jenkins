@@ -17,18 +17,6 @@
 # limitations under the License.
 #
 
-node.override['haproxy']['members'] = [
-  {
-    'hostname' => 'power-ci',
-    'ipaddress' => '127.0.0.1',
-    'port' => '8080'
-  }
-]
-
-node.default['osl-jenkins']['restart_plugins'] = %w(
-  credentials:2.1.13
-  ssh-credentials:1.13
-)
 node.default['osl-jenkins']['plugins'] = %w(
   docker-commons:1.6
   ssh-slaves:1.17
