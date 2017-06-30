@@ -2,10 +2,6 @@ require 'spec_helper'
 
 set :backend, :exec
 
-describe service('haproxy') do
-  it { should be_running }
-end
-
 describe 'powerci' do
   it_behaves_like 'jenkins_server'
 end

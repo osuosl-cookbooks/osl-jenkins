@@ -247,6 +247,5 @@ suites:
         master:
           listen_address: '0.0.0.0'
   - name: powerci 
-    encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     run_list:
       - recipe[osl-jenkins::powerci]
