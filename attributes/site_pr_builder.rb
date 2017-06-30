@@ -5,8 +5,7 @@ default['osl-jenkins']['site_pr_builder'] = {
     'beaver-barcamp-pelican' => 'osuosl',
     'cass-pelican' => 'osu-cass',
     'osuosl-pelican' => 'osuosl',
-    'wiki' => 'osuosl',
-    'docs' => 'osuosl'
+    'wiki' => 'osuosl'
   },
   'credentials' => {
     'trigger_token' => nil,
