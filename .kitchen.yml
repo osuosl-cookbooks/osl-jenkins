@@ -246,3 +246,6 @@ suites:
       jenkins:
         master:
           listen_address: '0.0.0.0'
+  - name: powerci 
+    run_list:
+      - recipe[osl-jenkins::powerci]
