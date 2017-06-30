@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.6.1 (2017-06-30)
+------------------
+- remove docs builder until fixed
+
 1.6.0 (2017-06-30)
 ------------------
 - Add recipe for power-ci
