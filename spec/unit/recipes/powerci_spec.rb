@@ -41,6 +41,9 @@ describe 'osl-jenkins::powerci' do
           expect(chef_run.jenkins_plugin(plugin)).to notify('jenkins_command[safe-restart]')
         end
       end
+      it do
+        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
+      end
     end
   end
 end

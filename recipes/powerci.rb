@@ -88,3 +88,112 @@ node.default['osl-jenkins']['plugins'] = %w(
 )
 
 include_recipe 'osl-jenkins::master'
+
+# Jenkins needs to be restarted before running the following script otherwise
+# the imports fail
+jenkins_command 'safe-restart'
+
+jenkins_script 'Add Docker Cloud' do
+  command <<-EOH.gsub(/^ {4}/, '')
+    // Mostly from:
+    // https://gist.github.com/stuart-warren/e458c8439bcddb975c96b96bec3971b6
+    //
+    import jenkins.model.*;
+    import hudson.model.*;
+    import com.nirima.jenkins.plugins.docker.DockerCloud
+    import com.nirima.jenkins.plugins.docker.DockerTemplate
+    import com.nirima.jenkins.plugins.docker.DockerTemplateBase
+    import com.nirima.jenkins.plugins.docker.launcher.DockerComputerSSHLauncher
+    import hudson.plugins.sshslaves.SSHConnector
+    import com.cloudbees.plugins.credentials.*
+    import com.cloudbees.plugins.credentials.common.*
+    import com.cloudbees.plugins.credentials.domains.*
+    import com.cloudbees.plugins.credentials.impl.*
+
+    def instance = Jenkins.getInstance()
+    if (instance.pluginManager.activePlugins.find { it.shortName == "credentials" } != null) {
+      def domain = Domain.global()
+      def store = instance.getExtensionList('com.cloudbees.plugins.credentials.SystemCredentialsProvider')[0].getStore()
+
+      // Set credentials for docker containers
+      dockerUsernameAndPassword = new UsernamePasswordCredentialsImpl(
+                  CredentialsScope.GLOBAL,
+                  'ssh-docker', // credential ID
+                  'Jenkins Slave with Password Configuration',
+                  'jenkins', //username
+                  'jenkins'  //password
+              )
+      println '--> adding credentials for ssh slaves'
+      store.addCredentials(domain, dockerUsernameAndPassword)
+
+    } else {
+      println "--> no credentials plugin installed"
+    }
+
+    if (instance.pluginManager.activePlugins.find { it.shortName == "docker-plugin" } != null) {
+      DockerTemplateBase templateBase = new DockerTemplateBase(
+         'docker-ubuntu', // image
+        '', // dnsString
+        '', // network
+        '/usr/sbin/sshd -D', // dockerCommand
+        '', // volumesString
+        '', // volumesFromString
+        '', // environmentsString
+        '', // lxcConfString
+        '', // hostname
+        2048, // memoryLimit
+        2048, // memorySwap
+        2, // cpuShares
+        '', // bindPorts
+        false, // bindAllPorts
+        false, // privileged
+        false, // tty
+        '' // macAddress
+      );
+
+      SSHConnector sshConnector = new SSHConnector(
+        22,
+        'ssh-docker',  //credentialsID for connecting to running container
+        null,
+        null,
+        null,
+        null,
+        null
+      );
+      DockerComputerSSHLauncher dkSSHLauncher = new DockerComputerSSHLauncher(sshConnector);
+
+      DockerTemplate dkTemplate = new DockerTemplate(
+        templateBase,
+        'docker', //labelString
+        '', //remoteFs
+        '', // remoteFsMapping
+        '50', // instanceCapStr
+      )
+
+      dkTemplate.setLauncher(dkSSHLauncher);
+
+      ArrayList<DockerTemplate> dkTemplates = new ArrayList<DockerTemplate>();
+      dkTemplates.add(dkTemplate);
+
+      ArrayList<DockerCloud> dkCloud = new ArrayList<DockerCloud>();
+      dkCloud.add(
+        new DockerCloud(
+          'docker',
+          dkTemplates,
+          'tcp://192.168.0.4:2375', // serverUrl
+          '400', // containerCapStr
+          5, // connectTimeout
+          15, // readTimeout
+          '', // credentialsId
+          ''  // version
+        )
+      );
+
+      println '--> Configuring docker cloud'
+      instance.clouds.replaceBy(dkCloud)
+
+    } else {
+      println "--> no 'docker-plugin' plugin installed"
+    }
+  EOH
+end
