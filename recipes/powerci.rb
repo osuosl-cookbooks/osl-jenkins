@@ -17,6 +17,15 @@
 # limitations under the License.
 #
 
+node.default['osl-jenkins']['restart_plugins'] = %w(
+  credentials:2.1.13
+  ssh-credentials:1.13
+  ssh-slaves:1.17
+  token-macro:2.1
+  durable-task:1.13
+  docker-plugin:0.16.2
+)
+
 node.default['osl-jenkins']['plugins'] = %w(
   docker-commons:1.6
   ssh-slaves:1.17
@@ -58,7 +67,6 @@ node.default['osl-jenkins']['plugins'] = %w(
   workflow-multibranch:2.14
   branch-api:2.0.8
   embeddable-build-status:1.9
-  token-macro:2.1
   workflow-step-api:2.9
   build-monitor-plugin:1.11+build.201701152243
   pipeline-multibranch-defaults:1.1
@@ -74,7 +82,6 @@ node.default['osl-jenkins']['plugins'] = %w(
   mailer:1.20
   pipeline-model-api:1.1.3
   pipeline-stage-step:2.2
-  durable-task:1.13
   scm-api:2.1.1
   cloud-stats:0.11
   plain-credentials:1.4
@@ -88,10 +95,6 @@ node.default['osl-jenkins']['plugins'] = %w(
 )
 
 include_recipe 'osl-jenkins::master'
-
-# Jenkins needs to be restarted before running the following script otherwise
-# the imports fail
-jenkins_command 'safe-restart'
 
 jenkins_script 'Add Docker Cloud' do
   command <<-EOH.gsub(/^ {4}/, '')
