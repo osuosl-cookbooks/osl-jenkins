@@ -18,15 +18,14 @@
 
 # Sets up the slaves for packer_pipeline
 
-
-#Setup the user and add keys for ssh-ing
+# Setup the user and add keys for ssh-ing
 include_recipe 'osl-jenkins::default'
 
-#Create directory for builds and other artifacts
+# Create directory for builds and other artifacts
 directory '/home/alfred/workspace'
 
-#put the credentials for accessing openstack in alfred's home dir from the
-#encrypted databag
+# put the credentials for accessing openstack in alfred's home dir from the
+# encrypted databag
 node.override['osl-jenkins']['secrets_databag'] = 'osl_jenkins'
 node.override['osl-jenkins']['secrets_item'] = 'packer_pipeline_creds'
 
@@ -38,4 +37,4 @@ file '/home/alfred/openstack_credentials.json' do
   mode 0600
 end
 
-#install openstack_taster
+# install openstack_taster
