@@ -27,12 +27,15 @@ directory '/home/alfred/workspace'
 
 #put the credentials for accessing openstack in alfred's home dir from the
 #encrypted databag
-secrets = credential_secrets
-arch = node['hostnamectl']['architecture']
+node.override['osl-jenkins']['secrets_databag'] = 'osl_jenkins'
+node.override['osl-jenkins']['secrets_item'] = 'packer_pipeline_creds'
 
-file '/home/alfred/openstack_credentials'
-  content secrets[arch]
+arch = node['hostnamectl']['architecture'].sub!('-', '_')
+openstack_credentials = credential_secrets[arch]
+
+file '/home/alfred/openstack_credentials.json' do
+  content openstack_credentials.to_json
   mode 0600
-}
+end
 
 #install openstack_taster
