@@ -38,3 +38,8 @@ file '/home/alfred/openstack_credentials.json' do
 end
 
 # install openstack_taster
+gem 'openstack_taster' do
+  source 'https://github.com/osuosl/openstack_taster/releases/download/v0.0.2/openstack_taster-0.0.2.gem'
+  clear_sources true
+  action :install
+end
