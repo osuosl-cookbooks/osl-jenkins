@@ -47,14 +47,14 @@ openstack_taster_version = node['osl-jenkins']['openstack_taster_version']
     end
 
 # get the openstack_taster gem (because gem_package cannot seem to use our .gem file directly
-remote_file '/tmp/openstack_taster.gem' do
-  source "https://github.com/osuosl/openstack_taster/releases \
-  /download/v#{openstack_taster_version}/openstack_taster-#{openstack_taster_version}.gem"
+remote_file "#{Chef::Config[:file_cache_path]}/openstack_taster.gem" do
+  source "https://github.com/osuosl/openstack_taster/releases\
+/download/v#{openstack_taster_version}/openstack_taster-#{openstack_taster_version}.gem"
 end
 
 # install openstack_taster
 gem_package 'openstack_taster' do
-  source '/tmp/openstack_taster.gem'
+  source "#{Chef::Config[:file_cache_path]}/openstack_taster.gem"
   options '--no-user-install'
   clear_sources true
   action :install
