@@ -31,7 +31,7 @@ node.override['osl-jenkins']['secrets_item'] = 'packer_pipeline_creds'
 
 include_recipe 'sbp_packer::default'
 arch = node['kernel']['machine']
-if arch == 'ppc64le' then
+if arch == 'ppc64le'
   node.override['packer']['url_base'] = node['osl-jenkins']['packer_pipeline']['packer_ppc64le']['url_base']
   node.override['packer']['checksum'] = node['osl-jenkins']['packer_pipeline']['packer_ppc64le']['sha256sum']
 end
