@@ -13,7 +13,7 @@ stack = Faraday::RackBuilder.new do |builder|
 end
 Octokit.middleware = stack
 
-# Library to bump DNS zones
+# Library to process github payload for Packer Template Pipeline
 class PackerPipeline
   class << self
     @packer_templates_dir = ENV['PACKER_TEMPLATES_DIR'] || './bento/packer'
