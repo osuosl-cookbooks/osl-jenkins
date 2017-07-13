@@ -29,7 +29,12 @@ directory '/home/alfred/workspace'
 node.override['osl-jenkins']['secrets_databag'] = 'osl_jenkins'
 node.override['osl-jenkins']['secrets_item'] = 'packer_pipeline_creds'
 
-arch = node['hostnamectl']['architecture'].sub!('-', '_')
+arch = node['kernel']['machine']
+if arch == 'ppc64le' then
+  node.override[:packer][:url_base] = 'http://ftp.osuosl.org/pub/osl/openpower/packer/packer'
+  node.override[:checksum] = '7faa5665cb5bd4e53f670b8dc1bfe83b1a71177d5a049840365967f0049897c3'
+end
+
 openstack_credentials = credential_secrets[arch]
 
 file '/home/alfred/openstack_credentials.json' do
@@ -40,11 +45,7 @@ end
 openstack_taster_version = node['osl-jenkins']['openstack_taster_version']
 
 # install dependencies for gem dependencies
-
-%w( gcc
-    gcc-c++).each do |p|
-      package p
-    end
+include_recipe 'build-essential::default'
 
 # get the openstack_taster gem (because gem_package cannot seem to use our .gem file directly
 remote_file "#{Chef::Config[:file_cache_path]}/openstack_taster.gem" do
