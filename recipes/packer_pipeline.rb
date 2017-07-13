@@ -31,8 +31,8 @@ node.override['osl-jenkins']['secrets_item'] = 'packer_pipeline_creds'
 
 arch = node['kernel']['machine']
 if arch == 'ppc64le' then
-  node.override[:packer][:url_base] = 'http://ftp.osuosl.org/pub/osl/openpower/packer/packer'
-  node.override[:checksum] = '7faa5665cb5bd4e53f670b8dc1bfe83b1a71177d5a049840365967f0049897c3'
+  node.override[:packer][:url_base] = node['osl-jenkins']['packer_pipeline']['url_base']
+  node.override[:checksum] = node['osl-jenkins']['packer_pipeline']['sha256sum']
 end
 
 openstack_credentials = credential_secrets[arch]
