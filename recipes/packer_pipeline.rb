@@ -37,9 +37,33 @@ file '/home/alfred/openstack_credentials.json' do
   mode 0600
 end
 
+openstack_taster_version = node['osl-jenkins']['openstack_taster_version']
+
+# install dependencies for gem dependencies
+
+%w( gcc
+    gcc-c++
+  ).each do |p|
+    package p
+  end
+
+# get the openstack_taster gem (because gem_package cannot seem to use our .gem file directly
+remote_file '/tmp/openstack_taster.gem' do
+  source "https://github.com/osuosl/openstack_taster/releases/download/v#{openstack_taster_version}/openstack_taster-#{openstack_taster_version}.gem"
+end
+
 # install openstack_taster
-gem 'openstack_taster' do
-  source 'https://github.com/osuosl/openstack_taster/releases/download/v0.0.2/openstack_taster-0.0.2.gem'
+gem_package 'openstack_taster' do
+  source '/tmp/openstack_taster.gem'
+  options "--no-user-install"
   clear_sources true
   action :install
+end
+
+# put openstack_taster in alfred's path
+execute "put openstack_taster in path" do
+  command <<-HEREDOC
+    echo 'export PATH=/opt/chef/embedded/bin:$PATH' >> ~alfred/.bashrc
+  HEREDOC
+  not_if "grep '/opt/chef/embedded/bin' ~alfred/.bashrc"
 end
