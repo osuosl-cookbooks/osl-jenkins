@@ -29,10 +29,11 @@ directory '/home/alfred/workspace'
 node.override['osl-jenkins']['secrets_databag'] = 'osl_jenkins'
 node.override['osl-jenkins']['secrets_item'] = 'packer_pipeline_creds'
 
+include_recipe 'sbp_packer::default'
 arch = node['kernel']['machine']
 if arch == 'ppc64le' then
-  node.override[:packer][:url_base] = node['osl-jenkins']['packer_pipeline']['url_base']
-  node.override[:checksum] = node['osl-jenkins']['packer_pipeline']['sha256sum']
+  node.override['packer']['url_base'] = node['osl-jenkins']['packer_pipeline']['packer_ppc64le']['url_base']
+  node.override['packer']['checksum'] = node['osl-jenkins']['packer_pipeline']['packer_ppc64le']['sha256sum']
 end
 
 openstack_credentials = credential_secrets[arch]
@@ -42,7 +43,7 @@ file '/home/alfred/openstack_credentials.json' do
   mode 0600
 end
 
-openstack_taster_version = node['osl-jenkins']['openstack_taster_version']
+openstack_taster_version = node['osl-jenkins']['packer_pipeline']['openstack_taster_version']
 
 # install dependencies for gem dependencies
 include_recipe 'build-essential::default'
@@ -59,12 +60,4 @@ gem_package 'openstack_taster' do
   options '--no-user-install'
   clear_sources true
   action :install
-end
-
-# put openstack_taster in alfred's path
-execute 'put openstack_taster in path' do
-  command <<-HEREDOC
-    echo 'export PATH=/opt/chef/embedded/bin:$PATH' >> ~alfred/.bashrc
-  HEREDOC
-  not_if "grep '/opt/chef/embedded/bin' ~alfred/.bashrc"
 end
