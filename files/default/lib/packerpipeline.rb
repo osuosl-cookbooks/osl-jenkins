@@ -15,28 +15,8 @@ Octokit.middleware = stack
 
 # Library to bump DNS zones
 class PackerPipeline
-  @commit_msg = "\n\n"
-  @warning_msg = "Warning:\n\n"
-  @warning = false
-
   class << self
-    attr_reader :commit_msg
     @packer_templates_dir = ENV['PACKER_TEMPLATES_DIR'] || './bento/packer'
-  end
-
-  def self.add_commit_msg(msg)
-    @commit_msg << msg
-  end
-
-  def self.add_warning_msg(msg)
-    @warning = true
-    @warning_msg << msg
-  end
-
-  def self.pr_merged(json)
-    return unless json['action'] != 'closed' && json['pull_request']['merged'] != true
-    puts 'Not a merged PR, skipping...'
-    exit 0
   end
 
   def self.changed_files(json)
@@ -69,7 +49,6 @@ class PackerPipeline
 
   def self.start
     d = JSON.parse(STDIN.read)
-    PackerPipeline.pr_merged(d)
 
     templates = PackerPipeline.changed_files(d).map(
       &method(:find_dependent_templates)
