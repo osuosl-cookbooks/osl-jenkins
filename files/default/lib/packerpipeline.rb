@@ -50,10 +50,10 @@ class PackerPipeline
     return [file] if file =~ /.json$/
 
     dependent_templates = []
-  
+
     # go to dir containing all images
     Dir.chdir(@packer_templates_dir)
-  
+
     # Find if a shell script is referenced
     # iterate through images and look whether they refer to file
     Dir.glob('*.json') do |t|
@@ -71,8 +71,13 @@ class PackerPipeline
     d = JSON.parse(STDIN.read)
     PackerPipeline.pr_merged(d)
 
-    PackerPipeline.changed_files(d).map(
+    templates = PackerPipeline.changed_files(d).map(
       &method(:find_dependent_templates)
-    ).reduce(:+)
+    ).reduce(:+).uniq
+
+    %w(ppc64 x86_64).each do |arch|
+      print "images_affected_#{arch} = [ " \
+         "#{templates.select { |t| t.include? arch }.join(' ')} ]"
+    end
   end
 end
