@@ -30,6 +30,8 @@ node.override['osl-jenkins']['secrets_databag'] = 'osl_jenkins'
 node.override['osl-jenkins']['secrets_item'] = 'packer_pipeline_creds'
 
 include_recipe 'sbp_packer::default'
+node.override['packer']['version'] = '1.0.2'
+
 arch = node['kernel']['machine']
 if arch == 'ppc64le'
   node.override['packer']['url_base'] = node['osl-jenkins']['packer_pipeline']['packer_ppc64le']['url_base']
