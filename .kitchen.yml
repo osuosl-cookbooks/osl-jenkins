@@ -20,6 +20,10 @@ suites:
     run_list:
       - recipe[osl-jenkins::default]
   - name: master
+    driver:
+      security_groups:
+        - default
+        - github
     run_list:
       - recipe[osl-jenkins::master]
     attributes:
