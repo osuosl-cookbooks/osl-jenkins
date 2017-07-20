@@ -2,6 +2,26 @@
 driver:
   flavor_ref: 'm1.medium'
 
+platforms:
+  - name: centos-power-7.3
+    driver_plugin: openstack
+    driver_config:
+      image_ref: "CentOS 7.3 LE"
+    transport:
+      username: centos
+  - name: centos-6.9
+    driver_plugin: openstack
+    driver_config:
+      image_ref: "CentOS 6.9"
+    transport:
+      username: centos
+  - name: centos-7.3
+    driver_plugin: openstack
+    driver_config:
+      image_ref: "CentOS 7.3"
+    transport:
+      username: centos
+
 provisioner:
   name: chef_solo
   encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
@@ -260,3 +280,10 @@ suites:
       - recipe[osl-jenkins::packer_pipeline]
     excludes:
       - centos-6.9
+  - name: packer-power
+    encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
+    data_bags_path: test/integration/data_bags
+    run_list:
+      - recipe[osl-jenkins::packer_pipeline]
+    includes:
+      - centos-power-7.3
