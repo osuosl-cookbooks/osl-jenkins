@@ -22,7 +22,7 @@ class PackerPipeline
   end
 
   def self.find_dependent_templates(file)
-    return [file] if file =~ /.json$/
+    return [File.basename(file)] if file =~ /.json$/
 
     file = File.basename file
     dependent_templates = []
@@ -41,7 +41,7 @@ class PackerPipeline
 
       next if scripts.nil?
 
-      dependent_templates << File.join(Dir.pwd, t) if scripts.any? { |f| f.include? file }
+      dependent_templates << t if scripts.any? { |f| f.include? file }
     end
     dependent_templates
   end
@@ -56,11 +56,8 @@ class PackerPipeline
     puts "PR ##{d['number']}"
 
     %w(ppc64 x86_64).each do |arch|
-      print "images_affected_#{arch} = [ "
-      print templates.select { |t| t.include? arch }.map do |t|
-        JSON.parse(File.read(t))['variables']['image_name']
-      end.join(' ')
-      puts ' ]'
+      puts "templates_affected_#{arch} = [ " \
+        "#{templates.select { |t| t.include? arch }.join(' ')} ]"
     end
   end
 end
