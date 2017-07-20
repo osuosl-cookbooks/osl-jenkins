@@ -1,5 +1,4 @@
 #!/opt/chef/embedded/bin/ruby
-require 'git'
 require 'json'
 require 'octokit'
 require 'faraday-http-cache'
@@ -15,10 +14,6 @@ Octokit.middleware = stack
 
 # Library to process github payload for Packer Template Pipeline
 class PackerPipeline
-  class << self
-    @packer_templates_dir = ENV['PACKER_TEMPLATES_DIR'] || './bento/packer'
-  end
-
   def self.changed_files(json)
     github = Octokit::Client.new(access_token: ENV['GITHUB_TOKEN'], auto_paginate: true)
     repo_path = json['repository']['full_name']
@@ -29,19 +24,19 @@ class PackerPipeline
   def self.find_dependent_templates(file)
     return [file] if file =~ /.json$/
 
+    file = File.basename file
     dependent_templates = []
 
     # go to dir containing all images
-    Dir.chdir(@packer_templates_dir)
+    Dir.chdir(ENV['PACKER_TEMPLATES_DIR'] || './bento/packer')
 
     # Find if a shell script is referenced
     # iterate through images and look whether they refer to file
     Dir.glob('*.json') do |t|
-      t_data = JSON.parse(open(t))
-      if (t_data.include? 'provisioners') && t_data['provisioners'].any?
-        if t_data['provisioners'][0].include? 'scripts'
-          dependent_templates << t if t_data['provisioners'][0]['scripts'].include? file
-        end
+      t_data = JSON.parse(File.read(t))
+
+      if t_data['provisioners'] & [0] & ['scripts'].any? { |f| f.include? file }
+        dependent_templates << File.join(Dir.pwd, t)
       end
     end
     dependent_templates
@@ -50,13 +45,18 @@ class PackerPipeline
   def self.start
     d = JSON.parse(STDIN.read)
 
-    templates = PackerPipeline.changed_files(d).map(
-      &method(:find_dependent_templates)
-    ).reduce(:+).uniq
+    templates = PackerPipeline.changed_files(d).map do |f|
+      find_dependent_templates(f.filename)
+    end.reduce(:+).uniq
+
+    puts "PR ##{d['number']}"
 
     %w(ppc64 x86_64).each do |arch|
-      print "images_affected_#{arch} = [ " \
-         "#{templates.select { |t| t.include? arch }.join(' ')} ]"
+      print "images_affected_#{arch} = [ "
+      print templates.select { |t| t.include? arch }.map do |t|
+        JSON.parse(File.read(t))['variables']['image_name']
+      end.join(' ')
+      puts ' ]'
     end
   end
 end
