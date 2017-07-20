@@ -35,7 +35,7 @@ class PackerPipeline
     Dir.glob('*.json') do |t|
       t_data = JSON.parse(File.read(t))
 
-      if t_data['provisioners'] & [0] & ['scripts'].any? { |f| f.include? file }
+      if t_data.dig('provisioners', 0, 'scripts').any? { |f| f.include? file }
         dependent_templates << File.join(Dir.pwd, t)
       end
     end
