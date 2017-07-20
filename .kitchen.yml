@@ -3,22 +3,10 @@ driver:
   flavor_ref: 'm1.medium'
 
 platforms:
-  - name: centos-power-7.3
-    driver_plugin: openstack
-    driver_config:
-      image_ref: "CentOS 7.3 LE"
-    transport:
-      username: centos
-  - name: centos-6.9
-    driver_plugin: openstack
-    driver_config:
-      image_ref: "CentOS 6.9"
-    transport:
-      username: centos
   - name: centos-7.3
     driver_plugin: openstack
     driver_config:
-      image_ref: "CentOS 7.3"
+      image_ref: "b0cfefd8-ce5b-4495-bdaf-baf163676819"
     transport:
       username: centos
 
@@ -286,4 +274,4 @@ suites:
     run_list:
       - recipe[osl-jenkins::packer_pipeline]
     includes:
-      - centos-power-7.3
+      - centos-7.3
