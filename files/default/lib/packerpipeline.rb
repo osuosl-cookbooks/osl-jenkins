@@ -53,11 +53,13 @@ class PackerPipeline
       find_dependent_templates(f.filename)
     end.reduce(:+).uniq
 
-    puts "PR ##{d['number']}"
+    output = {
+      'pr' => d['number']
+    }
 
     %w(ppc64 x86_64).each do |arch|
-      puts "templates_affected_#{arch} = [ " \
-        "#{templates.select { |t| t.include? arch }.join(' ')} ]"
+      output[arch] = templates.select { |t| t.include? arch }.to_ary
     end
+    output
   end
 end
