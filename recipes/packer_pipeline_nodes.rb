@@ -27,6 +27,13 @@ directory '/home/alfred/workspace' do
   group 'alfred'
 end
 
+# git aliases to make things easier
+file '/home/alfred/.gitconfig' do
+  source gitconfig
+  owner 'alfred'
+  group 'alfred'
+end
+
 # put the credentials for accessing openstack in alfred's home dir from the
 # encrypted databag
 node.override['osl-jenkins']['secrets_databag'] = 'osl_jenkins'
