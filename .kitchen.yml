@@ -261,7 +261,7 @@ suites:
   - name: powerci 
     run_list:
       - recipe[osl-jenkins::powerci]
-  - name: packer_pipeline_nodes
+  - name: packer_pipeline_node
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     data_bags_path: test/integration/data_bags
     run_list:
