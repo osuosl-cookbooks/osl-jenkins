@@ -22,6 +22,13 @@ suites:
   - name: master
     run_list:
       - recipe[osl-jenkins::master]
+    driver:
+      network_ref:
+        - public
+        - vlan42
+      security_groups:
+        - default
+        - github
     attributes:
       osl-jenkins:
         credentials:
