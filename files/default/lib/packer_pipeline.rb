@@ -2,7 +2,6 @@
 require 'json'
 require 'octokit'
 require 'faraday-http-cache'
-require 'pry'
 
 # Github API caching
 stack = Faraday::RackBuilder.new do |builder|
