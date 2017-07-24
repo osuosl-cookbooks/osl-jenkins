@@ -29,7 +29,7 @@ end
 
 # git aliases to make things easier
 file '/home/alfred/.gitconfig' do
-  source gitconfig
+  content gitconfig
   owner 'alfred'
   group 'alfred'
 end
