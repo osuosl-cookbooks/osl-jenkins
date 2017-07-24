@@ -28,8 +28,8 @@ directory '/home/alfred/workspace' do
 end
 
 # git aliases to make things easier
-file '/home/alfred/.gitconfig' do
-  content gitconfig
+cookbook_file '/home/alfred/.gitconfig' do
+  source 'gitconfig'
   owner 'alfred'
   group 'alfred'
 end
