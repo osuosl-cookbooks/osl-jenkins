@@ -7,5 +7,5 @@ default['osl-jenkins']['packer_pipeline']['packer_ppc64le'] = {
 
 default['osl-jenkins']['packer_pipeline'] = {
   'bin_path' => ::File.join(node['jenkins']['master']['home'], 'bin'),
-  'lib_path' => ::File.join(node['jenkins']['master']['home'], 'lib'),
+  'lib_path' => ::File.join(node['jenkins']['master']['home'], 'lib')
 }

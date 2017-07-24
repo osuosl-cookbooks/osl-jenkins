@@ -48,4 +48,3 @@ cookbook_file ::File.join(packer_pipeline['lib_path'], 'packer_pipeline.rb') do
   group node['jenkins']['master']['group']
   mode 0440
 end
-
