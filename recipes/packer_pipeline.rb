@@ -22,7 +22,10 @@
 include_recipe 'osl-jenkins::default'
 
 # Create directory for builds and other artifacts
-directory '/home/alfred/workspace'
+directory '/home/alfred/workspace' do
+  owner 'alfred'
+  group 'alfred'
+end
 
 # put the credentials for accessing openstack in alfred's home dir from the
 # encrypted databag
@@ -43,6 +46,8 @@ openstack_credentials = credential_secrets[arch]
 file '/home/alfred/openstack_credentials.json' do
   content openstack_credentials.to_json
   mode 0600
+  owner 'alfred'
+  group 'alfred'
 end
 
 openstack_taster_version = node['osl-jenkins']['packer_pipeline']['openstack_taster_version']
