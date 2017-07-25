@@ -265,6 +265,6 @@ suites:
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     data_bags_path: test/integration/data_bags
     run_list:
-      - recipe[osl-jenkins::packer_pipeline_nodes]
+      - recipe[osl-jenkins::packer_pipeline_node]
     excludes:
       - centos-6.9
