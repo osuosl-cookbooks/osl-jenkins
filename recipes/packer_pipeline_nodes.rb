@@ -81,7 +81,8 @@ if arch == 'x86_64'
   include_recipe 'base::kvm'
 elsif arch == 'ppc64le'
   log 'qemu on ppc64le' do
-    message 'Assuming this ppc64le node has been already setup as a OpenStack compute node and skipping qemu installation'
+    message 'Assuming this ppc64le node has been already setup as a OpenStack compute node \
+    and skipping qemu installation'
     level :info
   end
 end
