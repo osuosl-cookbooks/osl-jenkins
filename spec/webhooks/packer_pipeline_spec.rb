@@ -2,7 +2,7 @@ require 'rspec'
 require 'rspec/mocks'
 require 'tempfile'
 require 'pathname'
-require_relative '../../files/default/lib/packerpipeline'
+require_relative '../../files/default/lib/packer_pipeline'
 
 module SpecHelper
   def fixture_path(name)
@@ -64,21 +64,21 @@ describe PackerPipeline do
       response_body = [double('Sawyer::Resource', filename: file)]
       allow(github_mock).to receive(:pull_request_files).with('osuosl/packer-templates', 16).and_return(response_body)
       allow(STDIN).to receive(:read).and_return(open_fixture('sync_packer_templates.json'))
-      expect { PackerPipeline.start }.to output(/16/).to_stdout
+      expect { puts PackerPipeline.start.to_json }.to output(/16/).to_stdout
     end
     it 'ouputs name of template files' do
       file = fixture_path('centos-7.2-ppc64-openstack.json')
       response_body = [double('Sawyer::Resource', filename: file)]
       allow(github_mock).to receive(:pull_request_files).with('osuosl/packer-templates', 16).and_return(response_body)
       allow(STDIN).to receive(:read).and_return(open_fixture('sync_packer_templates.json'))
-      expect { PackerPipeline.start }.to output(/centos-7.2-ppc64-openstack.json/).to_stdout
+      expect { puts PackerPipeline.start.to_json }.to output(/centos-7.2-ppc64-openstack.json/).to_stdout
     end
     it 'finds a template that uses a script' do
       file = fixture_path('osuosl.sh')
       response_body = [double('Sawyer::Resource', filename: file)]
       allow(github_mock).to receive(:pull_request_files).with('osuosl/packer-templates', 16).and_return(response_body)
       allow(STDIN).to receive(:read).and_return(open_fixture('sync_packer_templates.json'))
-      expect { PackerPipeline.start }.to output(/centos-7.3-x86_64-openstack.json/).to_stdout
+      expect { puts PackerPipeline.start.to_json }.to output(/centos-7.3-x86_64-openstack.json/).to_stdout
     end
     it 'outputs name of template file and finds a template that uses a script' do
       template = fixture_path('centos-7.2-ppc64-openstack.json')
@@ -89,8 +89,8 @@ describe PackerPipeline do
       ]
       allow(github_mock).to receive(:pull_request_files).with('osuosl/packer-templates', 16).and_return(response_body)
       allow(STDIN).to receive(:read).and_return(open_fixture('sync_packer_templates.json'))
-      expect { PackerPipeline.start }.to output(/centos-7.3-x86_64-openstack.json/).to_stdout
-      expect { PackerPipeline.start }.to output(/centos-7.2-ppc64-openstack.json/).to_stdout
+      expect { puts PackerPipeline.start.to_json }.to output(/centos-7.3-x86_64-openstack.json/).to_stdout
+      expect { puts PackerPipeline.start.to_json }.to output(/centos-7.2-ppc64-openstack.json/).to_stdout
     end
   end
 end
