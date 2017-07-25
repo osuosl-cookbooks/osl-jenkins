@@ -268,10 +268,3 @@ suites:
       - recipe[osl-jenkins::packer_pipeline_nodes]
     excludes:
       - centos-6.9
-  - name: packer-power
-    encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
-    data_bags_path: test/integration/data_bags
-    run_list:
-      - recipe[osl-jenkins::packer_pipeline]
-    includes:
-      - centos-7.3
