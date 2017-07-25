@@ -101,6 +101,7 @@ To set up:
 
 Contributing
 ------------
+
 TODO: (optional) If this is a public cookbook, detail the process for contributing. If this is a private cookbook, remove this section.
 
 e.g.
