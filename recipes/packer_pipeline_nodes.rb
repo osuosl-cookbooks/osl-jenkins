@@ -75,3 +75,13 @@ gem_package 'openstack_taster' do
   clear_sources true
   action :install
 end
+
+# setup qemu so that we can build images!
+if arch == 'x86_64'
+  include_recipe 'base::kvm'
+elsif arch == 'ppc64le'
+  log 'qemu on ppc64le' do
+    message 'Assuming this ppc64le node has been already setup as a OpenStack compute node and skipping qemu installation'
+    level :info
+  end
+end
