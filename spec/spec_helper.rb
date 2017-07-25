@@ -38,17 +38,17 @@ end
 
 shared_context 'data_bag_stubs' do
   before do
-    stub_data_bag_item('users','alfred').and_return(
-      'id': 'alfred',
-      'ssh_keys': [
+    stub_data_bag_item('users', 'alfred').and_return(
+      id: 'alfred',
+      ssh_keys: [
         'test_ssh_key'
       ]
     )
 
     allow(Chef::EncryptedDataBagItem).to receive(:load)
-      .with('osl_jenkins','packer_pipeline_creds')
+      .with('osl_jenkins', 'packer_pipeline_creds')
       .and_return(
-        'id': 'packer_pipeline_creds'
+        id: 'packer_pipeline_creds'
       )
       .and_raise(Net::HTTPServerException.new(
                    'osl_jenkins databag not found',
