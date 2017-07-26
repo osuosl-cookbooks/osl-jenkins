@@ -52,6 +52,26 @@ describe PackerPipeline do
       expect(files[1].filename).to match(/centos-7.2-ppc64-openstack.json/)
     end
   end
+  context '#find_dependent_templates' do
+    before :each do
+      allow(ENV).to receive(:[])
+      allow(ENV).to receive(:[]).with('PACKER_TEMPLATES_DIR').and_return(fixture_path(''))
+    end
+    it 'returns the name of a template file' do
+      file = fixture_path('centos-7.2-ppc64-openstack.json')
+      expect( PackerPipeline.find_dependent_templates(file) ).to match_array(['centos-7.2-ppc64-openstack.json'])
+    end
+    it 'returns a template that uses a script' do
+      file = fixture_path('osuosl.sh')
+      expect( PackerPipeline.find_dependent_templates(file) ).to match_array(['centos-7.3-x86_64-openstack.json'])
+    end
+    it 'returns templates that use a script' do
+      file = fixture_path('openstack.sh')
+      expect( PackerPipeline.find_dependent_templates(file) ).to match_array(
+        ['centos-7.3-x86_64-openstack.json','centos-7.2-ppc64-openstack.json']
+      )
+    end
+  end
   context '#start' do
     let(:github_mock) { double('Octokit', commits: [], issues: [], same_options?: false, auto_paginate: true) }
     before :each do
@@ -66,7 +86,7 @@ describe PackerPipeline do
       allow(STDIN).to receive(:read).and_return(open_fixture('sync_packer_templates.json'))
       expect { puts PackerPipeline.start.to_json }.to output(/16/).to_stdout
     end
-    it 'ouputs name of template files' do
+    it 'ouputs the name of a template file' do
       file = fixture_path('centos-7.2-ppc64-openstack.json')
       response_body = [double('Sawyer::Resource', filename: file)]
       allow(github_mock).to receive(:pull_request_files).with('osuosl/packer-templates', 16).and_return(response_body)
