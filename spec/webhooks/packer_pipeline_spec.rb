@@ -59,16 +59,16 @@ describe PackerPipeline do
     end
     it 'returns the name of a template file' do
       file = fixture_path('centos-7.2-ppc64-openstack.json')
-      expect( PackerPipeline.find_dependent_templates(file) ).to match_array(['centos-7.2-ppc64-openstack.json'])
+      expect(PackerPipeline.find_dependent_templates(file)).to match_array(['centos-7.2-ppc64-openstack.json'])
     end
     it 'returns a template that uses a script' do
       file = fixture_path('osuosl.sh')
-      expect( PackerPipeline.find_dependent_templates(file) ).to match_array(['centos-7.3-x86_64-openstack.json'])
+      expect(PackerPipeline.find_dependent_templates(file)).to match_array(['centos-7.3-x86_64-openstack.json'])
     end
     it 'returns templates that use a script' do
       file = fixture_path('openstack.sh')
-      expect( PackerPipeline.find_dependent_templates(file) ).to match_array(
-        ['centos-7.3-x86_64-openstack.json','centos-7.2-ppc64-openstack.json']
+      expect(PackerPipeline.find_dependent_templates(file)).to match_array(
+        ['centos-7.3-x86_64-openstack.json', 'centos-7.2-ppc64-openstack.json']
       )
     end
   end
