@@ -57,13 +57,13 @@ file '/home/alfred/openstack_credentials.json' do
   group 'alfred'
 end
 
-openstack_taster_version = node['osl-jenkins']['packer_pipeline']['openstack_taster_version']
 
 # install dependencies for gem dependencies
 include_recipe 'build-essential::default'
 
 # install openstack_taster
 gem_package 'openstack_taster' do
+  version node['osl-jenkins']['packer_pipeline']['openstack_taster_version']
   options '--no-user-install'
   clear_sources true
   action :install
