@@ -42,13 +42,12 @@ node.override['osl-jenkins']['secrets_item'] = 'packer_pipeline_creds'
 include_recipe 'sbp_packer::default'
 node.override['packer']['version'] = '1.0.2'
 
-arch = node['kernel']['machine']
-if arch == 'ppc64le'
-  node.override['packer']['url_base'] = node['osl-jenkins']['packer_pipeline']['packer_ppc64le']['url_base']
-  node.override['packer']['checksum'] = node['osl-jenkins']['packer_pipeline']['packer_ppc64le']['sha256sum']
+if node['kernel']['machine'] == 'ppc64le'
+  node.default['packer']['url_base'] = node['osl-jenkins']['packer_pipeline']['packer_ppc64le']['url_base']
+  node.default['packer']['checksum'] = node['osl-jenkins']['packer_pipeline']['packer_ppc64le']['sha256sum']
 end
 
-openstack_credentials = credential_secrets[arch]
+openstack_credentials = credential_secrets[node['kernel']['machine']]
 
 file '/home/alfred/openstack_credentials.json' do
   content openstack_credentials.to_json
@@ -56,7 +55,6 @@ file '/home/alfred/openstack_credentials.json' do
   owner 'alfred'
   group 'alfred'
 end
-
 
 # install dependencies for gem dependencies
 include_recipe 'build-essential::default'
@@ -70,12 +68,11 @@ gem_package 'openstack_taster' do
 end
 
 # setup qemu so that we can build images!
-if arch == 'x86_64'
-  include_recipe 'base::kvm'
-elsif arch == 'ppc64le'
-  log 'qemu on ppc64le' do
-    message 'Assuming this ppc64le node has been already setup as a OpenStack compute node \
-    and skipping qemu installation'
-    level :info
-  end
+include_recipe 'base::kvm' if node['kernel']['machine'] == 'x86_64'
+
+log 'qemu on ppc64le' do
+  message 'Assuming this ppc64le node has been already setup as a OpenStack compute node \
+  and skipping qemu installation'
+  level :info
+  only_if { node['kernel']['machine'] == 'ppc64le' }
 end
