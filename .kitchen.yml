@@ -2,14 +2,6 @@
 driver:
   flavor_ref: 'm1.medium'
 
-platforms:
-  - name: centos-7.3
-    driver_plugin: openstack
-    driver_config:
-      image_ref: "b0cfefd8-ce5b-4495-bdaf-baf163676819"
-    transport:
-      username: centos
-
 provisioner:
   name: chef_solo
   encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
