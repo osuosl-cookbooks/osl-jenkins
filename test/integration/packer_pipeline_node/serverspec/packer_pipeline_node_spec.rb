@@ -20,7 +20,7 @@ describe file('/home/alfred/workspace') do
 end
 
 describe file('/usr/local/bin/packer') do
-  it { should be_a_file }
+  it { should be_a_symlink }
   it { should be_executable }
 end
 
