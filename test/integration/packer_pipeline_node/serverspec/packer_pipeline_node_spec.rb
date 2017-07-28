@@ -32,10 +32,6 @@ describe file('/home/alfred/openstack_credentials.json') do
   it { should be_mode 600 }
 end
 
-describe package('qemu-kvm') do
-  it { should be_installed }
-end
-
 describe file('/opt/chef/embedded/bin/openstack_taster') do
   it { should be_a_file }
   it { should be_executable }
