@@ -1,0 +1,38 @@
+{
+  "id": "powerci",
+  "admin_users": {
+    "encrypted_data": "lo2gkjsekYdF1G84KP7/nWj502HLTmzIEx1Eh79AZi0vqAe9KNjCazvx8/Nb\nViAGy9QOSKFs7TTq+hWtZ3Uogwtjjx0AMdZcz6Z08rCqhOw=\n",
+    "hmac": "HUuHa5LQQsSZt0NoqawFcyb1m0/aowIqN4yZErRjx4I=\n",
+    "iv": "LI0BevBadi2hdA3mBH9ohQ==\n",
+    "version": 2,
+    "cipher": "aes-256-cbc"
+  },
+  "normal_users": {
+    "encrypted_data": "qiH13YG7wsUym4NV3LhkgMvTjXCF/HSV5ZC0ao5wdu+tKd8VWaYq+5ZizQ37\nprWh\n",
+    "hmac": "eKsROt5132DRNUNOkqP2jxQT4cQ0iQXa245386sUM54=\n",
+    "iv": "5tUAviu5I97HzSvfNQP0yQ==\n",
+    "version": 2,
+    "cipher": "aes-256-cbc"
+  },
+  "client_id": {
+    "encrypted_data": "ZH1ImJ4Lg2l6ZWhI4SnH3XJXXxdce77d5IB4qMHcImGi6NxFgAiEfD8Zxdl6\nKC70\n",
+    "hmac": "/8C169cx0Ukdkxoy4Rzu9uB33j2nxSpWtFDypWb7ZZc=\n",
+    "iv": "nDMgCSrzIfIZ0x7siaR5qA==\n",
+    "version": 2,
+    "cipher": "aes-256-cbc"
+  },
+  "client_secret": {
+    "encrypted_data": "IIsr2Aca7TrPVR9sXMgZ2BVyAwEFoadq8frX/hD2a7Gq6u1jsxf7t61m3cLM\nirV/7RzpFllQgg67SmQhu/lbSQ==\n",
+    "hmac": "z6q8ytFM9S/1QLESmGpRS3z62pj8g0N0kQ/XNfH3hfQ=\n",
+    "iv": "+OBxfVZZWt0EbnHVqB8VFg==\n",
+    "version": 2,
+    "cipher": "aes-256-cbc"
+  },
+  "cli_password": {
+    "encrypted_data": "FjeWXD83C48Q5MG8fWWC6NDMj7Aada1fziBmO64SGp6DA9TR/KQErsCoMQjG\nupwSbhvtoUIms8PlUBQo6a2Ofg==\n",
+    "hmac": "jPFWMolOsyZBp9UzLFhe3gMnr4s+d/8za7RKN9Gl23c=\n",
+    "iv": "pn8b8ZcqyWF+MXqOYLcE/g==\n",
+    "version": 2,
+    "cipher": "aes-256-cbc"
+  }
+}

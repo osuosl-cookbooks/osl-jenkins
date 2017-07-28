@@ -7,6 +7,15 @@ describe 'osl-jenkins::powerci' do
         ChefSpec::SoloRunner.new(p).converge(described_recipe)
       end
       include_context 'common_stubs'
+      before do
+        stub_data_bag_item('osl_jenkins', 'powerci').and_return(
+          admin_users: ['testadmin'],
+          normal_users: ['testuser'],
+          client_id: '123456789',
+          client_secret: '0987654321',
+          cli_password: 'abcdefghi'
+        )
+      end
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
       end
@@ -43,6 +52,12 @@ describe 'osl-jenkins::powerci' do
       end
       it do
         expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
+      end
+      it do
+        expect(chef_run).to execute_jenkins_script('Add GitHub OAuth config')
+      end
+      it do
+        expect(chef_run).to run_ruby_block('Set jenkins username/password if needed')
       end
     end
   end
