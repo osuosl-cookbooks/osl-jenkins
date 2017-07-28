@@ -41,7 +41,7 @@ node.override['osl-jenkins']['secrets_item'] = 'packer_pipeline_creds'
 
 if node['kernel']['machine'] == 'ppc64le'
   node.override['packer']['version'] = node['osl-jenkins']['packer_pipeline']['packer_ppc64le']['version']
-  remote_file "/usr/local/packer-v#{node['packer']['version']}" do
+  remote_file "/usr/local/bin/packer-v#{node['packer']['version']}" do
     source node['osl-jenkins']['packer_pipeline']['packer_ppc64le']['url_base']
     checksum node['osl-jenkins']['packer_pipeline']['packer_ppc64le']['checksum']
     mode '0755'
@@ -49,7 +49,7 @@ if node['kernel']['machine'] == 'ppc64le'
   end
 
   link '/usr/local/bin/packer' do
-    to "/usr/local/packer-v#{node['packer']['version']}"
+    to "/usr/local/bin/packer-v#{node['packer']['version']}"
   end
 else
   include_recipe 'sbp_packer::default'

@@ -21,7 +21,7 @@ describe 'osl-jenkins::packer_pipeline_node' do
       end
 
       it do
-        expect(chef_run).to create_remote_file('/usr/local/packer-v1.0.3-dev').with(
+        expect(chef_run).to create_remote_file('/usr/local/bin/packer-v1.0.3-dev').with(
           source: 'http://ftp.osuosl.org/pub/osl/openpower/packer/packer-v1.0.3-dev'
         )
       end
