@@ -39,12 +39,20 @@ end
 node.override['osl-jenkins']['secrets_databag'] = 'osl_jenkins'
 node.override['osl-jenkins']['secrets_item'] = 'packer_pipeline_creds'
 
-include_recipe 'sbp_packer::default'
-node.override['packer']['version'] = '1.0.2'
-
 if node['kernel']['machine'] == 'ppc64le'
-  node.default['packer']['url_base'] = node['osl-jenkins']['packer_pipeline']['packer_ppc64le']['url_base']
-  node.default['packer']['checksum'] = node['osl-jenkins']['packer_pipeline']['packer_ppc64le']['sha256sum']
+  node.override['packer']['version'] = node['osl-jenkins']['packer_pipeline']['packer_ppc64le']['version']
+  remote_file "/usr/local/packer-v#{node['packer']['version']}" do
+    source node['osl-jenkins']['packer_pipeline']['packer_ppc64le']['url_base']
+    checksum node['osl-jenkins']['packer_pipeline']['packer_ppc64le']['checksum']
+    mode '0755'
+    action :create
+  end
+
+  link '/usr/local/bin/packer' do
+    to "/usr/local/packer-v#{node['packer']['version']}"
+  end
+else
+  include_recipe 'sbp_packer::default'
 end
 
 openstack_credentials = credential_secrets[node['kernel']['machine']]
