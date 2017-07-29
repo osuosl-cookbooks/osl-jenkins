@@ -19,6 +19,7 @@ depends          'certificate'
 depends          'poise-python'
 depends          'git'
 depends          'sudo'
+depends          'sbp_packer', '= 1.4.7'
 
 supports         'centos', '~> 6.0'
 supports         'centos', '~> 7.0'

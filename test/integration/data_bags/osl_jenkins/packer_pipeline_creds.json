@@ -1,0 +1,17 @@
+{
+  "id": "packer_pipeline_creds",
+  "ppc64": {
+    "encrypted_data": "0zMVwGdXHeNa0kkHCphaqDJtr+Xxuh4SFta1q0SZLgv03rgKqhxe+h1iAGWW\nfZ4Z6zDVirmQ7cGDJY/tOy41Pc1Fb7uR7whNZY3COaqxRUsWVglfjjJZpKdg\nEVxf3/OnAioyOE0nvaszUFi/BMVlOdyr3caZdN9M3RGQF79mjFjVTlogCCXt\n02XTDJjugttVqLCq88qitFHgtmnFi/KGXkZe0Oe4l6au2FkLvlVOm8yrSDlM\nRbGR+AW7x5Vkrc8YKaSDvRW/caBUMdkI/zfUbEwfc9meXQs4R1vZXAThiJ9H\nZCS2JMpGqtui1Usx4tSqaV7fAskJl/RTmgiHPpRhcbjurNLWdoNeK0hjtZWH\nP3AbZFkNdlhq2bws7c/FwL3vXsJFk7D17IAtLdYRHhn7rrnoyibh8/AzCcRK\nmkb0W0Tn/vhLp7tNtAQcBb2MRd7VkxuV0F5OXH1qTNOOPxF2g4i3CPwlGtkz\n++iuDm0e0Fip6ZD6hI6kbycJ4dXY9TFtnpFO+xUpbyKIZ1TB1OFVkNS9Udhd\nb48XV/yp8T0CIuE1fg/7SxAxxI5iXwrf0pFn\n",
+    "hmac": "HjldIJuW/aj0MpGe+lfyrq23d+1VHsp/6Po1Tn6eUu8=\n",
+    "iv": "DtbCQzo1sBhSn/ihBh2Ysg==\n",
+    "version": 2,
+    "cipher": "aes-256-cbc"
+  },
+  "x86_64": {
+    "encrypted_data": "F5+9jU9iDS3TE8gDuz8gwEeWCSj52z1g+fvTUmK6zPySbKfjI6PQmRjTh+xP\naGxaEtKuF4zYibWuWtoM0WRFtX5z7pVAfMG6oVCuMM0W4uRuVeJsY+xfrKGS\nV1R5ytPakboI5XpWd/Hau//SDVVIyqLjm5+65vTRArrGpKztPY6ewHDPEzBF\nUmiLMMk27zlXhvNtV4fxeZpjU7XWb202Oig9J+sZ69VIb5I30eEKmKnL8OKV\nRoHGNsXNYcaMpprwy+GgM+CZkIyjwgSUn5mdxP6vqX7ZfJWRlBiHVZTK3LYF\nN3+WMI4adNJibTcGx1AIx6GkyqSGtbT7HM0WCwzs9LoZRFGMpj0pvKAhxSoV\nRhEwNhQP3bqwRKaBMHzU23xq9lGDWO8YBUrw1UNqBiP/bU/h886x/9gSaRJ7\nzoClI/iRv7sztYsoQogtZw13tuDKoJSRJ/MfU2SOFhgmWC7jRaGMsJBjblal\nPyRSsJsXWX1lM2zee12yL+LkLVLvNi45vBhHiudDoJtSE7KWrhgRPw==\n",
+    "hmac": "uMMY1yPU5gibo5AMow6eeDYVT26uvjLTeoPSJiuxWYg=\n",
+    "iv": "Yl4GtoQ0aORhUzk9wYxHtg==\n",
+    "version": 2,
+    "cipher": "aes-256-cbc"
+  }
+}

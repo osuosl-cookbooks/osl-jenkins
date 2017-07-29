@@ -20,6 +20,10 @@ suites:
     run_list:
       - recipe[osl-jenkins::default]
   - name: master
+    driver:
+      security_groups:
+        - default
+        - github
     run_list:
       - recipe[osl-jenkins::master]
     attributes:
@@ -249,3 +253,10 @@ suites:
   - name: powerci 
     run_list:
       - recipe[osl-jenkins::powerci]
+  - name: packer_pipeline_node
+    encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
+    data_bags_path: test/integration/data_bags
+    run_list:
+      - recipe[osl-jenkins::packer_pipeline_node]
+    excludes:
+      - centos-6.9

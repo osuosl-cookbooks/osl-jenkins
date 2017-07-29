@@ -3,9 +3,6 @@ osl-jenkins Cookbook
 
 Jenkins wrapper cookbook for OSL.
 
-e.g.
-This cookbook makes your favorite breakfast sandwich.
-
 Requirements
 ------------
 TODO: List your cookbook requirements. Be sure to include any requirements this cookbook has on platforms, libraries, other cookbooks, packages, operating systems, etc.
@@ -98,6 +95,13 @@ To set up:
       }
       ```
     - Add `osl-jenkins::cookbook_uploader` to the node's `run_list`
+
+#### osl-jenkins::packer_pipeline
+Sets up a Jenkins master to be able to run the packer pipeline described at [packer-templates/Jenkinsfile](https://github.com/osuosl/packer-templates/tree/master/Jenkinsfile)
+
+### osl-jenkins::packer_pipeline_node
+Sets up a node which will work on linting, packing, building, deploying for test, running several tests using [OpenStack_Taster](https://github.com/osuosl/openstack_taster/) and then deploy for production.
+
 
 Contributing
 ------------
