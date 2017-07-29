@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.7.0 (2017-07-29)
+------------------
+- Setting up nodes for packer pipeline
+
 1.6.2 (2017-07-25)
 ------------------
 - trivial change to re-open PR
