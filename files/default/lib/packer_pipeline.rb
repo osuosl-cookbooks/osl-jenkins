@@ -45,9 +45,11 @@ class PackerPipeline
       next unless t_data.class.name == 'Hash'
 
       # select only shell scripts provisioners as only they refer to files that we worry about
-      shell_script_provisioners = t_data.dig('provisioners').select { |p| p['type'] == 'shell' }
+      shell_script_provisioners = t_data.dig('provisioners')
       # .dig returns nil if it doesn't find that path in the hash.
       next if shell_script_provisioners.nil?
+
+      shell_script_provisioners.select! { |p| p['type'] == 'shell' }
 
       # if any of the shell script provisioners includes the shell script in question,
       # this is a dependent template
