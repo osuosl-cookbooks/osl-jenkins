@@ -52,12 +52,13 @@ describe PackerPipeline do
       expect(files[1].filename).to match(/centos-7.2-ppc64-openstack.json/)
     end
   end
+
   context '#find_dependent_templates' do
     before :each do
       allow(ENV).to receive(:[])
       allow(ENV).to receive(:[]).with('PACKER_TEMPLATES_DIR').and_return(fixture_path(''))
     end
-    it 'returns the name of a template file' do
+    it 'returns just the template name when a template name is passed' do
       file = fixture_path('centos-7.2-ppc64-openstack.json')
       expect(PackerPipeline.find_dependent_templates(file)).to match_array(['centos-7.2-ppc64-openstack.json'])
     end
