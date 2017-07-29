@@ -31,7 +31,7 @@ class PackerPipeline
     dependent_templates = []
 
     # go to dir containing all images
-    Dir.chdir(ENV['PACKER_TEMPLATES_DIR'] || './bento/packer')
+    Dir.chdir(ENV['PACKER_TEMPLATES_DIR'] || '/home/alfred/workspace')
 
     # Find if a shell script is referenced
     # iterate through images and look whether they refer to file
@@ -44,12 +44,17 @@ class PackerPipeline
       # to be other json files in the repo.
       next unless t_data.class.name == 'Hash'
 
-      scripts = t_data.dig('provisioners', 0, 'scripts')
-
+      # select only shell scripts provisioners as only they refer to files that we worry about
+      shell_script_provisioners = t_data.dig('provisioners').select { |p| p['type'] == 'shell' }
       # .dig returns nil if it doesn't find that path in the hash.
-      next if scripts.nil?
+      next if shell_script_provisioners.nil?
 
-      dependent_templates << t if scripts.any? { |f| f.include? file }
+      # if any of the shell script provisioners includes the shell script in question,
+      # this is a dependent template
+
+      shell_script_provisioners.each do |ssp|
+        dependent_templates << t if ssp['scripts'].any? { |f| f.include? file }
+      end
     end
     dependent_templates
   end
