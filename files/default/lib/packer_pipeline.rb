@@ -66,7 +66,9 @@ class PackerPipeline
 
     # Iterate through all the changed files and get an array of affected templates.
     # find_dependent_templates always returns an array of strings, so I use
-    # .reduce to stitch those arrays together.
+    # .reduce to stitch those arrays together by doing the + on arrays of dependent
+    # templates for each script. Finally .uniq will ensure we don't get the same
+    # template twice in the array
     templates = PackerPipeline.changed_files(d).map do |f|
       find_dependent_templates(f.filename)
     end.reduce(:+).uniq
