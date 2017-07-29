@@ -72,7 +72,12 @@ describe PackerPipeline do
         ['centos-7.3-x86_64-openstack.json', 'centos-7.2-ppc64-openstack.json']
       )
     end
+    it 'returns nothing when a script is not used by any template' do
+      file = fixture_path('this_script_does_not_exist_in_this_universe.sh')
+      expect(PackerPipeline.find_dependent_templates(file)).to match_array(nil)
+    end
   end
+
   context '#start' do
     let(:github_mock) { double('Octokit', commits: [], issues: [], same_options?: false, auto_paginate: true) }
     before :each do
