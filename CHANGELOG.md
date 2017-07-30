@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.8.1 (2017-07-30)
+------------------
+- Add deploy.sh for bento pipeline
+
 1.8.0 (2017-07-30)
 ------------------
 - ruby things to handle the needs of bento pipeline
