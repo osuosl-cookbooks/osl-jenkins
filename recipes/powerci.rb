@@ -67,9 +67,9 @@ node.default['osl-jenkins']['restart_plugins'] = %w(
   github-branch-source:2.0.5
   github-oauth:0.27
   icon-shim:2.0.3
-  matrix-auth:1.5
   authentication-tokens:1.3
-
+  embeddable-build-status:1.9
+  matrix-auth:1.5
 )
 
 node.default['osl-jenkins']['plugins'] = %w(
@@ -92,7 +92,6 @@ node.default['osl-jenkins']['plugins'] = %w(
   momentjs:1.1.1
   pipeline-build-step:2.5
   yet-another-docker-plugin:0.1.0-rc37
-  embeddable-build-status:1.9
   build-monitor-plugin:1.11+build.201701152243
   pipeline-multibranch-defaults:1.1
   pipeline-model-declarative-agent:1.1.1
@@ -276,6 +275,7 @@ jenkins_script 'Add GitHub OAuth config' do
       "hudson.model.Computer.Create",
       "hudson.model.Computer.Delete",
       "hudson.model.Computer.Disconnect",
+      "hudson.model.Computer.Provision",
       "hudson.model.Hudson.Administer",
       "hudson.model.Hudson.Read",
       "hudson.model.Item.Build",
@@ -284,15 +284,18 @@ jenkins_script 'Add GitHub OAuth config' do
       "hudson.model.Item.Create",
       "hudson.model.Item.Delete",
       "hudson.model.Item.Discover",
+      "hudson.model.Item.Move",
       "hudson.model.Item.Read",
       "hudson.model.Item.ViewStatus",
       "hudson.model.Item.Workspace",
       "hudson.model.Run.Delete",
+      "hudson.model.Run.Replay",
       "hudson.model.Run.Update",
       "hudson.model.View.Configure",
       "hudson.model.View.Create",
       "hudson.model.View.Delete",
-      "hudson.model.View.Read"
+      "hudson.model.View.Read",
+      "hudson.scm.SCM.Tag"
 		]
     #{admin_users}.each { au -> user = BuildPermission.buildNewAccessList(au, adminPermissions)
       user.each { p, u -> auth_strategy.add(p, u) }
