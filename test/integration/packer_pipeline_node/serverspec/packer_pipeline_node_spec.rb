@@ -24,10 +24,30 @@ describe file('/usr/local/bin/packer') do
   it { should be_executable }
 end
 
+describe file('/home/alfred/.ssh/bento_alfred_id') do
+  it { should be_a_file }
+  it { should be_owned_by 'alfred' }
+  it { should be_grouped_into 'alfred' }
+  it { should be_mode 600 }
+end
+
+describe file('/home/alfred/.ssh/bento_alfred_id.pub') do
+  it { should be_a_file }
+  it { should be_owned_by 'alfred' }
+  it { should be_grouped_into 'alfred' }
+  it { should be_mode 600 }
+end
+
 describe file('/home/alfred/openstack_credentials.json') do
   it { should be_a_file }
   it { should be_owned_by 'alfred' }
   it { should be_grouped_into 'alfred' }
+  it { should be_mode 600 }
+end
+
+describe file('/home/alfred/openstack_credentials.json') do
+  it { should be_a_file }
+  it { should be_owned_by 'alfred' }
   it { should be_grouped_into 'alfred' }
   it { should be_mode 600 }
 end
