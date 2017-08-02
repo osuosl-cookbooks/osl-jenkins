@@ -41,14 +41,14 @@ node.override['osl-jenkins']['secrets_item'] = 'jenkins1'
 
 openstack_access_keys = credential_secrets['jenkins']['packer_pipeline']
 
-file '/home/alfred/.ssh/bento_alfred_id' do
+file '/home/alfred/.ssh/packer_alfred_id' do
   content openstack_access_keys['private_key']
   owner 'alfred'
   group 'alfred'
   mode 0600
 end
 
-file '/home/alfred/.ssh/bento_alfred_id.pub' do
+file '/home/alfred/.ssh/packer_alfred_id.pub' do
   content openstack_access_keys['public_key']
   owner 'alfred'
   group 'alfred'
