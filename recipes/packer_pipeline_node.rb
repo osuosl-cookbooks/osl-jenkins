@@ -34,6 +34,27 @@ cookbook_file '/home/alfred/.gitconfig' do
   group 'alfred'
 end
 
+# put the key associated with the openstack_taster's users on various clusters
+# so that it can access the instances once created
+node.override['osl-jenkins']['secrets_databag'] = 'osl_jenkins'
+node.override['osl-jenkins']['secrets_item'] = 'jenkins1'
+
+openstack_access_keys = credential_secrets['jenkins']['packer_pipeline']
+
+file '/home/alfred/.ssh/bento_alfred_id' do
+  content openstack_access_keys['private_key']
+  owner 'alfred'
+  group 'alfred'
+  mode 0600
+end
+
+file '/home/alfred/.ssh/bento_alfred_id.pub' do
+  content openstack_access_keys['public_key']
+  owner 'alfred'
+  group 'alfred'
+  mode 0600
+end
+
 # put the credentials for accessing openstack in alfred's home dir from the
 # encrypted databag
 node.override['osl-jenkins']['secrets_databag'] = 'osl_jenkins'
@@ -62,28 +83,6 @@ if node['kernel']['machine'] == 'ppc64le'
   end
 else
   include_recipe 'sbp_packer::default'
-end
-
-# put the key associated with the openstack_taster's users on various clusters
-# so that it can access the instances once created
-node.override['osl-jenkins']['secrets_databag'] = 'osl_jenkins'
-node.override['osl-jenkins']['secrets_item'] = 'jenkins1'
-
-secrets = credential_secrets
-openstack_access_keys = secrets['jenkins']['packer_pipeline']
-
-file '/home/alfred/.ssh/bento_alfred_id' do
-  content openstack_access_keys['private_key']
-  owner 'alfred'
-  group 'alfred'
-  mode 0600
-end
-
-file '/home/alfred/.ssh/bento_alfred_id.pub' do
-  content openstack_access_keys['public_key']
-  owner 'alfred'
-  group 'alfred'
-  mode 0600
 end
 
 # install dependencies for gem dependencies
