@@ -41,7 +41,7 @@ describe 'osl-jenkins::packer_pipeline_node' do
       end
 
       it do
-        expect(chef_run).to create_file('/home/alfred/.ssh/bento_alfred_id').with(
+        expect(chef_run).to create_file('/home/alfred/.ssh/packer_alfred_id').with(
           user: 'alfred',
           group: 'alfred',
           mode: 0600,
@@ -50,7 +50,7 @@ describe 'osl-jenkins::packer_pipeline_node' do
       end
 
       it do
-        expect(chef_run).to create_file('/home/alfred/.ssh/bento_alfred_id.pub').with(
+        expect(chef_run).to create_file('/home/alfred/.ssh/packer_alfred_id.pub').with(
           user: 'alfred',
           group: 'alfred',
           mode: 0600,
