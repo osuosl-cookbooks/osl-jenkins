@@ -46,7 +46,7 @@ describe 'osl-jenkins::packer_pipeline_node' do
           group: 'alfred',
           mode: 0600,
           content: 'private key for openstack_taster goes here'
-          )
+        )
       end
 
       it do
@@ -55,7 +55,7 @@ describe 'osl-jenkins::packer_pipeline_node' do
           group: 'alfred',
           mode: 0600,
           content: 'public key for openstack_taster goes here'
-          )
+        )
       end
 
       it do
