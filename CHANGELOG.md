@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.8.2 (2017-08-03)
+------------------
+- setup keys to use with openstack taster
+
 1.8.1 (2017-07-30)
 ------------------
 - Add deploy.sh for bento pipeline
