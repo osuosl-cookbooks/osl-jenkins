@@ -41,15 +41,19 @@ node.override['osl-jenkins']['secrets_item'] = 'jenkins1'
 
 openstack_access_keys = credential_secrets['jenkins']['packer_pipeline']
 
-file '/home/alfred/.ssh/packer_alfred_id' do
-  content openstack_access_keys['private_key']
+# this is the key that's put on the instances created by openstack_taster
+# it has been manually put in all OpenStack Taster account on our clusters.
+file '/home/alfred/.ssh/packer_alfred_id.pub' do
+  content openstack_access_keys['public_key']
   owner 'alfred'
   group 'alfred'
   mode 0600
 end
 
-file '/home/alfred/.ssh/packer_alfred_id.pub' do
-  content openstack_access_keys['public_key']
+# this is the private key part of the above keypair to actually ssh into
+# those instances and run our suites
+file '/home/alfred/.ssh/packer_alfred_id' do
+  content openstack_access_keys['private_key']
   owner 'alfred'
   group 'alfred'
   mode 0600
