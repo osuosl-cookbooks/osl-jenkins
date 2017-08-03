@@ -18,7 +18,7 @@
 
 # Sets up the slaves for packer_pipeline
 
-# Setup the user and add keys for ssh-ing
+# Setup the user and add an authorized key entry for the master
 include_recipe 'osl-jenkins::default'
 
 # Create directory for builds and other artifacts
@@ -34,11 +34,45 @@ cookbook_file '/home/alfred/.gitconfig' do
   group 'alfred'
 end
 
+# put the key associated with the openstack_taster's users on various clusters
+# so that it can access the instances once created
+node.override['osl-jenkins']['secrets_databag'] = 'osl_jenkins'
+node.override['osl-jenkins']['secrets_item'] = 'jenkins1'
+
+openstack_access_keys = credential_secrets['jenkins']['packer_pipeline']
+
+# this is the key that's put on the instances created by openstack_taster
+# it has been manually put in all OpenStack Taster account on our clusters.
+file '/home/alfred/.ssh/packer_alfred_id.pub' do
+  content openstack_access_keys['public_key']
+  owner 'alfred'
+  group 'alfred'
+  mode 0600
+end
+
+# this is the private key part of the above keypair to actually ssh into
+# those instances and run our suites
+file '/home/alfred/.ssh/packer_alfred_id' do
+  content openstack_access_keys['private_key']
+  owner 'alfred'
+  group 'alfred'
+  mode 0600
+end
+
 # put the credentials for accessing openstack in alfred's home dir from the
 # encrypted databag
 node.override['osl-jenkins']['secrets_databag'] = 'osl_jenkins'
 node.override['osl-jenkins']['secrets_item'] = 'packer_pipeline_creds'
 
+openstack_credentials = credential_secrets[node['kernel']['machine']]
+file '/home/alfred/openstack_credentials.json' do
+  content openstack_credentials.to_json
+  mode 0600
+  owner 'alfred'
+  group 'alfred'
+end
+
+# setup the right packer
 if node['kernel']['machine'] == 'ppc64le'
   node.override['packer']['version'] = node['osl-jenkins']['packer_pipeline']['packer_ppc64le']['version']
   remote_file "/usr/local/bin/packer-v#{node['packer']['version']}" do
@@ -53,15 +87,6 @@ if node['kernel']['machine'] == 'ppc64le'
   end
 else
   include_recipe 'sbp_packer::default'
-end
-
-openstack_credentials = credential_secrets[node['kernel']['machine']]
-
-file '/home/alfred/openstack_credentials.json' do
-  content openstack_credentials.to_json
-  mode 0600
-  owner 'alfred'
-  group 'alfred'
 end
 
 # install dependencies for gem dependencies

@@ -50,10 +50,18 @@ shared_context 'data_bag_stubs' do
       .and_return(
         id: 'packer_pipeline_creds'
       )
-      .and_raise(Net::HTTPServerException.new(
-                   'osl_jenkins databag not found',
-                   Net::HTTPResponse.new('1.1', '404', '')
-      ))
+
+    allow(Chef::EncryptedDataBagItem).to receive(:load)
+      .with('osl_jenkins', 'jenkins1')
+      .and_return(
+        id: 'jenkins1',
+        'jenkins' => {
+          'packer_pipeline' => {
+            'public_key' => 'public key for openstack_taster goes here',
+            'private_key' => 'private key for openstack_taster goes here'
+          }
+        }
+      )
   end
 end
 shared_context 'cookbook_uploader' do

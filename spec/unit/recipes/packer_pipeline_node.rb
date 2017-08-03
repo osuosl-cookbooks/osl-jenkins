@@ -41,6 +41,24 @@ describe 'osl-jenkins::packer_pipeline_node' do
       end
 
       it do
+        expect(chef_run).to create_file('/home/alfred/.ssh/packer_alfred_id').with(
+          user: 'alfred',
+          group: 'alfred',
+          mode: 0600,
+          content: 'private key for openstack_taster goes here'
+        )
+      end
+
+      it do
+        expect(chef_run).to create_file('/home/alfred/.ssh/packer_alfred_id.pub').with(
+          user: 'alfred',
+          group: 'alfred',
+          mode: 0600,
+          content: 'public key for openstack_taster goes here'
+        )
+      end
+
+      it do
         expect(chef_run).to create_directory('/home/alfred/workspace').with(
           user: 'alfred',
           group: 'alfred'
