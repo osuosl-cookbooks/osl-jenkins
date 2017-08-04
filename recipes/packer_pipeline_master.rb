@@ -48,3 +48,21 @@ cookbook_file ::File.join(packer_pipeline['lib_path'], 'packer_pipeline.rb') do
   group node['jenkins']['master']['group']
   mode 0440
 end
+
+# define the path where the packer_pipeline job's xml would be temporarily cached on the machine
+packer_pipeline_xml = ::File.join(Chef::Config[:file_cache_path], 'packer_pipeline', 'config.xml')
+jenkins_credentials = secrets['jenkins']['packer_pipeline']
+
+template packer_pipeline_xml do
+  source 'packer_pipeline.config.xml.erb'
+  mode 0440
+  variables(
+    trigger_token: jenkins_credentials['trigger_token']
+  )
+end
+
+# this actually takes care of putting the config.xml for the job in the jenkins dir
+jenkins_job 'packer_pipeline' do
+  config packer_pipeline_xml
+  action [:create, :enable]
+end
