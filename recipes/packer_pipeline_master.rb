@@ -62,6 +62,8 @@ template packer_pipeline_xml do
 end
 
 # this actually takes care of putting the config.xml for the job in the jenkins dir
+# this config.xml does *NOT* contain the actual Groovy Script which is the heart of the job.
+# the groovy script will be a fresh version checked out from the packer-templates repo everytime.
 jenkins_job 'packer_pipeline' do
   config packer_pipeline_xml
   action [:create, :enable]
