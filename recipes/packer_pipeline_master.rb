@@ -17,6 +17,10 @@
 # limitations under the License.
 
 # Sets up the master for packer_pipeline
+
+include_recipe 'osl-jenkins::master'
+
+# get attributes specific to this job
 packer_pipeline = node['osl-jenkins']['packer_pipeline']
 
 # Install necessary gems
@@ -51,6 +55,7 @@ end
 
 # define the path where the packer_pipeline job's xml would be temporarily cached on the machine
 packer_pipeline_xml = ::File.join(Chef::Config[:file_cache_path], 'packer_pipeline', 'config.xml')
+secrets = credential_secrets
 jenkins_credentials = secrets['jenkins']['packer_pipeline']
 
 template packer_pipeline_xml do

@@ -96,7 +96,7 @@ To set up:
       ```
     - Add `osl-jenkins::cookbook_uploader` to the node's `run_list`
 
-#### osl-jenkins::packer_pipeline
+#### osl-jenkins::packer_pipeline_master
 Sets up a Jenkins master to be able to run the packer pipeline described at [packer-templates/Jenkinsfile](https://github.com/osuosl/packer-templates/tree/master/Jenkinsfile)
 
 ### osl-jenkins::packer_pipeline_node
