@@ -58,6 +58,10 @@ packer_pipeline_xml = ::File.join(Chef::Config[:file_cache_path], 'packer_pipeli
 secrets = credential_secrets
 jenkins_credentials = secrets['jenkins']['packer_pipeline']
 
+directory ::File.dirname(packer_pipeline_xml) do
+  recursive true
+end
+
 template packer_pipeline_xml do
   source 'packer_pipeline.config.xml.erb'
   mode 0440
