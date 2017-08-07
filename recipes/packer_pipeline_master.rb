@@ -17,6 +17,10 @@
 # limitations under the License.
 
 # Sets up the master for packer_pipeline
+
+include_recipe 'osl-jenkins::master'
+
+# get attributes specific to this job
 packer_pipeline = node['osl-jenkins']['packer_pipeline']
 
 # Install necessary gems
@@ -47,4 +51,29 @@ cookbook_file ::File.join(packer_pipeline['lib_path'], 'packer_pipeline.rb') do
   owner node['jenkins']['master']['user']
   group node['jenkins']['master']['group']
   mode 0440
+end
+
+# define the path where the packer_pipeline job's xml would be temporarily cached on the machine
+packer_pipeline_xml = ::File.join(Chef::Config[:file_cache_path], 'packer_pipeline', 'config.xml')
+secrets = credential_secrets
+jenkins_credentials = secrets['jenkins']['packer_pipeline']
+
+directory ::File.dirname(packer_pipeline_xml) do
+  recursive true
+end
+
+template packer_pipeline_xml do
+  source 'packer_pipeline.config.xml.erb'
+  mode 0440
+  variables(
+    trigger_token: jenkins_credentials['trigger_token']
+  )
+end
+
+# this actually takes care of putting the config.xml for the job in the jenkins dir
+# this config.xml does *NOT* contain the actual Groovy Script which is the heart of the job.
+# the groovy script will be a fresh version checked out from the packer-templates repo everytime.
+jenkins_job 'packer_pipeline' do
+  config packer_pipeline_xml
+  action [:create, :enable]
 end

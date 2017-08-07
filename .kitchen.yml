@@ -222,6 +222,30 @@ suites:
       jenkins:
         master:
           listen_address: '0.0.0.0'
+  - name: packer_pipeline_master
+    run_list:
+      - recipe[osl-jenkins::packer_pipeline_master]
+    encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
+    provisioner: chef_zero
+    driver:
+      security_groups:
+        - default
+        - github
+    attributes:
+      osl-jenkins:
+        credentials:
+          git:
+            packer_pipeline:
+              user: <%= ENV['GITHUB_USER'] %>
+              token: <%= ENV['GITHUB_TOKEN'] %>
+          jenkins:
+            packer_pipeline:
+              user: <%= ENV['JENKINS_USER'] %>
+              api_token: <%= ENV['JENKINS_PASS'] %>
+              trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
+      jenkins:
+        master:
+          listen_address: '0.0.0.0'
   - name: site_pr_builder
     run_list:
       - recipe[osl-jenkins::site_pr_builder]
