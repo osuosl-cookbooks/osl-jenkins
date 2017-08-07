@@ -250,9 +250,11 @@ suites:
               user: <%= ENV['JENKINS_USER'] %>
               api_token: <%= ENV['JENKINS_PASS'] %>
               trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
-      jenkins:
-        master:
-          listen_address: '0.0.0.0'
+              public_key: 'ssh-rsa THIS_IS_A_PUBLIC_KEY'
+              private_key: '-----BEGIN RSA PRIVATE KEY-----END RSA PRIVATE KEY-----'
+        jenkins:
+          master:
+            listen_address: '0.0.0.0'
   - name: site_pr_builder
     run_list:
       - recipe[osl-jenkins::site_pr_builder]
