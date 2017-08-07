@@ -70,18 +70,19 @@ node.default['osl-jenkins']['restart_plugins'] = %w(
   authentication-tokens:1.3
   embeddable-build-status:1.9
   matrix-auth:1.5
+  cloud-stats:0.11
+  config-file-provider:2.15.7
+  resource-disposer:0.6
+  openstack-cloud:2.22
 )
 
 node.default['osl-jenkins']['plugins'] = %w(
   docker-commons:1.6
-  resource-disposer:0.6
   pipeline-model-extensions:1.1.3
   emailext-template:1.0
   pipeline-stage-tags-metadata:1.1.3
   workflow-cps-global-lib:2.8
-  openstack-cloud:2.22
   bouncycastle-api:2.16.1
-  config-file-provider:2.15.7
   handlebars:1.1.1
   credentials-binding:1.11
   email-ext:2.57.2
@@ -101,7 +102,6 @@ node.default['osl-jenkins']['plugins'] = %w(
   workflow-basic-steps:2.4
   pipeline-model-api:1.1.3
   pipeline-stage-step:2.2
-  cloud-stats:0.11
   pipeline-graph-analysis:1.3
   workflow-aggregator:2.5
   job-restrictions:0.6
@@ -214,6 +214,25 @@ jenkins_script 'Add Docker Cloud' do
     }
   EOH
 end
+
+jenkins_script 'Add OpenStack cloud' do
+  command <<-EOH.gsub(/^ {4}/, '')
+    import jenkins.plugins.openstack.compute.*
+		import jenkins.model.*
+    import hudson.model.*;
+    
+    def instance = Jenkins.getInstance()
+      
+    JCloudsSlaveTemplate template = new JCloudsSlaveTemplate("template", "label", new SlaveOptions(
+          "img", "hw", "nw", "ud", 1, "public", "sg", "az", 2, "kp", 3, "jvmo", "fsRoot", "cid", JCloudsCloud.SlaveType.JNLP, 4
+         ));
+    JCloudsCloud cloud = new JCloudsCloud("openstack", "identity", "credential", "endPointUrl", "zone", new SlaveOptions(
+             "IMG", "HW", "NW", "UD", 6, null, "SG", "AZ", 7, "KP", 8, "JVMO", "FSrOOT", "CID", JCloudsCloud.SlaveType.SSH, 9
+             ), Arrays.asList(template));
+    instance.clouds.add(cloud);
+  EOH
+end
+
 
 jenkins_script 'Add GitHub OAuth config' do
   command <<-EOH.gsub(/^ {4}/, '')
