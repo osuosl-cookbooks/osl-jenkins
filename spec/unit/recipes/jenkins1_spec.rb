@@ -51,6 +51,13 @@ describe 'osl-jenkins::jenkins1' do
                 'user' => 'manatee',
                 'pass' => 'password',
                 'trigger_token' => 'trigger_token'
+              },
+              'packer_pipeline' => {
+                'user' => 'manatee',
+                'api_token' => 'token_password',
+                'trigger_token' => 'trigger_token',
+                'public_key' => 'public key for openstack_taster goes here',
+                'private_key' => 'private key for openstack_taster goes here'
               }
             }
           )

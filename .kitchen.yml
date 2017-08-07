@@ -148,6 +148,9 @@ suites:
             site_pr_builder:
               user: <%= ENV['GITHUB_USER'] %>
               token: <%= ENV['GITHUB_TOKEN'] %>
+            packer_pipeline:
+              user: <%= ENV['GITHUB_USER'] %>
+              token: <%= ENV['GITHUB_TOKEN'] %>
           jenkins:
             cookbook_uploader:
               user: <%= ENV['JENKINS_USER'] %>
@@ -162,6 +165,10 @@ suites:
               api_token: <%= ENV['JENKINS_PASS'] %>
               trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
             site_pr_builder:
+              user: <%= ENV['JENKINS_USER'] %>
+              api_token: <%= ENV['JENKINS_PASS'] %>
+              trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
+            packer_pipeline:
               user: <%= ENV['JENKINS_USER'] %>
               api_token: <%= ENV['JENKINS_PASS'] %>
               trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
