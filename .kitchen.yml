@@ -1,6 +1,14 @@
 ---
 driver:
   flavor_ref: 'm1.medium'
+  network_ref:
+    - vlan42
+    - public
+  security_groups:
+    - default
+    - github
+driver_config:
+  user_data: userdata.txt
 
 provisioner:
   name: chef_solo
@@ -22,15 +30,6 @@ suites:
   - name: master
     run_list:
       - recipe[osl-jenkins::master]
-    driver_config:
-      user_data: userdata.txt
-    driver:
-      network_ref:
-        - vlan42
-        - public
-      security_groups:
-        - default
-        - github
     attributes:
       osl-jenkins:
         credentials:
