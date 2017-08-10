@@ -89,11 +89,12 @@ else
   include_recipe 'sbp_packer::default'
 end
 
-# install dependencies for gem dependencies
+# install dependencies for gem dependencies at compile time so that chef_gem can use them
+node.override['build-essential']['compile_time'] = true
 include_recipe 'build-essential::default'
 
 # install openstack_taster
-gem_package 'openstack_taster' do
+chef_gem 'openstack_taster' do
   version node['osl-jenkins']['packer_pipeline']['openstack_taster_version']
   options '--no-user-install'
   clear_sources true
