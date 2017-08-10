@@ -301,3 +301,13 @@ suites:
       - recipe[osl-jenkins::packer_pipeline_node]
     excludes:
       - centos-6.9
+    attributes:
+      osl-jenkins:
+        credentials:
+          jenkins:
+            packer_pipeline:
+              user: <%= ENV['JENKINS_USER'] %>
+              api_token: <%= ENV['JENKINS_PASS'] %>
+              trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
+              public_key: 'ssh-rsa THIS_IS_A_PUBLIC_KEY'
+              private_key: '-----BEGIN RSA PRIVATE KEY-----END RSA PRIVATE KEY-----'

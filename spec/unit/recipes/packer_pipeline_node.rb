@@ -81,7 +81,7 @@ describe 'osl-jenkins::packer_pipeline_node' do
       end
 
       it do
-        expect(chef_run).to install_gem_package('openstack_taster').with(
+        expect(chef_run).to install_chef_gem('openstack_taster').with(
           options: '--no-user-install'
         )
       end
