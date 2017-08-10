@@ -57,6 +57,9 @@ describe 'osl-jenkins::powerci' do
         expect(chef_run).to execute_jenkins_script('Add GitHub OAuth config')
       end
       it do
+        expect(chef_run).to execute_jenkins_script('Add OpenStack Cloud')
+      end
+      it do
         expect(chef_run).to run_ruby_block('Set jenkins username/password if needed')
       end
     end
