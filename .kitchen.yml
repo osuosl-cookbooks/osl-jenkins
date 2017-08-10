@@ -1,6 +1,14 @@
 ---
 driver:
   flavor_ref: 'm1.medium'
+  network_ref:
+    - vlan42
+    - public
+  security_groups:
+    - default
+    - github
+driver_config:
+  user_data: userdata.txt
 
 provisioner:
   name: chef_solo
