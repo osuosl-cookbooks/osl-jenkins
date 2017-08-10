@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.8.5 (2017-08-10)
+------------------
+- install openstack_taster as a chef_gem explicitly
+
 1.8.4 (2017-08-07)
 ------------------
 - add packer_pipeline job
