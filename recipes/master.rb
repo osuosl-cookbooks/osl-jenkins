@@ -39,6 +39,14 @@ node.default['certificate'] = [{
   }
 }]
 
+include_recipe 'yum-plugin-versionlock'
+
+yum_version_lock 'jenkins' do
+  version_split = node['jenkins']['master']['version'].split('-')
+  version version_split[0]
+  release version_split[1]
+end
+
 include_recipe 'java'
 include_recipe 'jenkins::master'
 include_recipe 'certificate::manage_by_attributes'

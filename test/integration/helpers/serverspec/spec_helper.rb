@@ -10,6 +10,10 @@ shared_examples_for 'jenkins_server' do
     it { should be_installed.with_version('2.46.3-1.1') }
   end
 
+  describe command('yum versionlock') do
+    its(:stdout) { should match(/^0:jenkins-2.46.3-1.1.x86_64$/) }
+  end
+
   %w(80 443 8080).each do |p|
     describe port(p) do
       it { should be_listening }
