@@ -102,7 +102,7 @@ chef_gem 'openstack_taster' do
 end
 
 # setup qemu so that we can build images!
-include_recipe 'base::kvm' if node['kernel']['machine'] == 'x86_64'
+include_recipe 'yum-qemu-ev' if node['kernel']['machine'] == 'x86_64'
 
 log 'qemu on ppc64le' do
   message 'Assuming this ppc64le node has been already setup as a OpenStack compute node \
