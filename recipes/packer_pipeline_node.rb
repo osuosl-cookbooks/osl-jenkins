@@ -21,6 +21,14 @@
 # Setup the user and add an authorized key entry for the master
 include_recipe 'osl-jenkins::default'
 
+# install dependencies for gem dependencies at compile time so that chef_gem can use them
+node.override['build-essential']['compile_time'] = true
+include_recipe 'build-essential::default'
+
+# setup qemu so that we can build images!
+include_recipe 'yum-qemu-ev::default'
+include_recipe 'base::kvm'
+
 # Create directory for builds and other artifacts
 directory '/home/alfred/workspace' do
   owner 'alfred'
@@ -89,10 +97,6 @@ else
   include_recipe 'sbp_packer::default'
 end
 
-# install dependencies for gem dependencies at compile time so that chef_gem can use them
-node.override['build-essential']['compile_time'] = true
-include_recipe 'build-essential::default'
-
 # install openstack_taster
 chef_gem 'openstack_taster' do
   version node['osl-jenkins']['packer_pipeline']['openstack_taster_version']
@@ -100,7 +104,3 @@ chef_gem 'openstack_taster' do
   clear_sources true
   action :install
 end
-
-# setup qemu so that we can build images!
-include_recipe 'yum-qemu-ev::default'
-include_recipe 'base::kvm'
