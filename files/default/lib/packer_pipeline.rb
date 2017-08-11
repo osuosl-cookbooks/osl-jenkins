@@ -31,7 +31,7 @@ class PackerPipeline
     dependent_templates = []
 
     # go to dir containing all images
-    Dir.chdir(ENV['PACKER_TEMPLATES_DIR'] || '/home/alfred/workspace')
+    Dir.chdir(ENV['PACKER_TEMPLATES_DIR'] || '/home/alfred/workspace/packer-templates')
 
     # Find if a shell script is referenced
     # iterate through images and look whether they refer to file
