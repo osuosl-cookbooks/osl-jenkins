@@ -43,55 +43,56 @@ node.default['osl-jenkins']['restart_plugins'] = %w(
   plain-credentials:1.4
   ace-editor:1.1
   jquery-detached:1.2.1
-  structs:1.6
+  structs:1.10
   display-url-api:2.0
   branch-api:2.0.8
   cloudbees-folder:6.0.3
-  scm-api:2.1.1
-  script-security:1.27
-  workflow-step-api:2.9
+  scm-api:2.2.0
+  script-security:1.31
+  workflow-step-api:2.12
   workflow-support:2.14
   workflow-scm-step:2.4
-  workflow-api:2.13
-  workflow-cps:2.30
+  workflow-api:2.20
+  workflow-cps:2.39
   workflow-job:2.10
   workflow-multibranch:2.14
   junit:1.20
   matrix-project:1.10
   mailer:1.20
-  git-client:2.4.5
-  git:3.3.0
+  jackson2-api:2.7.3
+  git-client:2.5.0
+  git:3.5.1
   git-server:1.7
-  github-api:1.85
+  github-api:1.86
   github:1.27.0
-  github-branch-source:2.0.5
+  github-branch-source:2.2.3
   github-oauth:0.27
   icon-shim:2.0.3
   authentication-tokens:1.3
   embeddable-build-status:1.9
   matrix-auth:1.5
   cloud-stats:0.11
-  config-file-provider:2.15.7
+  config-file-provider:2.16.2
   resource-disposer:0.6
   openstack-cloud:2.22
 )
 
 node.default['osl-jenkins']['plugins'] = %w(
-  docker-commons:1.6
+  docker-commons:1.8
   pipeline-model-extensions:1.1.3
   emailext-template:1.0
   pipeline-stage-tags-metadata:1.1.3
   workflow-cps-global-lib:2.8
   bouncycastle-api:2.16.1
   handlebars:1.1.1
-  credentials-binding:1.11
+  credentials-binding:1.13
   email-ext:2.57.2
   pipeline-milestone-step:1.3.1
   pipeline-rest-api:2.6
   docker-build-publish:1.3.2
-  pipeline-input-step:2.7
+  pipeline-input-step:2.8
   momentjs:1.1.1
-  pipeline-build-step:2.5
+  pipeline-build-step:2.5.1
   yet-another-docker-plugin:0.1.0-rc37
   build-monitor-plugin:1.11+build.201701152243
   pipeline-multibranch-defaults:1.1
