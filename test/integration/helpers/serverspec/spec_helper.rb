@@ -7,7 +7,11 @@ shared_examples_for 'jenkins_server' do
   end
 
   describe package('jenkins') do
-    it { should be_installed.with_version('2.46.3-1.1') }
+    it { should be_installed.with_version('2.60.2-1.1') }
+  end
+
+  describe command('yum versionlock') do
+    its(:stdout) { should match(/^0:jenkins-2.60.2-1.1.x86_64$/) }
   end
 
   %w(80 443 8080).each do |p|
@@ -22,6 +26,6 @@ shared_examples_for 'jenkins_server' do
   end
 
   describe command('curl -k https://localhost/about/') do
-    its(:stdout) { should match(/Jenkins 2.46.3/) }
+    its(:stdout) { should match(/Jenkins 2.60.2/) }
   end
 end
