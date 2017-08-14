@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.8.8 (2017-08-14)
+------------------
+- Update to Jenkins 2.60.2
+
 1.8.7 (2017-08-14)
 ------------------
 - Update various plugins which have security updates
