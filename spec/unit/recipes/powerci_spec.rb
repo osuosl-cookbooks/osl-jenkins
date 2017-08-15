@@ -22,22 +22,21 @@ describe 'osl-jenkins::powerci' do
       %w(
         build-monitor-plugin:1.11+build.201701152243
         cloud-stats:0.11
-        config-file-provider:2.15.7
-        docker-commons:1.6
+        config-file-provider:2.16.2
+        docker-commons:1.8
         docker-plugin:0.16.2
         docker-build-publish:1.3.2
         email-ext:2.57.2
         emailext-template:1.0
         embeddable-build-status:1.9
-        git-client:2.4.5
-        github-api:1.85
+        git-client:2.5.0
+        github-api:1.86
         github-oauth:0.27
         job-restrictions:0.6
         matrix-project:1.10
         openstack-cloud:2.22
         pipeline-multibranch-defaults:1.1
         resource-disposer:0.6
-        yet-another-docker-plugin:0.1.0-rc37
       ).each do |plugins_version|
         plugin, version = plugins_version.split(':')
         it do

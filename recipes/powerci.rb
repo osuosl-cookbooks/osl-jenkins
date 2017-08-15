@@ -93,7 +93,6 @@ node.default['osl-jenkins']['plugins'] = %w(
   pipeline-input-step:2.8
   momentjs:1.1.1
   pipeline-build-step:2.5.1
-  yet-another-docker-plugin:0.1.0-rc37
   build-monitor-plugin:1.11+build.201701152243
   pipeline-multibranch-defaults:1.1
   pipeline-model-declarative-agent:1.1.1
