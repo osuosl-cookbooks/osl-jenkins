@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.8.9 (2017-08-15)
+------------------
+- use yum-qemu-ev instead of base for setting qemu-kvm
+
 1.8.8 (2017-08-14)
 ------------------
 - Update to Jenkins 2.60.2
