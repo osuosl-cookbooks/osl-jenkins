@@ -21,6 +21,6 @@ depends          'git'
 depends          'sudo'
 depends          'sbp_packer', '= 1.4.7'
 depends          'yum-plugin-versionlock'
-
+depends          'yum-qemu-ev'
 supports         'centos', '~> 6.0'
 supports         'centos', '~> 7.0'

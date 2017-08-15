@@ -6,5 +6,6 @@ cookbook 'firewall', git: 'git@github.com:osuosl-cookbooks/firewall'
 cookbook 'munin', git: 'git@github.com:osuosl-cookbooks/munin'
 cookbook 'osl-haproxy', git: 'git@github.com:osuosl-cookbooks/osl-haproxy'
 cookbook 'osl-munin', git: 'git@github.com:osuosl-cookbooks/osl-munin'
+cookbook 'yum-qemu-ev', git: 'git@github.com:osuosl-cookbooks/yum-qemu-ev'
 
 metadata
