@@ -45,14 +45,14 @@ node.default['osl-jenkins']['restart_plugins'] = %w(
   jquery-detached:1.2.1
   structs:1.10
   display-url-api:2.0
-  branch-api:2.0.8
   cloudbees-folder:6.0.3
   scm-api:2.2.0
+  branch-api:2.0.8
   script-security:1.31
   workflow-step-api:2.12
-  workflow-support:2.14
   workflow-scm-step:2.4
   workflow-api:2.20
+  workflow-support:2.14
   workflow-cps:2.39
   workflow-job:2.10
   workflow-multibranch:2.14
