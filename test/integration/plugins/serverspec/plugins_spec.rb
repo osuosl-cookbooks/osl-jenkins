@@ -65,6 +65,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     pipeline-stage-step:2.2
     pipeline-stage-tags-metadata:1.1.2
     pipeline-stage-view:2.6
+    pipeline-utility-steps:1.4.0
     plain-credentials:1.4
     run-condition:1.0
     scm-api:2.2.0
