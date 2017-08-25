@@ -104,3 +104,14 @@ chef_gem 'openstack_taster' do
   clear_sources true
   action :install
 end
+
+# install openstack-cli as a python package if not already installed
+install_openstack_cli_package = %w(
+  /usr/local/bin/openstack
+  /usr/bin/openstack
+).none? { |ob| File.executable? ob }
+
+if install_openstack_cli_package
+  include_recipe 'poise-python'
+  python_package 'python-openstackclient'
+end
