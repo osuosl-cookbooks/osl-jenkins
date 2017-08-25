@@ -56,6 +56,6 @@ describe file('/opt/chef/embedded/bin/openstack_taster') do
   it { should be_executable }
 end
 
-describe command('openstack --version') do
+describe command("scl enable python27 'openstack --version'") do
   its(:exit_status) { should eq 0 }
 end
