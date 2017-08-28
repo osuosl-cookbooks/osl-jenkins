@@ -33,6 +33,11 @@ describe 'osl-jenkins::packer_pipeline_node' do
         runner.converge(described_recipe)
       end
 
+      before do
+        # stub absence of openstack commandline tool
+        allow(File).to receive(:executable?).and_return(false)
+      end
+
       include_context 'common_stubs'
       include_context 'data_bag_stubs'
 
@@ -84,6 +89,26 @@ describe 'osl-jenkins::packer_pipeline_node' do
         expect(chef_run).to install_chef_gem('openstack_taster').with(
           options: '--no-user-install'
         )
+      end
+
+      it do
+        expect(chef_run).to install_python_package('python-openstackclient')
+      end
+    end
+
+    context 'when openstack client is already installed' do
+      cached(:chef_run) do
+        runner = ChefSpec::SoloRunner.new(p)
+        runner.converge(described_recipe)
+      end
+
+      include_context 'common_stubs'
+      include_context 'data_bag_stubs'
+
+      it do
+        # stub presence of openstack commandline tool
+        allow(File).to receive(:executable?).and_return(true)
+        expect(chef_run).to_not install_python_package('python-openstackclient')
       end
     end
   end
