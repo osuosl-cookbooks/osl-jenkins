@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.8.11 (2017-08-28)
+-------------------
+- openstack client for pipeline nodes
+
 1.8.10 (2017-08-23)
 -------------------
 - plugin with inbuilt capabilities of readJSON & writeJSON
