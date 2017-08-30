@@ -13,7 +13,6 @@ Octokit.middleware = stack
 
 # Library to process github payload for Packer Template Pipeline
 class PackerPipeline
-
   def self.new
     @github = Octokit::Client.new(access_token: ENV['GITHUB_TOKEN'], auto_paginate: true)
     @repo_path = 'osuosl/packer-templates'
@@ -68,9 +67,11 @@ class PackerPipeline
 
   # update status for the PR from the final_results given by the pipeline
   # the final_results is a JSON hash containing all the templates that were processed.
-  def self.set_commit_status(final_results)
+  def self.commit_status(final_results)
     git_commit = ENV['GIT_COMMIT']
     return unless git_commit
+
+    final_results = JSON.parse(final_results)
 
     # we are processing a JSON array which looks liek
     # {
@@ -83,20 +84,16 @@ class PackerPipeline
     #         }
     #   }
     # }
-
-    #TODO: make this point to the specific job's console output
-    target_url = 'https://jenkins.osuosl.org/job/packer_pipeline'
-
-    p final_results 
-
     final_status = {}
 
     final_results.keys.each do |arch|
       final_results[arch].keys.each do |t|
-        #create a context array per template
-        final_status[t] = { options: {
+        # create a context array per template
+        final_status[t] = {
+          options: {
             context: t,
-            target_url: target_url,
+            # TODO: make this point to the specific job's console output
+            target_url: 'https://jenkins.osuosl.org/job/packer_pipeline'
           }
         }
 
@@ -110,28 +107,27 @@ class PackerPipeline
           final_status[t][:state] = 'success'
           final_status[t][:options][:description] = "All passed! #{final_results[arch][t]}"
         end
-      #set status
-      @github.create_status(@repo_path, git_commit, final_status[t][:state], final_status[t][:options])
+        # set status
+        @github.create_status(@repo_path, git_commit, final_status[t][:state], final_status[t][:options])
       end
     end
-
-    puts "We set result as #{final_status}"
+    puts "We set GitHub status as #{final_status}"
   end
 
   def self.process_payload(payload)
-
+    payload = JSON.parse(payload)
     # Iterate through all the changed files and get an array of affected templates.
     # find_dependent_templates always returns an array of strings, so I use
     # .reduce to stitch those arrays together by doing the + on arrays of dependent
     # templates for each script. Finally .uniq will ensure we don't get the same
     # template twice in the array
-    templates = PackerPipeline.changed_files(payload).map do |f|
+    templates = changed_files(payload).map do |f|
       find_dependent_templates(f.filename)
     end.reduce(:+).uniq
 
     # Include the PR number
     output = {
-      'pr' => d['number']
+      'pr' => payload['number']
     }
 
     # Create hash of templates and the architectures associated with them.
