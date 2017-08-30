@@ -43,7 +43,7 @@ end
 if options[:final_results_file]
   if File.readable? options[:final_results_file]
     final_results = File.read(options[:final_results_file])
-    puts PackerPipeline.new.commit_status(final_results)
+    puts "We set GitHub status as #{PackerPipeline.new.commit_status(final_results)}"
     exit 0
   else
     puts "Final results file #{options[:final_results_file]} is not readable!"

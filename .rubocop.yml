@@ -25,7 +25,7 @@ Style/MutableConstant:
     - 'spec/spec_helper.rb'
 
 Metrics/AbcSize:
-  Max: 30
+  Max: 31.11
   Exclude:
     - 'libraries/default.rb'
 

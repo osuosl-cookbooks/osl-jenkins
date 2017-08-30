@@ -92,7 +92,7 @@ describe PackerPipeline do
       payload = open_fixture('sync_packer_templates.json')
       expect { puts PackerPipeline.new.process_payload(payload).to_json }.to output(/16/).to_stdout
     end
-    it 'ouputs the name of a template file' do
+    it 'outputs the name of a template file' do
       file = fixture_path('centos-7.2-ppc64-openstack.json')
       response_body = [double('Sawyer::Resource', filename: file)]
       allow(github_mock).to receive(:pull_request_files).with('osuosl/packer-templates', 16).and_return(response_body)
@@ -132,6 +132,65 @@ describe PackerPipeline do
       expect do
         puts PackerPipeline.new.process_payload(payload).to_json
       end.to output(/centos-7.2-ppc64-openstack.json/).to_stdout
+    end
+  end
+
+  context '#commit_status' do
+    let(:github_mock) { double('Octokit', commits: [], issues: [], same_options?: false, auto_paginate: true) }
+    before :each do
+      allow(Octokit::Client).to receive(:new) { github_mock }
+      allow(ENV).to receive(:[])
+      allow(ENV).to receive(:[]).with('BUILD_URL').and_return(
+        'https://jenkins.osuosl.org/job/packer_pipeline/1/'
+      )
+      allow(ENV).to receive(:[]).with('GIT_COMMIT').and_return(
+        '28256684538cbdde31d0e33829e6d9054b8130de'
+      )
+    end
+
+    it 'sets the status for a single template' do
+      final_results = open_fixture('final_results_single_template.json')
+
+      allow(github_mock).to receive('create_status').with(
+        'osuosl/packer-templates',
+        '28256684538cbdde31d0e33829e6d9054b8130de',
+        'failure',
+        context: 'centos-7.3-x86_64-mitaka-aio-openstack.json',
+        target_url: 'https://jenkins.osuosl.org/job/packer_pipeline/1/console',
+        description: 'builder failed!'
+      )
+
+      expect do
+        puts PackerPipeline.new.commit_status(final_results)
+      end.to output(/builder failed/).to_stdout
+    end
+
+    it 'sets the status for multiple templates' do
+      final_results = open_fixture('final_results_multiple_templates.json')
+
+      allow(github_mock).to receive('create_status').with(
+        'osuosl/packer-templates',
+        '28256684538cbdde31d0e33829e6d9054b8130de',
+        'success',
+        context: 'centos-7.3-x86_64-openstack.json',
+        target_url: 'https://jenkins.osuosl.org/job/packer_pipeline/1/console',
+        description: 'All passed! {"linter"=>0, "builder"=>0, "deploy_test"=>0, "taster"=>0}'
+      )
+
+      allow(github_mock).to receive('create_status').with(
+        'osuosl/packer-templates',
+        '28256684538cbdde31d0e33829e6d9054b8130de',
+        'failure',
+        context: 'centos-7.3-x86_64-mitaka-aio-openstack.json',
+        target_url: 'https://jenkins.osuosl.org/job/packer_pipeline/1/console',
+        description: 'builder failed!'
+      )
+      expected_output = <<-OUTPUT
+{"centos-7.3-x86_64-mitaka-aio-openstack.json"=>{:options=>{:context=>"centos-7.3-x86_64-mitaka-aio-openstack.json", :target_url=>"https://jenkins.osuosl.org/job/packer_pipeline/1/console", :description=>"builder failed!"}, :state=>"failure"}, "centos-7.3-x86_64-openstack.json"=>{:options=>{:context=>"centos-7.3-x86_64-openstack.json", :target_url=>"https://jenkins.osuosl.org/job/packer_pipeline/1/console", :description=>"All passed! {\\"linter\\"=>0, \\"builder\\"=>0, \\"deploy_test\\"=>0, \\"taster\\"=>0}"}, :state=>"success"}}
+OUTPUT
+      expect do
+        puts PackerPipeline.new.commit_status(final_results)
+      end.to output(expected_output).to_stdout
     end
   end
 end

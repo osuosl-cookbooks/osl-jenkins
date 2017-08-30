@@ -73,7 +73,7 @@ class PackerPipeline
 
     final_results = JSON.parse(final_results)
 
-    # we are processing a JSON array which looks liek
+    # we are processing a JSON array which looks like
     # {
     #   'arch': {
     #       'template_name' : {
@@ -93,12 +93,15 @@ class PackerPipeline
           options: {
             context: t,
             # TODO: make this point to the specific job's console output
-            target_url: 'https://jenkins.osuosl.org/job/packer_pipeline'
+            target_url: "#{ENV['BUILD_URL']}console"
           }
         }
 
+        # we will set the GitHub status based on the first stage that we encounter
+        # as failed. The Pipeline automatically ignores a template once it has
+        # failed a previous stage, so we do it this way.
         final_results[arch][t].keys.each do |stage|
-          if final_results[arch][t][stage] != 0
+          if final_results[arch][t][stage].to_i != 0
             final_status[t][:state] = 'failure'
             final_status[t][:options][:description] = "#{stage} failed!"
             break
@@ -111,7 +114,7 @@ class PackerPipeline
         @github.create_status(@repo_path, git_commit, final_status[t][:state], final_status[t][:options])
       end
     end
-    puts "We set GitHub status as #{final_status}"
+    final_status
   end
 
   def self.process_payload(payload)
