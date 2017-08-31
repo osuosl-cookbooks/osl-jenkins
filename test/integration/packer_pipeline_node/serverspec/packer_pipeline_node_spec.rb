@@ -59,3 +59,7 @@ end
 describe command("scl enable python27 'openstack --version'") do
   its(:exit_status) { should eq 0 }
 end
+
+describe command('berks version') do
+  its(:exit_status) { should eq 0 }
+end
