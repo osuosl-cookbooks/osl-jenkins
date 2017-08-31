@@ -29,6 +29,9 @@ include_recipe 'build-essential::default'
 include_recipe 'yum-qemu-ev::default'
 include_recipe 'base::kvm'
 
+# setup chefdk so that we have berks
+include_recipe 'base::chefdk'
+
 # Create directory for builds and other artifacts
 directory '/home/alfred/workspace' do
   owner 'alfred'
