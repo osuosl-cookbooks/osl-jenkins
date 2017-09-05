@@ -60,6 +60,12 @@ shared_context 'data_bag_stubs' do
             'public_key' => 'public key for openstack_taster goes here',
             'private_key' => 'private key for openstack_taster goes here'
           }
+        },
+        'git' => {
+          'packer_pipeline' => {
+            'user' => 'osuosl-manatee',
+            'token' => 'FAKE_TOKEN'
+          }
         }
       )
   end

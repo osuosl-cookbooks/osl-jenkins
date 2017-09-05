@@ -1,8 +1,8 @@
-require 'spec_helper'
+require_relative '../../spec_helper.rb'
 
 describe 'osl-jenkins::packer_pipeline_node' do
   [CENTOS_7_OPTS].each do |p|
-    context "#{p[:platform]} #{p[:version]} on ppc64le platform" do
+    context "special things for #{p[:platform]} #{p[:version]} on ppc64le arch" do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(p) do |node|
           node.automatic['kernel']['machine'] = 'ppc64le'
@@ -27,7 +27,7 @@ describe 'osl-jenkins::packer_pipeline_node' do
       end
     end
 
-    context "#{p[:platform]} #{p[:version]} on x86_64 platform" do
+    context "common things for #{p[:platform]} #{p[:version]} on x86_64 and ppc64le archs" do
       cached(:chef_run) do
         runner = ChefSpec::SoloRunner.new(p)
         runner.converge(described_recipe)
@@ -78,6 +78,18 @@ describe 'osl-jenkins::packer_pipeline_node' do
       end
 
       it do
+        expect(chef_run).to create_template('/home/alfred/.git-credentials').with(
+          user: 'alfred',
+          group: 'alfred',
+          mode: 0600,
+          variables: {
+            username: 'osuosl-manatee',
+            password: 'FAKE_TOKEN'
+          }
+        )
+      end
+
+      it do
         expect(chef_run).to create_file('/home/alfred/openstack_credentials.json').with(
           user: 'alfred',
           group: 'alfred',
@@ -100,7 +112,7 @@ describe 'osl-jenkins::packer_pipeline_node' do
       end
     end
 
-    context 'when openstack client is already installed' do
+    context 'when openstack client is already installed on any platform' do
       cached(:chef_run) do
         runner = ChefSpec::SoloRunner.new(p)
         runner.converge(described_recipe)

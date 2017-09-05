@@ -38,11 +38,29 @@ directory '/home/alfred/workspace' do
   group 'alfred'
 end
 
-# git aliases to make things easier
+# git aliases & other config to make things easier
 cookbook_file '/home/alfred/.gitconfig' do
   source 'gitconfig'
   owner 'alfred'
   group 'alfred'
+end
+
+# put the key associated with the openstack_taster's users on various clusters
+# so that it can access the instances once created
+node.override['osl-jenkins']['secrets_databag'] = 'osl_jenkins'
+node.override['osl-jenkins']['secrets_item'] = 'jenkins1'
+github_credentials = credential_secrets['git']['packer_pipeline']
+
+# ~/.git-credentials for use by various shell scripts
+template '/home/alfred/.git-credentials' do
+  owner 'alfred'
+  group 'alfred'
+  source 'git_credentials.erb'
+  mode 0600
+  variables(
+    username: github_credentials['user'],
+    password: github_credentials['token']
+  )
 end
 
 # put the key associated with the openstack_taster's users on various clusters
