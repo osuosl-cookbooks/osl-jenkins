@@ -1,0 +1,24 @@
+{
+  "git": {
+    "encrypted_data": "4BvaBN3o8/4ElgNA5Dq5X2j7d0WToGjFh4okt4gaaSAbRZpZTP65RKfKDAx/\nfT4n2uRvpTv8p4BS++xEsB8JbXZQAnweWP9GWM6KE93Ypt2UEtnuE6hfn+jI\nFtJBdGIQDixOEF9Ndezli+VfyRSERvBj/75J779JTDIdAdDYsvUvXnVTTgLL\nEN/RUOjCkvY8oOKbDzaKjFy2V32wBo2Ht2IhZGnovkFhmrASY0xb6w0HFHFe\nXD5pPsFjM+nEe5427qc3NQ93HtANefAnaIuDrMQrdxfNI5cS6aM8EiPs2Xy9\nD79vhSzplr2Y7JLWWLda1kxFGwE8F237w+M6yLRQoS22t+NgZ2cZKksJLnIK\nwga2mdRHZVWjkxmaMrbZ+vZO\n",
+    "hmac": "BDNOjVNO2k9sUBkFLReTb+grNZsV9UlDyyESOeod8ZY=\n",
+    "iv": "Ihw4ykynmfWeDIwoF/5VaA==\n",
+    "version": 2,
+    "cipher": "aes-256-cbc"
+  },
+  "id": "jenkins1",
+  "jenkins": {
+    "encrypted_data": "CtFqXQzTFFbAZyCYKVDFz5EBtEX+57V/wSgRuDaohPGV3hSB+p15UkaHo5wx\nAPpOc8lYu/snFW+gnLNJ/O+ch3bH3+RDEsuzQLZX2KwcasKfe2xJIJx7DKv2\nG3ixPmmA5oW0XWdLPrcmrQc/1AAez6K0+S/EZWO/JI2qMRzWCEaSfjAl/ZjK\n09il0A1UXiZbrOjlAjdALkJC0wPPm99JDUXTZ0PiMhk5iaY56hCCDohOV+3H\nl1n1H6QU89jxkc8sk21AeteitRgirpmlNjxCtvRkCtqffrfJL8Gc+z4n5lXt\nUs8VOtUXhyTHBjK1WIyOq511nULRbXW8/r09RKHZNec31hxnFU1398DDj4Ft\nbDkcFXtfjXMefOegDK2q9ai+9T708fxv9aWWhDuVhAQ7J4DWQvznlZPTUUhz\nVw+d92uG3w7xk/CC83zlf3oztgsuwFuXNqgS4xIJySx6jN2c0D7iUFXDZ8GN\nzUPWwghzZKRux4XLD1xrVqfRvLpMsqzcEV3NPmN0C/VsU0fxYuZnKR4ZaVAA\ngy/fMDk0/HI2O6PcuKubvfh+UNIqVMZe55tO\n",
+    "hmac": "3iteaXXBkB/hUbowZBt6E/YSRioD3robmI50fsvqsWw=\n",
+    "iv": "mBdHCkMUSLN0nElcX/71Cw==\n",
+    "version": 2,
+    "cipher": "aes-256-cbc"
+  },
+  "jenkins_private_key": {
+    "encrypted_data": "vz/o2WzfWCtL1/+Vwe8GnlzU34bARGlaVONYIEJRVI2VBDkzk/whHgmaEbV3\ngl2dh13JrbisNxDLYT3qQHl9nR6oeXEK8f2HEQwEwQeOKBI4mz/Y8rTJzzBb\nbLf6wt6/\n",
+    "hmac": "rM9eX5DG9/944ZosIw8bD3xMkQJ9VNgKqxv39PG3+oU=\n",
+    "iv": "xKmESNByCqJoitkDGg60gw==\n",
+    "version": 2,
+    "cipher": "aes-256-cbc"
+  }
+}

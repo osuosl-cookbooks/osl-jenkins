@@ -63,3 +63,8 @@ end
 describe command('berks version') do
   its(:exit_status) { should eq 0 }
 end
+
+describe file('/home/alfred/.git-credentials') do
+  it { should be_a_file }
+  its(:content) { should match('https://osuosl-manatee:FAKE_TOKEN@github.com') }
+end

@@ -5,6 +5,7 @@
 [user]
     name = Manatee
     email = github@osuosl.org
+# this is to make git use ~/.git-credentials
 [credential]
     helper = store
 [alias]
