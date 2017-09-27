@@ -2,7 +2,7 @@
 driver:
   flavor_ref: 'm1.medium'
   network_ref:
-    - vlan42
+  #  - vlan42
     - public
   security_groups:
     - default
@@ -291,9 +291,12 @@ suites:
       jenkins:
         master:
           listen_address: '0.0.0.0'
-  - name: powerci 
+  - name: powerci
     run_list:
+      - recipe[osl-docker::powerci]
       - recipe[osl-jenkins::powerci]
+    excludes:
+      - centos-6.9
   - name: packer_pipeline_node
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     data_bags_path: test/integration/data_bags

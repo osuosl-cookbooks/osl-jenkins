@@ -148,8 +148,68 @@ jenkins_script 'Add Docker Cloud' do
     }
 
     if (instance.pluginManager.activePlugins.find { it.shortName == "docker-plugin" } != null) {
-      DockerTemplateBase templateBase = new DockerTemplateBase(
-         'docker-ubuntu', // image
+      DockerTemplateBase ubuntuTemplateBase = new DockerTemplateBase(
+         'ppc64le/ubuntu:16.04', // image
+        '', // dnsString
+        '', // network
+        '/usr/sbin/sshd -D', // dockerCommand
+        '', // volumesString
+        '', // volumesFromString
+        '', // environmentsString
+        '', // lxcConfString
+        '', // hostname
+        2048, // memoryLimit
+        2048, // memorySwap
+        2, // cpuShares
+        '', // bindPorts
+        false, // bindAllPorts
+        false, // privileged
+        false, // tty
+        '' // macAddress
+      );
+
+      DockerTemplateBase debianTemplateBase = new DockerTemplateBase(
+         'ppc64le/debian:9', // image
+        '', // dnsString
+        '', // network
+        '/usr/sbin/sshd -D', // dockerCommand
+        '', // volumesString
+        '', // volumesFromString
+        '', // environmentsString
+        '', // lxcConfString
+        '', // hostname
+        2048, // memoryLimit
+        2048, // memorySwap
+        2, // cpuShares
+        '', // bindPorts
+        false, // bindAllPorts
+        false, // privileged
+        false, // tty
+        '' // macAddress
+      );
+
+      DockerTemplateBase fedoraTemplateBase = new DockerTemplateBase(
+         'ppc64le/fedora:26', // image
+        '', // dnsString
+        '', // network
+        '/usr/sbin/sshd -D', // dockerCommand
+        '', // volumesString
+        '', // volumesFromString
+        '', // environmentsString
+        '', // lxcConfString
+        '', // hostname
+        2048, // memoryLimit
+        2048, // memorySwap
+        2, // cpuShares
+        '', // bindPorts
+        false, // bindAllPorts
+        false, // privileged
+        false, // tty
+        '' // macAddress
+      );
+
+      DockerTemplateBase centosTemplateBase = new DockerTemplateBase(
+         'ppc64le/centos:7', // image
         '', // dnsString
         '', // network
         '/usr/sbin/sshd -D', // dockerCommand
@@ -179,25 +239,55 @@ jenkins_script 'Add Docker Cloud' do
       );
       DockerComputerSSHLauncher dkSSHLauncher = new DockerComputerSSHLauncher(sshConnector);
 
-      DockerTemplate dkTemplate = new DockerTemplate(
-        templateBase,
-        'docker', //labelString
+      DockerTemplate dkUbuntuTemplate = new DockerTemplate(
+        ubuntuTemplateBase,
+        'docker-ubuntu', //labelString
         '', //remoteFs
         '', // remoteFsMapping
         '50', // instanceCapStr
       )
 
-      dkTemplate.setLauncher(dkSSHLauncher);
+      DockerTemplate dkDebianTemplate = new DockerTemplate(
+        debianTemplateBase,
+        'docker-debian', //labelString
+        '', //remoteFs
+        '', // remoteFsMapping
+        '50', // instanceCapStr
+      )
+
+      DockerTemplate dkFedoraTemplate = new DockerTemplate(
+        fedoraTemplateBase,
+        'docker-fedora', //labelString
+        '', //remoteFs
+        '', // remoteFsMapping
+        '50', // instanceCapStr
+      )
+
+      DockerTemplate dkCentosTemplate = new DockerTemplate(
+        centosTemplateBase,
+        'docker-centos', //labelString
+        '', //remoteFs
+        '', // remoteFsMapping
+        '50', // instanceCapStr
+      )
+
+      dkUbuntuTemplate.setLauncher(dkSSHLauncher);
+      dkDebianTemplate.setLauncher(dkSSHLauncher);
+      dkFedoraTemplate.setLauncher(dkSSHLauncher);
+      dkCentosTemplate.setLauncher(dkSSHLauncher);
 
       ArrayList<DockerTemplate> dkTemplates = new ArrayList<DockerTemplate>();
-      dkTemplates.add(dkTemplate);
+      dkTemplates.add(dkUbuntuTemplate);
+      dkTemplates.add(dkDebianTemplate);
+      dkTemplates.add(dkFedoraTemplate);
+      dkTemplates.add(dkCentosTemplate);
 
       ArrayList<DockerCloud> dkCloud = new ArrayList<DockerCloud>();
       dkCloud.add(
         new DockerCloud(
-          'docker',
+          'docker1',
           dkTemplates,
-          'tcp://192.168.0.4:2375', // serverUrl
+          'tcp://127.0.0.1:2375', // serverUrl
           '400', // containerCapStr
           5, // connectTimeout
           15, // readTimeout
