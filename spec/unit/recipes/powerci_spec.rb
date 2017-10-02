@@ -50,7 +50,7 @@ describe 'osl-jenkins::powerci' do
         end
       end
       it do
-        expect(chef_run).to execute_jenkins_script('Add Docker Cloud').with(command: '')
+        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
       end
       it do
         expect(chef_run).to execute_jenkins_script('Add GitHub OAuth config')
