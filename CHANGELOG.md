@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.8.17 (2017-10-02)
+-------------------
+- Remove cass remnants in osl-jenkins
+
 1.8.16 (2017-09-22)
 -------------------
 - Ratelimit and add a quiet period to packer_pipeline.
