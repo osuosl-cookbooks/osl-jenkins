@@ -136,7 +136,7 @@ jenkins_script 'Add Docker Cloud' do
     def instance = Jenkins.getInstance()
     if (instance.pluginManager.activePlugins.find { it.shortName == "docker-plugin" } != null) {
       DockerTemplateBase ubuntuTemplateBase = new DockerTemplateBase(
-         'ppc64le/ubuntu:16.04', // image
+         'osuosl/ubuntu-ppc64le:16.04', // image
         '', // dnsString
         '', // network
         '', // dockerCommand
@@ -156,7 +156,7 @@ jenkins_script 'Add Docker Cloud' do
       );
 
       DockerTemplateBase debianTemplateBase = new DockerTemplateBase(
-         'ppc64le/debian:9', // image
+         'osuosl/debian-ppc64le:9', // image
         '', // dnsString
         '', // network
         '', // dockerCommand
@@ -176,7 +176,7 @@ jenkins_script 'Add Docker Cloud' do
       );
 
       DockerTemplateBase fedoraTemplateBase = new DockerTemplateBase(
-         'ppc64le/fedora:26', // image
+         'osuosl/fedora-ppc64le:26', // image
         '', // dnsString
         '', // network
         '', // dockerCommand
@@ -196,7 +196,7 @@ jenkins_script 'Add Docker Cloud' do
       );
 
       DockerTemplateBase centosTemplateBase = new DockerTemplateBase(
-         'ppc64le/centos:7', // image
+         'osuosl/centos-ppc64le:7', // image
         '', // dnsString
         '', // network
         '', // dockerCommand
@@ -243,7 +243,7 @@ jenkins_script 'Add Docker Cloud' do
         credentials,
         null, null, null,
         "", "", null, "", "",
-        30, 20, 10,
+        null, null, null,
         strategy
       );
 
@@ -300,7 +300,7 @@ jenkins_script 'Add Docker Cloud' do
           'tcp://127.0.0.1:2375', // serverUrl
           '400', // containerCapStr
           5, // connectTimeout
-          15, // readTimeout
+          600, // readTimeout
           '', // credentialsId
           ''  // version
         )
