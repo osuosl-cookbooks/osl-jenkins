@@ -22,6 +22,7 @@ admin_users = items['admin_users']
 normal_users = items['normal_users']
 client_id = items['client_id']
 client_secret = items['client_secret']
+powerci = node['osl-jenkins']['powerci']
 
 ruby_block 'Set jenkins username/password if needed' do
   block do
@@ -117,45 +118,30 @@ jenkins_script 'Add Docker Cloud' do
     //
     import jenkins.model.*;
     import hudson.model.*;
+    import com.cloudbees.plugins.credentials.CredentialsProvider
+    import com.cloudbees.jenkins.plugins.sshcredentials.SSHUserPrivateKey
     import com.nirima.jenkins.plugins.docker.DockerCloud
     import com.nirima.jenkins.plugins.docker.DockerTemplate
     import com.nirima.jenkins.plugins.docker.DockerTemplateBase
     import com.nirima.jenkins.plugins.docker.launcher.DockerComputerSSHLauncher
     import hudson.plugins.sshslaves.SSHConnector
-    import com.cloudbees.plugins.credentials.*
-    import com.cloudbees.plugins.credentials.common.*
-    import com.cloudbees.plugins.credentials.domains.*
-    import com.cloudbees.plugins.credentials.impl.*
+		import com.cloudbees.plugins.credentials.*
+		import com.cloudbees.plugins.credentials.common.*
+		import com.cloudbees.plugins.credentials.domains.*
+		import com.cloudbees.plugins.credentials.impl.*
+    import hudson.plugins.sshslaves.verifiers.SshHostKeyVerificationStrategy
+    import hudson.plugins.sshslaves.verifiers.NonVerifyingKeyVerificationStrategy
 
     def instance = Jenkins.getInstance()
-    if (instance.pluginManager.activePlugins.find { it.shortName == "credentials" } != null) {
-      def domain = Domain.global()
-      def store = instance.getExtensionList('com.cloudbees.plugins.credentials.SystemCredentialsProvider')[0].getStore()
-
-      // Set credentials for docker containers
-      dockerUsernameAndPassword = new UsernamePasswordCredentialsImpl(
-                  CredentialsScope.GLOBAL,
-                  'ssh-docker', // credential ID
-                  'Jenkins Slave with Password Configuration',
-                  'jenkins', //username
-                  'jenkins'  //password
-              )
-      println '--> adding credentials for ssh slaves'
-      store.addCredentials(domain, dockerUsernameAndPassword)
-
-    } else {
-      println "--> no credentials plugin installed"
-    }
-
     if (instance.pluginManager.activePlugins.find { it.shortName == "docker-plugin" } != null) {
       DockerTemplateBase ubuntuTemplateBase = new DockerTemplateBase(
          'ppc64le/ubuntu:16.04', // image
         '', // dnsString
         '', // network
-        '/usr/sbin/sshd -D', // dockerCommand
+        '', // dockerCommand
         '', // volumesString
         '', // volumesFromString
-        '', // environmentsString
+        'JENKINS_SLAVE_SSH_PUBKEY=#{powerci['docker_public_key']}', // environmentsString
         '', // lxcConfString
         '', // hostname
         2048, // memoryLimit
@@ -172,10 +158,10 @@ jenkins_script 'Add Docker Cloud' do
          'ppc64le/debian:9', // image
         '', // dnsString
         '', // network
-        '/usr/sbin/sshd -D', // dockerCommand
+        '', // dockerCommand
         '', // volumesString
         '', // volumesFromString
-        '', // environmentsString
+        'JENKINS_SLAVE_SSH_PUBKEY=#{powerci['docker_public_key']}', // environmentsString
         '', // lxcConfString
         '', // hostname
         2048, // memoryLimit
@@ -192,10 +178,10 @@ jenkins_script 'Add Docker Cloud' do
          'ppc64le/fedora:26', // image
         '', // dnsString
         '', // network
-        '/usr/sbin/sshd -D', // dockerCommand
+        '', // dockerCommand
         '', // volumesString
         '', // volumesFromString
-        '', // environmentsString
+        'JENKINS_SLAVE_SSH_PUBKEY=#{powerci['docker_public_key']}', // environmentsString
         '', // lxcConfString
         '', // hostname
         2048, // memoryLimit
@@ -212,10 +198,10 @@ jenkins_script 'Add Docker Cloud' do
          'ppc64le/centos:7', // image
         '', // dnsString
         '', // network
-        '/usr/sbin/sshd -D', // dockerCommand
+        '', // dockerCommand
         '', // volumesString
         '', // volumesFromString
-        '', // environmentsString
+        'JENKINS_SLAVE_SSH_PUBKEY=#{powerci['docker_public_key']}', // environmentsString
         '', // lxcConfString
         '', // hostname
         2048, // memoryLimit
@@ -228,15 +214,38 @@ jenkins_script 'Add Docker Cloud' do
         '' // macAddress
       );
 
+      // Find ssh credentials
+      id_matcher = CredentialsMatchers.withId('powerci-docker')
+      available_credentials =
+        CredentialsProvider.lookupCredentials(
+        StandardUsernameCredentials.class,
+        instance,
+        hudson.security.ACL.SYSTEM,
+        new SchemeRequirement("ssh")
+        )
+
+      credentials =
+        CredentialsMatchers.firstOrNull(
+        available_credentials,
+        id_matcher
+        )
+
+      if(credentials == null) {
+        println("ERROR: Unable to find powerci-docker credentials")
+        return
+      }
+
+      // Setup ssh to docker nodes using our powerci-docker credentials
+      SshHostKeyVerificationStrategy strategy = new NonVerifyingKeyVerificationStrategy()
       SSHConnector sshConnector = new SSHConnector(
         22,
-        'ssh-docker',  //credentialsID for connecting to running container
-        null,
-        null,
-        null,
-        null,
-        null
+        credentials,
+        null, null, null,
+        "", "", null, "", "",
+        30, 20, 10,
+        strategy
       );
+
       DockerComputerSSHLauncher dkSSHLauncher = new DockerComputerSSHLauncher(sshConnector);
 
       DockerTemplate dkUbuntuTemplate = new DockerTemplate(
