@@ -3,7 +3,6 @@ default['osl-jenkins']['site_pr_builder'] = {
   'lib_path' => ::File.join(node['jenkins']['master']['home'], 'lib'),
   'sites_to_build' => {
     'beaver-barcamp-pelican' => 'osuosl',
-    'cass-pelican' => 'osu-cass',
     'osuosl-pelican' => 'osuosl',
     'wiki' => 'osuosl'
   },
