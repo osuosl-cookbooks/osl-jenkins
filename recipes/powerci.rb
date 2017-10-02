@@ -17,19 +17,20 @@
 # limitations under the License.
 #
 
-items = data_bag_item('osl_jenkins', 'powerci')
-admin_users = items['admin_users']
-normal_users = items['normal_users']
-client_id = items['client_id']
-client_secret = items['client_secret']
+node.default['osl-jenkins']['secrets_item'] = 'powerci'
+secrets = credential_secrets
+admin_users = secrets['admin_users']
+normal_users = secrets['normal_users']
+client_id = secrets['oauth']['powerci']['client_id']
+client_secret = secrets['oauth']['powerci']['client_secret']
 powerci = node['osl-jenkins']['powerci']
 
 ruby_block 'Set jenkins username/password if needed' do
   block do
     if ::File.exist?('/var/lib/jenkins/config.xml') &&
        ::File.foreach('/var/lib/jenkins/config.xml').grep(/GithubSecurityRealm/).any?
-      node.run_state[:jenkins_username] = 'osuosl-manatee' # ~FC001
-      node.run_state[:jenkins_password] = items['cli_password'] # ~FC001
+      node.run_state[:jenkins_username] = secrets['git']['powerci']['user'] # ~FC001
+      node.run_state[:jenkins_password] = secrets['git']['powerci']['token'] # ~FC001
     end
   end
 end
@@ -490,8 +491,8 @@ ruby_block 'Set jenkins username/password if needed' do
   block do
     if ::File.exist?('/var/lib/jenkins/config.xml') &&
        ::File.foreach('/var/lib/jenkins/config.xml').grep(/GithubSecurityRealm/).any?
-      node.run_state[:jenkins_username] = 'osuosl-manatee' # ~FC001
-      node.run_state[:jenkins_password] = items['cli_password'] # ~FC001
+      node.run_state[:jenkins_username] = secrets['git']['powerci']['user'] # ~FC001
+      node.run_state[:jenkins_password] = secrets['git']['powerci']['token'] # ~FC001
     end
   end
 end
