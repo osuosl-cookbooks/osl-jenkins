@@ -126,10 +126,10 @@ jenkins_script 'Add Docker Cloud' do
     import com.nirima.jenkins.plugins.docker.DockerTemplateBase
     import com.nirima.jenkins.plugins.docker.launcher.DockerComputerSSHLauncher
     import hudson.plugins.sshslaves.SSHConnector
-		import com.cloudbees.plugins.credentials.*
-		import com.cloudbees.plugins.credentials.common.*
-		import com.cloudbees.plugins.credentials.domains.*
-		import com.cloudbees.plugins.credentials.impl.*
+    import com.cloudbees.plugins.credentials.*
+    import com.cloudbees.plugins.credentials.common.*
+    import com.cloudbees.plugins.credentials.domains.*
+    import com.cloudbees.plugins.credentials.impl.*
     import hudson.plugins.sshslaves.verifiers.SshHostKeyVerificationStrategy
     import hudson.plugins.sshslaves.verifiers.NonVerifyingKeyVerificationStrategy
 
