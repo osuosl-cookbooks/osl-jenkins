@@ -33,3 +33,13 @@ Metrics/MethodLength:
   Max: 30
   Exclude:
     - 'libraries/default.rb'
+
+Style/ClassAndModuleChildren:
+  Exclude:
+    - 'recipes/powerci.rb'
+Style/Documentation:
+  Exclude:
+    - 'spec/**/*'
+    - 'test/**/*'
+    - 'libraries/powerci.rb'
+    - 'recipes/powerci.rb'

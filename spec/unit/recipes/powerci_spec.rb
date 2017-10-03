@@ -8,12 +8,33 @@ describe 'osl-jenkins::powerci' do
       end
       include_context 'common_stubs'
       before do
-        stub_data_bag_item('osl_jenkins', 'powerci').and_return(
+        allow(Chef::EncryptedDataBagItem).to receive(:load).with('osl_jenkins', 'powerci').and_return(
           admin_users: ['testadmin'],
           normal_users: ['testuser'],
-          client_id: '123456789',
-          client_secret: '0987654321',
-          cli_password: 'abcdefghi'
+          'oauth' => {
+            'powerci' => {
+              client_id: '123456789',
+              client_secret: '0987654321'
+            }
+          },
+          'git' => {
+            'powerci' => {
+              'user' => 'powerci',
+              'token' => 'powerci'
+            }
+          }
+        )
+        stub_search('node', 'roles:powerci_docker').and_return(
+          [
+            {
+              ipaddress: '192.168.0.1',
+              fqdn: 'docker1.example.org'
+            },
+            {
+              ipaddress: '192.168.0.2',
+              fqdn: 'docker2.example.org'
+            }
+          ]
         )
       end
       it 'converges successfully' do
@@ -51,6 +72,12 @@ describe 'osl-jenkins::powerci' do
       end
       it do
         expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
+      end
+      it 'should add docker hosts' do
+        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
+          .with(command: %r{tcp://192.168.0.1:2375})
+        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
+          .with(command: %r{tcp://192.168.0.2:2375})
       end
       it do
         expect(chef_run).to execute_jenkins_script('Add GitHub OAuth config')

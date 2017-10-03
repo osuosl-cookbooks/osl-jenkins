@@ -17,6 +17,10 @@
 # limitations under the License.
 #
 
+class ::Chef::Recipe
+  include Powerci::Helper
+end
+
 node.default['osl-jenkins']['secrets_item'] = 'powerci'
 secrets = credential_secrets
 admin_users = secrets['admin_users']
@@ -111,6 +115,26 @@ node.default['osl-jenkins']['plugins'] = %w(
 )
 
 include_recipe 'osl-jenkins::master'
+
+if Chef::Config[:solo] && !defined?(ChefSpec)
+  Chef::Log.warn('This recipe uses search which Chef Solo does not support') if Chef::Config[:solo]
+else
+  docker_hosts = "\n"
+  powerci_docker = search(
+    :node,
+    'roles:powerci_docker',
+    filter_result: {
+      'ipaddress' => ['ipaddress'],
+      'fqdn' => ['fqdn']
+    }
+  )
+end
+
+unless powerci_docker.nil?
+  powerci_docker.each do |host|
+    docker_hosts += add_docker_host(host['fqdn'], host['ipaddress'])
+  end
+end
 
 jenkins_script 'Add Docker Cloud' do
   command <<-EOH.gsub(/^ {4}/, '')
@@ -293,19 +317,7 @@ jenkins_script 'Add Docker Cloud' do
       dkTemplates.add(dkCentosTemplate);
 
       ArrayList<DockerCloud> dkCloud = new ArrayList<DockerCloud>();
-      dkCloud.add(
-        new DockerCloud(
-          'docker1',
-          dkTemplates,
-          'tcp://127.0.0.1:2375', // serverUrl
-          '400', // containerCapStr
-          5, // connectTimeout
-          600, // readTimeout
-          '', // credentialsId
-          ''  // version
-        )
-      );
-
+      #{docker_hosts}
       println '--> Configuring docker cloud'
       instance.clouds.replaceBy(dkCloud)
 
