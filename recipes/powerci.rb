@@ -136,6 +136,18 @@ unless powerci_docker.nil?
   end
 end
 
+docker_images = "\n"
+powerci['docker_images'].each do |image|
+  docker_images +=
+    add_docker_image(
+      image,
+      powerci['docker_public_key'],
+      powerci['docker']['memory_limit'],
+      powerci['docker']['memory_swap'],
+      powerci['docker']['cpu_shared']
+    )
+end
+
 jenkins_script 'Add Docker Cloud' do
   command <<-EOH.gsub(/^ {4}/, '')
     // Mostly from:
@@ -159,86 +171,6 @@ jenkins_script 'Add Docker Cloud' do
 
     def instance = Jenkins.getInstance()
     if (instance.pluginManager.activePlugins.find { it.shortName == "docker-plugin" } != null) {
-      DockerTemplateBase ubuntuTemplateBase = new DockerTemplateBase(
-         'osuosl/ubuntu-ppc64le:16.04', // image
-        '', // dnsString
-        '', // network
-        '', // dockerCommand
-        '', // volumesString
-        '', // volumesFromString
-        'JENKINS_SLAVE_SSH_PUBKEY=#{powerci['docker_public_key']}', // environmentsString
-        '', // lxcConfString
-        '', // hostname
-        2048, // memoryLimit
-        2048, // memorySwap
-        2, // cpuShares
-        '', // bindPorts
-        false, // bindAllPorts
-        false, // privileged
-        false, // tty
-        '' // macAddress
-      );
-
-      DockerTemplateBase debianTemplateBase = new DockerTemplateBase(
-         'osuosl/debian-ppc64le:9', // image
-        '', // dnsString
-        '', // network
-        '', // dockerCommand
-        '', // volumesString
-        '', // volumesFromString
-        'JENKINS_SLAVE_SSH_PUBKEY=#{powerci['docker_public_key']}', // environmentsString
-        '', // lxcConfString
-        '', // hostname
-        2048, // memoryLimit
-        2048, // memorySwap
-        2, // cpuShares
-        '', // bindPorts
-        false, // bindAllPorts
-        false, // privileged
-        false, // tty
-        '' // macAddress
-      );
-
-      DockerTemplateBase fedoraTemplateBase = new DockerTemplateBase(
-         'osuosl/fedora-ppc64le:26', // image
-        '', // dnsString
-        '', // network
-        '', // dockerCommand
-        '', // volumesString
-        '', // volumesFromString
-        'JENKINS_SLAVE_SSH_PUBKEY=#{powerci['docker_public_key']}', // environmentsString
-        '', // lxcConfString
-        '', // hostname
-        2048, // memoryLimit
-        2048, // memorySwap
-        2, // cpuShares
-        '', // bindPorts
-        false, // bindAllPorts
-        false, // privileged
-        false, // tty
-        '' // macAddress
-      );
-
-      DockerTemplateBase centosTemplateBase = new DockerTemplateBase(
-         'osuosl/centos-ppc64le:7', // image
-        '', // dnsString
-        '', // network
-        '', // dockerCommand
-        '', // volumesString
-        '', // volumesFromString
-        'JENKINS_SLAVE_SSH_PUBKEY=#{powerci['docker_public_key']}', // environmentsString
-        '', // lxcConfString
-        '', // hostname
-        2048, // memoryLimit
-        2048, // memorySwap
-        2, // cpuShares
-        '', // bindPorts
-        false, // bindAllPorts
-        false, // privileged
-        false, // tty
-        '' // macAddress
-      );
-
       // Find ssh credentials
       id_matcher = CredentialsMatchers.withId('powerci-docker')
       available_credentials =
@@ -272,50 +204,8 @@ jenkins_script 'Add Docker Cloud' do
       );
 
       DockerComputerSSHLauncher dkSSHLauncher = new DockerComputerSSHLauncher(sshConnector);
-
-      DockerTemplate dkUbuntuTemplate = new DockerTemplate(
-        ubuntuTemplateBase,
-        'docker-ubuntu', //labelString
-        '', //remoteFs
-        '', // remoteFsMapping
-        '50', // instanceCapStr
-      )
-
-      DockerTemplate dkDebianTemplate = new DockerTemplate(
-        debianTemplateBase,
-        'docker-debian', //labelString
-        '', //remoteFs
-        '', // remoteFsMapping
-        '50', // instanceCapStr
-      )
-
-      DockerTemplate dkFedoraTemplate = new DockerTemplate(
-        fedoraTemplateBase,
-        'docker-fedora', //labelString
-        '', //remoteFs
-        '', // remoteFsMapping
-        '50', // instanceCapStr
-      )
-
-      DockerTemplate dkCentosTemplate = new DockerTemplate(
-        centosTemplateBase,
-        'docker-centos', //labelString
-        '', //remoteFs
-        '', // remoteFsMapping
-        '50', // instanceCapStr
-      )
-
-      dkUbuntuTemplate.setLauncher(dkSSHLauncher);
-      dkDebianTemplate.setLauncher(dkSSHLauncher);
-      dkFedoraTemplate.setLauncher(dkSSHLauncher);
-      dkCentosTemplate.setLauncher(dkSSHLauncher);
-
       ArrayList<DockerTemplate> dkTemplates = new ArrayList<DockerTemplate>();
-      dkTemplates.add(dkUbuntuTemplate);
-      dkTemplates.add(dkDebianTemplate);
-      dkTemplates.add(dkFedoraTemplate);
-      dkTemplates.add(dkCentosTemplate);
-
+      #{docker_images}
       ArrayList<DockerCloud> dkCloud = new ArrayList<DockerCloud>();
       #{docker_hosts}
       println '--> Configuring docker cloud'

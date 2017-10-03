@@ -73,6 +73,16 @@ describe 'osl-jenkins::powerci' do
       it do
         expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
       end
+      it 'should add docker images' do
+        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
+          .with(command: %r{'osuosl/ubuntu-ppc64le:16.04', // image})
+        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
+          .with(command: %r{'osuosl/debian-ppc64le:9', // image})
+        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
+          .with(command: %r{'osuosl/fedora-ppc64le:26', // image})
+        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
+          .with(command: %r{'osuosl/centos-ppc64le:7', // image})
+      end
       it 'should add docker hosts' do
         expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
           .with(command: %r{tcp://192.168.0.1:2375})

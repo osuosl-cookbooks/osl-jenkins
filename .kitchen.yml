@@ -293,6 +293,7 @@ suites:
           listen_address: '0.0.0.0'
   - name: powerci
     nodes_path: test/integration/nodes
+    provisioner: chef_zero
     run_list:
       - recipe[osl-docker::powerci]
       - recipe[osl-jenkins::powerci]
