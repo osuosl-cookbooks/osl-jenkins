@@ -31,7 +31,6 @@ class PackerPipeline
   def self.find_dependent_templates(file)
     return [File.basename(file)] if file =~ /.json$/
 
-    file = File.basename file
     dependent_templates = []
 
     # go to dir containing all images
