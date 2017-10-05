@@ -62,12 +62,12 @@ describe PackerPipeline do
       file = fixture_path('centos-7.2-ppc64-openstack.json')
       expect(PackerPipeline.new.find_dependent_templates(file)).to match_array(['centos-7.2-ppc64-openstack.json'])
     end
-    it 'returns a template that uses a script' do
-      file = fixture_path('osuosl.sh')
+    it 'returns a single template that uses a script' do
+      file = 'scripts/centos/osuosl.sh'
       expect(PackerPipeline.new.find_dependent_templates(file)).to match_array(['centos-7.3-x86_64-openstack.json'])
     end
-    it 'returns templates that use a script' do
-      file = fixture_path('openstack.sh')
+    it 'returns multiple templates that use a script' do
+      file = 'scripts/centos/openstack.sh'
       expect(PackerPipeline.new.find_dependent_templates(file)).to match_array(
         ['centos-7.3-x86_64-openstack.json', 'centos-7.2-ppc64-openstack.json']
       )
@@ -86,7 +86,7 @@ describe PackerPipeline do
       allow(ENV).to receive(:[]).with('PACKER_TEMPLATES_DIR').and_return(fixture_path(''))
     end
     it 'prints the PR number' do
-      file = fixture_path('osuosl.sh')
+      file = fixture_path('scripts/centos/osuosl.sh')
       response_body = [double('Sawyer::Resource', filename: file)]
       allow(github_mock).to receive(:pull_request_files).with('osuosl/packer-templates', 16).and_return(response_body)
       payload = open_fixture('sync_packer_templates.json')
@@ -104,7 +104,7 @@ describe PackerPipeline do
       end.to output(/centos-7.2-ppc64-openstack.json/).to_stdout
     end
     it 'finds a template that uses a script' do
-      file = fixture_path('osuosl.sh')
+      file = 'scripts/centos/osuosl.sh'
       response_body = [double('Sawyer::Resource', filename: file)]
       allow(github_mock).to receive(:pull_request_files).with('osuosl/packer-templates', 16).and_return(response_body)
 
@@ -116,7 +116,7 @@ describe PackerPipeline do
     end
     it 'outputs name of template file and finds a template that uses a script' do
       template = fixture_path('centos-7.2-ppc64-openstack.json')
-      script = fixture_path('osuosl.sh')
+      script = 'scripts/centos/osuosl.sh'
       response_body = [
         double('Sawyer::Resource', filename: template),
         double('Sawyer::Resource', filename: script)
