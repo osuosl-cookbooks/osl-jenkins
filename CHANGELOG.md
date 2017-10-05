@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.8.18 (2017-10-05)
+-------------------
+- Dependent templates are now searched for by using full path.
+
 1.8.17 (2017-10-02)
 -------------------
 - Remove cass remnants in osl-jenkins
