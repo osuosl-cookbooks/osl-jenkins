@@ -24,7 +24,6 @@ node.default['osl-jenkins']['cookbook_uploader'].tap do |conf|
     phase_out_nginx
     phpbb
     production
-    testing
     workstation
   )
   conf['org'] = 'osuosl-cookbooks'
