@@ -28,7 +28,10 @@ module Powerci
     # @param [Integer] docker memory swap
     # @param [Integer] docker cpu shared
     def add_docker_image(image, docker_public_key, memory_limit, memory_swap, cpu_shared)
+      # Convert docker image name into something that works as a Groovy variable name
       var_name = image.tr('/:\-.', '_')
+      # Convert docker image name into a more sensible jenkins label converting slashes and colons to dashes
+      label = "docker-#{image.tr('/:', '-')}"
       <<-EOH.gsub(/^ {2}/, '')
         DockerTemplateBase #{var_name}_TemplateBase = new DockerTemplateBase(
            '#{image}', // image
@@ -51,7 +54,7 @@ module Powerci
         );
         DockerTemplate dk_#{var_name}_Template = new DockerTemplate(
           #{var_name}_TemplateBase,
-          '#{image}', //labelString
+          '#{label}', //labelString
           '', //remoteFs
           '', // remoteFsMapping
           '50', // instanceCapStr
