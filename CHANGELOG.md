@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.9.0 (2017-10-12)
+------------------
+- Manually setup docker jenkins with images and host
+
 1.8.19 (2017-10-09)
 -------------------
 - Remove testing env from default env
