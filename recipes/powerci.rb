@@ -17,18 +17,24 @@
 # limitations under the License.
 #
 
-items = data_bag_item('osl_jenkins', 'powerci')
-admin_users = items['admin_users']
-normal_users = items['normal_users']
-client_id = items['client_id']
-client_secret = items['client_secret']
+class ::Chef::Recipe
+  include Powerci::Helper
+end
+
+node.default['osl-jenkins']['secrets_item'] = 'powerci'
+secrets = credential_secrets
+admin_users = secrets['admin_users']
+normal_users = secrets['normal_users']
+client_id = secrets['oauth']['powerci']['client_id']
+client_secret = secrets['oauth']['powerci']['client_secret']
+powerci = node['osl-jenkins']['powerci']
 
 ruby_block 'Set jenkins username/password if needed' do
   block do
     if ::File.exist?('/var/lib/jenkins/config.xml') &&
        ::File.foreach('/var/lib/jenkins/config.xml').grep(/GithubSecurityRealm/).any?
-      node.run_state[:jenkins_username] = 'osuosl-manatee' # ~FC001
-      node.run_state[:jenkins_password] = items['cli_password'] # ~FC001
+      node.run_state[:jenkins_username] = secrets['git']['powerci']['user'] # ~FC001
+      node.run_state[:jenkins_password] = secrets['git']['powerci']['token'] # ~FC001
     end
   end
 end
@@ -110,6 +116,38 @@ node.default['osl-jenkins']['plugins'] = %w(
 
 include_recipe 'osl-jenkins::master'
 
+if Chef::Config[:solo] && !defined?(ChefSpec)
+  Chef::Log.warn('This recipe uses search which Chef Solo does not support') if Chef::Config[:solo]
+else
+  docker_hosts = "\n"
+  powerci_docker = search(
+    :node,
+    'roles:powerci_docker',
+    filter_result: {
+      'ipaddress' => ['ipaddress'],
+      'fqdn' => ['fqdn']
+    }
+  )
+end
+
+unless powerci_docker.nil?
+  powerci_docker.each do |host|
+    docker_hosts += add_docker_host(host['fqdn'], host['ipaddress'])
+  end
+end
+
+docker_images = "\n"
+powerci['docker_images'].each do |image|
+  docker_images +=
+    add_docker_image(
+      image,
+      powerci['docker_public_key'],
+      powerci['docker']['memory_limit'],
+      powerci['docker']['memory_swap'],
+      powerci['docker']['cpu_shared']
+    )
+end
+
 jenkins_script 'Add Docker Cloud' do
   command <<-EOH.gsub(/^ {4}/, '')
     // Mostly from:
@@ -117,6 +155,8 @@ jenkins_script 'Add Docker Cloud' do
     //
     import jenkins.model.*;
     import hudson.model.*;
+    import com.cloudbees.plugins.credentials.CredentialsProvider
+    import com.cloudbees.jenkins.plugins.sshcredentials.SSHUserPrivateKey
     import com.nirima.jenkins.plugins.docker.DockerCloud
     import com.nirima.jenkins.plugins.docker.DockerTemplate
     import com.nirima.jenkins.plugins.docker.DockerTemplateBase
@@ -126,86 +166,48 @@ jenkins_script 'Add Docker Cloud' do
     import com.cloudbees.plugins.credentials.common.*
     import com.cloudbees.plugins.credentials.domains.*
     import com.cloudbees.plugins.credentials.impl.*
+    import hudson.plugins.sshslaves.verifiers.SshHostKeyVerificationStrategy
+    import hudson.plugins.sshslaves.verifiers.NonVerifyingKeyVerificationStrategy
 
     def instance = Jenkins.getInstance()
-    if (instance.pluginManager.activePlugins.find { it.shortName == "credentials" } != null) {
-      def domain = Domain.global()
-      def store = instance.getExtensionList('com.cloudbees.plugins.credentials.SystemCredentialsProvider')[0].getStore()
-
-      // Set credentials for docker containers
-      dockerUsernameAndPassword = new UsernamePasswordCredentialsImpl(
-                  CredentialsScope.GLOBAL,
-                  'ssh-docker', // credential ID
-                  'Jenkins Slave with Password Configuration',
-                  'jenkins', //username
-                  'jenkins'  //password
-              )
-      println '--> adding credentials for ssh slaves'
-      store.addCredentials(domain, dockerUsernameAndPassword)
-
-    } else {
-      println "--> no credentials plugin installed"
-    }
-
     if (instance.pluginManager.activePlugins.find { it.shortName == "docker-plugin" } != null) {
-      DockerTemplateBase templateBase = new DockerTemplateBase(
-         'docker-ubuntu', // image
-        '', // dnsString
-        '', // network
-        '/usr/sbin/sshd -D', // dockerCommand
-        '', // volumesString
-        '', // volumesFromString
-        '', // environmentsString
-        '', // lxcConfString
-        '', // hostname
-        2048, // memoryLimit
-        2048, // memorySwap
-        2, // cpuShares
-        '', // bindPorts
-        false, // bindAllPorts
-        false, // privileged
-        false, // tty
-        '' // macAddress
-      );
+      // Find ssh credentials
+      id_matcher = CredentialsMatchers.withId('powerci-docker')
+      available_credentials =
+        CredentialsProvider.lookupCredentials(
+        StandardUsernameCredentials.class,
+        instance,
+        hudson.security.ACL.SYSTEM,
+        new SchemeRequirement("ssh")
+        )
 
+      credentials =
+        CredentialsMatchers.firstOrNull(
+        available_credentials,
+        id_matcher
+        )
+
+      if(credentials == null) {
+        println("ERROR: Unable to find powerci-docker credentials")
+        return
+      }
+
+      // Setup ssh to docker nodes using our powerci-docker credentials
+      SshHostKeyVerificationStrategy strategy = new NonVerifyingKeyVerificationStrategy()
       SSHConnector sshConnector = new SSHConnector(
         22,
-        'ssh-docker',  //credentialsID for connecting to running container
-        null,
-        null,
-        null,
-        null,
-        null
+        credentials,
+        null, null, null,
+        "", "", null, "", "",
+        null, null, null,
+        strategy
       );
+
       DockerComputerSSHLauncher dkSSHLauncher = new DockerComputerSSHLauncher(sshConnector);
-
-      DockerTemplate dkTemplate = new DockerTemplate(
-        templateBase,
-        'docker', //labelString
-        '', //remoteFs
-        '', // remoteFsMapping
-        '50', // instanceCapStr
-      )
-
-      dkTemplate.setLauncher(dkSSHLauncher);
-
       ArrayList<DockerTemplate> dkTemplates = new ArrayList<DockerTemplate>();
-      dkTemplates.add(dkTemplate);
-
+      #{docker_images}
       ArrayList<DockerCloud> dkCloud = new ArrayList<DockerCloud>();
-      dkCloud.add(
-        new DockerCloud(
-          'docker',
-          dkTemplates,
-          'tcp://192.168.0.4:2375', // serverUrl
-          '400', // containerCapStr
-          5, // connectTimeout
-          15, // readTimeout
-          '', // credentialsId
-          ''  // version
-        )
-      );
-
+      #{docker_hosts}
       println '--> Configuring docker cloud'
       instance.clouds.replaceBy(dkCloud)
 
@@ -391,8 +393,8 @@ ruby_block 'Set jenkins username/password if needed' do
   block do
     if ::File.exist?('/var/lib/jenkins/config.xml') &&
        ::File.foreach('/var/lib/jenkins/config.xml').grep(/GithubSecurityRealm/).any?
-      node.run_state[:jenkins_username] = 'osuosl-manatee' # ~FC001
-      node.run_state[:jenkins_password] = items['cli_password'] # ~FC001
+      node.run_state[:jenkins_username] = secrets['git']['powerci']['user'] # ~FC001
+      node.run_state[:jenkins_password] = secrets['git']['powerci']['token'] # ~FC001
     end
   end
 end

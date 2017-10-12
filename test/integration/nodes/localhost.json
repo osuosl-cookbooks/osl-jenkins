@@ -1,0 +1,10 @@
+{
+  "name": "localhost",
+  "automatic": {
+    "fqdn": "localhost.localdomain",
+    "ipaddress": "127.0.0.1"
+  },
+  "roles": [
+    "powerci_docker"
+  ]
+}

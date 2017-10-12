@@ -86,3 +86,17 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     its(:stdout) { should match(/^#{plugin}.*#{version}[\s\(]?/) }
   end
 end
+
+describe file('/var/lib/jenkins/config.xml') do
+  %w(
+    osuosl/ubuntu-ppc64le:16.04
+    osuosl/debian-ppc64le:9
+    osuosl/fedora-ppc64le:26
+    osuosl/centos-ppc64le:7
+  ).each do |image|
+    its(:content) { should match(%r{<image>#{image}</image>}) }
+  end
+  its(:content) { should match(/<string>JENKINS_SLAVE_SSH_PUBKEY=ssh-rsa AAAAB3.*/) }
+  its(:content) { should match(%r{<credentialsId>powerci-docker</credentialsId>}) }
+  its(:content) { should match(%r{<serverUrl>tcp://127.0.0.1:2375</serverUrl>}) }
+end
