@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.9.2 (2017-10-19)
+------------------
+- Update to jenkins-2.73.2
+
 1.9.1 (2017-10-13)
 ------------------
 - Use openstack_newton instead of openstack_mitaka for default chef env…
