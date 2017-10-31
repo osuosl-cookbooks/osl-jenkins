@@ -90,9 +90,13 @@ end
 describe file('/var/lib/jenkins/config.xml') do
   %w(
     osuosl/ubuntu-ppc64le:16.04
+    osuosl/ubuntu-ppc64le-cuda:8.0
+    osuosl/ubuntu-ppc64le-cuda:8.0-cudnn6
     osuosl/debian-ppc64le:9
     osuosl/fedora-ppc64le:26
     osuosl/centos-ppc64le:7
+    osuosl/centos-ppc64le-cuda:8.0
+    osuosl/centos-ppc64le-cuda:8.0-cudnn6
   ).each do |image|
     its(:content) { should match(%r{<image>#{image}</image>}) }
   end
