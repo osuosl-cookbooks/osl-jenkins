@@ -106,10 +106,6 @@ describe 'osl-jenkins::packer_pipeline_node' do
       it do
         expect(chef_run).to install_python_package('python-openstackclient')
       end
-
-      it do
-        expect(chef_run).to install_package('chefdk')
-      end
     end
 
     context 'when openstack client is already installed on any platform' do
