@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.9.4 (2017-11-10)
+------------------
+- Add copy-to-slave plugin for powerci use
+
 1.9.3 (2017-10-31)
 ------------------
 - Add CUDA images to POWERCI
