@@ -58,6 +58,7 @@ describe 'osl-jenkins::powerci' do
         openstack-cloud:2.22
         pipeline-multibranch-defaults:1.1
         resource-disposer:0.6
+        copy-to-slave:1.4.4
       ).each do |plugins_version|
         plugin, version = plugins_version.split(':')
         it do
