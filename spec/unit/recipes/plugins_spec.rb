@@ -46,7 +46,7 @@ describe 'osl-jenkins::plugins' do
         git:3.5.1
         git-client:2.5.0
         github:1.26.2
-        github-api:1.86
+        github-api:1.90
         github-branch-source:2.2.3
         github-oauth:0.22.3
         github-organization-folder:1.6
