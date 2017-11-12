@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.9.5 (2017-11-12)
+------------------
+- Bump github-api to 1.90 to work around issue with their API
+
 1.9.4 (2017-11-10)
 ------------------
 - Add copy-to-slave plugin for powerci use
