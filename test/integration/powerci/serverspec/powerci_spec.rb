@@ -22,7 +22,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     git:3.5.1
     pipeline-stage-tags-metadata:1.1.3
     workflow-scm-step:2.4
-    github-api:1.86
+    github-api:1.90
     workflow-cps-global-lib:2.8
     openstack-cloud:2.22
     cloudbees-folder:6.0.3

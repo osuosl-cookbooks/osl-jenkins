@@ -51,7 +51,7 @@ describe 'osl-jenkins::powerci' do
         emailext-template:1.0
         embeddable-build-status:1.9
         git-client:2.5.0
-        github-api:1.86
+        github-api:1.90
         github-oauth:0.27
         job-restrictions:0.6
         matrix-project:1.10

@@ -69,7 +69,7 @@ node.default['osl-jenkins']['restart_plugins'] = %w(
   git-client:2.5.0
   git:3.5.1
   git-server:1.7
-  github-api:1.86
+  github-api:1.90
   github:1.27.0
   github-branch-source:2.2.3
   github-oauth:0.27
