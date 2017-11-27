@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.9.6 (2017-11-27)
+------------------
+- Fix ChefSpec tests
+
 1.9.5 (2017-11-12)
 ------------------
 - Bump github-api to 1.90 to work around issue with their API
