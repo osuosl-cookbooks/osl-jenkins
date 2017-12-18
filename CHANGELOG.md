@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.9.9 (2017-12-18)
+------------------
+- Adjust timeouts for packer jobs
+
 1.9.8 (2017-12-18)
 ------------------
 - Install packer using base::packer instead
