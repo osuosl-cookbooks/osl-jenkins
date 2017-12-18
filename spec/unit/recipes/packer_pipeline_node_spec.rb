@@ -15,16 +15,6 @@ describe 'osl-jenkins::packer_pipeline_node' do
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
       end
-
-      it do
-        expect(chef_run).to create_link('/usr/local/bin/packer')
-      end
-
-      it do
-        expect(chef_run).to create_remote_file('/usr/local/bin/packer-v1.0.3-dev').with(
-          source: 'http://ftp.osuosl.org/pub/osl/openpower/packer/packer-v1.0.3-dev'
-        )
-      end
     end
 
     context "common things for #{p[:platform]} #{p[:version]} on x86_64 and ppc64le archs" do
