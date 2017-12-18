@@ -32,6 +32,9 @@ include_recipe 'base::kvm'
 # setup chefdk so that we have berks
 include_recipe 'base::chefdk'
 
+# setup packer so that we can build images
+include_recipe 'base::packer'
+
 # Create directory for builds and other artifacts
 directory '/home/alfred/workspace' do
   owner 'alfred'
@@ -99,23 +102,6 @@ file '/home/alfred/openstack_credentials.json' do
   mode 0600
   owner 'alfred'
   group 'alfred'
-end
-
-# setup the right packer
-if node['kernel']['machine'] == 'ppc64le'
-  node.override['packer']['version'] = node['osl-jenkins']['packer_pipeline']['packer_ppc64le']['version']
-  remote_file "/usr/local/bin/packer-v#{node['packer']['version']}" do
-    source node['osl-jenkins']['packer_pipeline']['packer_ppc64le']['url_base']
-    checksum node['osl-jenkins']['packer_pipeline']['packer_ppc64le']['checksum']
-    mode '0755'
-    action :create
-  end
-
-  link '/usr/local/bin/packer' do
-    to "/usr/local/bin/packer-v#{node['packer']['version']}"
-  end
-else
-  include_recipe 'sbp_packer::default'
 end
 
 # install openstack_taster

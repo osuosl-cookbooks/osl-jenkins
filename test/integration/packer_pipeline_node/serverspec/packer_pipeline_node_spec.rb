@@ -18,11 +18,6 @@ describe file('/home/alfred/workspace') do
   it { should be_grouped_into 'alfred' }
 end
 
-describe file('/usr/local/bin/packer') do
-  it { should be_a_symlink }
-  it { should be_executable }
-end
-
 describe file('/home/alfred/.ssh/packer_alfred_id') do
   it { should be_a_file }
   it { should be_owned_by 'alfred' }
