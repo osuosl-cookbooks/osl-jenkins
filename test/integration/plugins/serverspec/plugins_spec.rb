@@ -69,7 +69,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     plain-credentials:1.4
     run-condition:1.0
     scm-api:2.2.0
-    script-security:1.31
+    script-security:1.39
     ssh-agent:1.15
     ssh-credentials:1.13
     ssh-slaves:1.16

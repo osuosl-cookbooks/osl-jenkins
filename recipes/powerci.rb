@@ -54,7 +54,7 @@ node.default['osl-jenkins']['restart_plugins'] = %w(
   cloudbees-folder:6.0.3
   scm-api:2.2.0
   branch-api:2.0.8
-  script-security:1.31
+  script-security:1.39
   workflow-step-api:2.12
   workflow-scm-step:2.4
   workflow-api:2.20

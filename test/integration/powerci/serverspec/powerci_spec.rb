@@ -75,7 +75,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     plain-credentials:1.4
     github-oauth:0.27
     pipeline-graph-analysis:1.3
-    script-security:1.31
+    script-security:1.39
     workflow-aggregator:2.5
     job-restrictions:0.6
     pipeline-stage-view:2.6
