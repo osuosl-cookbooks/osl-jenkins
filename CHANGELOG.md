@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.9.8 (2017-12-18)
+------------------
+- Install packer using base::packer instead
+
 1.9.7 (2017-12-18)
 ------------------
 - Update to Jenkins-2.89.2 and also update script-security plugin
