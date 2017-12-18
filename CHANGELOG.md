@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.9.7 (2017-12-18)
+------------------
+- Update to Jenkins-2.89.2 and also update script-security plugin
+
 1.9.6 (2017-11-27)
 ------------------
 - Fix ChefSpec tests
