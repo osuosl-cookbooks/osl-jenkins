@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.9.10 (2017-12-19)
+-------------------
+- Bump openstack_taster to 1.0.2
+
 1.9.9 (2017-12-18)
 ------------------
 - Adjust timeouts for packer jobs
