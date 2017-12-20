@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.9.11 (2017-12-20)
+-------------------
+- Disable throttle for packer builds
+
 1.9.10 (2017-12-19)
 -------------------
 - Bump openstack_taster to 1.0.2
