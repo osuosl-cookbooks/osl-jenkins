@@ -15,25 +15,6 @@ describe 'osl-jenkins::packer_pipeline_node' do
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
       end
-    end
-
-    context "common things for #{p[:platform]} #{p[:version]} on x86_64 and ppc64le archs" do
-      cached(:chef_run) do
-        runner = ChefSpec::SoloRunner.new(p)
-        runner.converge(described_recipe)
-      end
-
-      before do
-        # stub absence of openstack commandline tool
-        allow(File).to receive(:executable?).and_return(false)
-      end
-
-      include_context 'common_stubs'
-      include_context 'data_bag_stubs'
-
-      it 'converges successfully' do
-        expect { chef_run }.to_not raise_error
-      end
 
       it do
         expect(chef_run).to create_file('/home/alfred/.ssh/packer_alfred_id').with(
@@ -91,26 +72,6 @@ describe 'osl-jenkins::packer_pipeline_node' do
         expect(chef_run).to install_chef_gem('openstack_taster').with(
           options: '--no-user-install'
         )
-      end
-
-      it do
-        expect(chef_run).to install_python_package('python-openstackclient')
-      end
-    end
-
-    context 'when openstack client is already installed on any platform' do
-      cached(:chef_run) do
-        runner = ChefSpec::SoloRunner.new(p)
-        runner.converge(described_recipe)
-      end
-
-      include_context 'common_stubs'
-      include_context 'data_bag_stubs'
-
-      it do
-        # stub presence of openstack commandline tool
-        allow(File).to receive(:executable?).and_return(true)
-        expect(chef_run).to_not install_python_package('python-openstackclient')
       end
     end
   end
