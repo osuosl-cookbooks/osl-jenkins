@@ -35,6 +35,9 @@ include_recipe 'base::chefdk'
 # setup packer so that we can build images
 include_recipe 'base::packer'
 
+# Setup openstack client so we can uplod images
+include_recipe 'base::openstackclient'
+
 # Create directory for builds and other artifacts
 directory '/home/alfred/workspace' do
   owner 'alfred'
@@ -110,15 +113,4 @@ chef_gem 'openstack_taster' do
   options '--no-user-install'
   clear_sources true
   action :install
-end
-
-# install openstack-cli as a python package if not already installed
-install_openstack_cli_package = %w(
-  /usr/local/bin/openstack
-  /usr/bin/openstack
-).none? { |ob| File.executable? ob }
-
-if install_openstack_cli_package
-  include_recipe 'poise-python'
-  python_package 'python-openstackclient'
 end
