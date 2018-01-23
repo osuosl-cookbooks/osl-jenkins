@@ -9,13 +9,14 @@ end
 describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localhost:8080/ list-plugins') do
   %w(
     ace-editor:1.1
-    ant:1.2
+    ant:1.8
     antisamy-markup-formatter:1.3
     authentication-tokens:1.3
     bouncycastle-api:2.16.1
     branch-api:2.0.8
     build-token-root:1.4
     cloudbees-folder:6.0.3
+    command-launcher:1.2
     conditional-buildstep:1.3.1
     credentials:2.1.13
     credentials-binding:1.13
@@ -23,7 +24,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     display-url-api:1.1.1
     docker-commons:1.8
     docker-workflow:1.10
-    durable-task:1.13
+    durable-task:1.17
     external-monitor-job:1.4
     ghprb:1.36.1
     git:3.5.1
@@ -48,7 +49,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     mapdb-api:1.0.6.0
     matrix-auth:1.5
     matrix-project:1.7.1
-    maven-plugin:2.12.1
+    maven-plugin:2.14
     momentjs:1.1.1
     pam-auth:1.2
     parameterized-trigger:2.35.1
@@ -77,19 +78,19 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     subversion:2.9
     text-finder:1.10
     token-macro:2.1
-    translation:1.12
+    translation:1.16
     windows-slaves:1.1
     workflow-aggregator:2.5
-    workflow-api:2.20
+    workflow-api:2.25
     workflow-basic-steps:2.4
     workflow-cps:2.39
     workflow-cps-global-lib:2.7
-    workflow-durable-task-step:2.10
+    workflow-durable-task-step:2.18
     workflow-job:2.10
     workflow-multibranch:2.14
     workflow-scm-step:2.4
-    workflow-step-api:2.12
-    workflow-support:2.14
+    workflow-step-api:2.14
+    workflow-support:2.17
     ws-cleanup:0.28
   ).each do |plugins_version|
     plugin, version = plugins_version.split(':')
