@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.9.13 (2018-01-29)
+-------------------
+- Update plugins with security updates / Bump to jenkins-2.89.3
+
 1.9.12 (2017-12-27)
 -------------------
 - Install openstackclient using base::openstackclient
