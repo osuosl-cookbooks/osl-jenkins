@@ -44,7 +44,7 @@ node.default['osl-jenkins']['restart_plugins'] = %w(
   ssh-credentials:1.13
   ssh-slaves:1.17
   token-macro:2.1
-  durable-task:1.13
+  durable-task:1.17
   docker-plugin:0.16.2
   plain-credentials:1.4
   ace-editor:1.1
@@ -55,10 +55,10 @@ node.default['osl-jenkins']['restart_plugins'] = %w(
   scm-api:2.2.0
   branch-api:2.0.8
   script-security:1.39
-  workflow-step-api:2.12
+  workflow-step-api:2.14
   workflow-scm-step:2.4
-  workflow-api:2.20
-  workflow-support:2.14
+  workflow-api:2.25
+  workflow-support:2.17
   workflow-cps:2.39
   workflow-job:2.10
   workflow-multibranch:2.14
@@ -103,7 +103,7 @@ node.default['osl-jenkins']['plugins'] = %w(
   pipeline-multibranch-defaults:1.1
   pipeline-model-declarative-agent:1.1.1
   docker-workflow:1.10
-  workflow-durable-task-step:2.11
+  workflow-durable-task-step:2.18
   pipeline-model-definition:1.1.3
   workflow-basic-steps:2.4
   pipeline-model-api:1.1.3

@@ -20,7 +20,7 @@
 # Don't automatically update jenkins
 node.override['yum-cron']['yum_parameter'] = '-x jenkins'
 
-node.default['jenkins']['master']['version'] = '2.89.2-1.1'
+node.default['jenkins']['master']['version'] = '2.89.3-1.1'
 node.default['jenkins']['master']['listen_address'] = '127.0.0.1'
 
 node.default['java']['jdk_version'] = '8'
@@ -49,6 +49,11 @@ end
 
 include_recipe 'java'
 include_recipe 'jenkins::master'
+
+edit_resource(:package, 'jenkins') do
+  flush_cache(before: true)
+end
+
 include_recipe 'certificate::manage_by_attributes'
 include_recipe 'osl-jenkins::haproxy'
 include_recipe 'osl-haproxy::default'

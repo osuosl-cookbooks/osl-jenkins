@@ -46,21 +46,21 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     pipeline-input-step:2.8
     momentjs:1.1.1
     ssh-credentials:1.13
-    workflow-support:2.14
+    workflow-support:2.17
     pipeline-build-step:2.5.1
     matrix-auth:1.5
     workflow-multibranch:2.14
     branch-api:2.0.8
     embeddable-build-status:1.9
     token-macro:2.1
-    workflow-step-api:2.12
+    workflow-step-api:2.14
     build-monitor-plugin:1.11\+build.201701152243
     pipeline-multibranch-defaults:1.1
     pipeline-model-declarative-agent:1.1.1
     ace-editor:1.1
     docker-workflow:1.10
-    workflow-durable-task-step:2.11
-    workflow-api:2.20
+    workflow-durable-task-step:2.18
+    workflow-api:2.25
     github-branch-source:2.2.3
     docker-plugin:0.16.2
     pipeline-model-definition:1.1.3
@@ -69,7 +69,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     credentials:2.1.13
     pipeline-model-api:1.1.3
     pipeline-stage-step:2.2
-    durable-task:1.13
+    durable-task:1.17
     scm-api:2.2.0
     cloud-stats:0.11
     plain-credentials:1.4

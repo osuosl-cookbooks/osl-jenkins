@@ -47,6 +47,7 @@ describe 'osl-jenkins::powerci' do
         docker-commons:1.8
         docker-plugin:0.16.2
         docker-build-publish:1.3.2
+        durable-task:1.17
         email-ext:2.57.2
         emailext-template:1.0
         embeddable-build-status:1.9
@@ -59,6 +60,10 @@ describe 'osl-jenkins::powerci' do
         pipeline-multibranch-defaults:1.1
         resource-disposer:0.6
         copy-to-slave:1.4.4
+        workflow-step-api:2.14
+        workflow-api:2.25
+        workflow-support:2.17
+        workflow-durable-task-step:2.18
       ).each do |plugins_version|
         plugin, version = plugins_version.split(':')
         it do
