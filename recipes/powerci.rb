@@ -117,6 +117,14 @@ node.default['osl-jenkins']['plugins'] = %w(
 
 include_recipe 'osl-jenkins::master'
 
+# Install directly from a URL since this doesn't appear to be included in the package data
+jenkins_plugin 'sge-cloud-plugin' do
+  source 'http://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/sge-cloud-plugin/1.17/sge-cloud-plugin-1.17.hpi'
+  version '1.17'
+  install_deps false
+  notifies :execute, 'jenkins_command[safe-restart]'
+end
+
 if Chef::Config[:solo] && !defined?(ChefSpec)
   Chef::Log.warn('This recipe uses search which Chef Solo does not support') if Chef::Config[:solo]
 else
