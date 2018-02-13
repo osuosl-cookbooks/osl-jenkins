@@ -90,6 +90,8 @@ describe 'osl-jenkins::powerci' do
         expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
           .with(command: %r{'osuosl/ubuntu-ppc64le-cuda:8.0-cudnn6', // image})
         expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
+          .with(command: %r{'osuosl/ubuntu-ppc64le-cuda:9.0-cudnn7', // image})
+        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
           .with(command: %r{'osuosl/debian-ppc64le:9', // image})
         expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
           .with(command: %r{'osuosl/fedora-ppc64le:26', // image})
