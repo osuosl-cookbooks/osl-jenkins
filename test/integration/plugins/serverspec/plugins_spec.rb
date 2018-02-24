@@ -19,7 +19,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     command-launcher:1.2
     conditional-buildstep:1.3.1
     credentials:2.1.13
-    credentials-binding:1.13
+    credentials-binding:1.15
     cvs:2.12
     display-url-api:1.1.1
     docker-commons:1.8
@@ -43,7 +43,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     jackson2-api:2.7.3
     javadoc:1.3
     jquery-detached:1.2.1
-    junit:1.20
+    junit:1.24
     ldap:1.12
     mailer:1.20
     mapdb-api:1.0.6.0
@@ -69,7 +69,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     pipeline-utility-steps:1.4.0
     plain-credentials:1.4
     run-condition:1.0
-    scm-api:2.2.0
+    scm-api:2.2.6
     script-security:1.39
     ssh-agent:1.15
     ssh-credentials:1.13
@@ -90,7 +90,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     workflow-multibranch:2.14
     workflow-scm-step:2.4
     workflow-step-api:2.14
-    workflow-support:2.17
+    workflow-support:2.18
     ws-cleanup:0.28
   ).each do |plugins_version|
     plugin, version = plugins_version.split(':')

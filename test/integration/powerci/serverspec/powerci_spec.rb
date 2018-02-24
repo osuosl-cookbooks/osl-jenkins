@@ -26,13 +26,13 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     workflow-cps-global-lib:2.8
     openstack-cloud:2.22
     cloudbees-folder:6.0.3
-    junit:1.20
+    junit:1.24
     bouncycastle-api:2.16.1
     display-url-api:2.0
     matrix-project:1.10
     config-file-provider:2.16.2
     handlebars:1.1.1
-    credentials-binding:1.13
+    credentials-binding:1.15
     workflow-cps:2.39
     workflow-job:2.10
     email-ext:2.57.2
@@ -46,7 +46,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     pipeline-input-step:2.8
     momentjs:1.1.1
     ssh-credentials:1.13
-    workflow-support:2.17
+    workflow-support:2.18
     pipeline-build-step:2.5.1
     matrix-auth:1.5
     workflow-multibranch:2.14
@@ -70,7 +70,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     pipeline-model-api:1.1.3
     pipeline-stage-step:2.2
     durable-task:1.17
-    scm-api:2.2.0
+    scm-api:2.2.6
     cloud-stats:0.11
     plain-credentials:1.4
     github-oauth:0.27

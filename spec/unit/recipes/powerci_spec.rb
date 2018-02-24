@@ -62,7 +62,7 @@ describe 'osl-jenkins::powerci' do
         copy-to-slave:1.4.4
         workflow-step-api:2.14
         workflow-api:2.25
-        workflow-support:2.17
+        workflow-support:2.18
         workflow-durable-task-step:2.18
       ).each do |plugins_version|
         plugin, version = plugins_version.split(':')

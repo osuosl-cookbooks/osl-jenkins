@@ -52,17 +52,17 @@ node.default['osl-jenkins']['restart_plugins'] = %w(
   structs:1.10
   display-url-api:2.0
   cloudbees-folder:6.0.3
-  scm-api:2.2.0
+  scm-api:2.2.6
   branch-api:2.0.8
   script-security:1.39
   workflow-step-api:2.14
   workflow-scm-step:2.4
   workflow-api:2.25
-  workflow-support:2.17
+  workflow-support:2.18
   workflow-cps:2.39
   workflow-job:2.10
   workflow-multibranch:2.14
-  junit:1.20
+  junit:1.24
   matrix-project:1.10
   mailer:1.20
   jackson2-api:2.7.3
@@ -91,7 +91,7 @@ node.default['osl-jenkins']['plugins'] = %w(
   workflow-cps-global-lib:2.8
   bouncycastle-api:2.16.1
   handlebars:1.1.1
-  credentials-binding:1.13
+  credentials-binding:1.15
   email-ext:2.57.2
   pipeline-milestone-step:1.3.1
   pipeline-rest-api:2.6
