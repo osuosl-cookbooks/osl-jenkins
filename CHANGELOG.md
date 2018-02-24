@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.9.16 (2018-02-24)
+-------------------
+- Bump to jenkins-2.89.4
+
 1.9.15 (2018-02-19)
 -------------------
 - Add osuosl/ubuntu-ppc64le-cuda:9.1-cudnn7 image to powerci
