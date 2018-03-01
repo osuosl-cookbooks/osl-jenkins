@@ -27,7 +27,7 @@ describe 'osl-jenkins::site_pr_builder' do
       end
 
       %w(beaver-barcamp-pelican_pr_builder osuosl-pelican_pr_builder
-         wiki_pr_builder).each do |job|
+         wiki_pr_builder docs_pr_builder).each do |job|
         it do
           expect(chef_run).to create_directory("/var/chef/cache/#{job}").with(recursive: true)
         end
