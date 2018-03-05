@@ -82,6 +82,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     git-server:1.7
     jackson2-api:2.7.3
     copy-to-slave:1.4.4
+    sge-cloud-plugin:1.17
   ).each do |plugins_version|
     plugin, version = plugins_version.split(':')
     its(:stdout) { should match(/^#{plugin}.*#{version}[\s\(]?/) }

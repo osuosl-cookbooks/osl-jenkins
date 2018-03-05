@@ -77,6 +77,17 @@ describe 'osl-jenkins::powerci' do
         end
       end
       it do
+        expect(chef_run).to install_jenkins_plugin('sge-cloud-plugin').with(
+          version: '1.17',
+          install_deps: false,
+          source: 'http://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/sge-cloud-plugin/' \
+                  '1.17/sge-cloud-plugin-1.17.hpi'
+        )
+      end
+      it do
+        expect(chef_run.jenkins_plugin('sge-cloud-plugin')).to notify('jenkins_command[safe-restart]')
+      end
+      it do
         expect(chef_run).to create_jenkins_password_credentials('powerci')
       end
       it do
