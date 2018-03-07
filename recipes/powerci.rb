@@ -40,7 +40,8 @@ ruby_block 'Set jenkins username/password if needed' do
 end
 
 node.default['osl-jenkins']['restart_plugins'] = %w(
-  credentials:2.1.13
+  structs:1.14
+  credentials:2.1.16
   ssh-credentials:1.13
   ssh-slaves:1.17
   token-macro:2.1
@@ -48,8 +49,8 @@ node.default['osl-jenkins']['restart_plugins'] = %w(
   docker-plugin:0.16.2
   plain-credentials:1.4
   ace-editor:1.1
+  jsch:0.1.54.2
   jquery-detached:1.2.1
-  structs:1.10
   display-url-api:2.0
   cloudbees-folder:6.0.3
   scm-api:2.2.6
@@ -66,8 +67,9 @@ node.default['osl-jenkins']['restart_plugins'] = %w(
   matrix-project:1.10
   mailer:1.20
   jackson2-api:2.7.3
-  git-client:2.5.0
-  git:3.5.1
+  apache-httpcomponents-client-4-api:4.5.3-2.1
+  git-client:2.7.1
+  git:3.8.0
   git-server:1.7
   github-api:1.90
   github:1.27.0

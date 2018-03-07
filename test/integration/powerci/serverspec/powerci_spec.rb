@@ -17,9 +17,9 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     resource-disposer:0.6
     pipeline-model-extensions:1.1.3
     github:1.27.0
-    structs:1.10
+    structs:1.14
     emailext-template:1.0
-    git:3.5.1
+    git:3.8.0
     pipeline-stage-tags-metadata:1.1.3
     workflow-scm-step:2.4
     github-api:1.90
@@ -41,7 +41,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     authentication-tokens:1.3
     pipeline-rest-api:2.6
     docker-build-publish:1.3.2
-    git-client:2.5.0
+    git-client:2.7.1
     jquery-detached:1.2.1
     pipeline-input-step:2.8
     momentjs:1.1.1
@@ -66,7 +66,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     pipeline-model-definition:1.1.3
     workflow-basic-steps:2.4
     mailer:1.20
-    credentials:2.1.13
+    credentials:2.1.16
     pipeline-model-api:1.1.3
     pipeline-stage-step:2.2
     durable-task:1.17
@@ -85,6 +85,8 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     sge-cloud-plugin:1.17
     command-launcher:1.2
     build-token-root:1.4
+    jsch:0.1.54.2
+    apache-httpcomponents-client-4-api:4.5.3-2.1
   ).each do |plugins_version|
     plugin, version = plugins_version.split(':')
     its(:stdout) { should match(/^#{plugin}.*#{version}[\s\(]?/) }

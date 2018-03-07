@@ -11,7 +11,8 @@ describe 'osl-jenkins::plugins' do
         expect { chef_run }.to_not raise_error
       end
       %w(
-        credentials:2.1.13
+        structs:1.14
+        credentials:2.1.16
         ssh-credentials:1.13
       ).each do |plugins_version|
         plugin, version = plugins_version.split(':')
@@ -29,6 +30,7 @@ describe 'osl-jenkins::plugins' do
         ace-editor:1.1
         ant:1.8
         antisamy-markup-formatter:1.3
+        apache-httpcomponents-client-4-api:4.5.3-2.1
         authentication-tokens:1.3
         bouncycastle-api:2.16.1
         branch-api:2.0.8
@@ -44,8 +46,8 @@ describe 'osl-jenkins::plugins' do
         durable-task:1.17
         external-monitor-job:1.4
         ghprb:1.36.1
-        git:3.5.1
-        git-client:2.5.0
+        git:3.8.0
+        git-client:2.7.1
         github:1.26.2
         github-api:1.90
         github-branch-source:2.2.3
@@ -60,6 +62,7 @@ describe 'osl-jenkins::plugins' do
         jackson2-api:2.7.3
         javadoc:1.3
         jquery-detached:1.2.1
+        jsch:0.1.54.2
         junit:1.24
         ldap:1.12
         mailer:1.20
@@ -90,8 +93,7 @@ describe 'osl-jenkins::plugins' do
         script-security:1.39
         ssh-agent:1.15
         ssh-slaves:1.16
-        structs:1.10
-        subversion:2.9
+        subversion:2.10.3
         text-finder:1.10
         token-macro:2.1
         translation:1.16
