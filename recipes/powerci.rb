@@ -113,6 +113,8 @@ node.default['osl-jenkins']['plugins'] = %w(
   job-restrictions:0.6
   pipeline-stage-view:2.6
   copy-to-slave:1.4.4
+  command-launcher:1.2
+  build-token-root:1.4
 )
 
 include_recipe 'osl-jenkins::master'
