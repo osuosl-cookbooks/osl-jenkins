@@ -33,6 +33,8 @@ shared_context 'common_stubs' do
                    'osl_jenkins databag not found',
                    Net::HTTPResponse.new('1.1', '404', '')
       ))
+    stub_command("chef gem list -i -v '< 2.0.0' netaddr").and_return(true)
+    stub_command("chef gem list -i -v '>= 2.0.0' netaddr").and_return(false)
   end
 end
 

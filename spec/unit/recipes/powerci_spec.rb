@@ -64,6 +64,8 @@ describe 'osl-jenkins::powerci' do
         workflow-api:2.25
         workflow-support:2.18
         workflow-durable-task-step:2.18
+        command-launcher:1.2
+        build-token-root:1.4
       ).each do |plugins_version|
         plugin, version = plugins_version.split(':')
         it do
