@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.9.18 (2018-03-14)
+-------------------
+- Install build-token-root and its dependencies for powerci users
+
 1.9.17 (2018-03-05)
 -------------------
 - Install SGE jenkins plugin on powerci
