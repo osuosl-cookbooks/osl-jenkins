@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: osl-jenkins
-# Recipe:: powerci
+# Cookbook:: osl-jenkins
+# Recipe:: ibmz_ci
 #
-# Copyright 2017, Oregon State University
+# Copyright:: 2018, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,42 +15,45 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
 
 class ::Chef::Recipe
   include Powerci::Helper
 end
 
-node.default['osl-jenkins']['secrets_item'] = 'powerci'
+node.default['osl-jenkins']['secrets_item'] = 'ibmz_ci'
 secrets = credential_secrets
 admin_users = secrets['admin_users']
 normal_users = secrets['normal_users']
-client_id = secrets['oauth']['powerci']['client_id']
-client_secret = secrets['oauth']['powerci']['client_secret']
-powerci = node['osl-jenkins']['powerci']
+client_id = secrets['oauth']['ibmz_ci']['client_id']
+client_secret = secrets['oauth']['ibmz_ci']['client_secret']
+ibmz_ci = node['osl-jenkins']['ibmz_ci']
+docker_cert = Chef::EncryptedDataBagItem.load(
+  node['osl-docker']['data_bag'],
+  "client-#{node['fqdn'].tr('.', '-')}"
+)
 
 ruby_block 'Set jenkins username/password if needed' do
   block do
     if ::File.exist?('/var/lib/jenkins/config.xml') &&
        ::File.foreach('/var/lib/jenkins/config.xml').grep(/GithubSecurityRealm/).any?
-      node.run_state[:jenkins_username] = secrets['git']['powerci']['user'] # ~FC001
-      node.run_state[:jenkins_password] = secrets['git']['powerci']['token'] # ~FC001
+      node.run_state[:jenkins_username] = secrets['git']['ibmz_ci']['user'] # ~FC001
+      node.run_state[:jenkins_password] = secrets['git']['ibmz_ci']['token'] # ~FC001
     end
   end
 end
 
 node.default['osl-jenkins']['restart_plugins'] = %w(
-  structs:1.14
-  credentials:2.1.16
+  credentials:2.1.13
   ssh-credentials:1.13
-  ssh-slaves:1.17
-  token-macro:2.1
+  ssh-slaves:1.26
+  token-macro:2.4
   durable-task:1.17
-  docker-plugin:0.16.2
+  docker-java-api:3.0.14
+  docker-plugin:1.1.3
   plain-credentials:1.4
   ace-editor:1.1
-  jsch:0.1.54.2
   jquery-detached:1.2.1
+  structs:1.10
   display-url-api:2.0
   cloudbees-folder:6.0.3
   scm-api:2.2.6
@@ -67,9 +70,8 @@ node.default['osl-jenkins']['restart_plugins'] = %w(
   matrix-project:1.10
   mailer:1.20
   jackson2-api:2.7.3
-  apache-httpcomponents-client-4-api:4.5.3-2.1
-  git-client:2.7.1
-  git:3.8.0
+  git-client:2.5.0
+  git:3.5.1
   git-server:1.7
   github-api:1.90
   github:1.27.0
@@ -86,12 +88,12 @@ node.default['osl-jenkins']['restart_plugins'] = %w(
 )
 
 node.default['osl-jenkins']['plugins'] = %w(
-  docker-commons:1.8
+  docker-commons:1.11
   pipeline-model-extensions:1.1.3
   emailext-template:1.0
   pipeline-stage-tags-metadata:1.1.3
   workflow-cps-global-lib:2.8
-  bouncycastle-api:2.16.1
+  bouncycastle-api:2.16.2
   handlebars:1.1.1
   credentials-binding:1.15
   email-ext:2.57.2
@@ -104,7 +106,7 @@ node.default['osl-jenkins']['plugins'] = %w(
   build-monitor-plugin:1.11+build.201701152243
   pipeline-multibranch-defaults:1.1
   pipeline-model-declarative-agent:1.1.1
-  docker-workflow:1.10
+  docker-workflow:1.15.1
   workflow-durable-task-step:2.18
   pipeline-model-definition:1.1.3
   workflow-basic-steps:2.4
@@ -114,28 +116,19 @@ node.default['osl-jenkins']['plugins'] = %w(
   workflow-aggregator:2.5
   job-restrictions:0.6
   pipeline-stage-view:2.6
-  copy-to-slave:1.4.4
   command-launcher:1.2
   build-token-root:1.4
 )
 
 include_recipe 'osl-jenkins::master'
 
-# Install directly from a URL since this doesn't appear to be included in the package data
-jenkins_plugin 'sge-cloud-plugin' do
-  source 'http://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/sge-cloud-plugin/1.17/sge-cloud-plugin-1.17.hpi'
-  version '1.17'
-  install_deps false
-  notifies :execute, 'jenkins_command[safe-restart]'
-end
-
 if Chef::Config[:solo] && !defined?(ChefSpec)
   Chef::Log.warn('This recipe uses search which Chef Solo does not support') if Chef::Config[:solo]
 else
   docker_hosts = "\n"
-  powerci_docker = search(
+  ibmz_ci_docker = search(
     :node,
-    'roles:powerci_docker',
+    'roles:ibmz_ci_docker',
     filter_result: {
       'ipaddress' => ['ipaddress'],
       'fqdn' => ['fqdn']
@@ -143,21 +136,21 @@ else
   )
 end
 
-unless powerci_docker.nil?
-  powerci_docker.each do |host|
-    docker_hosts += add_docker_host(host['fqdn'], host['ipaddress'], nil)
+unless ibmz_ci_docker.nil?
+  ibmz_ci_docker.each do |host|
+    docker_hosts += add_docker_host(host['fqdn'], host['ipaddress'], 'credentials_server')
   end
 end
 
 docker_images = "\n"
-powerci['docker_images'].each do |image|
+ibmz_ci['docker_images'].each do |image|
   docker_images +=
     add_docker_image(
       image,
-      powerci['docker_public_key'],
-      powerci['docker']['memory_limit'],
-      powerci['docker']['memory_swap'],
-      powerci['docker']['cpu_shared']
+      ibmz_ci['docker_public_key'],
+      ibmz_ci['docker']['memory_limit'],
+      ibmz_ci['docker']['memory_swap'],
+      ibmz_ci['docker']['cpu_shared']
     )
 end
 
@@ -173,8 +166,12 @@ jenkins_script 'Add Docker Cloud' do
     import com.nirima.jenkins.plugins.docker.DockerCloud
     import com.nirima.jenkins.plugins.docker.DockerTemplate
     import com.nirima.jenkins.plugins.docker.DockerTemplateBase
+    import io.jenkins.docker.connector.DockerComputerAttachConnector
+    import io.jenkins.docker.connector.DockerComputerSSHConnector
+    import org.jenkinsci.plugins.docker.commons.credentials.DockerServerCredentials
+    import com.nirima.jenkins.plugins.docker.launcher.DockerComputerLauncher
     import com.nirima.jenkins.plugins.docker.launcher.DockerComputerSSHLauncher
-    import hudson.plugins.sshslaves.SSHConnector
+    import org.jenkinsci.plugins.docker.commons.credentials.DockerServerEndpoint
     import com.cloudbees.plugins.credentials.*
     import com.cloudbees.plugins.credentials.common.*
     import com.cloudbees.plugins.credentials.domains.*
@@ -184,8 +181,41 @@ jenkins_script 'Add Docker Cloud' do
 
     def instance = Jenkins.getInstance()
     if (instance.pluginManager.activePlugins.find { it.shortName == "docker-plugin" } != null) {
+      // Find docker host credentials
+      id_matcher_server = CredentialsMatchers.withId('ibmz_ci_docker-server')
+      available_credentials_server =
+        CredentialsProvider.lookupCredentials(
+        StandardUsernameCredentials.class,
+        instance,
+        hudson.security.ACL.SYSTEM,
+        null
+        )
+
+      credentials_server =
+        CredentialsMatchers.firstOrNull(
+        available_credentials_server,
+        id_matcher_server
+        )
+
+      if(credentials_server == null) {
+        DockerServerCredentials credentials_docker_host =
+          new DockerServerCredentials(
+            CredentialsScope.GLOBAL,
+            "ibmz_ci_docker-server",
+            "Docker client certificate",
+            "#{docker_cert['key'].gsub("\n",'\n')}",
+            "#{docker_cert['cert'].gsub("\n",'\n')}",
+            "#{docker_cert['chain'].gsub("\n",'\n')}"
+            )
+        CredentialsProvider.lookupStores(instance).iterator().next().addCredentials(
+          Domain.global(),
+          credentials_docker_host
+        )
+      }
+
+
       // Find ssh credentials
-      id_matcher = CredentialsMatchers.withId('powerci-docker')
+      id_matcher = CredentialsMatchers.withId('ibmz_ci-docker')
       available_credentials =
         CredentialsProvider.lookupCredentials(
         StandardUsernameCredentials.class,
@@ -201,22 +231,16 @@ jenkins_script 'Add Docker Cloud' do
         )
 
       if(credentials == null) {
-        println("ERROR: Unable to find powerci-docker credentials")
+        println("ERROR: Unable to find ibmz_ci-docker credentials")
         return
       }
 
-      // Setup ssh to docker nodes using our powerci-docker credentials
+      // Setup ssh to docker nodes using our ibmz_ci-docker credentials
       SshHostKeyVerificationStrategy strategy = new NonVerifyingKeyVerificationStrategy()
-      SSHConnector sshConnector = new SSHConnector(
-        22,
-        credentials,
-        null, null, null,
-        "", "", null, "", "",
-        null, null, null,
-        strategy
-      );
-
-      DockerComputerSSHLauncher dkSSHLauncher = new DockerComputerSSHLauncher(sshConnector);
+      DockerComputerSSHConnector sshConnector =
+        new DockerComputerSSHConnector(
+          new DockerComputerSSHConnector.ManuallyConfiguredSSHKey('ibmz_ci-docker', strategy)
+        )
       ArrayList<DockerTemplate> dkTemplates = new ArrayList<DockerTemplate>();
       #{docker_images}
       ArrayList<DockerCloud> dkCloud = new ArrayList<DockerCloud>();
@@ -227,67 +251,6 @@ jenkins_script 'Add Docker Cloud' do
     } else {
       println "--> no 'docker-plugin' plugin installed"
     }
-  EOH
-end
-
-jenkins_script 'Add OpenStack Cloud' do
-  command <<-EOH.gsub(/^ {4}/, '')
-    import jenkins.plugins.openstack.compute.*
-		import jenkins.model.*
-    import hudson.model.*;
-
-    def instance = Jenkins.getInstance()
-
-    JCloudsSlaveTemplate template = new JCloudsSlaveTemplate(
-      "template",
-      "label",
-      new SlaveOptions(
-          "img",
-          "hw",
-          "nw",
-          "ud",
-          1,
-          "public",
-          "sg",
-          "az",
-          2,
-          "kp",
-          3,
-          "jvmo",
-          "fsRoot",
-          "cid",
-          JCloudsCloud.SlaveType.JNLP,
-          4
-      )
-    );
-    JCloudsCloud cloud = new JCloudsCloud(
-      "osl-openstack", // name for the openstack cloud
-      "identity", // format: TENANT_NAME:USER_NAME
-      "credential", //password for the username
-      "endPointUrl", //OpenStack Auth URL
-      "zone",
-      new SlaveOptions(
-             "IMG", //Image
-             "HW",
-             "NW",
-             "UD",
-             6,
-             null,
-             "SG",
-             "AZ",
-             7,
-             "KP",
-             8,
-             "JVMO",
-             "FSrOOT",
-             "CID",
-             JCloudsCloud.SlaveType.SSH,
-             9
-      ),
-      Arrays.asList(template)
-    );
-
-    instance.clouds.add(cloud);
   EOH
 end
 
@@ -406,8 +369,8 @@ ruby_block 'Set jenkins username/password if needed' do
   block do
     if ::File.exist?('/var/lib/jenkins/config.xml') &&
        ::File.foreach('/var/lib/jenkins/config.xml').grep(/GithubSecurityRealm/).any?
-      node.run_state[:jenkins_username] = secrets['git']['powerci']['user'] # ~FC001
-      node.run_state[:jenkins_password] = secrets['git']['powerci']['token'] # ~FC001
+      node.run_state[:jenkins_username] = secrets['git']['ibmz_ci']['user'] # ~FC001
+      node.run_state[:jenkins_password] = secrets['git']['ibmz_ci']['token'] # ~FC001
     end
   end
 end

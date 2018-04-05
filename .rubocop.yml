@@ -37,9 +37,11 @@ Metrics/MethodLength:
 Style/ClassAndModuleChildren:
   Exclude:
     - 'recipes/powerci.rb'
+    - 'recipes/ibmz_ci.rb'
 Style/Documentation:
   Exclude:
     - 'spec/**/*'
     - 'test/**/*'
     - 'libraries/powerci.rb'
     - 'recipes/powerci.rb'
+    - 'recipes/ibmz_ci.rb'

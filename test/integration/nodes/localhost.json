@@ -5,6 +5,7 @@
     "ipaddress": "127.0.0.1"
   },
   "roles": [
-    "powerci_docker"
+    "powerci_docker",
+    "ibmz_ci_docker"
   ]
 }

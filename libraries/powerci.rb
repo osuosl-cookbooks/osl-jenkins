@@ -3,22 +3,44 @@ module Powerci
     # A Groovy snippet that will add a new docker host given a hostname and IP address
     # @param [String] hostname
     # @param [String] IP address
-    def add_docker_host(hostname, ip)
-      <<-EOH.gsub(/^ {2}/, '')
-        dkCloud.add(
-          new DockerCloud(
-            '#{hostname}',
-            dkTemplates,
-            'tcp://#{ip}:2375', // serverUrl
-            '400',                // containerCapStr
-            5,                    // connectTimeout
-            600,                  // readTimeout
-            '',                   // credentialsId
-            ''                    // version
-          )
-        );
+    def add_docker_host(hostname, ip, credentials)
+      if credentials.nil?
+        <<-EOH.gsub(/^ {4}/, '')
+          dkCloud.add(
+            new DockerCloud(
+              '#{hostname}',
+              dkTemplates,
+              'tcp://#{ip}:2375', // serverUrl
+              '400',                // containerCapStr
+              5,                    // connectTimeout
+              600,                  // readTimeout
+              '',                   // credentialsId
+              ''                    // version
+            )
+          );
 
-      EOH
+        EOH
+      else
+        <<-EOH.gsub(/^ {4}/, '')
+          DockerServerEndpoint endpoint_#{hostname.tr('.', '_')} = new DockerServerEndpoint(
+            'tcp://#{ip}:2376',     // uri
+            'ibmz_ci_docker-server' // credentials
+          )
+          dkCloud.add(
+            new DockerCloud(
+              '#{hostname}',
+              dkTemplates,
+              endpoint_#{hostname.tr('.', '_')}, // endpoint
+              400,                  // containerCapStr
+              5,                    // connectTimeout
+              600,                  // readTimeout
+              '',                   // version
+              ''                    // dockerHostname
+            )
+          );
+
+        EOH
+      end
     end
 
     # A Groovy snippet that will add new docker images
@@ -35,13 +57,13 @@ module Powerci
       <<-EOH.gsub(/^ {2}/, '')
         DockerTemplateBase #{var_name}_TemplateBase = new DockerTemplateBase(
            '#{image}', // image
+          '',     // pullCredentialsId
           '',     // dnsString
           '',     // network
           '',     // dockerCommand
           '',     // volumesString
           '',     // volumesFromString
           'JENKINS_SLAVE_SSH_PUBKEY=#{docker_public_key}', // environmentsString
-          '',     // lxcConfString
           '',     // hostname
           #{memory_limit},   // memoryLimit
           #{memory_swap},   // memorySwap
@@ -50,16 +72,16 @@ module Powerci
           false,  // bindAllPorts
           false,  // privileged
           false,  // tty
-          ''      // macAddress
+          '',     // macAddress
+          ''      // extraHostsString
         );
         DockerTemplate dk_#{var_name}_Template = new DockerTemplate(
-          #{var_name}_TemplateBase,
-          '#{label}', //labelString
-          '', //remoteFs
-          '', // remoteFsMapping
-          '50', // instanceCapStr
+          #{var_name}_TemplateBase, // dockerTemplateBase
+          sshConnector,   // connector
+          '#{label}',     // labelString
+          '',             // remoteFs
+          '50',           // instanceCapStr
         )
-        dk_#{var_name}_Template.setLauncher(dkSSHLauncher);
         dkTemplates.add(dk_#{var_name}_Template);
 
       EOH

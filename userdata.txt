@@ -1,3 +1,4 @@
 #cloud-config
 runcmd:
  - dhclient eth0
+manage_etc_hosts: true
