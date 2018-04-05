@@ -3,7 +3,7 @@ def public_address
 end
 
 def credential_secrets
-  Chef::EncryptedDataBagItem.load(
+  data_bag_item(
     node['osl-jenkins']['secrets_databag'],
     node['osl-jenkins']['secrets_item']
   )

@@ -19,6 +19,7 @@
 
 class ::Chef::Recipe
   include OSLDocker::Helper
+  include OSLGithubOauth::Helper
 end
 
 node.default['osl-jenkins']['secrets_item'] = 'powerci'
@@ -43,10 +44,12 @@ node.default['osl-jenkins']['restart_plugins'] = %w(
   structs:1.14
   credentials:2.1.16
   ssh-credentials:1.13
-  ssh-slaves:1.17
-  token-macro:2.1
+  ssh-slaves:1.26
+  token-macro:2.4
   durable-task:1.17
-  docker-plugin:0.16.2
+  docker-commons:1.11
+  docker-java-api:3.0.14
+  docker-plugin:1.1.3
   plain-credentials:1.4
   ace-editor:1.1
   jsch:0.1.54.2
@@ -86,12 +89,11 @@ node.default['osl-jenkins']['restart_plugins'] = %w(
 )
 
 node.default['osl-jenkins']['plugins'] = %w(
-  docker-commons:1.8
   pipeline-model-extensions:1.1.3
   emailext-template:1.0
   pipeline-stage-tags-metadata:1.1.3
   workflow-cps-global-lib:2.8
-  bouncycastle-api:2.16.1
+  bouncycastle-api:2.16.2
   handlebars:1.1.1
   credentials-binding:1.15
   email-ext:2.57.2
@@ -104,7 +106,7 @@ node.default['osl-jenkins']['plugins'] = %w(
   build-monitor-plugin:1.11+build.201701152243
   pipeline-multibranch-defaults:1.1
   pipeline-model-declarative-agent:1.1.1
-  docker-workflow:1.10
+  docker-workflow:1.15.1
   workflow-durable-task-step:2.18
   pipeline-model-definition:1.1.3
   workflow-basic-steps:2.4
@@ -114,7 +116,6 @@ node.default['osl-jenkins']['plugins'] = %w(
   workflow-aggregator:2.5
   job-restrictions:0.6
   pipeline-stage-view:2.6
-  copy-to-slave:1.4.4
   command-launcher:1.2
   build-token-root:1.4
 )
@@ -122,6 +123,13 @@ node.default['osl-jenkins']['plugins'] = %w(
 include_recipe 'osl-jenkins::master'
 
 # Install directly from a URL since this doesn't appear to be included in the package data
+jenkins_plugin 'copy-to-slave' do
+  source 'http://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/copy-to-slave/1.4.4/copy-to-slave-1.4.4.hpi'
+  version '1.4.4'
+  install_deps false
+  notifies :execute, 'jenkins_command[safe-restart]'
+end
+
 jenkins_plugin 'sge-cloud-plugin' do
   source 'http://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/sge-cloud-plugin/1.17/sge-cloud-plugin-1.17.hpi'
   version '1.17'
@@ -161,73 +169,29 @@ powerci['docker_images'].each do |image|
     )
 end
 
+docker_cloud =
+  add_docker_cloud(
+    docker_images,
+    docker_hosts,
+    nil, nil, nil,
+    'powerci-docker',
+    nil
+  )
+
+github_oauth =
+  add_github_oauth(
+    client_id,
+    client_secret,
+    admin_users,
+    normal_users
+  )
+
+file '/tmp/docker.groovy' do
+  content docker_cloud
+end
+
 jenkins_script 'Add Docker Cloud' do
-  command <<-EOH.gsub(/^ {4}/, '')
-    // Mostly from:
-    // https://gist.github.com/stuart-warren/e458c8439bcddb975c96b96bec3971b6
-    //
-    import jenkins.model.*;
-    import hudson.model.*;
-    import com.cloudbees.plugins.credentials.CredentialsProvider
-    import com.cloudbees.jenkins.plugins.sshcredentials.SSHUserPrivateKey
-    import com.nirima.jenkins.plugins.docker.DockerCloud
-    import com.nirima.jenkins.plugins.docker.DockerTemplate
-    import com.nirima.jenkins.plugins.docker.DockerTemplateBase
-    import com.nirima.jenkins.plugins.docker.launcher.DockerComputerSSHLauncher
-    import hudson.plugins.sshslaves.SSHConnector
-    import com.cloudbees.plugins.credentials.*
-    import com.cloudbees.plugins.credentials.common.*
-    import com.cloudbees.plugins.credentials.domains.*
-    import com.cloudbees.plugins.credentials.impl.*
-    import hudson.plugins.sshslaves.verifiers.SshHostKeyVerificationStrategy
-    import hudson.plugins.sshslaves.verifiers.NonVerifyingKeyVerificationStrategy
-
-    def instance = Jenkins.getInstance()
-    if (instance.pluginManager.activePlugins.find { it.shortName == "docker-plugin" } != null) {
-      // Find ssh credentials
-      id_matcher = CredentialsMatchers.withId('powerci-docker')
-      available_credentials =
-        CredentialsProvider.lookupCredentials(
-        StandardUsernameCredentials.class,
-        instance,
-        hudson.security.ACL.SYSTEM,
-        new SchemeRequirement("ssh")
-        )
-
-      credentials =
-        CredentialsMatchers.firstOrNull(
-        available_credentials,
-        id_matcher
-        )
-
-      if(credentials == null) {
-        println("ERROR: Unable to find powerci-docker credentials")
-        return
-      }
-
-      // Setup ssh to docker nodes using our powerci-docker credentials
-      SshHostKeyVerificationStrategy strategy = new NonVerifyingKeyVerificationStrategy()
-      SSHConnector sshConnector = new SSHConnector(
-        22,
-        credentials,
-        null, null, null,
-        "", "", null, "", "",
-        null, null, null,
-        strategy
-      );
-
-      DockerComputerSSHLauncher dkSSHLauncher = new DockerComputerSSHLauncher(sshConnector);
-      ArrayList<DockerTemplate> dkTemplates = new ArrayList<DockerTemplate>();
-      #{docker_images}
-      ArrayList<DockerCloud> dkCloud = new ArrayList<DockerCloud>();
-      #{docker_hosts}
-      println '--> Configuring docker cloud'
-      instance.clouds.replaceBy(dkCloud)
-
-    } else {
-      println "--> no 'docker-plugin' plugin installed"
-    }
-  EOH
+  command docker_cloud
 end
 
 jenkins_script 'Add OpenStack Cloud' do
@@ -292,114 +256,7 @@ jenkins_script 'Add OpenStack Cloud' do
 end
 
 jenkins_script 'Add GitHub OAuth config' do
-  command <<-EOH.gsub(/^ {4}/, '')
-		import hudson.security.*
-		import jenkins.model.*
-		import org.jenkinsci.plugins.GithubAuthorizationStrategy
-		import hudson.security.AuthorizationStrategy
-		import hudson.security.SecurityRealm
-		import org.jenkinsci.plugins.GithubSecurityRealm
-		import hudson.security.ProjectMatrixAuthorizationStrategy
-		import hudson.security.csrf.DefaultCrumbIssuer
-
-		Jenkins.instance.crumbIssuer = new DefaultCrumbIssuer(true)
-
-		// Authentication
-		String githubWebUri = 'https://github.com'
-		String githubApiUri = 'https://api.github.com'
-		String clientID = '#{client_id}'
-		String clientSecret = '#{client_secret}'
-		String oauthScopes = 'read:org'
-		SecurityRealm github_realm = new GithubSecurityRealm(githubWebUri, githubApiUri, clientID, clientSecret, oauthScopes)
-		//check for equality, no need to modify the runtime if no settings changed
-		if(!github_realm.equals(Jenkins.instance.getSecurityRealm())) {
-				Jenkins.instance.setSecurityRealm(github_realm)
-				Jenkins.instance.save()
-		}
-
-		// Authorization
-		class BuildPermission {
-			static buildNewAccessList(userOrGroup, permissions) {
-				def newPermissionsMap = [:]
-				permissions.each {
-					newPermissionsMap.put(Permission.fromId(it), userOrGroup)
-				}
-				return newPermissionsMap
-			}
-		}
-
-		auth_strategy = new hudson.security.ProjectMatrixAuthorizationStrategy()
-
-		authenticatedPermissions = [ "hudson.model.Hudson.Read" ]
-		authenticated = BuildPermission.buildNewAccessList("authenticated", authenticatedPermissions)
-		authenticated.each { p, u -> auth_strategy.add(p, u) }
-
-    anonPermissions = [ "hudson.model.Hudson.Read" ]
-		anon = BuildPermission.buildNewAccessList("anonymous", anonPermissions)
-		anon.each { p, u -> auth_strategy.add(p, u) }
-
-
-		adminPermissions = [
-      "com.cloudbees.plugins.credentials.CredentialsProvider.Create",
-      "com.cloudbees.plugins.credentials.CredentialsProvider.Delete",
-      "com.cloudbees.plugins.credentials.CredentialsProvider.ManageDomains",
-      "com.cloudbees.plugins.credentials.CredentialsProvider.Update",
-      "com.cloudbees.plugins.credentials.CredentialsProvider.View",
-      "hudson.model.Computer.Build",
-      "hudson.model.Computer.Configure",
-      "hudson.model.Computer.Connect",
-      "hudson.model.Computer.Create",
-      "hudson.model.Computer.Delete",
-      "hudson.model.Computer.Disconnect",
-      "hudson.model.Computer.Provision",
-      "hudson.model.Hudson.Administer",
-      "hudson.model.Hudson.Read",
-      "hudson.model.Item.Build",
-      "hudson.model.Item.Cancel",
-      "hudson.model.Item.Configure",
-      "hudson.model.Item.Create",
-      "hudson.model.Item.Delete",
-      "hudson.model.Item.Discover",
-      "hudson.model.Item.Move",
-      "hudson.model.Item.Read",
-      "hudson.model.Item.ViewStatus",
-      "hudson.model.Item.Workspace",
-      "hudson.model.Run.Delete",
-      "hudson.model.Run.Replay",
-      "hudson.model.Run.Update",
-      "hudson.model.View.Configure",
-      "hudson.model.View.Create",
-      "hudson.model.View.Delete",
-      "hudson.model.View.Read",
-      "hudson.scm.SCM.Tag"
-		]
-    #{admin_users}.each { au -> user = BuildPermission.buildNewAccessList(au, adminPermissions)
-      user.each { p, u -> auth_strategy.add(p, u) }
-    }
-
-		userPermissions = [
-			"hudson.model.Item.Build",
-			"hudson.model.Item.Cancel",
-			"hudson.model.Item.Configure",
-			"hudson.model.Item.Create",
-			"hudson.model.Item.Delete",
-			"hudson.model.Item.Discover",
-			"hudson.model.Item.Read",
-			"hudson.model.Item.ViewStatus",
-			"hudson.model.Item.Workspace"
-		]
-    #{normal_users}.each { nu -> user = BuildPermission.buildNewAccessList(nu, userPermissions)
-      user.each { p, u -> auth_strategy.add(p, u) }
-    }
-
-
-		//check for equality, no need to modify the runtime if no settings changed
-		if(!auth_strategy.equals(Jenkins.instance.getAuthorizationStrategy())) {
-				Jenkins.instance.setAuthorizationStrategy(auth_strategy)
-				Jenkins.instance.save()
-		}
-
-	EOH
+  command github_oauth
 end
 
 ruby_block 'Set jenkins username/password if needed' do

@@ -3,13 +3,15 @@ module OSLDocker
     # A Groovy snippet that adds a collection of Docker clouds into Jenkins
     # @param [String] groovy snippet of docker images
     # @param [String] groovy snippet of docker hosts
-    def add_docker_cloud(docker_images, docker_hosts, docker_client_key, docker_client_cert, docker_client_chain)
+    # rubocop:disable Metrics/ParameterLists
+    def add_docker_cloud(docker_images, docker_hosts, docker_client_key, docker_client_cert, docker_client_chain,
+                         ssh_cred_id, docker_cred_id)
       docker_tls =
         unless docker_client_key.nil? && docker_client_cert.nil? && docker_client_chain.nil?
           <<-EOH.gsub(/^ {2}/, '')
 
             // Find docker host credentials
-            id_matcher_server = CredentialsMatchers.withId('ibmz_ci_docker-server')
+            id_matcher_server = CredentialsMatchers.withId('#{docker_cred_id}')
             available_credentials_server =
               CredentialsProvider.lookupCredentials(
               StandardUsernameCredentials.class,
@@ -28,7 +30,7 @@ module OSLDocker
               DockerServerCredentials credentials_docker_host =
                 new DockerServerCredentials(
                   CredentialsScope.GLOBAL,
-                  "ibmz_ci_docker-server",
+                  "#{docker_cred_id}",
                   "Docker client certificate",
                   "#{docker_client_key.gsub("\n", '\n')}",
                   "#{docker_client_cert.gsub("\n", '\n')}",
@@ -69,7 +71,7 @@ module OSLDocker
         if (instance.pluginManager.activePlugins.find { it.shortName == "docker-plugin" } != null) {
           #{docker_tls}
           // Find ssh credentials
-          id_matcher = CredentialsMatchers.withId('ibmz_ci-docker')
+          id_matcher = CredentialsMatchers.withId('#{ssh_cred_id}')
           available_credentials =
             CredentialsProvider.lookupCredentials(
             StandardUsernameCredentials.class,
@@ -85,15 +87,15 @@ module OSLDocker
             )
 
           if(credentials == null) {
-            println("ERROR: Unable to find ibmz_ci-docker credentials")
+            println("ERROR: Unable to find #{ssh_cred_id} credentials")
             return
           }
 
-          // Setup ssh to docker nodes using our ibmz_ci-docker credentials
+          // Setup ssh to docker nodes using our #{ssh_cred_id} credentials
           SshHostKeyVerificationStrategy strategy = new NonVerifyingKeyVerificationStrategy()
           DockerComputerSSHConnector sshConnector =
             new DockerComputerSSHConnector(
-              new DockerComputerSSHConnector.ManuallyConfiguredSSHKey('ibmz_ci-docker', strategy)
+              new DockerComputerSSHConnector.ManuallyConfiguredSSHKey('#{ssh_cred_id}', strategy)
             )
           ArrayList<DockerTemplate> dkTemplates = new ArrayList<DockerTemplate>();
           #{docker_images}
@@ -114,16 +116,20 @@ module OSLDocker
     def add_docker_host(hostname, ip, credentials)
       if credentials.nil?
         <<-EOH
+          DockerServerEndpoint endpoint_#{hostname.tr('.', '_')} = new DockerServerEndpoint(
+            'tcp://#{ip}:2375',     // uri
+            ''                      // credentials
+          )
           dkCloud.add(
             new DockerCloud(
               '#{hostname}',
               dkTemplates,
-              'tcp://#{ip}:2375', // serverUrl
-              '400',                // containerCapStr
+              endpoint_#{hostname.tr('.', '_')}, // endpoint
+              400,                  // containerCapStr
               5,                    // connectTimeout
               600,                  // readTimeout
-              '',                   // credentialsId
-              ''                    // version
+              '',                   // version
+              ''                    // dockerHostname
             )
           );
 

@@ -161,7 +161,9 @@ docker_cloud =
     docker_hosts,
     docker_cert['key'],
     docker_cert['cert'],
-    docker_cert['chain']
+    docker_cert['chain'],
+    'ibmz_ci-docker',
+    'ibmz_ci_docker-server'
   )
 
 github_oauth =
