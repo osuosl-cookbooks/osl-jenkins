@@ -49,8 +49,9 @@ describe 'osl-jenkins::ibmz_ci' do
         build-monitor-plugin:1.11+build.201701152243
         cloud-stats:0.11
         config-file-provider:2.16.2
-        docker-commons:1.8
-        docker-plugin:0.16.2
+        docker-commons:1.11
+        docker-java-api:3.0.14
+        docker-plugin:1.1.3
         docker-build-publish:1.3.2
         durable-task:1.17
         email-ext:2.57.2
@@ -64,7 +65,6 @@ describe 'osl-jenkins::ibmz_ci' do
         openstack-cloud:2.22
         pipeline-multibranch-defaults:1.1
         resource-disposer:0.6
-        copy-to-slave:1.4.4
         workflow-step-api:2.14
         workflow-api:2.25
         workflow-support:2.18
@@ -99,15 +99,19 @@ describe 'osl-jenkins::ibmz_ci' do
       end
       it 'should add docker hosts' do
         expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-          .with(command: %r{tcp://192.168.0.1:2375})
+          .with(command: %r{tcp://192.168.0.1:2376.*\n.*ibmz_ci_docker-server.*})
         expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-          .with(command: %r{tcp://192.168.0.2:2375})
-      end
-      it do
-        expect(chef_run).to execute_jenkins_script('Add GitHub OAuth config').with(command: '')
+          .with(command: %r{tcp://192.168.0.2:2376.*\n.*ibmz_ci_docker-server.*})
       end
       it do
         expect(chef_run).to execute_jenkins_script('Add GitHub OAuth config')
+          .with(command: /String clientID = '123456789'/)
+        expect(chef_run).to execute_jenkins_script('Add GitHub OAuth config')
+          .with(command: /String clientSecret = '0987654321'/)
+        expect(chef_run).to execute_jenkins_script('Add GitHub OAuth config')
+          .with(command: /\["testadmin"\].each \{ au -> user = BuildPermission.*/)
+        expect(chef_run).to execute_jenkins_script('Add GitHub OAuth config')
+          .with(command: /\["testuser"\].each \{ nu -> user = BuildPermission.*/)
       end
       it do
         expect(chef_run).to run_ruby_block('Set jenkins username/password if needed')

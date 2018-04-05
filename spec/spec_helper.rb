@@ -27,10 +27,9 @@ end
 
 shared_context 'common_stubs' do
   before do
-    allow(Chef::EncryptedDataBagItem).to receive(:load)
-      .with('osl_jenkins', 'secrets')
+    stub_data_bag_item('osl_jenkins', 'secrets')
       .and_raise(Net::HTTPServerException.new(
-                   'osl_jenkins databag not found',
+                   'Not Found',
                    Net::HTTPResponse.new('1.1', '404', '')
       ))
     stub_command("chef gem list -i -v '< 2.0.0' netaddr").and_return(true)
@@ -47,14 +46,12 @@ shared_context 'data_bag_stubs' do
       ]
     )
 
-    allow(Chef::EncryptedDataBagItem).to receive(:load)
-      .with('osl_jenkins', 'packer_pipeline_creds')
+    stub_data_bag_item('osl_jenkins', 'packer_pipeline_creds')
       .and_return(
         id: 'packer_pipeline_creds'
       )
 
-    allow(Chef::EncryptedDataBagItem).to receive(:load)
-      .with('osl_jenkins', 'jenkins1')
+    stub_data_bag_item('osl_jenkins', 'jenkins1')
       .and_return(
         id: 'jenkins1',
         'jenkins' => {

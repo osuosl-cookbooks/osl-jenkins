@@ -8,9 +8,15 @@ describe 'osl-jenkins::powerci' do
       end
       include_context 'common_stubs'
       before do
-        allow(Chef::EncryptedDataBagItem).to receive(:load).with('osl_jenkins', 'powerci').and_return(
+        stub_data_bag_item('osl_jenkins', 'powerci').and_return(
           admin_users: ['testadmin'],
           normal_users: ['testuser'],
+          'sge' => {
+            username: 'username',
+            password: 'password',
+            hostname: 'sge.example.org',
+            port: 22
+          },
           'oauth' => {
             'powerci' => {
               client_id: '123456789',
@@ -47,9 +53,10 @@ describe 'osl-jenkins::powerci' do
         config-file-provider:2.16.2
         copy-to-slave:1.4.4
         credentials:2.1.16
+        docker-commons:1.11
+        docker-java-api:3.0.14
+        docker-plugin:1.1.3
         docker-build-publish:1.3.2
-        docker-commons:1.8
-        docker-plugin:0.16.2
         durable-task:1.17
         email-ext:2.57.2
         emailext-template:1.0
@@ -82,6 +89,14 @@ describe 'osl-jenkins::powerci' do
         it do
           expect(chef_run.jenkins_plugin(plugin)).to notify('jenkins_command[safe-restart]')
         end
+      end
+      it do
+        expect(chef_run).to install_jenkins_plugin('copy-to-slave').with(
+          version: '1.4.4',
+          install_deps: false,
+          source: 'http://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/copy-to-slave/' \
+                  '1.4.4/copy-to-slave-1.4.4.hpi'
+        )
       end
       it do
         expect(chef_run).to install_jenkins_plugin('sge-cloud-plugin').with(
@@ -130,9 +145,33 @@ describe 'osl-jenkins::powerci' do
       end
       it do
         expect(chef_run).to execute_jenkins_script('Add GitHub OAuth config')
+          .with(command: /String clientID = '123456789'/)
+        expect(chef_run).to execute_jenkins_script('Add GitHub OAuth config')
+          .with(command: /String clientSecret = '0987654321'/)
+        expect(chef_run).to execute_jenkins_script('Add GitHub OAuth config')
+          .with(command: /\["testadmin"\].each \{ au -> user = BuildPermission.*/)
+        expect(chef_run).to execute_jenkins_script('Add GitHub OAuth config')
+          .with(command: /\["testuser"\].each \{ nu -> user = BuildPermission.*/)
       end
       it do
         expect(chef_run).to execute_jenkins_script('Add OpenStack Cloud')
+      end
+      it do
+        expect(chef_run).to execute_jenkins_script('Add SGE Cloud')
+          .with(
+            command: %r{
+BatchCloud sge = new BatchCloud\(
+  'CGRB-ubuntu',    // cloudName
+  'ubuntu',   // queueType
+  'docker-gpu',   // label
+  1440,         // maximumIdleMinutes
+  'sge.example.org', // hostname
+  22,      // port
+  'username', // username
+  'password' // password
+\)}
+
+          )
       end
       it do
         expect(chef_run).to run_ruby_block('Set jenkins username/password if needed')

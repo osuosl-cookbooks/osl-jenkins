@@ -99,8 +99,7 @@ describe 'osl-jenkins::master' do
           ChefSpec::SoloRunner.new(p).converge(described_recipe)
         end
         before do
-          allow(Chef::EncryptedDataBagItem).to receive(:load)
-            .with('osl_jenkins', 'secrets')
+          stub_data_bag_item('osl_jenkins', 'secrets')
             .and_return(
               'git' => {
                 'cookbook_uploader' => {
@@ -159,8 +158,7 @@ describe 'osl-jenkins::master' do
           ChefSpec::SoloRunner.new(p).converge(described_recipe)
         end
         before do
-          allow(Chef::EncryptedDataBagItem).to receive(:load)
-            .with('osl_jenkins', 'secrets')
+          stub_data_bag_item('osl_jenkins', 'secrets')
             .and_raise(Net::HTTPServerException.new(
                          'osl_jenkins databag not found',
                          Net::HTTPResponse.new('1.1', '503', '')
