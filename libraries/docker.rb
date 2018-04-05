@@ -1,4 +1,4 @@
-module Powerci
+module OSLDocker
   module Helper
     # A Groovy snippet that will add a new docker host given a hostname and IP address
     # @param [String] hostname

@@ -18,7 +18,7 @@
 #
 
 class ::Chef::Recipe
-  include Powerci::Helper
+  include OSLDocker::Helper
 end
 
 node.default['osl-jenkins']['secrets_item'] = 'powerci'
