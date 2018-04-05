@@ -24,6 +24,11 @@ describe 'osl-jenkins::ibmz_ci' do
             }
           }
         )
+        stub_data_bag_item('docker', 'client-fauxhai-local').and_return(
+          key: 'key',
+          cert: 'cert',
+          chain: 'chain'
+        )
         stub_search('node', 'roles:ibmz_ci_docker').and_return(
           [
             {

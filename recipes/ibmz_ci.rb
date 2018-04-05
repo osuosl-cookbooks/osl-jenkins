@@ -27,7 +27,7 @@ normal_users = secrets['normal_users']
 client_id = secrets['oauth']['ibmz_ci']['client_id']
 client_secret = secrets['oauth']['ibmz_ci']['client_secret']
 ibmz_ci = node['osl-jenkins']['ibmz_ci']
-docker_cert = Chef::EncryptedDataBagItem.load(
+docker_cert = data_bag_item(
   node['osl-docker']['data_bag'],
   "client-#{node['fqdn'].tr('.', '-')}"
 )
@@ -138,7 +138,7 @@ end
 
 unless ibmz_ci_docker.nil?
   ibmz_ci_docker.each do |host|
-    docker_hosts += add_docker_host(host['fqdn'], host['ipaddress'], 'credentials_server')
+    docker_hosts += add_docker_host(host['fqdn'], host['ipaddress'], 'ibmz_ci_docker-server')
   end
 end
 
@@ -154,104 +154,16 @@ ibmz_ci['docker_images'].each do |image|
     )
 end
 
+docker_cloud =
+  add_docker_cloud(
+    docker_images,
+    docker_hosts,
+    docker_cert['key'],
+    docker_cert['cert'],
+    docker_cert['chain']
+  )
 jenkins_script 'Add Docker Cloud' do
-  command <<-EOH.gsub(/^ {4}/, '')
-    // Mostly from:
-    // https://gist.github.com/stuart-warren/e458c8439bcddb975c96b96bec3971b6
-    //
-    import jenkins.model.*;
-    import hudson.model.*;
-    import com.cloudbees.plugins.credentials.CredentialsProvider
-    import com.cloudbees.jenkins.plugins.sshcredentials.SSHUserPrivateKey
-    import com.nirima.jenkins.plugins.docker.DockerCloud
-    import com.nirima.jenkins.plugins.docker.DockerTemplate
-    import com.nirima.jenkins.plugins.docker.DockerTemplateBase
-    import io.jenkins.docker.connector.DockerComputerAttachConnector
-    import io.jenkins.docker.connector.DockerComputerSSHConnector
-    import org.jenkinsci.plugins.docker.commons.credentials.DockerServerCredentials
-    import com.nirima.jenkins.plugins.docker.launcher.DockerComputerLauncher
-    import com.nirima.jenkins.plugins.docker.launcher.DockerComputerSSHLauncher
-    import org.jenkinsci.plugins.docker.commons.credentials.DockerServerEndpoint
-    import com.cloudbees.plugins.credentials.*
-    import com.cloudbees.plugins.credentials.common.*
-    import com.cloudbees.plugins.credentials.domains.*
-    import com.cloudbees.plugins.credentials.impl.*
-    import hudson.plugins.sshslaves.verifiers.SshHostKeyVerificationStrategy
-    import hudson.plugins.sshslaves.verifiers.NonVerifyingKeyVerificationStrategy
-
-    def instance = Jenkins.getInstance()
-    if (instance.pluginManager.activePlugins.find { it.shortName == "docker-plugin" } != null) {
-      // Find docker host credentials
-      id_matcher_server = CredentialsMatchers.withId('ibmz_ci_docker-server')
-      available_credentials_server =
-        CredentialsProvider.lookupCredentials(
-        StandardUsernameCredentials.class,
-        instance,
-        hudson.security.ACL.SYSTEM,
-        null
-        )
-
-      credentials_server =
-        CredentialsMatchers.firstOrNull(
-        available_credentials_server,
-        id_matcher_server
-        )
-
-      if(credentials_server == null) {
-        DockerServerCredentials credentials_docker_host =
-          new DockerServerCredentials(
-            CredentialsScope.GLOBAL,
-            "ibmz_ci_docker-server",
-            "Docker client certificate",
-            "#{docker_cert['key'].gsub("\n",'\n')}",
-            "#{docker_cert['cert'].gsub("\n",'\n')}",
-            "#{docker_cert['chain'].gsub("\n",'\n')}"
-            )
-        CredentialsProvider.lookupStores(instance).iterator().next().addCredentials(
-          Domain.global(),
-          credentials_docker_host
-        )
-      }
-
-
-      // Find ssh credentials
-      id_matcher = CredentialsMatchers.withId('ibmz_ci-docker')
-      available_credentials =
-        CredentialsProvider.lookupCredentials(
-        StandardUsernameCredentials.class,
-        instance,
-        hudson.security.ACL.SYSTEM,
-        new SchemeRequirement("ssh")
-        )
-
-      credentials =
-        CredentialsMatchers.firstOrNull(
-        available_credentials,
-        id_matcher
-        )
-
-      if(credentials == null) {
-        println("ERROR: Unable to find ibmz_ci-docker credentials")
-        return
-      }
-
-      // Setup ssh to docker nodes using our ibmz_ci-docker credentials
-      SshHostKeyVerificationStrategy strategy = new NonVerifyingKeyVerificationStrategy()
-      DockerComputerSSHConnector sshConnector =
-        new DockerComputerSSHConnector(
-          new DockerComputerSSHConnector.ManuallyConfiguredSSHKey('ibmz_ci-docker', strategy)
-        )
-      ArrayList<DockerTemplate> dkTemplates = new ArrayList<DockerTemplate>();
-      #{docker_images}
-      ArrayList<DockerCloud> dkCloud = new ArrayList<DockerCloud>();
-      #{docker_hosts}
-      println '--> Configuring docker cloud'
-      instance.clouds.replaceBy(dkCloud)
-
-    } else {
-      println "--> no 'docker-plugin' plugin installed"
-    }
-  EOH
+  command docker_cloud
 end
 
 jenkins_script 'Add GitHub OAuth config' do
