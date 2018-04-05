@@ -8,7 +8,7 @@ describe 'osl-jenkins::ibmz_ci' do
       end
       include_context 'common_stubs'
       before do
-        allow(Chef::EncryptedDataBagItem).to receive(:load).with('osl_jenkins', 'ibmz_ci').and_return(
+        stub_data_bag_item('osl_jenkins', 'ibmz_ci').and_return(
           admin_users: ['testadmin'],
           normal_users: ['testuser'],
           'oauth' => {
@@ -102,6 +102,9 @@ describe 'osl-jenkins::ibmz_ci' do
           .with(command: %r{tcp://192.168.0.1:2375})
         expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
           .with(command: %r{tcp://192.168.0.2:2375})
+      end
+      it do
+        expect(chef_run).to execute_jenkins_script('Add GitHub OAuth config').with(command: '')
       end
       it do
         expect(chef_run).to execute_jenkins_script('Add GitHub OAuth config')

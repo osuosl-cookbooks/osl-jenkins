@@ -48,5 +48,6 @@ Style/Documentation:
     - 'spec/**/*'
     - 'test/**/*'
     - 'libraries/docker.rb'
+    - 'libraries/github_oauth.rb'
     - 'recipes/powerci.rb'
     - 'recipes/ibmz_ci.rb'
