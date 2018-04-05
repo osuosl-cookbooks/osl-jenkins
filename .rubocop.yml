@@ -49,6 +49,7 @@ Style/Documentation:
     - 'test/**/*'
     - 'libraries/docker.rb'
     - 'libraries/openstack.rb'
+    - 'libraries/sge.rb'
     - 'libraries/github_oauth.rb'
     - 'recipes/powerci.rb'
     - 'recipes/ibmz_ci.rb'

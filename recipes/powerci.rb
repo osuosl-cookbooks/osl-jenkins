@@ -20,6 +20,7 @@
 class ::Chef::Recipe
   include OSLDocker::Helper
   include OSLOpenStack::Helper
+  include OSLSGE::Helper
   include OSLGithubOauth::Helper
 end
 
@@ -29,6 +30,7 @@ admin_users = secrets['admin_users']
 normal_users = secrets['normal_users']
 client_id = secrets['oauth']['powerci']['client_id']
 client_secret = secrets['oauth']['powerci']['client_secret']
+sge = secrets['sge']
 powerci = node['osl-jenkins']['powerci']
 
 ruby_block 'Set jenkins username/password if needed' do
@@ -180,6 +182,16 @@ docker_cloud =
   )
 
 openstack_cloud = add_openstack_cloud
+sge_cloud =
+  add_sge_cloud(
+    'CGRB-ubuntu',
+    'ubuntu',
+    'docker-gpu',
+    sge['hostname'],
+    sge['username'],
+    sge['password'],
+    sge['port']
+  )
 
 github_oauth =
   add_github_oauth(
@@ -195,6 +207,10 @@ end
 
 jenkins_script 'Add OpenStack Cloud' do
   command openstack_cloud
+end
+
+jenkins_script 'Add SGE Cloud' do
+  command sge_cloud
 end
 
 jenkins_script 'Add GitHub OAuth config' do
