@@ -1,9 +1,17 @@
-require 'serverspec'
+require 'spec_helper'
 
 set :backend, :exec
 
+describe 'plugins' do
+  it_behaves_like 'jenkins_server'
+end
+
 describe file('/var/log/jenkins/jenkins.log') do
   its(:content) { should_not match(/SEVERE: Failed Loading plugin/) }
+end
+
+describe file('/tmp/kitchen/cache/reload-jenkins') do
+  it { should_not exist }
 end
 
 describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localhost:8080/ list-plugins') do
