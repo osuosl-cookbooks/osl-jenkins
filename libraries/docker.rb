@@ -68,7 +68,8 @@ module OSLDocker
         import hudson.plugins.sshslaves.verifiers.NonVerifyingKeyVerificationStrategy
 
         def instance = Jenkins.getInstance()
-        if (instance.pluginManager.activePlugins.find { it.shortName == "docker-plugin" } != null) {
+        if (instance.pluginManager.activePlugins.find { it.shortName == "docker-plugin" } != null &&
+            instance.pluginManager.activePlugins.find { it.shortName == "docker-commons" } != null) {
           #{docker_tls}
           // Find ssh credentials
           id_matcher = CredentialsMatchers.withId('#{ssh_cred_id}')

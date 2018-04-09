@@ -43,82 +43,76 @@ ruby_block 'Set jenkins username/password if needed' do
   end
 end
 
-node.default['osl-jenkins']['restart_plugins'] = %w(
-  credentials:2.1.13
-  ssh-credentials:1.13
-  ssh-slaves:1.26
-  token-macro:2.4
-  durable-task:1.17
+node.default['osl-jenkins']['plugins'] = %w(
+  ace-editor:1.1
+  authentication-tokens:1.3
+  bouncycastle-api:2.16.2
+  branch-api:2.0.8
+  build-monitor-plugin:1.11+build.201701152243
+  build-token-root:1.4
+  cloudbees-folder:6.0.3
+  cloud-stats:0.11
+  command-launcher:1.2
+  config-file-provider:2.16.2
+  credentials-binding:1.15
+  display-url-api:2.0
+  docker-build-publish:1.3.2
   docker-commons:1.11
   docker-java-api:3.0.14
   docker-plugin:1.1.3
-  plain-credentials:1.4
-  ace-editor:1.1
-  jquery-detached:1.2.1
-  structs:1.10
-  display-url-api:2.0
-  cloudbees-folder:6.0.3
-  scm-api:2.2.6
-  branch-api:2.0.8
-  script-security:1.39
-  workflow-step-api:2.14
-  workflow-scm-step:2.4
-  workflow-api:2.25
-  workflow-support:2.18
-  workflow-cps:2.39
-  workflow-job:2.10
-  workflow-multibranch:2.14
-  junit:1.24
-  matrix-project:1.10
-  mailer:1.20
-  jackson2-api:2.7.3
-  git-client:2.5.0
+  docker-workflow:1.15.1
+  durable-task:1.17
+  email-ext:2.57.2
+  emailext-template:1.0
+  embeddable-build-status:1.9
   git:3.5.1
-  git-server:1.7
-  github-api:1.90
+  git-client:2.5.0
   github:1.27.0
+  github-api:1.90
   github-branch-source:2.2.3
   github-oauth:0.27
-  icon-shim:2.0.3
-  authentication-tokens:1.3
-  embeddable-build-status:1.9
-  matrix-auth:1.5
-  cloud-stats:0.11
-  config-file-provider:2.16.2
-  resource-disposer:0.6
-  openstack-cloud:2.22
-)
-
-node.default['osl-jenkins']['plugins'] = %w(
-  pipeline-model-extensions:1.1.3
-  emailext-template:1.0
-  pipeline-stage-tags-metadata:1.1.3
-  workflow-cps-global-lib:2.8
-  bouncycastle-api:2.16.2
+  git-server:1.7
   handlebars:1.1.1
-  credentials-binding:1.15
-  email-ext:2.57.2
-  pipeline-milestone-step:1.3.1
-  pipeline-rest-api:2.6
-  docker-build-publish:1.3.2
-  pipeline-input-step:2.8
-  momentjs:1.1.1
-  pipeline-build-step:2.5.1
-  build-monitor-plugin:1.11+build.201701152243
-  pipeline-multibranch-defaults:1.1
-  pipeline-model-declarative-agent:1.1.1
-  docker-workflow:1.15.1
-  workflow-durable-task-step:2.18
-  pipeline-model-definition:1.1.3
-  workflow-basic-steps:2.4
-  pipeline-model-api:1.1.3
-  pipeline-stage-step:2.2
-  pipeline-graph-analysis:1.3
-  workflow-aggregator:2.5
+  icon-shim:2.0.3
+  jackson2-api:2.7.3
   job-restrictions:0.6
+  jquery-detached:1.2.1
+  junit:1.24
+  mailer:1.20
+  matrix-auth:1.5
+  matrix-project:1.10
+  momentjs:1.1.1
+  openstack-cloud:2.22
+  pipeline-build-step:2.5.1
+  pipeline-graph-analysis:1.3
+  pipeline-input-step:2.8
+  pipeline-milestone-step:1.3.1
+  pipeline-model-api:1.1.3
+  pipeline-model-declarative-agent:1.1.1
+  pipeline-model-definition:1.1.3
+  pipeline-model-extensions:1.1.3
+  pipeline-multibranch-defaults:1.1
+  pipeline-rest-api:2.6
+  pipeline-stage-step:2.2
+  pipeline-stage-tags-metadata:1.1.3
   pipeline-stage-view:2.6
-  command-launcher:1.2
-  build-token-root:1.4
+  plain-credentials:1.4
+  resource-disposer:0.6
+  scm-api:2.2.6
+  script-security:1.39
+  ssh-slaves:1.26
+  token-macro:2.4
+  workflow-aggregator:2.5
+  workflow-api:2.25
+  workflow-basic-steps:2.4
+  workflow-cps:2.39
+  workflow-cps-global-lib:2.8
+  workflow-durable-task-step:2.18
+  workflow-job:2.10
+  workflow-multibranch:2.14
+  workflow-scm-step:2.4
+  workflow-step-api:2.14
+  workflow-support:2.18
 )
 
 include_recipe 'osl-jenkins::master'

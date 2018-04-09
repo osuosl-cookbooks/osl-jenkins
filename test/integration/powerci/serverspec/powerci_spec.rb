@@ -125,5 +125,5 @@ describe file('/var/lib/jenkins/config.xml') do
       <username>username</username>
       <password>\{.*\}</password>
     <\/org.jenkinsci.plugins.sge.BatchCloud>})
-	end
+  end
 end
