@@ -119,6 +119,7 @@ These environment variables are required on the following suites:
 - bumpzone
 - cookbook-uploader
 - github-comment
+- ibmz-ci
 - jenkins1
 - packer-pipeline-master
 - packer-pipeline-node
@@ -141,9 +142,9 @@ to the others.
 
 ## Github OAuth
 
-The ``powerci`` suite also uses Github OAuth tokens which requires the addition of the ``GITHUB_CLIENT_ID`` and
-``GITHUB_CLIENT_SECRET`` environment vars. To create the OAuth tokens, click on settings under your profile and then
-click on *OAuth Apps*. Create a new application and enter the following data:
+The ``powerci`` and ``ibmz-ci`` suites also uses Github OAuth tokens which requires the addition of the
+``GITHUB_CLIENT_ID`` and ``GITHUB_CLIENT_SECRET`` environment vars. To create the OAuth tokens, click on settings under
+your profile and then click on *OAuth Apps*. Create a new application and enter the following data:
 
 - Application name: ``powerci``
 - Homepage URL: ``https://<test-kitchen IP address>``
