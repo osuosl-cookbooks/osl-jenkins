@@ -195,7 +195,7 @@ github_oauth =
     normal_users
   )
 
-jenkins_script 'Add Docker Cloud' do
+jenkins_script 'Add Docker Cloud' do # ~FC005
   command docker_cloud
 end
 
