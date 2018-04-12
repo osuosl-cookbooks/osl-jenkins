@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.10.0 (2018-04-12)
+-------------------
+- Add IBM-Z recipe and other fixes
+
 1.9.19 (2018-03-22)
 -------------------
 - Update subversion and git plugins for security patches
