@@ -117,7 +117,7 @@ module OSLDocker
     def add_docker_host(hostname, ip, credentials)
       if credentials.nil?
         <<-EOH
-          DockerServerEndpoint endpoint_#{hostname.tr('.', '_')} = new DockerServerEndpoint(
+          DockerServerEndpoint endpoint_#{hostname.tr('.-', '_')} = new DockerServerEndpoint(
             'tcp://#{ip}:2375',     // uri
             ''                      // credentials
           )
@@ -125,7 +125,7 @@ module OSLDocker
             new DockerCloud(
               '#{hostname}',
               dkTemplates,
-              endpoint_#{hostname.tr('.', '_')}, // endpoint
+              endpoint_#{hostname.tr('.-', '_')}, // endpoint
               400,                  // containerCapStr
               5,                    // connectTimeout
               600,                  // readTimeout
@@ -137,7 +137,7 @@ module OSLDocker
         EOH
       else
         <<-EOH
-          DockerServerEndpoint endpoint_#{hostname.tr('.', '_')} = new DockerServerEndpoint(
+          DockerServerEndpoint endpoint_#{hostname.tr('.-', '_')} = new DockerServerEndpoint(
             'tcp://#{ip}:2376',     // uri
             '#{credentials}'        // credentials
           )
@@ -145,7 +145,7 @@ module OSLDocker
             new DockerCloud(
               '#{hostname}',
               dkTemplates,
-              endpoint_#{hostname.tr('.', '_')}, // endpoint
+              endpoint_#{hostname.tr('.-', '_')}, // endpoint
               400,                  // containerCapStr
               5,                    // connectTimeout
               600,                  // readTimeout
