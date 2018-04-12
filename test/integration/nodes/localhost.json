@@ -1,7 +1,7 @@
 {
   "name": "localhost",
   "automatic": {
-    "fqdn": "localhost.localdomain",
+    "fqdn": "localhost-withdash.localdomain",
     "ipaddress": "127.0.0.1"
   },
   "roles": [

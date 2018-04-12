@@ -33,11 +33,11 @@ describe 'osl-jenkins::ibmz_ci' do
           [
             {
               ipaddress: '192.168.0.1',
-              fqdn: 'docker1.example.org'
+              fqdn: 's390x-docker1.example.org'
             },
             {
               ipaddress: '192.168.0.2',
-              fqdn: 'docker2.example.org'
+              fqdn: 's390x-docker2.example.org'
             }
           ]
         )
