@@ -12,8 +12,9 @@ end
 
 describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localhost:8080/ list-plugins') do
   %w(
-    docker-commons:1.8
-    ssh-slaves:1.17
+    docker-java-api:3.0.14
+    docker-commons:1.11
+    ssh-slaves:1.26
     resource-disposer:0.6
     pipeline-model-extensions:1.1.3
     github:1.27.0
@@ -27,7 +28,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     openstack-cloud:2.22
     cloudbees-folder:6.0.3
     junit:1.24
-    bouncycastle-api:2.16.1
+    bouncycastle-api:2.16.2
     display-url-api:2.0
     matrix-project:1.10
     config-file-provider:2.16.2
@@ -52,17 +53,17 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     workflow-multibranch:2.14
     branch-api:2.0.8
     embeddable-build-status:1.9
-    token-macro:2.1
+    token-macro:2.4
     workflow-step-api:2.14
     build-monitor-plugin:1.11\+build.201701152243
     pipeline-multibranch-defaults:1.1
     pipeline-model-declarative-agent:1.1.1
     ace-editor:1.1
-    docker-workflow:1.10
+    docker-workflow:1.15.1
     workflow-durable-task-step:2.18
     workflow-api:2.25
     github-branch-source:2.2.3
-    docker-plugin:0.16.2
+    docker-plugin:1.1.3
     pipeline-model-definition:1.1.3
     workflow-basic-steps:2.4
     mailer:1.20
@@ -81,9 +82,9 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     pipeline-stage-view:2.6
     git-server:1.7
     jackson2-api:2.7.3
+    command-launcher:1.2
     copy-to-slave:1.4.4
     sge-cloud-plugin:1.17
-    command-launcher:1.2
     build-token-root:1.4
     jsch:0.1.54.2
     apache-httpcomponents-client-4-api:4.5.3-2.1
@@ -110,5 +111,19 @@ describe file('/var/lib/jenkins/config.xml') do
   end
   its(:content) { should match(/<string>JENKINS_SLAVE_SSH_PUBKEY=ssh-rsa AAAAB3.*/) }
   its(:content) { should match(%r{<credentialsId>powerci-docker</credentialsId>}) }
-  its(:content) { should match(%r{<serverUrl>tcp://127.0.0.1:2375</serverUrl>}) }
+  its(:content) { should match(%r{<uri>tcp://127.0.0.1:2375</uri>}) }
+  its(:content) do
+    should match(%r{
+    <org.jenkinsci.plugins.sge.BatchCloud plugin="sge-cloud-plugin@1.17">
+      <name>CGRB-ubuntu</name>
+      <cloudName>CGRB-ubuntu</cloudName>
+      <queueType>ubuntu</queueType>
+      <label>docker-gpu</label>
+      <maximumIdleMinutes>1440</maximumIdleMinutes>
+      <hostname>sge.example.org</hostname>
+      <port>22</port>
+      <username>username</username>
+      <password>\{.*\}</password>
+    <\/org.jenkinsci.plugins.sge.BatchCloud>})
+  end
 end

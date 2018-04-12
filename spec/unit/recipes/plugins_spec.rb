@@ -7,8 +7,34 @@ describe 'osl-jenkins::plugins' do
         ChefSpec::SoloRunner.new(p).converge('osl-jenkins::master', described_recipe)
       end
       include_context 'common_stubs'
+      before do
+        allow(File).to receive(:exist?).and_call_original
+        allow(File).to receive(:exist?).with('/var/chef/cache/reload-jenkins').and_return(false)
+      end
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
+      end
+      it do
+        expect(chef_run).to_not write_log('Safe Restart Jenkins').with(message: 'Safe Restart Jenkins')
+      end
+      it do
+        expect(chef_run).to delete_file('/var/chef/cache/reload-jenkins')
+      end
+      it do
+        expect(chef_run.log('Safe Restart Jenkins')).to notify('jenkins_command[safe-restart]').immediately
+      end
+      context 'installed new plugin' do
+        cached(:chef_run) do
+          ChefSpec::SoloRunner.new(p).converge('osl-jenkins::master', described_recipe)
+        end
+        include_context 'common_stubs'
+        before do
+          allow(File).to receive(:exist?).and_call_original
+          allow(File).to receive(:exist?).with('/var/chef/cache/reload-jenkins').and_return(true)
+        end
+        it do
+          expect(chef_run).to write_log('Safe Restart Jenkins').with(message: 'Safe Restart Jenkins')
+        end
       end
       %w(
         structs:1.14
@@ -120,6 +146,10 @@ describe 'osl-jenkins::plugins' do
         end
         it do
           expect(chef_run.jenkins_plugin(plugin)).to notify('jenkins_command[safe-restart]')
+        end
+        it do
+          expect(chef_run.jenkins_plugin(plugin)).to notify('file[/var/chef/cache/reload-jenkins]')
+            .to(:touch).immediately
         end
       end
     end

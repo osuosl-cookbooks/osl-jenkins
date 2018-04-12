@@ -26,6 +26,12 @@ node['osl-jenkins']['restart_plugins'].each do |plugins_version|
   end
 end
 
+reload_file = ::File.join(Chef::Config[:file_cache_path], 'reload-jenkins')
+
+file reload_file do
+  action :nothing
+end
+
 # Install plugins that can allow for Jenkins restarts later
 node['osl-jenkins']['plugins'].each do |plugins_version|
   p, v = plugins_version.split(':')
@@ -33,5 +39,16 @@ node['osl-jenkins']['plugins'].each do |plugins_version|
     version v
     install_deps false
     notifies :execute, 'jenkins_command[safe-restart]'
+    notifies :touch, "file[#{reload_file}]", :immediately
   end
+end
+
+log 'Safe Restart Jenkins' do
+  message 'Safe Restart Jenkins'
+  only_if { ::File.exist?(reload_file) }
+  notifies :execute, 'jenkins_command[safe-restart]', :immediately
+end
+
+file reload_file do
+  action :delete
 end

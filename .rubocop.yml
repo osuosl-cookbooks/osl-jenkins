@@ -29,17 +29,27 @@ Metrics/AbcSize:
   Exclude:
     - 'libraries/default.rb'
 
+Metrics/ModuleLength:
+  Max: 150
+  Exclude:
+    - 'libraries/docker.rb'
+
 Metrics/MethodLength:
-  Max: 30
+  Max: 40
   Exclude:
     - 'libraries/default.rb'
 
 Style/ClassAndModuleChildren:
   Exclude:
     - 'recipes/powerci.rb'
+    - 'recipes/ibmz_ci.rb'
 Style/Documentation:
   Exclude:
     - 'spec/**/*'
     - 'test/**/*'
-    - 'libraries/powerci.rb'
+    - 'libraries/docker.rb'
+    - 'libraries/openstack.rb'
+    - 'libraries/sge.rb'
+    - 'libraries/github_oauth.rb'
     - 'recipes/powerci.rb'
+    - 'recipes/ibmz_ci.rb'

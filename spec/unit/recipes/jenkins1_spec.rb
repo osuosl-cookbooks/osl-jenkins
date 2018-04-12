@@ -19,7 +19,7 @@ describe 'osl-jenkins::jenkins1' do
       include_context 'common_stubs'
       include_context 'cookbook_uploader'
       before do
-        allow(Chef::EncryptedDataBagItem).to receive(:load).with('osl_jenkins', 'jenkins1')
+        stub_data_bag_item('osl_jenkins', 'jenkins1')
           .and_return(
             'jenkins_private_key' => 'private_key',
             'git' => {

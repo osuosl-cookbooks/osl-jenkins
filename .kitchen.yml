@@ -286,6 +286,11 @@ suites:
             - 'osuosl-manatee'
             - <%= ENV['GITHUB_USER'] %>
           normal_users: []
+          sge:
+            hostname: 'sge.example.org'
+            username: 'username'
+            password: 'password'
+            port: 22
           oauth:
             powerci:
               client_id: <%= ENV['GITHUB_CLIENT_ID'] %>
@@ -296,6 +301,37 @@ suites:
               token: <%= ENV['GITHUB_TOKEN'] %>
           ssh:
             powerci-docker:
+              user: 'jenkins'
+              private_key: "-----BEGIN RSA PRIVATE KEY-----\nMIIEogIBAAKCAQEAqAickUPOP01HPxBnnceszXu3p6/HPkNCLCF4ZtEj6IUb+V23\nMDZk1U6ENnzri5Uxt9hfAqzF2fo5qfQKDGbaNp19EtbCIAWlm6fMkAPdJJn8wB/G\nVufUlaufW4F2jNK8Bcd3EFjy9OiJrfobvCV75vgb/mfvUhRrPbfMW8dhCU+egKP9\nH85d6hG0r3y26TaB0AZ3p1y/Px+m6ojUodCyqgsDxVH+qh/DdN1zw1jgSaiwedyJ\n/fSMZUUMyUkwou+oyUFbQANqjPFFxPND65ojKzgTPOG0SoDCCKoRXY/7pr6e+Eum\nlhurW1ZdVrLrBfRT2o6tFwYstVkN+uOraDaj6wIDAQABAoIBAAdq4eZztM4MjkGV\nas2HO/SSKohHdScldu1VyOfZAZnJDnQSk/yX2hmkbqetGgS+YER6U69dixpVNmhv\nMmZbv/Q7PYMwYb9iIG5fmOMemIt+FK8yd+HsN/Enc1BpxZ7vyocCyBm7o3X2MeWx\nLbo/eVm3yByR3/milx1RWL8QbRMpE0gTQkMMeBPNygRzKJecs6nY+VpNJ2f89lbx\ngjWQLswqZdFdLV0YSVuIbJHy+syTCo0c6fPcnQbjsWYm95wT+T18zDI54L3x/8BY\n5iyKTRVfDhy0de+/MG9Ty7SvDuQ/M6m08HaEkRE0PI16eWch5ge5YCzncBgt7DrG\nbf3ZoMkCgYEA1ILGhpKu9Dx6754t/0+SUdNsEZ8LqjIny7mOJjaGh+ge3D2yZmbv\n7orI82YGPqyZ05ry5+NBGc33yNQCpxnhMx5tMRRqQWQ6AFElubzsjvGKrcobHrt0\neV4THqMjqMZ978LPpkb4P9/bzAL8TfoJgCDldr5OtLVVJC1WRimLFAcCgYEAymu4\nnyQFYsBy8oew2Shv9EvVUJf6kL8QmrDcI5KiAVBI5JB5CZfm9v+w2mntmT8YrIq3\nzs+zR85d9uXB6aGENgCpAoZhxOqH3ieOT+raY1HSm4lg2mKdep4A9KHutM6L6I7k\n2KAahOYrkXDS8MrZ0pu3M9gWVF9nyB19C6sxH/0CgYAFSD7hB3Jb1ckEfb0M9JBh\ngkzUX0yt7VM56CHVZ1OOu0FRHiN6EiLynfaCvk13b1jffqF9DBQJLSp0jniGaMlF\nOQNjzesaNwCOE3ZJmJ2UrAJTcYudBvHNNn5pK4ruXgixVflNW8Q96jWPa5+T3Jwx\n2B98BRz1tvAn1wym789qLwKBgHTshFholjPUtpEhkCXgFcsngrBrGXFC7HRudLqX\nmLzpgzGDwmaoN+G1EJMZXQWITNhdyI7NquFvcxeK39f0VEpdV0L+HLuCPbk1YB8J\nqdx1BxKQ6EE9dXm+iw7D+v610FslL0tyL99UlRYN9crhYbEmAU0RJNTXxzrwzapP\n2LCBAoGAN+xSHVXIFLbADXnAJTU/tqi/7ZPGybX3TJEkLTzgw5aYB5PWFPWFKPgL\nOT4dGkaWOe55eVZ2Qz4WlhLc38fbjIcAl3/yAnK9SbvxBpvO7LEGj4XOzVzrzU6H\nlacuYndx6mBU0Ya5Ldx5sLpoZz7JU1j6Kl31kC45qLY0dVLCLCU=\n-----END RSA PRIVATE KEY-----"
+  - name: ibmz_ci
+    nodes_path: test/integration/nodes
+    provisioner: chef_zero
+    run_list:
+      - recipe[osl-docker::ibmz_ci]
+      - recipe[osl-jenkins::ibmz_ci]
+    driver_config:
+      server_name: ibmz_ci
+    excludes:
+      - centos-6.9
+    attributes:
+      osl-jenkins:
+        ibmz_ci:
+          docker_public_key: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCoCJyRQ84/TUc/EGedx6zNe7enr8c+Q0IsIXhm0SPohRv5XbcwNmTVToQ2fOuLlTG32F8CrMXZ+jmp9AoMZto2nX0S1sIgBaWbp8yQA90kmfzAH8ZW59SVq59bgXaM0rwFx3cQWPL06Imt+hu8JXvm+Bv+Z+9SFGs9t8xbx2EJT56Ao/0fzl3qEbSvfLbpNoHQBnenXL8/H6bqiNSh0LKqCwPFUf6qH8N03XPDWOBJqLB53In99IxlRQzJSTCi76jJQVtAA2qM8UXE80PrmiMrOBM84bRKgMIIqhFdj/umvp74S6aWG6tbVl1WsusF9FPajq0XBiy1WQ3646toNqPr'
+        credentials:
+          admin_users:
+            - 'osuosl-manatee'
+            - <%= ENV['GITHUB_USER'] %>
+          normal_users: []
+          oauth:
+            ibmz_ci:
+              client_id: <%= ENV['GITHUB_CLIENT_ID'] %>
+              client_secret: <%= ENV['GITHUB_CLIENT_SECRET'] %>
+          git:
+            ibmz_ci:
+              user: <%= ENV['GITHUB_USER'] %>
+              token: <%= ENV['GITHUB_TOKEN'] %>
+          ssh:
+            ibmz_ci-docker:
               user: 'jenkins'
               private_key: "-----BEGIN RSA PRIVATE KEY-----\nMIIEogIBAAKCAQEAqAickUPOP01HPxBnnceszXu3p6/HPkNCLCF4ZtEj6IUb+V23\nMDZk1U6ENnzri5Uxt9hfAqzF2fo5qfQKDGbaNp19EtbCIAWlm6fMkAPdJJn8wB/G\nVufUlaufW4F2jNK8Bcd3EFjy9OiJrfobvCV75vgb/mfvUhRrPbfMW8dhCU+egKP9\nH85d6hG0r3y26TaB0AZ3p1y/Px+m6ojUodCyqgsDxVH+qh/DdN1zw1jgSaiwedyJ\n/fSMZUUMyUkwou+oyUFbQANqjPFFxPND65ojKzgTPOG0SoDCCKoRXY/7pr6e+Eum\nlhurW1ZdVrLrBfRT2o6tFwYstVkN+uOraDaj6wIDAQABAoIBAAdq4eZztM4MjkGV\nas2HO/SSKohHdScldu1VyOfZAZnJDnQSk/yX2hmkbqetGgS+YER6U69dixpVNmhv\nMmZbv/Q7PYMwYb9iIG5fmOMemIt+FK8yd+HsN/Enc1BpxZ7vyocCyBm7o3X2MeWx\nLbo/eVm3yByR3/milx1RWL8QbRMpE0gTQkMMeBPNygRzKJecs6nY+VpNJ2f89lbx\ngjWQLswqZdFdLV0YSVuIbJHy+syTCo0c6fPcnQbjsWYm95wT+T18zDI54L3x/8BY\n5iyKTRVfDhy0de+/MG9Ty7SvDuQ/M6m08HaEkRE0PI16eWch5ge5YCzncBgt7DrG\nbf3ZoMkCgYEA1ILGhpKu9Dx6754t/0+SUdNsEZ8LqjIny7mOJjaGh+ge3D2yZmbv\n7orI82YGPqyZ05ry5+NBGc33yNQCpxnhMx5tMRRqQWQ6AFElubzsjvGKrcobHrt0\neV4THqMjqMZ978LPpkb4P9/bzAL8TfoJgCDldr5OtLVVJC1WRimLFAcCgYEAymu4\nnyQFYsBy8oew2Shv9EvVUJf6kL8QmrDcI5KiAVBI5JB5CZfm9v+w2mntmT8YrIq3\nzs+zR85d9uXB6aGENgCpAoZhxOqH3ieOT+raY1HSm4lg2mKdep4A9KHutM6L6I7k\n2KAahOYrkXDS8MrZ0pu3M9gWVF9nyB19C6sxH/0CgYAFSD7hB3Jb1ckEfb0M9JBh\ngkzUX0yt7VM56CHVZ1OOu0FRHiN6EiLynfaCvk13b1jffqF9DBQJLSp0jniGaMlF\nOQNjzesaNwCOE3ZJmJ2UrAJTcYudBvHNNn5pK4ruXgixVflNW8Q96jWPa5+T3Jwx\n2B98BRz1tvAn1wym789qLwKBgHTshFholjPUtpEhkCXgFcsngrBrGXFC7HRudLqX\nmLzpgzGDwmaoN+G1EJMZXQWITNhdyI7NquFvcxeK39f0VEpdV0L+HLuCPbk1YB8J\nqdx1BxKQ6EE9dXm+iw7D+v610FslL0tyL99UlRYN9crhYbEmAU0RJNTXxzrwzapP\n2LCBAoGAN+xSHVXIFLbADXnAJTU/tqi/7ZPGybX3TJEkLTzgw5aYB5PWFPWFKPgL\nOT4dGkaWOe55eVZ2Qz4WlhLc38fbjIcAl3/yAnK9SbvxBpvO7LEGj4XOzVzrzU6H\nlacuYndx6mBU0Ya5Ldx5sLpoZz7JU1j6Kl31kC45qLY0dVLCLCU=\n-----END RSA PRIVATE KEY-----"
   - name: packer_pipeline_node
