@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.10.1 (2018-04-12)
+-------------------
+- Translate characters on hostnames which contain - to _ for function names
+
 1.10.0 (2018-04-12)
 -------------------
 - Add IBM-Z recipe and other fixes
