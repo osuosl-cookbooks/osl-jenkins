@@ -17,7 +17,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     ssh-slaves:1.26
     resource-disposer:0.6
     pipeline-model-extensions:1.1.3
-    github:1.27.0
+    github:1.29.0
     structs:1.14
     emailext-template:1.0
     git:3.8.0
@@ -29,8 +29,8 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     cloudbees-folder:6.0.3
     junit:1.24
     bouncycastle-api:2.16.2
-    display-url-api:2.0
-    matrix-project:1.10
+    display-url-api:2.2.0
+    matrix-project:1.13
     config-file-provider:2.16.2
     handlebars:1.1.1
     credentials-binding:1.15
@@ -66,7 +66,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     docker-plugin:1.1.3
     pipeline-model-definition:1.1.3
     workflow-basic-steps:2.4
-    mailer:1.20
+    mailer:1.21
     credentials:2.1.16
     pipeline-model-api:1.1.3
     pipeline-stage-step:2.2

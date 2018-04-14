@@ -53,6 +53,7 @@ describe 'osl-jenkins::powerci' do
         config-file-provider:2.16.2
         copy-to-slave:1.4.4
         credentials:2.1.16
+        display-url-api:2.2.0
         docker-commons:1.11
         docker-java-api:3.0.14
         docker-plugin:1.1.3
@@ -63,11 +64,13 @@ describe 'osl-jenkins::powerci' do
         embeddable-build-status:1.9
         git:3.8.0
         git-client:2.7.1
+        github:1.29.0
         github-api:1.90
         github-oauth:0.27
         job-restrictions:0.6
         jsch:0.1.54.2
-        matrix-project:1.10
+        mailer:1.21
+        matrix-project:1.13
         openstack-cloud:2.22
         pipeline-multibranch-defaults:1.1
         resource-disposer:0.6

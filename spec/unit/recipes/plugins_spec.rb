@@ -66,15 +66,15 @@ describe 'osl-jenkins::plugins' do
         conditional-buildstep:1.3.1
         credentials-binding:1.15
         cvs:2.12
-        display-url-api:1.1.1
+        display-url-api:2.2.0
         docker-commons:1.8
         docker-workflow:1.10
         durable-task:1.17
         external-monitor-job:1.4
-        ghprb:1.36.1
+        ghprb:1.40.0
         git:3.8.0
         git-client:2.7.1
-        github:1.26.2
+        github:1.29.0
         github-api:1.90
         github-branch-source:2.2.3
         github-oauth:0.22.3
@@ -91,10 +91,10 @@ describe 'osl-jenkins::plugins' do
         jsch:0.1.54.2
         junit:1.24
         ldap:1.12
-        mailer:1.20
+        mailer:1.21
         mapdb-api:1.0.6.0
         matrix-auth:1.5
-        matrix-project:1.7.1
+        matrix-project:1.13
         maven-plugin:2.14
         momentjs:1.1.1
         pam-auth:1.2
