@@ -46,27 +46,33 @@ describe 'osl-jenkins::ibmz_ci' do
         expect { chef_run }.to_not raise_error
       end
       %w(
+        apache-httpcomponents-client-4-api:4.5.3-2.1
         build-monitor-plugin:1.11+build.201701152243
         cloud-stats:0.11
         config-file-provider:2.16.2
+        display-url-api:2.2.0
         docker-commons:1.11
         docker-java-api:3.0.14
         docker-plugin:1.1.3
         docker-build-publish:1.3.2
         durable-task:1.17
-        email-ext:2.57.2
+        email-ext:2.62
         emailext-template:1.0
         embeddable-build-status:1.9
-        git-client:2.5.0
+        git:3.8.0
+        git-client:2.7.1
+        github:1.29.0
         github-api:1.90
         github-oauth:0.27
         job-restrictions:0.6
-        matrix-project:1.10
-        openstack-cloud:2.22
+        jsch:0.1.54.2
+        mailer:1.21
+        matrix-project:1.13
         pipeline-multibranch-defaults:1.1
         resource-disposer:0.6
         workflow-step-api:2.14
         workflow-api:2.25
+        workflow-job:2.11
         workflow-support:2.18
         workflow-durable-task-step:2.18
         command-launcher:1.2

@@ -45,6 +45,7 @@ end
 
 node.default['osl-jenkins']['plugins'] = %w(
   ace-editor:1.1
+  apache-httpcomponents-client-4-api:4.5.3-2.1
   authentication-tokens:1.3
   bouncycastle-api:2.16.2
   branch-api:2.0.8
@@ -55,19 +56,19 @@ node.default['osl-jenkins']['plugins'] = %w(
   command-launcher:1.2
   config-file-provider:2.16.2
   credentials-binding:1.15
-  display-url-api:2.0
+  display-url-api:2.2.0
   docker-build-publish:1.3.2
   docker-commons:1.11
   docker-java-api:3.0.14
   docker-plugin:1.1.3
   docker-workflow:1.15.1
   durable-task:1.17
-  email-ext:2.57.2
+  email-ext:2.62
   emailext-template:1.0
   embeddable-build-status:1.9
-  git:3.5.1
-  git-client:2.5.0
-  github:1.27.0
+  git:3.8.0
+  git-client:2.7.1
+  github:1.29.0
   github-api:1.90
   github-branch-source:2.2.3
   github-oauth:0.27
@@ -77,12 +78,12 @@ node.default['osl-jenkins']['plugins'] = %w(
   jackson2-api:2.7.3
   job-restrictions:0.6
   jquery-detached:1.2.1
+  jsch:0.1.54.2
   junit:1.24
-  mailer:1.20
+  mailer:1.21
   matrix-auth:1.5
-  matrix-project:1.10
+  matrix-project:1.13
   momentjs:1.1.1
-  openstack-cloud:2.22
   pipeline-build-step:2.5.1
   pipeline-graph-analysis:1.3
   pipeline-input-step:2.8
@@ -108,7 +109,7 @@ node.default['osl-jenkins']['plugins'] = %w(
   workflow-cps:2.39
   workflow-cps-global-lib:2.8
   workflow-durable-task-step:2.18
-  workflow-job:2.10
+  workflow-job:2.11
   workflow-multibranch:2.14
   workflow-scm-step:2.4
   workflow-step-api:2.14

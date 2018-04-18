@@ -53,21 +53,24 @@ describe 'osl-jenkins::powerci' do
         config-file-provider:2.16.2
         copy-to-slave:1.4.4
         credentials:2.1.16
+        display-url-api:2.2.0
         docker-commons:1.11
         docker-java-api:3.0.14
         docker-plugin:1.1.3
         docker-build-publish:1.3.2
         durable-task:1.17
-        email-ext:2.57.2
+        email-ext:2.62
         emailext-template:1.0
         embeddable-build-status:1.9
         git:3.8.0
         git-client:2.7.1
+        github:1.29.0
         github-api:1.90
         github-oauth:0.27
         job-restrictions:0.6
         jsch:0.1.54.2
-        matrix-project:1.10
+        mailer:1.21
+        matrix-project:1.13
         openstack-cloud:2.22
         pipeline-multibranch-defaults:1.1
         resource-disposer:0.6
@@ -78,6 +81,7 @@ describe 'osl-jenkins::powerci' do
         build-token-root:1.4
         workflow-step-api:2.14
         workflow-support:2.18
+        workflow-job:2.11
       ).each do |plugins_version|
         plugin, version = plugins_version.split(':')
         it do
