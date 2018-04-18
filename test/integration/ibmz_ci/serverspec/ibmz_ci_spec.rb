@@ -32,7 +32,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     docker-plugin:1.1.3
     docker-workflow:1.15.1
     durable-task:1.17
-    email-ext:2.57.2
+    email-ext:2.62
     emailext-template:1.0
     embeddable-build-status:1.9
     git:3.8.0
@@ -80,7 +80,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     workflow-cps:2.39
     workflow-cps-global-lib:2.8
     workflow-durable-task-step:2.18
-    workflow-job:2.10
+    workflow-job:2.11
     workflow-multibranch:2.14
     workflow-scm-step:2.4
     workflow-step-api:2.14

@@ -87,7 +87,7 @@ default['osl-jenkins']['plugins'] = %w(
   workflow-cps:2.39
   workflow-cps-global-lib:2.7
   workflow-durable-task-step:2.18
-  workflow-job:2.10
+  workflow-job:2.11
   workflow-multibranch:2.14
   workflow-scm-step:2.4
   workflow-step-api:2.14

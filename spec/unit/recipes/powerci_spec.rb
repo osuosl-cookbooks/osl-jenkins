@@ -59,7 +59,7 @@ describe 'osl-jenkins::powerci' do
         docker-plugin:1.1.3
         docker-build-publish:1.3.2
         durable-task:1.17
-        email-ext:2.57.2
+        email-ext:2.62
         emailext-template:1.0
         embeddable-build-status:1.9
         git:3.8.0
@@ -81,6 +81,7 @@ describe 'osl-jenkins::powerci' do
         build-token-root:1.4
         workflow-step-api:2.14
         workflow-support:2.18
+        workflow-job:2.11
       ).each do |plugins_version|
         plugin, version = plugins_version.split(':')
         it do

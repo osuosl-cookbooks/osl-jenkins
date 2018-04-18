@@ -56,7 +56,7 @@ describe 'osl-jenkins::ibmz_ci' do
         docker-plugin:1.1.3
         docker-build-publish:1.3.2
         durable-task:1.17
-        email-ext:2.57.2
+        email-ext:2.62
         emailext-template:1.0
         embeddable-build-status:1.9
         git:3.8.0
@@ -72,6 +72,7 @@ describe 'osl-jenkins::ibmz_ci' do
         resource-disposer:0.6
         workflow-step-api:2.14
         workflow-api:2.25
+        workflow-job:2.11
         workflow-support:2.18
         workflow-durable-task-step:2.18
         command-launcher:1.2

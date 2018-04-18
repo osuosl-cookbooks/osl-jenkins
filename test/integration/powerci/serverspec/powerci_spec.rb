@@ -35,8 +35,8 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     handlebars:1.1.1
     credentials-binding:1.15
     workflow-cps:2.39
-    workflow-job:2.10
-    email-ext:2.57.2
+    workflow-job:2.11
+    email-ext:2.62
     pipeline-milestone-step:1.3.1
     icon-shim:2.0.3
     authentication-tokens:1.3
