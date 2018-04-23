@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.10.3 (2018-04-23)
+-------------------
+- Add ccache volume to all docker instances for POWER/IBM-Z CI
+
 1.10.2 (2018-04-18)
 -------------------
 - Update to jenkins-2.107.2
