@@ -176,7 +176,7 @@ module OSLDocker
             '',     // dnsString
             '',     // network
             '',     // dockerCommand
-            '',     // volumesString
+            'ccache:/var/cache/ccache', // volumesString
             '',     // volumesFromString
             'JENKINS_SLAVE_SSH_PUBKEY=#{docker_public_key}', // environmentsString
             '',     // hostname
