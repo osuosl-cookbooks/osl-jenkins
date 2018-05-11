@@ -3,7 +3,7 @@ driver:
   flavor_ref: 'm1.medium'
   network_ref:
   #  - vlan42
-    - public
+    - public1
   security_groups:
     - default
     - github
