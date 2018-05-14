@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.10.6 (2018-05-14)
+-------------------
+- Revert "Use SSH instead of HTTPS for pulling github repos"
+
 1.10.5 (2018-05-14)
 -------------------
 - Use SSH instead of HTTPS for pulling github repos
