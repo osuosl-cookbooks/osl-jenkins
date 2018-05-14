@@ -23,7 +23,7 @@ site_pr_builder = node['osl-jenkins']['site_pr_builder']
 site_pr_builder['sites_to_build'].each do |site, org|
   job_name = "#{site}_pr_builder"
   repo = "#{org}/#{site}"
-  github_url = "git@github.com:#{repo}.git"
+  github_url = "https://github.com/#{repo}"
   rsync_target = "/var/www/staging.osuosl.org/htdocs/#{site}-$ghprbPullId"
   site_url = "http://#{site}-$ghprbPullId.staging.osuosl.org"
 
