@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.10.7 (2018-05-25)
+-------------------
+- Add build-timeout plugin per RT:30007
+
 1.10.6 (2018-05-14)
 -------------------
 - Revert "Use SSH instead of HTTPS for pulling github repos"
