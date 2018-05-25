@@ -45,11 +45,12 @@ end
 
 node.default['osl-jenkins']['plugins'] = %w(
   ace-editor:1.1
-  apache-httpcomponents-client-4-api:4.5.3-2.1
+  apache-httpcomponents-client-4-api:4.5.5-2.1
   authentication-tokens:1.3
   bouncycastle-api:2.16.2
   branch-api:2.0.8
   build-monitor-plugin:1.11+build.201701152243
+  build-timeout:1.19
   build-token-root:1.4
   cloudbees-folder:6.0.3
   cloud-stats:0.11
