@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.10.8 (2018-05-30)
+-------------------
+- Update to jenkins-2.107.3
+
 1.10.7 (2018-05-25)
 -------------------
 - Add build-timeout plugin per RT:30007
