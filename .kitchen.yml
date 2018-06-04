@@ -276,7 +276,7 @@ suites:
       - recipe[osl-docker::powerci]
       - recipe[osl-jenkins::powerci]
     excludes:
-      - centos-6.9
+      - centos-6
     attributes:
       osl-jenkins:
         powerci:
@@ -312,7 +312,7 @@ suites:
     driver_config:
       server_name: ibmz_ci
     excludes:
-      - centos-6.9
+      - centos-6
     attributes:
       osl-jenkins:
         ibmz_ci:
@@ -340,7 +340,7 @@ suites:
     run_list:
       - recipe[osl-jenkins::packer_pipeline_node]
     excludes:
-      - centos-6.9
+      - centos-6
     attributes:
       osl-jenkins:
         credentials:
