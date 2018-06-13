@@ -47,6 +47,7 @@ describe 'osl-jenkins::powerci' do
         expect { chef_run }.to_not raise_error
       end
       %w(
+        ansicolor:0.5.2
         apache-httpcomponents-client-4-api:4.5.5-2.1
         build-monitor-plugin:1.11+build.201701152243
         build-timeout:1.19
