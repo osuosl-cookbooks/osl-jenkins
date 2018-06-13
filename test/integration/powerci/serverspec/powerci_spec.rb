@@ -13,6 +13,7 @@ end
 describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localhost:8080/ list-plugins') do
   %w(
     ace-editor:1.1
+    ansicolor:0.5.2
     apache-httpcomponents-client-4-api:4.5.5-2.1
     authentication-tokens:1.3
     bouncycastle-api:2.16.2
