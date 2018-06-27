@@ -109,8 +109,7 @@ end
 
 # install openstack_taster
 chef_gem 'openstack_taster' do
-  version node['osl-jenkins']['packer_pipeline']['openstack_taster_version']
   options '--no-user-install'
   clear_sources true
-  action :install
+  action :upgrade
 end
