@@ -119,7 +119,7 @@ describe file('/var/lib/jenkins/config.xml') do
     <org.jenkinsci.plugins.sge.BatchCloud plugin="sge-cloud-plugin@1.17">
       <name>CGRB-ubuntu</name>
       <cloudName>CGRB-ubuntu</cloudName>
-      <queueType>ubuntu</queueType>
+      <queueType>docker_gpu</queueType>
       <label>docker-gpu</label>
       <maximumIdleMinutes>1440</maximumIdleMinutes>
       <hostname>sge.example.org</hostname>
