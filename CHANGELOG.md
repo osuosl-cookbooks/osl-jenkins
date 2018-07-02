@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.10.11 (2018-07-02)
+--------------------
+- Switch to using docker_gpu queue on SGE for powerci
+
 1.10.10 (2018-06-27)
 --------------------
 - Always upgrade openstack_taster
