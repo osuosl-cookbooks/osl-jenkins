@@ -181,7 +181,7 @@ openstack_cloud = add_openstack_cloud
 sge_cloud =
   add_sge_cloud(
     'CGRB-ubuntu',
-    'ubuntu',
+    'docker_gpu',
     'docker-gpu',
     sge['hostname'],
     sge['username'],

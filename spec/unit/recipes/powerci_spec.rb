@@ -168,7 +168,7 @@ describe 'osl-jenkins::powerci' do
             command: %r{
 BatchCloud sge = new BatchCloud\(
   'CGRB-ubuntu',    // cloudName
-  'ubuntu',   // queueType
+  'docker_gpu',   // queueType
   'docker-gpu',   // label
   1440,         // maximumIdleMinutes
   'sge.example.org', // hostname
