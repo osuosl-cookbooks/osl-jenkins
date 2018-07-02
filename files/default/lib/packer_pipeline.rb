@@ -21,7 +21,7 @@ class PackerPipeline
 
   # find the changed files associated with the PR
   def self.changed_files(json)
-    issue_number = json['number']
+    issue_number = json['number'].nil? ? json['issue']['number'] : json['number']
     @github.pull_request_files(@repo_path, issue_number)
   end
 
@@ -128,8 +128,9 @@ class PackerPipeline
     end.reduce(:+).uniq
 
     # Include the PR number
+    pr_num = payload['number'].nil? ? payload['issue']['number'] : payload['number']
     output = {
-      'pr' => payload['number']
+      'pr' => pr_num
     }
 
     # Create hash of templates and the architectures associated with them.
