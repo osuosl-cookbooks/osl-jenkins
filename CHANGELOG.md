@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.10.12 (2018-07-02)
+--------------------
+- Deal with issue comment payloads properly with packer pipeline
+
 1.10.11 (2018-07-02)
 --------------------
 - Switch to using docker_gpu queue on SGE for powerci
