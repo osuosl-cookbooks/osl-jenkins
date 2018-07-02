@@ -68,7 +68,37 @@ describe PackerPipeline do
       expect(files[1].filename).to match(/centos-7.2-ppc64-openstack.json/)
     end
   end
-
+  context '#get_commit' do
+    let(:github_mock) { double('Octokit', commits: [], issues: [], same_options?: false, auto_paginate: true) }
+    before :each do
+      allow(Octokit::Client).to receive(:new) { github_mock }
+    end
+    it 'returns a git commit sha' do
+      contents_response = {
+        head: double('Sawyer::Resource', sha: 'git-sha')
+      }
+      response_body = double('Sawyer::Resource', contents_response)
+      allow(github_mock).to receive(:pull_request).with('osuosl/packer-templates', 59).and_return(response_body)
+      commit = PackerPipeline.new.get_commit(59)
+      expect(commit).to match(/git-sha/)
+    end
+  end
+  context '#abort_comment' do
+    let(:github_mock) { double('Octokit', commits: [], issues: [], same_options?: false, auto_paginate: true) }
+    before :each do
+      allow(Octokit::Client).to receive(:new) { github_mock }
+    end
+    it 'adds comment and aborts' do
+      allow(github_mock).to receive(:add_comment).with('osuosl/packer-templates', 59, 'error comment')
+      begin
+        expect(STDOUT).to receive(:puts).with('error comment')
+        PackerPipeline.new.abort_comment('error comment', 59)
+        expect(github_mock).to receive(:add_comment).with('osuosl/packer-templates', 59, 'error comment')
+      rescue SystemExit => e
+        expect(e.status).to eq 1
+      end
+    end
+  end
   context '#find_dependent_templates' do
     before :each do
       allow(ENV).to receive(:[])
@@ -106,7 +136,18 @@ describe PackerPipeline do
       response_body = [double('Sawyer::Resource', filename: file)]
       allow(github_mock).to receive(:pull_request_files).with('osuosl/packer-templates', 16).and_return(response_body)
       payload = open_fixture('sync_packer_templates.json')
-      expect { puts PackerPipeline.new.process_payload(payload).to_json }.to output(/16/).to_stdout
+      expect { puts PackerPipeline.new.process_payload(payload).to_json }.to output(/"pr":16/).to_stdout
+      expect do
+        puts PackerPipeline.new.process_payload(payload).to_json
+      end.to output(/"event_type":"pull_request"/).to_stdout
+    end
+    it 'prints the PR number w/ issue payload' do
+      file = fixture_path('scripts/centos/osuosl.sh')
+      response_body = [double('Sawyer::Resource', filename: file)]
+      allow(github_mock).to receive(:pull_request_files).with('osuosl/packer-templates', 59).and_return(response_body)
+      payload = open_fixture('issue_packer_templates.json')
+      expect { puts PackerPipeline.new.process_payload(payload).to_json }.to output(/"pr":59/).to_stdout
+      expect { puts PackerPipeline.new.process_payload(payload).to_json }.to output(/"event_type":"issue"/).to_stdout
     end
     it 'prints the PR number w/ issue payload' do
       file = fixture_path('scripts/centos/osuosl.sh')
@@ -255,6 +296,177 @@ OUTPUT
       expect do
         puts PackerPipeline.new.commit_status(final_results)
       end.to output(expected_output).to_stdout
+    end
+    context '!deploy' do
+      let(:github_mock) { double('Octokit', commits: [], issues: [], same_options?: false, auto_paginate: true) }
+      before :each do
+        allow(Octokit::Client).to receive(:new) { github_mock }
+        allow(ENV).to receive(:[])
+        allow(ENV).to receive(:[]).with('BUILD_URL').and_return(
+          'https://jenkins.osuosl.org/job/packer_pipeline/1/'
+        )
+        allow(ENV).to receive(:[]).with('GIT_COMMIT').and_return(nil)
+        allow(ENV).to receive(:[]).with('GIT_PR').and_return(59)
+      end
+
+      it 'Merges PR and deletes branch on !deploy' do
+        head_response = {
+          sha: '28256684538cbdde31d0e33829e6d9054b8130de',
+          ref: 'joe/awesome-branch'
+        }
+        contents_response = {
+          head: double('Sawyer::Resource', head_response),
+          merged: false,
+          mergable: true
+        }
+        response_body = double('Sawyer::Resource', contents_response)
+        allow(github_mock).to receive(:pull_request).with('osuosl/packer-templates', 59).and_return(response_body)
+        final_results = open_fixture('final_results_single_template_deploy.json')
+
+        allow(github_mock).to receive('create_status').with(
+          'osuosl/packer-templates',
+          '28256684538cbdde31d0e33829e6d9054b8130de',
+          'success',
+          context: 'centos-7.3-x86_64-mitaka-aio-openstack.json',
+          target_url: 'https://jenkins.osuosl.org/job/packer_pipeline/1/console',
+          description: 'All passed! {"linter"=>0, "builder"=>0, "deploy_test"=>0, "taster"=>0, "publish"=>0}'
+        )
+
+        expect(github_mock).to receive(:merge_pull_request).with('osuosl/packer-templates', 59)
+        expect(github_mock).to receive(:delete_branch).with('osuosl/packer-templates', 'joe/awesome-branch')
+        expected_output = <<-EOF
+{"centos-7.3-x86_64-mitaka-aio-openstack.json"=>{:options=>{:context=>"centos-7.3-x86_64-mitaka-aio-openstack.json", :target_url=>"https://jenkins.osuosl.org/job/packer_pipeline/1/console", :description=>"All passed! {\\"linter\\"=>0, \\"builder\\"=>0, \\"deploy_test\\"=>0, \\"taster\\"=>0, \\"publish\\"=>0}"}, :state=>"success"}}
+EOF
+        expect do
+          puts PackerPipeline.new.commit_status(final_results)
+        end.to output(expected_output).to_stdout
+      end
+      it 'Does NOT merge PR nor deletes branch on !deploy failure' do
+        head_response = {
+          sha: '28256684538cbdde31d0e33829e6d9054b8130de',
+          ref: 'joe/awesome-branch'
+        }
+        contents_response = {
+          head: double('Sawyer::Resource', head_response),
+          merged: false,
+          mergable: true
+        }
+        response_body = double('Sawyer::Resource', contents_response)
+        allow(github_mock).to receive(:pull_request).with('osuosl/packer-templates', 59).and_return(response_body)
+        final_results = open_fixture('final_results_single_template_deploy_failed.json')
+
+        allow(github_mock).to receive('create_status').with(
+          'osuosl/packer-templates',
+          '28256684538cbdde31d0e33829e6d9054b8130de',
+          'failure',
+          context: 'centos-7.3-x86_64-mitaka-aio-openstack.json',
+          target_url: 'https://jenkins.osuosl.org/job/packer_pipeline/1/console',
+          description: 'publish failed!'
+        )
+
+        expect(github_mock).to_not receive(:merge_pull_request).with('osuosl/packer-templates', 59)
+        expect(github_mock).to_not receive(:delete_branch).with('osuosl/packer-templates', 'joe/awesome-branch')
+        expected_output = <<-EOF
+{"centos-7.3-x86_64-mitaka-aio-openstack.json"=>{:options=>{:context=>"centos-7.3-x86_64-mitaka-aio-openstack.json", :target_url=>"https://jenkins.osuosl.org/job/packer_pipeline/1/console", :description=>"publish failed!"}, :state=>"failure"}}
+EOF
+        expect do
+          puts PackerPipeline.new.commit_status(final_results)
+        end.to output(expected_output).to_stdout
+      end
+      it 'Does NOT merge PR nor deletes branch if already merged' do
+        head_response = {
+          sha: '28256684538cbdde31d0e33829e6d9054b8130de',
+          ref: 'joe/awesome-branch'
+        }
+        contents_response = {
+          head: double('Sawyer::Resource', head_response),
+          merged: true,
+          mergable: true
+        }
+        response_body = double('Sawyer::Resource', contents_response)
+        allow(github_mock).to receive(:pull_request).with('osuosl/packer-templates', 59).and_return(response_body)
+        final_results = open_fixture('final_results_single_template_deploy.json')
+
+        allow(github_mock).to receive(:add_comment).with(
+          'osuosl/packer-templates',
+          59,
+          'Error: Cannot merge PR because it has already been merged.'
+        )
+        allow(github_mock).to receive('create_status').with(
+          'osuosl/packer-templates',
+          '28256684538cbdde31d0e33829e6d9054b8130de',
+          'success',
+          context: 'centos-7.3-x86_64-mitaka-aio-openstack.json',
+          target_url: 'https://jenkins.osuosl.org/job/packer_pipeline/1/console',
+          description: 'All passed! {"linter"=>0, "builder"=>0, "deploy_test"=>0, "taster"=>0, "publish"=>0}'
+        )
+
+        expect(github_mock).to_not receive(:merge_pull_request).with('osuosl/packer-templates', 59)
+        expect(github_mock).to_not receive(:delete_branch).with('osuosl/packer-templates', 'joe/awesome-branch')
+        expected_output = <<-EOF
+{"centos-7.3-x86_64-mitaka-aio-openstack.json"=>{:options=>{:context=>"centos-7.3-x86_64-mitaka-aio-openstack.json", :target_url=>"https://jenkins.osuosl.org/job/packer_pipeline/1/console", :description=>"All passed! {\\"linter\\"=>0, \\"builder\\"=>0, \\"deploy_test\\"=>0, \\"taster\\"=>0, \\"publish\\"=>0}"}, :state=>"success"}}
+EOF
+        begin
+          expect do
+            puts PackerPipeline.new.commit_status(final_results)
+          end.to output(expected_output).to_stdout
+          PackerPipeline.new.abort_comment('error comment', 59)
+          expect(github_mock).to receive(:add_comment).with(
+            'osuosl/packer-templates',
+            59,
+            'Error: Cannot merge PR because it has already been merged.'
+          )
+        rescue SystemExit => e
+          expect(e.status).to eq 1
+        end
+      end
+      it 'Does NOT merge PR nor deletes branch if not mergable' do
+        head_response = {
+          sha: '28256684538cbdde31d0e33829e6d9054b8130de',
+          ref: 'joe/awesome-branch'
+        }
+        contents_response = {
+          head: double('Sawyer::Resource', head_response),
+          merged: false,
+          mergable: false
+        }
+        response_body = double('Sawyer::Resource', contents_response)
+        allow(github_mock).to receive(:pull_request).with('osuosl/packer-templates', 59).and_return(response_body)
+        final_results = open_fixture('final_results_single_template_deploy.json')
+
+        allow(github_mock).to receive(:add_comment).with(
+          'osuosl/packer-templates',
+          59,
+          'Error: Cannot merge PR because it would create merge conflicts.'
+        )
+        allow(github_mock).to receive('create_status').with(
+          'osuosl/packer-templates',
+          '28256684538cbdde31d0e33829e6d9054b8130de',
+          'success',
+          context: 'centos-7.3-x86_64-mitaka-aio-openstack.json',
+          target_url: 'https://jenkins.osuosl.org/job/packer_pipeline/1/console',
+          description: 'All passed! {"linter"=>0, "builder"=>0, "deploy_test"=>0, "taster"=>0, "publish"=>0}'
+        )
+
+        expect(github_mock).to_not receive(:merge_pull_request).with('osuosl/packer-templates', 59)
+        expect(github_mock).to_not receive(:delete_branch).with('osuosl/packer-templates', 'joe/awesome-branch')
+        expected_output = <<-EOF
+{"centos-7.3-x86_64-mitaka-aio-openstack.json"=>{:options=>{:context=>"centos-7.3-x86_64-mitaka-aio-openstack.json", :target_url=>"https://jenkins.osuosl.org/job/packer_pipeline/1/console", :description=>"All passed! {\\"linter\\"=>0, \\"builder\\"=>0, \\"deploy_test\\"=>0, \\"taster\\"=>0, \\"publish\\"=>0}"}, :state=>"success"}}
+EOF
+        begin
+          expect do
+            puts PackerPipeline.new.commit_status(final_results)
+          end.to output(expected_output).to_stdout
+          PackerPipeline.new.abort_comment('error comment', 59)
+          expect(github_mock).to receive(:add_comment).with(
+            'osuosl/packer-templates',
+            59,
+            'Error: Cannot merge PR because it would create merge conflicts.'
+          )
+        rescue SystemExit => e
+          expect(e.status).to eq 1
+        end
+      end
     end
   end
 end

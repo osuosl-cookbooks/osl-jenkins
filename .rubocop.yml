@@ -28,6 +28,15 @@ Metrics/AbcSize:
   Max: 31.11
   Exclude:
     - 'libraries/default.rb'
+    - 'files/default/lib/packer_pipeline.rb'
+
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - 'files/default/lib/packer_pipeline.rb'
+
+Metrics/PerceivedComplexity:
+  Exclude:
+    - 'files/default/lib/packer_pipeline.rb'
 
 Metrics/ModuleLength:
   Max: 150

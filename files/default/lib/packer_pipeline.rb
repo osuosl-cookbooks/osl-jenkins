@@ -25,6 +25,18 @@ class PackerPipeline
     @github.pull_request_files(@repo_path, issue_number)
   end
 
+  # get the latest git sha for a PR
+  def self.get_commit(pr)
+    @github.pull_request(@repo_path, pr).head.sha
+  end
+
+  # add comment to the PR and abort
+  def self.abort_comment(comment, pr)
+    @github.add_comment(@repo_path, pr, comment)
+    puts comment
+    exit(1)
+  end
+
   # If file is a template, return it in an array.
   # If it receives a script, then it locates all
   # templates that use that script and returns them in an array.
@@ -67,7 +79,7 @@ class PackerPipeline
   # update status for the PR from the final_results given by the pipeline
   # the final_results is a JSON hash containing all the templates that were processed.
   def self.commit_status(final_results)
-    git_commit = ENV['GIT_COMMIT']
+    git_commit = ENV['GIT_COMMIT'].nil? ? get_commit(ENV['GIT_PR']) : ENV['GIT_COMMIT']
     return unless git_commit
 
     final_results = JSON.parse(final_results)
@@ -84,6 +96,7 @@ class PackerPipeline
     #   }
     # }
     final_status = {}
+    final_state = true
 
     final_results.keys.each do |arch|
       final_results[arch].keys.each do |t|
@@ -103,6 +116,7 @@ class PackerPipeline
           if final_results[arch][t][stage].to_i != 0
             final_status[t][:state] = 'failure'
             final_status[t][:options][:description] = "#{stage} failed!"
+            final_state = false
             break
           end
 
@@ -112,6 +126,14 @@ class PackerPipeline
         # set status
         @github.create_status(@repo_path, git_commit, final_status[t][:state], final_status[t][:options])
       end
+    end
+    if !ENV['GIT_PR'].nil? && final_state == true
+      pr_num = ENV['GIT_PR']
+      pr = @github.pull_request(@repo_path, pr_num)
+      abort_comment('Error: Cannot merge PR because it has already been merged.', pr_num) if pr.merged
+      abort_comment('Error: Cannot merge PR because it would create merge conflicts.', pr_num) unless pr.mergable
+      @github.merge_pull_request(@repo_path, pr_num)
+      @github.delete_branch(@repo_path, pr.head.ref)
     end
     final_status
   end
@@ -129,8 +151,10 @@ class PackerPipeline
 
     # Include the PR number
     pr_num = payload['number'].nil? ? payload['issue']['number'] : payload['number']
+    event_type = payload['number'].nil? ? 'issue' : 'pull_request'
     output = {
-      'pr' => pr_num
+      'pr' => pr_num,
+      'event_type' => event_type
     }
 
     # Create hash of templates and the architectures associated with them.
