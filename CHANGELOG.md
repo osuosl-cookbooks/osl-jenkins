@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.10.13 (2018-07-10)
+--------------------
+- Add more enhancements to !deploy functionality
+
 1.10.12 (2018-07-02)
 --------------------
 - Deal with issue comment payloads properly with packer pipeline
