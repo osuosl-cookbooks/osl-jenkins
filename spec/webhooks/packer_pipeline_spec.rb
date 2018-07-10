@@ -50,7 +50,7 @@ describe PackerPipeline do
     it 'finds multiple changed files' do
       response_body = [
         double('Sawyer::Resource', filename: 'centos-7.3-x86_64-openstack.json'),
-        double('Sawyer::Resource', filename: 'centos-7.2-ppc64-openstack.json')
+        double('Sawyer::Resource', filename: 'centos-7.2-ppc64-openstack.json'),
       ]
       allow(github_mock).to receive(:pull_request_files).with('osuosl/packer-templates', 16).and_return(response_body)
       files = PackerPipeline.new.changed_files(open_json('sync_packer_templates.json'))
@@ -60,7 +60,7 @@ describe PackerPipeline do
     it 'finds multiple changed files w/ issue payload' do
       response_body = [
         double('Sawyer::Resource', filename: 'centos-7.3-x86_64-openstack.json'),
-        double('Sawyer::Resource', filename: 'centos-7.2-ppc64-openstack.json')
+        double('Sawyer::Resource', filename: 'centos-7.2-ppc64-openstack.json'),
       ]
       allow(github_mock).to receive(:pull_request_files).with('osuosl/packer-templates', 59).and_return(response_body)
       files = PackerPipeline.new.changed_files(open_json('issue_packer_templates.json'))
@@ -75,7 +75,7 @@ describe PackerPipeline do
     end
     it 'returns a git commit sha' do
       contents_response = {
-        head: double('Sawyer::Resource', sha: 'git-sha')
+        head: double('Sawyer::Resource', sha: 'git-sha'),
       }
       response_body = double('Sawyer::Resource', contents_response)
       allow(github_mock).to receive(:pull_request).with('osuosl/packer-templates', 59).and_return(response_body)
@@ -251,7 +251,7 @@ describe PackerPipeline do
       script = 'scripts/centos/osuosl.sh'
       response_body = [
         double('Sawyer::Resource', filename: template),
-        double('Sawyer::Resource', filename: script)
+        double('Sawyer::Resource', filename: script),
       ]
       head_response = { sha: 'git-sha' }
       contents_response = { head: double('Sawyer::Resource', head_response) }
@@ -274,7 +274,7 @@ describe PackerPipeline do
       script = 'scripts/centos/osuosl.sh'
       response_body = [
         double('Sawyer::Resource', filename: template),
-        double('Sawyer::Resource', filename: script)
+        double('Sawyer::Resource', filename: script),
       ]
       head_response = { sha: 'git-sha' }
       contents_response = { head: double('Sawyer::Resource', head_response) }
@@ -362,12 +362,12 @@ OUTPUT
     it 'Merges PR and deletes branch on !deploy' do
       head_response = {
         sha: '28256684538cbdde31d0e33829e6d9054b8130de',
-        ref: 'joe/awesome-branch'
+        ref: 'joe/awesome-branch',
       }
       contents_response = {
         head: double('Sawyer::Resource', head_response),
         merged: false,
-        mergeable: true
+        mergeable: true,
       }
       response_body = double('Sawyer::Resource', contents_response)
       allow(github_mock).to receive(:pull_request).with('osuosl/packer-templates', 59).and_return(response_body)
@@ -378,12 +378,12 @@ OUTPUT
     it 'Does NOT merge PR nor deletes branch if already merged' do
       head_response = {
         sha: '28256684538cbdde31d0e33829e6d9054b8130de',
-        ref: 'joe/awesome-branch'
+        ref: 'joe/awesome-branch',
       }
       contents_response = {
         head: double('Sawyer::Resource', head_response),
         merged: true,
-        mergeable: true
+        mergeable: true,
       }
       response_body = double('Sawyer::Resource', contents_response)
       allow(github_mock).to receive(:pull_request).with('osuosl/packer-templates', 59).and_return(response_body)
@@ -409,12 +409,12 @@ OUTPUT
     it 'Does NOT merge PR nor deletes branch if not mergeable' do
       head_response = {
         sha: '28256684538cbdde31d0e33829e6d9054b8130de',
-        ref: 'joe/awesome-branch'
+        ref: 'joe/awesome-branch',
       }
       contents_response = {
         head: double('Sawyer::Resource', head_response),
         merged: false,
-        mergeable: false
+        mergeable: false,
       }
       response_body = double('Sawyer::Resource', contents_response)
       allow(github_mock).to receive(:pull_request).with('osuosl/packer-templates', 59).and_return(response_body)

@@ -40,26 +40,26 @@ describe 'osl-jenkins::master' do
       context 'set secrets in attribute' do
         cached(:chef_run) do
           ChefSpec::SoloRunner.new(p) do |node|
-            node.set['osl-jenkins']['credentials']['git'] = {
+            node.normal['osl-jenkins']['credentials']['git'] = {
               'cookbook_uploader' => {
                 user: 'manatee',
-                token: 'token_password'
+                token: 'token_password',
               },
               'bumpzone' => {
                 'user' => 'johndoe',
-                'token' => 'password'
-              }
+                'token' => 'password',
+              },
             }
-            node.set['osl-jenkins']['credentials']['ssh'] = {
+            node.normal['osl-jenkins']['credentials']['ssh'] = {
               'alfred' => {
                 user: 'alfred',
-                private_key: 'private rsa key'
+                private_key: 'private rsa key',
               },
               'alfred-passphrase' => {
                 user: 'alfred-passphrase',
                 private_key: 'private rsa key',
-                passphrase: 'password'
-              }
+                passphrase: 'password',
+              },
             }
           end.converge(described_recipe)
         end
@@ -104,23 +104,23 @@ describe 'osl-jenkins::master' do
               'git' => {
                 'cookbook_uploader' => {
                   'user' => 'manatee',
-                  'token' => 'token_password'
+                  'token' => 'token_password',
                 },
                 'bumpzone' => {
                   'user' => 'johndoe',
-                  'token' => 'password'
-                }
+                  'token' => 'password',
+                },
               },
               'ssh' => {
                 'alfred' => {
                   'user' => 'alfred',
-                  'private_key' => 'private rsa key'
+                  'private_key' => 'private rsa key',
                 },
                 'alfred-passphrase' => {
                   'user' => 'alfred-passphrase',
                   'private_key' => 'private rsa key',
-                  'passphrase' => 'password'
-                }
+                  'passphrase' => 'password',
+                },
               }
             )
         end

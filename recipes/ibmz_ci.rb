@@ -33,16 +33,6 @@ docker_cert = data_bag_item(
   "client-#{node['fqdn'].tr('.', '-')}"
 )
 
-ruby_block 'Set jenkins username/password if needed' do
-  block do
-    if ::File.exist?('/var/lib/jenkins/config.xml') &&
-       ::File.foreach('/var/lib/jenkins/config.xml').grep(/GithubSecurityRealm/).any?
-      node.run_state[:jenkins_username] = secrets['git']['ibmz_ci']['user'] # ~FC001
-      node.run_state[:jenkins_password] = secrets['git']['ibmz_ci']['token'] # ~FC001
-    end
-  end
-end
-
 node.default['osl-jenkins']['plugins'] = %w(
   ace-editor:1.1
   ansicolor:0.5.2
@@ -129,7 +119,7 @@ else
     'roles:ibmz_ci_docker',
     filter_result: {
       'ipaddress' => ['ipaddress'],
-      'fqdn' => ['fqdn']
+      'fqdn' => ['fqdn'],
     }
   )
 end

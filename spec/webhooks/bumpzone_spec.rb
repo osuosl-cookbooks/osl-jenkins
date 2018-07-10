@@ -76,7 +76,7 @@ describe BumpZone do
     it 'finds multiple changed files' do
       response_body = [
         double('Sawyer::Resource', filename: 'db.osuosl.org'),
-        double('Sawyer::Resource', filename: 'db.bak')
+        double('Sawyer::Resource', filename: 'db.bak'),
       ]
       allow(github_mock).to receive(:pull_request_files).with('osuosl/zonefiles-test', 1).and_return(response_body)
       files = BumpZone.changed_files(open_json('merge_payload.json'))

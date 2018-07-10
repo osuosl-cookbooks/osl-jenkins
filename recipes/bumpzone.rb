@@ -28,7 +28,7 @@ end
 
 [
   bumpzone['bin_path'],
-  bumpzone['lib_path']
+  bumpzone['lib_path'],
 ].each do |d|
   directory d do
     recursive true

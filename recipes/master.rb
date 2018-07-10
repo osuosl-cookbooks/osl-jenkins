@@ -28,15 +28,15 @@ node.default['java']['jdk_version'] = '8'
 # Manually set the jenkins java attribute to stop jenkins being restarted
 # every chef run due to logic in
 # https://github.com/chef-cookbooks/jenkins/blob/master/attributes/default.rb#L45-L53
-node.set['jenkins']['java'] = 'java'
+node.default['jenkins']['java'] = 'java'
 
 node.default['certificate'] = [{
   'wildcard' => {
     'cert_file' => 'wildcard.pem',
     'key_file' => 'wildcard.key',
     'chain_file' => 'wildcard-bundle.crt',
-    'combined_file' => true
-  }
+    'combined_file' => true,
+  },
 }]
 
 include_recipe 'yum-plugin-versionlock'
@@ -64,8 +64,8 @@ if platform_family?('rhel')
     # .git-credentials file to work (needed for the cookbook_uploader recipe),
     # and the Jenkins git plugin recommends 1.8.x. So we use 1.8.5.5, the
     # latest 1.8.x.
-    node.set['git']['version'] = '1.8.5.5'
-    node.set['git']['checksum'] = '106b480e2b3ae8b02e5b6b099d7a4049' \
+    node.default['git']['version'] = '1.8.5.5'
+    node.default['git']['checksum'] = '106b480e2b3ae8b02e5b6b099d7a4049' \
                                   'f2b1128659ac81f317267d2ed134679f'
     include_recipe 'build-essential'
     include_recipe 'git::source'

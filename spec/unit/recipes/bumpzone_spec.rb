@@ -5,18 +5,18 @@ describe 'osl-jenkins::bumpzone' do
     context "#{p[:platform]} #{p[:version]}" do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(p) do |node|
-          node.set['osl-jenkins']['credentials']['git'] = {
+          node.normal['osl-jenkins']['credentials']['git'] = {
             'bumpzone' => {
               user: 'manatee',
-              token: 'token_password'
-            }
+              token: 'token_password',
+            },
           }
-          node.set['osl-jenkins']['credentials']['jenkins'] = {
+          node.normal['osl-jenkins']['credentials']['jenkins'] = {
             'bumpzone' => {
               user: 'manatee',
               api_token: 'api_token',
-              trigger_token: 'trigger_token'
-            }
+              trigger_token: 'trigger_token',
+            },
           }
         end.converge(described_recipe)
       end
@@ -67,7 +67,7 @@ describe 'osl-jenkins::bumpzone' do
             mode: 0440,
             variables: {
               github_url: 'https://github.com/osuosl/zonefiles.git',
-              trigger_token: 'trigger_token'
+              trigger_token: 'trigger_token',
             }
           )
       end
@@ -78,7 +78,7 @@ describe 'osl-jenkins::bumpzone' do
             mode: 0440,
             variables: {
               github_url: 'https://github.com/osuosl/zonefiles.git',
-              trigger_token: 'trigger_token'
+              trigger_token: 'trigger_token',
             }
           )
       end
@@ -89,7 +89,7 @@ describe 'osl-jenkins::bumpzone' do
             mode: 0440,
             variables: {
               github_url: 'https://github.com/osuosl/zonefiles.git',
-              dns_master: 'dns_master'
+              dns_master: 'dns_master',
             }
           )
       end

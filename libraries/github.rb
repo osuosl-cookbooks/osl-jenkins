@@ -71,11 +71,11 @@ def set_up_github_push(github_token, org_name, repo_name, job_name,
   hook_config = {
     url: url,
     content_type: content_type,
-    insecure_ssl: insecure_hook
+    insecure_ssl: insecure_hook,
   }
   hook_options = {
     events: events,
-    active: true
+    active: true,
   }
 
   # Create a hook if none exist, or update the existing one(s).

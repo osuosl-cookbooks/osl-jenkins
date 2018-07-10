@@ -28,10 +28,6 @@ end
 
 reload_file = ::File.join(Chef::Config[:file_cache_path], 'reload-jenkins')
 
-file reload_file do
-  action :nothing
-end
-
 # Install plugins that can allow for Jenkins restarts later
 node['osl-jenkins']['plugins'].each do |plugins_version|
   p, v = plugins_version.split(':')

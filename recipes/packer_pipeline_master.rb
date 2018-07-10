@@ -32,7 +32,7 @@ end
 
 [
   packer_pipeline['bin_path'],
-  packer_pipeline['lib_path']
+  packer_pipeline['lib_path'],
 ].each do |d|
   directory d do
     recursive true

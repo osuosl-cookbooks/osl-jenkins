@@ -145,7 +145,7 @@ else
     'roles:powerci_docker',
     filter_result: {
       'ipaddress' => ['ipaddress'],
-      'fqdn' => ['fqdn']
+      'fqdn' => ['fqdn'],
     }
   )
 end

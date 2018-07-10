@@ -42,13 +42,13 @@ class CheckZone
     return unless git_commit
     status_description = {
       'success' => 'named-checkzone has passed',
-      'failure' => 'named-checkzone has found a syntax error'
+      'failure' => 'named-checkzone has found a syntax error',
     }
 
     options = {
       context: 'checkzone',
       target_url: "#{ENV['BUILD_URL']}console",
-      description: status_description[status]
+      description: status_description[status],
     }
 
     @github.create_status(@repo_path, git_commit, status, options)

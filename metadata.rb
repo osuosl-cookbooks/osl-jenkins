@@ -1,7 +1,8 @@
 name             'osl-jenkins'
 maintainer       'Oregon State University'
 maintainer_email 'systems@osuosl.org'
-license          'Apache 2.0'
+license          'Apache-2.0'
+chef_version     '>= 12.18' if respond_to?(:chef_version)
 description      'Installs/Configures osl-jenkins'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          '1.10.18'
@@ -12,7 +13,7 @@ depends          'base', '>= 2.6.0'
 depends          'build-essential'
 depends          'git'
 depends          'java'
-depends          'jenkins', '~> 5.0.1'
+depends          'jenkins', '~> 5.0.6'
 depends          'osl-haproxy'
 depends          'osl-docker'
 depends          'ssh-keys'

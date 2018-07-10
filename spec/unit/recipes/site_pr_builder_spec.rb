@@ -5,18 +5,18 @@ describe 'osl-jenkins::site_pr_builder' do
     context "#{p[:platform]} #{p[:version]}" do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(p) do |node|
-          node.set['osl-jenkins']['credentials']['git'] = {
+          node.normal['osl-jenkins']['credentials']['git'] = {
             'site_pr_builder' => {
               user: 'manatee',
-              token: 'token_password'
-            }
+              token: 'token_password',
+            },
           }
-          node.set['osl-jenkins']['credentials']['jenkins'] = {
+          node.normal['osl-jenkins']['credentials']['jenkins'] = {
             'site_pr_builder' => {
               user: 'manatee',
               pass: 'password',
-              trigger_token: 'trigger_token'
-            }
+              trigger_token: 'trigger_token',
+            },
           }
         end.converge(described_recipe)
       end

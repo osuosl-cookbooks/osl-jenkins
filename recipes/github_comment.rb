@@ -28,7 +28,7 @@ end
 
 [
   github_comment['bin_path'],
-  github_comment['lib_path']
+  github_comment['lib_path'],
 ].each do |d|
   directory d do
     recursive true

@@ -15,31 +15,31 @@ describe 'osl-jenkins::powerci' do
             username: 'username',
             password: 'password',
             hostname: 'sge.example.org',
-            port: 22
+            port: 22,
           },
           'oauth' => {
             'powerci' => {
               client_id: '123456789',
-              client_secret: '0987654321'
-            }
+              client_secret: '0987654321',
+            },
           },
           'git' => {
             'powerci' => {
               'user' => 'powerci',
-              'token' => 'powerci'
-            }
+              'token' => 'powerci',
+            },
           }
         )
         stub_search('node', 'roles:powerci_docker').and_return(
           [
             {
               ipaddress: '192.168.0.1',
-              fqdn: 'powerci-docker1.example.org'
+              fqdn: 'powerci-docker1.example.org',
             },
             {
               ipaddress: '192.168.0.2',
-              fqdn: 'powerci-docker2.example.org'
-            }
+              fqdn: 'powerci-docker2.example.org',
+            },
           ]
         )
       end

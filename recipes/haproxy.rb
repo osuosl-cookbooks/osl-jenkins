@@ -31,6 +31,6 @@ node.default['haproxy']['members'] = [
   {
     'hostname' => 'jenkins',
     'ipaddress' => '127.0.0.1',
-    'port' => '8080'
-  }
+    'port' => '8080',
+  },
 ]

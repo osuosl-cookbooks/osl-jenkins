@@ -128,7 +128,7 @@ describe CheckZone do
     it 'finds multiple changed files' do
       response_body = [
         double('Sawyer::Resource', filename: 'db.osuosl.org'),
-        double('Sawyer::Resource', filename: 'db.osuosl.com')
+        double('Sawyer::Resource', filename: 'db.osuosl.com'),
       ]
       allow(github_mock).to receive(:pull_request_files).with('osuosl/zonefiles-test', 10).and_return(response_body)
       CheckZone.reset
@@ -146,7 +146,7 @@ describe CheckZone do
         .and_return([
                       nil,
                       StringIO.new('pass'),
-                      double(value: double(Process::Status, exitstatus: 0))
+                      double(value: double(Process::Status, exitstatus: 0)),
                     ])
       CheckZone.reset
       CheckZone.checkzone(zone_file)
@@ -160,7 +160,7 @@ describe CheckZone do
         .and_return([
                       nil,
                       StringIO.new(open_fixture('named-checkzone')),
-                      double(value: double(Process::Status, exitstatus: 1))
+                      double(value: double(Process::Status, exitstatus: 1)),
                     ])
       CheckZone.reset
       CheckZone.checkzone(zone_file)
@@ -262,7 +262,7 @@ describe CheckZone do
         .and_return([
                       nil,
                       StringIO.new('pass'),
-                      double(value: double(Process::Status, exitstatus: 0))
+                      double(value: double(Process::Status, exitstatus: 0)),
                     ])
       allow(github_mock).to receive(:pull_request_files).with('osuosl/zonefiles-test', 1).and_return(response_body)
       allow(github_mock).to receive(:add_comment)
@@ -306,7 +306,7 @@ describe CheckZone do
         .and_return([
                       nil,
                       StringIO.new("failed\n"),
-                      double(value: double(Process::Status, exitstatus: 1))
+                      double(value: double(Process::Status, exitstatus: 1)),
                     ])
       allow(github_mock).to receive(:pull_request_files).with('osuosl/zonefiles-test', 1).and_return(response_body)
       allow(github_mock).to receive(:add_comment)

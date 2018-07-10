@@ -5,14 +5,14 @@ describe 'osl-jenkins::jenkins1' do
     context "#{p[:platform]} #{p[:version]}" do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(p) do |node|
-          node.set['osl-jenkins']['cookbook_uploader'] = {
+          node.normal['osl-jenkins']['cookbook_uploader'] = {
             'org' => 'osuosl-cookbooks',
             'chef_repo' => 'osuosl/chef-repo',
             'authorized_teams' => %w(osuosl-cookbooks/staff),
             'default_environments' => %w(production workstation),
             'override_repos' => %w(test-cookbook),
             'github_insecure_hook' => true,
-            'do_not_upload_cookbooks' => true
+            'do_not_upload_cookbooks' => true,
           }
         end.converge(described_recipe)
       end
@@ -25,40 +25,40 @@ describe 'osl-jenkins::jenkins1' do
             'git' => {
               'cookbook_uploader' => {
                 'user' => 'manatee',
-                'token' => 'token_password'
+                'token' => 'token_password',
               },
               'bumpzone' => {
                 'user' => 'manatee',
-                'token' => 'token_password'
+                'token' => 'token_password',
               },
               'github_comment' => {
                 'user' => 'manatee',
-                'token' => 'token_password'
-              }
+                'token' => 'token_password',
+              },
             },
             'jenkins' => {
               'cookbook_uploader' => {
                 'user' => 'manatee',
                 'pass' => 'password',
-                'trigger_token' => 'trigger_token'
+                'trigger_token' => 'trigger_token',
               },
               'bumpzone' => {
                 'user' => 'manatee',
                 'api_token' => 'api_token',
-                'trigger_token' => 'trigger_token'
+                'trigger_token' => 'trigger_token',
               },
               'github_comment' => {
                 'user' => 'manatee',
                 'pass' => 'password',
-                'trigger_token' => 'trigger_token'
+                'trigger_token' => 'trigger_token',
               },
               'packer_pipeline' => {
                 'user' => 'manatee',
                 'api_token' => 'token_password',
                 'trigger_token' => 'trigger_token',
                 'public_key' => 'public key for openstack_taster goes here',
-                'private_key' => 'private key for openstack_taster goes here'
-              }
+                'private_key' => 'private key for openstack_taster goes here',
+              },
             }
           )
       end

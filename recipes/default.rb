@@ -27,7 +27,7 @@ group 'alfred' do
 end
 
 user 'alfred' do
-  supports manage_home: true
+  manage_home true
   gid 'alfred'
   system true
   shell '/bin/bash'

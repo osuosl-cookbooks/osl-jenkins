@@ -6,6 +6,6 @@ default['osl-jenkins']['github_comment'] = {
   'credentials' => {
     'trigger_token' => nil,
     'github_user' => nil,
-    'github_token' => nil
-  }
+    'github_token' => nil,
+  },
 }

@@ -14,14 +14,14 @@ describe 'osl-jenkins::ibmz_ci' do
           'oauth' => {
             'ibmz_ci' => {
               client_id: '123456789',
-              client_secret: '0987654321'
-            }
+              client_secret: '0987654321',
+            },
           },
           'git' => {
             'ibmz_ci' => {
               'user' => 'ibmz_ci',
-              'token' => 'ibmz_ci'
-            }
+              'token' => 'ibmz_ci',
+            },
           }
         )
         stub_data_bag_item('docker', 'client-fauxhai-local').and_return(
@@ -33,12 +33,12 @@ describe 'osl-jenkins::ibmz_ci' do
           [
             {
               ipaddress: '192.168.0.1',
-              fqdn: 's390x-docker1.example.org'
+              fqdn: 's390x-docker1.example.org',
             },
             {
               ipaddress: '192.168.0.2',
-              fqdn: 's390x-docker2.example.org'
-            }
+              fqdn: 's390x-docker2.example.org',
+            },
           ]
         )
       end

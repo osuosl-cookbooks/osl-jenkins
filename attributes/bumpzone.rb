@@ -8,6 +8,6 @@ default['osl-jenkins']['bumpzone'] = {
   'credentials' => {
     'trigger_token' => nil,
     'github_user' => nil,
-    'github_token' => nil
-  }
+    'github_token' => nil,
+  },
 }
