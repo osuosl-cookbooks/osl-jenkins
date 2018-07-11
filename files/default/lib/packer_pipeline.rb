@@ -138,7 +138,7 @@ class PackerPipeline
   def self.production_deploy(pr_num)
     pr = @github.pull_request(@repo_path, pr_num)
     abort_comment('Error: Cannot merge PR because it has already been merged.', pr_num) if pr.merged
-    abort_comment('Error: Cannot merge PR because it would create merge conflicts.', pr_num) unless pr.mergable
+    abort_comment('Error: Cannot merge PR because it would create merge conflicts.', pr_num) unless pr.mergeable
     @github.merge_pull_request(@repo_path, pr_num)
     @github.delete_branch(@repo_path, pr.head.ref)
   end

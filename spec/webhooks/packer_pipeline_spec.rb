@@ -367,7 +367,7 @@ OUTPUT
       contents_response = {
         head: double('Sawyer::Resource', head_response),
         merged: false,
-        mergable: true
+        mergeable: true
       }
       response_body = double('Sawyer::Resource', contents_response)
       allow(github_mock).to receive(:pull_request).with('osuosl/packer-templates', 59).and_return(response_body)
@@ -383,7 +383,7 @@ OUTPUT
       contents_response = {
         head: double('Sawyer::Resource', head_response),
         merged: true,
-        mergable: true
+        mergeable: true
       }
       response_body = double('Sawyer::Resource', contents_response)
       allow(github_mock).to receive(:pull_request).with('osuosl/packer-templates', 59).and_return(response_body)
@@ -406,7 +406,7 @@ OUTPUT
         expect(e.status).to eq 1
       end
     end
-    it 'Does NOT merge PR nor deletes branch if not mergable' do
+    it 'Does NOT merge PR nor deletes branch if not mergeable' do
       head_response = {
         sha: '28256684538cbdde31d0e33829e6d9054b8130de',
         ref: 'joe/awesome-branch'
@@ -414,7 +414,7 @@ OUTPUT
       contents_response = {
         head: double('Sawyer::Resource', head_response),
         merged: false,
-        mergable: false
+        mergeable: false
       }
       response_body = double('Sawyer::Resource', contents_response)
       allow(github_mock).to receive(:pull_request).with('osuosl/packer-templates', 59).and_return(response_body)
