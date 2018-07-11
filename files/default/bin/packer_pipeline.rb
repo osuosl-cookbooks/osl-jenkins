@@ -7,7 +7,7 @@ options = {}
 
 parser = OptionParser.new do |opts|
   opts.banner = "
-        Usage: #{$PROGRAM_NAME} -p PAYLOAD_JSON_FILE -f FINAL_RESULTS_FILE
+        Usage: #{$PROGRAM_NAME} -p PAYLOAD_JSON_FILE | -f FINAL_RESULTS_FILE | -d PR
         You can either pass the PAYLOAD_JSON_FILE to process and begin the pipeline processing
         OR the FINAL_RESULTS_FILE to send back to GitHub
   "
@@ -25,6 +25,12 @@ parser = OptionParser.new do |opts|
     options[:final_results_file] = f
   end
 
+  opts.on('-d PR',
+          '--deploy PR',
+          'Specify the the PR number to deploy') do |d|
+    options[:deploy] = d
+  end
+
   opts.on_tail('-h', '--help', 'Prints this help text') do
     puts opts
     exit
@@ -34,9 +40,10 @@ end
 parser.parse! ARGV
 
 if !options.key?(:payload_json_file) &&
-   !options.key?(:final_results_file)
+   !options.key?(:final_results_file) &&
+   !options.key?(:deploy)
 
-  puts 'Either you must pass the PAYLOAD_JSON_FILE or the FINAL_RESULTS_FILE!'
+  puts 'Either you must pass the PAYLOAD_JSON_FILE, FINAL_RESULTS_FILE or the PR!'
   exit 1
 end
 
@@ -61,3 +68,5 @@ if options[:payload_json_file]
     exit 2
   end
 end
+
+PackerPipeline.new.production_deploy(options[:deploy]) if options[:deploy]
