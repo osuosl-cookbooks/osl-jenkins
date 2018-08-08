@@ -159,9 +159,9 @@ describe 'osl-jenkins::powerci' do
         expect(chef_run).to execute_jenkins_script('Add GitHub OAuth config')
           .with(command: /\["testuser"\].each \{ nu -> user = BuildPermission.*/)
       end
-      it do
-        expect(chef_run).to execute_jenkins_script('Add OpenStack Cloud')
-      end
+      # it do
+      #   expect(chef_run).to execute_jenkins_script('Add OpenStack Cloud')
+      # end
       it do
         expect(chef_run).to execute_jenkins_script('Add SGE Cloud')
           .with(
