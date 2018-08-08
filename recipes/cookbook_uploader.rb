@@ -17,6 +17,7 @@
 # limitations under the License.
 #
 
+node.default['osl-jenkins']['gems'] = %w(git octokit faraday-http-cache)
 include_recipe 'osl-jenkins::master'
 
 org_name = node['osl-jenkins']['cookbook_uploader']['org']
@@ -30,13 +31,6 @@ non_bump_message = 'Exiting because comment was not a bump request'.freeze
 secrets = credential_secrets
 git_cred = secrets['git']['cookbook_uploader']
 jenkins_cred = secrets['jenkins']['cookbook_uploader']
-
-# Install necessary gems
-%w(git octokit faraday-http-cache).each do |g|
-  chef_gem g do # ~FC009
-    compile_time true
-  end
-end
 
 # Copy over scripts for Jenkins to run
 scripts_path = node['osl-jenkins']['cookbook_uploader']['scripts_path']

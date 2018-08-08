@@ -59,3 +59,10 @@ default['osl-jenkins']['secrets_databag'] = 'osl_jenkins'
 
 # String; The name of the databag item to use.
 default['osl-jenkins']['secrets_item'] = 'secrets'
+
+###
+### Attributes that can be set separately in each recipe
+###
+
+# String: The names of chef gems to install
+default['osl-jenkins']['gems'] = []

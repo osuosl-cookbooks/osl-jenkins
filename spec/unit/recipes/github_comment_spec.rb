@@ -18,7 +18,7 @@ describe 'osl-jenkins::github_comment' do
               trigger_token: 'trigger_token',
             },
           }
-        end.converge(described_recipe)
+        end.converge(described_recipe, 'osl-jenkins::default')
       end
       include_context 'common_stubs'
       it 'converges successfully' do

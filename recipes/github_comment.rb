@@ -15,16 +15,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+node.default['osl-jenkins']['gems'] = %w(git octokit faraday-http-cache)
 include_recipe 'osl-jenkins::master'
 
 github_comment = node['osl-jenkins']['github_comment']
-
-# Install necessary gems
-%w(git octokit faraday-http-cache).each do |g|
-  chef_gem g do # ~FC009
-    compile_time true
-  end
-end
 
 [
   github_comment['bin_path'],

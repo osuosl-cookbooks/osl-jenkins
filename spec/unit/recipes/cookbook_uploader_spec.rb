@@ -27,7 +27,7 @@ describe 'osl-jenkins::cookbook_uploader' do
               trigger_token: 'trigger_token',
             },
           }
-        end.converge(described_recipe)
+        end.converge(described_recipe, 'osl-jenkins::default')
       end
       include_context 'common_stubs'
       include_context 'cookbook_uploader'
