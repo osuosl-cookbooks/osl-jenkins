@@ -128,4 +128,32 @@ describe file('/var/lib/jenkins/config.xml') do
       <password>\{.*\}</password>
     <\/org.jenkinsci.plugins.sge.BatchCloud>})
   end
+  its(:content) do
+    should match(%r{
+    <org.jenkinsci.plugins.sge.BatchCloud plugin="sge-cloud-plugin@1.17">
+      <name>CGRB-ubuntu-cuda91</name>
+      <cloudName>CGRB-ubuntu-cuda91</cloudName>
+      <queueType>docker_gpu@openpower3</queueType>
+      <label>docker-gpu-cuda91</label>
+      <maximumIdleMinutes>1440</maximumIdleMinutes>
+      <hostname>sge.example.org</hostname>
+      <port>22</port>
+      <username>username</username>
+      <password>\{.*\}</password>
+    <\/org.jenkinsci.plugins.sge.BatchCloud>})
+  end
+  its(:content) do
+    should match(%r{
+    <org.jenkinsci.plugins.sge.BatchCloud plugin="sge-cloud-plugin@1.17">
+      <name>CGRB-ubuntu-cuda92</name>
+      <cloudName>CGRB-ubuntu-cuda92</cloudName>
+      <queueType>docker_gpu@openpower2</queueType>
+      <label>docker-gpu-cuda92</label>
+      <maximumIdleMinutes>1440</maximumIdleMinutes>
+      <hostname>sge.example.org</hostname>
+      <port>22</port>
+      <username>username</username>
+      <password>\{.*\}</password>
+    <\/org.jenkinsci.plugins.sge.BatchCloud>})
+  end
 end

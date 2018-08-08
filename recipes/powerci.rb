@@ -178,11 +178,36 @@ docker_cloud =
   )
 
 # openstack_cloud = add_openstack_cloud
-sge_cloud =
+
+sge_cloud = header_sge_cloud
+# Default label for GPU jobs
+sge_cloud +=
   add_sge_cloud(
     'CGRB-ubuntu',
     'docker_gpu',
     'docker-gpu',
+    sge['hostname'],
+    sge['username'],
+    sge['password'],
+    sge['port']
+  )
+# Label for using CUDA 9.1
+sge_cloud +=
+  add_sge_cloud(
+    'CGRB-ubuntu-cuda91',
+    'docker_gpu@openpower3',
+    'docker-gpu-cuda91',
+    sge['hostname'],
+    sge['username'],
+    sge['password'],
+    sge['port']
+  )
+# Label for using CUDA 9.2
+sge_cloud +=
+  add_sge_cloud(
+    'CGRB-ubuntu-cuda92',
+    'docker_gpu@openpower2',
+    'docker-gpu-cuda92',
     sge['hostname'],
     sge['username'],
     sge['password'],
