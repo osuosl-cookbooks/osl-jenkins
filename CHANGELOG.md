@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.10.17 (2018-08-08)
+--------------------
+- Create new GPU labels for CUDA 9.1 and 9.2
+
 1.10.16 (2018-08-08)
 --------------------
 - Disable OpenStack cloud in powerci due to potential issues
