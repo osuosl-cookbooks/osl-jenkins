@@ -177,7 +177,7 @@ docker_cloud =
     nil
   )
 
-openstack_cloud = add_openstack_cloud
+# openstack_cloud = add_openstack_cloud
 sge_cloud =
   add_sge_cloud(
     'CGRB-ubuntu',
@@ -201,9 +201,11 @@ jenkins_script 'Add Docker Cloud' do # ~FC005
   command docker_cloud
 end
 
-jenkins_script 'Add OpenStack Cloud' do
-  command openstack_cloud
-end
+# Disable code since we're not even using it and it may be causing other issues with Jenkins related to
+# https://support.osuosl.org/Ticket/Display.html?id=30194
+# jenkins_script 'Add OpenStack Cloud' do
+#   command openstack_cloud
+# end
 
 jenkins_script 'Add SGE Cloud' do
   command sge_cloud
