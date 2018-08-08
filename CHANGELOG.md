@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.10.16 (2018-08-08)
+--------------------
+- Disable OpenStack cloud in powerci due to potential issues
+
 1.10.15 (2018-07-11)
 --------------------
 - Fix typo in deploy
