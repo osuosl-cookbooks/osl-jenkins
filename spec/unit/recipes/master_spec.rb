@@ -37,6 +37,9 @@ describe 'osl-jenkins::master' do
       it do
         expect(chef_run).to_not execute_jenkins_command('safe-restart')
       end
+      it do
+        expect(chef_run.jenkins_command('safe-restart')).to do_nothing
+      end
       context 'set secrets in attribute' do
         cached(:chef_run) do
           ChefSpec::SoloRunner.new(p) do |node|
