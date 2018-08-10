@@ -24,15 +24,15 @@ describe 'osl-jenkins::jenkins1' do
             'jenkins_private_key' => 'private_key',
             'git' => {
               'cookbook_uploader' => {
-                'user' => 'manatee',
+                'user' => 'manatee1',
                 'token' => 'token_password',
               },
               'bumpzone' => {
-                'user' => 'manatee',
+                'user' => 'manatee2',
                 'token' => 'token_password',
               },
               'github_comment' => {
-                'user' => 'manatee',
+                'user' => 'manatee3',
                 'token' => 'token_password',
               },
             },
@@ -64,6 +64,24 @@ describe 'osl-jenkins::jenkins1' do
       end
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
+      end
+      it do
+        expect(chef_run).to create_jenkins_password_credentials('manatee1').with(
+          id: 'cookbook_uploader',
+          password: 'token_password'
+        )
+      end
+      it do
+        expect(chef_run).to create_jenkins_password_credentials('manatee2').with(
+          id: 'bumpzone',
+          password: 'token_password'
+        )
+      end
+      it do
+        expect(chef_run).to create_jenkins_password_credentials('manatee3').with(
+          id: 'github_comment',
+          password: 'token_password'
+        )
       end
       it do
         expect(chef_run).to install_python_runtime('2')
