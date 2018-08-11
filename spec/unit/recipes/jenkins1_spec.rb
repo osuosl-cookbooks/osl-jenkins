@@ -18,6 +18,7 @@ describe 'osl-jenkins::jenkins1' do
       end
       include_context 'common_stubs'
       include_context 'cookbook_uploader'
+      include_context 'data_bag_stubs'
       before do
         stub_data_bag_item('osl_jenkins', 'jenkins1')
           .and_return(

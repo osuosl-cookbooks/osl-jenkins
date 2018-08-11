@@ -16,6 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 node.default['osl-jenkins']['gems'] = %w(git octokit faraday-http-cache)
+include_recipe 'osl-jenkins'
 include_recipe 'osl-jenkins::master'
 
 github_comment = node['osl-jenkins']['github_comment']

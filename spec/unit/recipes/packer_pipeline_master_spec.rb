@@ -15,6 +15,7 @@ describe 'osl-jenkins::packer_pipeline_master' do
         end.converge(described_recipe)
       end
       include_context 'common_stubs'
+      include_context 'data_bag_stubs'
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
       end

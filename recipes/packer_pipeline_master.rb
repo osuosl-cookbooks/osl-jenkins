@@ -16,19 +16,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Installs necessary gems
+
+node.default['osl-jenkins']['gems'] = %w(git octokit faraday-http-cache)
+include_recipe 'osl-jenkins'
+
 # Sets up the master for packer_pipeline
 
 include_recipe 'osl-jenkins::master'
 
 # get attributes specific to this job
 packer_pipeline = node['osl-jenkins']['packer_pipeline']
-
-# Install necessary gems
-%w(git octokit faraday-http-cache).each do |g|
-  chef_gem g do # ~FC009
-    compile_time true
-  end
-end
 
 [
   packer_pipeline['bin_path'],
