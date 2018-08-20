@@ -43,9 +43,3 @@ end.run_action(:reload)
 
 node.default['ssh_keys']['alfred'] = 'alfred'
 include_recipe 'ssh-keys'
-
-node.deep_fetch('osl-jenkins', 'gems').each do |g|
-  chef_gem g do # ~FC009
-    compile_time true
-  end
-end
