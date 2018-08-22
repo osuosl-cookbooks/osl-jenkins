@@ -275,6 +275,7 @@ suites:
     run_list:
       - recipe[osl-docker::powerci]
       - recipe[osl-jenkins::powerci]
+      - recipe[jenkins_test]
     excludes:
       - centos-6
     attributes:
@@ -309,6 +310,7 @@ suites:
     run_list:
       - recipe[osl-docker::ibmz_ci]
       - recipe[osl-jenkins::ibmz_ci]
+      - recipe[jenkins_test]
     driver_config:
       server_name: ibmz_ci
     excludes:
