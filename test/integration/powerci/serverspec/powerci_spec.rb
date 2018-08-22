@@ -14,19 +14,19 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
   %w(
     ace-editor:1.1
     ansicolor:0.5.2
-    apache-httpcomponents-client-4-api:4.5.5-2.1
+    apache-httpcomponents-client-4-api:4.5.5-3.0
     authentication-tokens:1.3
-    bouncycastle-api:2.16.2
+    bouncycastle-api:2.16.3
     branch-api:2.0.8
     build-monitor-plugin:1.11\+build.201701152243
     build-timeout:1.19
     build-token-root:1.4
     cloudbees-folder:6.0.3
-    cloud-stats:0.11
+    cloud-stats:0.14
     command-launcher:1.2
     config-file-provider:2.16.2
     copy-to-slave:1.4.4
-    credentials:2.1.16
+    credentials:2.1.17
     credentials-binding:1.15
     display-url-api:2.2.0
     docker-build-publish:1.3.2
@@ -38,11 +38,11 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     email-ext:2.62
     emailext-template:1.0
     embeddable-build-status:1.9
-    git:3.8.0
+    git:3.9.1
     git-client:2.7.1
-    github:1.29.0
+    github:1.29.2
     github-api:1.90
-    github-branch-source:2.2.3
+    github-branch-source:2.3.6
     github-oauth:0.27
     git-server:1.7
     handlebars:1.1.1
@@ -56,7 +56,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     matrix-auth:1.5
     matrix-project:1.13
     momentjs:1.1.1
-    openstack-cloud:2.22
+    openstack-cloud:2.37
     pipeline-build-step:2.5.1
     pipeline-graph-analysis:1.3
     pipeline-input-step:2.8
@@ -71,11 +71,11 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     pipeline-stage-tags-metadata:1.1.3
     pipeline-stage-view:2.6
     plain-credentials:1.4
-    resource-disposer:0.6
+    resource-disposer:0.12
     scm-api:2.2.6
     script-security:1.39
     sge-cloud-plugin:1.17
-    ssh-credentials:1.13
+    ssh-credentials:1.14
     ssh-slaves:1.26
     structs:1.14
     token-macro:2.4
@@ -88,7 +88,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     workflow-job:2.11
     workflow-multibranch:2.14
     workflow-scm-step:2.4
-    workflow-step-api:2.14
+    workflow-step-api:2.16
     workflow-support:2.18
   ).each do |plugins_version|
     plugin, version = plugins_version.split(':')

@@ -47,7 +47,8 @@ describe 'osl-jenkins::ibmz_ci' do
       end
       %w(
         ansicolor:0.5.2
-        apache-httpcomponents-client-4-api:4.5.5-2.1
+        apache-httpcomponents-client-4-api:4.5.5-3.0
+        bouncycastle-api:2.16.3
         build-monitor-plugin:1.11+build.201701152243
         build-timeout:1.19
         build-token-root:1.4
@@ -63,21 +64,22 @@ describe 'osl-jenkins::ibmz_ci' do
         email-ext:2.62
         emailext-template:1.0
         embeddable-build-status:1.9
-        git:3.8.0
+        git:3.9.1
         git-client:2.7.1
-        github:1.29.0
+        github:1.29.2
         github-api:1.90
+        github-branch-source:2.3.6
         github-oauth:0.27
         job-restrictions:0.6
         jsch:0.1.54.2
         mailer:1.21
         matrix-project:1.13
         pipeline-multibranch-defaults:1.1
-        resource-disposer:0.6
+        resource-disposer:0.12
         workflow-api:2.25
         workflow-durable-task-step:2.18
         workflow-job:2.11
-        workflow-step-api:2.14
+        workflow-step-api:2.16
         workflow-support:2.18
       ).each do |plugins_version|
         plugin, version = plugins_version.split(':')
