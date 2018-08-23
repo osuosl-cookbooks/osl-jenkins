@@ -7,5 +7,5 @@ describe package('chefdk') do
 end
 
 describe command('chef --version') do
-  its(:stdout) { should match(/0\.14\.25/) }
+  its(:stdout) { should match(/1\.2\.20/) }
 end
