@@ -122,3 +122,12 @@ node.deep_fetch('osl-jenkins', 'gems').each do |g|
     compile_time true
   end
 end
+
+[
+  node['osl-jenkins']['bin_path'],
+  node['osl-jenkins']['lib_path'],
+].each do |d|
+  directory d do
+    recursive true
+  end
+end

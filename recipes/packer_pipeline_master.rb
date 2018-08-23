@@ -25,25 +25,17 @@ node.default['osl-jenkins']['gems'] = %w(git octokit faraday-http-cache)
 include_recipe 'osl-jenkins::master'
 
 # get attributes specific to this job
-packer_pipeline = node['osl-jenkins']['packer_pipeline']
+bin_path = node['osl-jenkins']['bin_path']
+lib_path = node['osl-jenkins']['lib_path']
 
-[
-  packer_pipeline['bin_path'],
-  packer_pipeline['lib_path'],
-].each do |d|
-  directory d do
-    recursive true
-  end
-end
-
-cookbook_file ::File.join(packer_pipeline['bin_path'], 'packer_pipeline.rb') do
+cookbook_file ::File.join(bin_path, 'packer_pipeline.rb') do
   source 'bin/packer_pipeline.rb'
   owner node['jenkins']['master']['user']
   group node['jenkins']['master']['group']
   mode 0550
 end
 
-cookbook_file ::File.join(packer_pipeline['lib_path'], 'packer_pipeline.rb') do
+cookbook_file ::File.join(lib_path, 'packer_pipeline.rb') do
   source 'lib/packer_pipeline.rb'
   owner node['jenkins']['master']['user']
   group node['jenkins']['master']['group']

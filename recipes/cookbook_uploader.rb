@@ -33,12 +33,9 @@ git_cred = secrets['git']['cookbook_uploader']
 jenkins_cred = secrets['jenkins']['cookbook_uploader']
 
 # Copy over scripts for Jenkins to run
-scripts_path = node['osl-jenkins']['cookbook_uploader']['scripts_path']
-directory scripts_path do
-  recursive true
-end
+bin_path = node['osl-jenkins']['bin_path']
 %w(github_pr_comment_trigger.rb bump_environments.rb).each do |s|
-  template ::File.join(scripts_path, s) do
+  template ::File.join(bin_path, s) do
     source "#{s}.erb"
     mode '0550'
     owner node['jenkins']['master']['user']
@@ -67,7 +64,7 @@ end
 
 # Create cookbook-uploader jobs for each repo
 execute_shell = 'echo $payload | ' +
-                ::File.join(scripts_path, 'github_pr_comment_trigger.rb')
+                ::File.join(bin_path, 'github_pr_comment_trigger.rb')
 repo_names = node['osl-jenkins']['cookbook_uploader']['override_repos']
 repo_names = collect_github_repositories(git_cred['token'], org_name) if repo_names.nil? || repo_names.empty?
 repo_names.each do |repo_name|
@@ -103,7 +100,7 @@ repo_names.each do |repo_name|
 end
 
 # Also create a job for bumping versions in environments
-execute_shell = ::File.join(scripts_path, 'bump_environments.rb')
+execute_shell = ::File.join(bin_path, 'bump_environments.rb')
 xml = ::File.join(Chef::Config[:file_cache_path],
                   chef_repo, 'config.xml')
 directory ::File.dirname(xml) do

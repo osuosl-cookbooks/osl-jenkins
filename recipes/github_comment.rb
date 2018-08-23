@@ -18,25 +18,17 @@
 node.default['osl-jenkins']['gems'] = %w(git octokit faraday-http-cache)
 include_recipe 'osl-jenkins::master'
 
-github_comment = node['osl-jenkins']['github_comment']
+bin_path = node['osl-jenkins']['bin_path']
+lib_path = node['osl-jenkins']['lib_path']
 
-[
-  github_comment['bin_path'],
-  github_comment['lib_path'],
-].each do |d|
-  directory d do
-    recursive true
-  end
-end
-
-cookbook_file ::File.join(github_comment['bin_path'], 'github_comment.rb') do
+cookbook_file ::File.join(bin_path, 'github_comment.rb') do
   source 'bin/github_comment.rb'
   owner node['jenkins']['master']['user']
   group node['jenkins']['master']['group']
   mode 0550
 end
 
-cookbook_file ::File.join(github_comment['lib_path'], 'github_comment.rb') do
+cookbook_file ::File.join(lib_path, 'github_comment.rb') do
   source 'lib/github_comment.rb'
   owner node['jenkins']['master']['user']
   group node['jenkins']['master']['group']
