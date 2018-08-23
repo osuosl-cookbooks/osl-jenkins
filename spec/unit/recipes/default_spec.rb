@@ -24,7 +24,7 @@ describe 'osl-jenkins::default' do
         )
       end
       it do
-        expect(chef_run).to reload_ohai('reload_passwd').with(
+        expect(chef_run).to reload_ohai('jenkins_reload_passwd').with(
           plugin: 'etc'
         )
       end
