@@ -64,6 +64,7 @@ describe 'osl-jenkins::plugins' do
         cloudbees-folder:6.0.3
         command-launcher:1.2
         conditional-buildstep:1.3.1
+        copyartifact:1.41
         credentials-binding:1.15
         cvs:2.12
         display-url-api:2.2.0
@@ -95,7 +96,7 @@ describe 'osl-jenkins::plugins' do
         mapdb-api:1.0.6.0
         matrix-auth:1.5
         matrix-project:1.13
-        maven-plugin:2.14
+        maven-plugin:3.1.2
         momentjs:1.1.1
         pam-auth:1.2
         parameterized-trigger:2.35.1
