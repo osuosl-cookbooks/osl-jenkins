@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+1.10.18 (2018-08-24)
+--------------------
+- Update to Jenkins 2.121.3
+
 1.10.17 (2018-08-08)
 --------------------
 - Create new GPU labels for CUDA 9.1 and 9.2
