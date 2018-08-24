@@ -6,21 +6,22 @@
 # }
 default['osl-jenkins']['restart_plugins'] = %w(
   structs:1.14
-  credentials:2.1.16
-  ssh-credentials:1.13
+  credentials:2.1.17
+  ssh-credentials:1.14
 )
 default['osl-jenkins']['plugins'] = %w(
   ace-editor:1.1
   ant:1.8
   antisamy-markup-formatter:1.3
-  apache-httpcomponents-client-4-api:4.5.3-2.1
+  apache-httpcomponents-client-4-api:4.5.5-3.0
   authentication-tokens:1.3
-  bouncycastle-api:2.16.1
+  bouncycastle-api:2.16.3
   branch-api:2.0.8
   build-token-root:1.4
   cloudbees-folder:6.0.3
   command-launcher:1.2
   conditional-buildstep:1.3.1
+  copyartifact:1.41
   credentials-binding:1.15
   cvs:2.12
   display-url-api:2.2.0
@@ -28,12 +29,12 @@ default['osl-jenkins']['plugins'] = %w(
   docker-workflow:1.10
   durable-task:1.17
   external-monitor-job:1.4
-  ghprb:1.40.0
-  git:3.8.0
+  ghprb:1.42.0
+  git:3.9.1
   git-client:2.7.1
-  github:1.29.0
+  github:1.29.2
   github-api:1.90
-  github-branch-source:2.2.3
+  github-branch-source:2.3.6
   github-oauth:0.22.3
   github-organization-folder:1.6
   gitlab-plugin:1.4.4
@@ -52,7 +53,7 @@ default['osl-jenkins']['plugins'] = %w(
   mapdb-api:1.0.6.0
   matrix-auth:1.5
   matrix-project:1.13
-  maven-plugin:2.14
+  maven-plugin:3.1.2
   momentjs:1.1.1
   pam-auth:1.2
   parameterized-trigger:2.35.1
@@ -74,7 +75,7 @@ default['osl-jenkins']['plugins'] = %w(
   run-condition:1.0
   scm-api:2.2.6
   script-security:1.39
-  ssh-agent:1.15
+  ssh-agent:1.16
   ssh-slaves:1.16
   subversion:2.10.3
   text-finder:1.10
@@ -90,7 +91,7 @@ default['osl-jenkins']['plugins'] = %w(
   workflow-job:2.11
   workflow-multibranch:2.14
   workflow-scm-step:2.4
-  workflow-step-api:2.14
+  workflow-step-api:2.16
   workflow-support:2.18
   ws-cleanup:0.28
 )

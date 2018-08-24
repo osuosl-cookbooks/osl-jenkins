@@ -46,9 +46,9 @@ end
 node.default['osl-jenkins']['plugins'] = %w(
   ace-editor:1.1
   ansicolor:0.5.2
-  apache-httpcomponents-client-4-api:4.5.5-2.1
+  apache-httpcomponents-client-4-api:4.5.5-3.0
   authentication-tokens:1.3
-  bouncycastle-api:2.16.2
+  bouncycastle-api:2.16.3
   branch-api:2.0.8
   build-monitor-plugin:1.11+build.201701152243
   build-timeout:1.19
@@ -68,11 +68,11 @@ node.default['osl-jenkins']['plugins'] = %w(
   email-ext:2.62
   emailext-template:1.0
   embeddable-build-status:1.9
-  git:3.8.0
+  git:3.9.1
   git-client:2.7.1
-  github:1.29.0
+  github:1.29.2
   github-api:1.90
-  github-branch-source:2.2.3
+  github-branch-source:2.3.6
   github-oauth:0.27
   git-server:1.7
   handlebars:1.1.1
@@ -100,7 +100,7 @@ node.default['osl-jenkins']['plugins'] = %w(
   pipeline-stage-tags-metadata:1.1.3
   pipeline-stage-view:2.6
   plain-credentials:1.4
-  resource-disposer:0.6
+  resource-disposer:0.12
   scm-api:2.2.6
   script-security:1.39
   ssh-slaves:1.26
@@ -114,7 +114,7 @@ node.default['osl-jenkins']['plugins'] = %w(
   workflow-job:2.11
   workflow-multibranch:2.14
   workflow-scm-step:2.4
-  workflow-step-api:2.14
+  workflow-step-api:2.16
   workflow-support:2.18
 )
 
