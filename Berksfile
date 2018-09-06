@@ -9,6 +9,14 @@ cookbook 'osl-haproxy', git: 'git@github.com:osuosl-cookbooks/osl-haproxy'
 cookbook 'osl-docker', git: 'git@github.com:osuosl-cookbooks/osl-docker'
 cookbook 'osl-munin', git: 'git@github.com:osuosl-cookbooks/osl-munin'
 cookbook 'osl-syslog', git: 'git@github.com:osuosl-cookbooks/osl-syslog'
+cookbook 'osl-apache', git: 'git@github.com:osuosl-cookbooks/osl-apache'
+cookbook 'osl-rsync', git: 'git@github.com:osuosl-cookbooks/osl-rsync'
+cookbook 'osl-php', git: 'git@github.com:osuosl-cookbooks/osl-php'
+cookbook 'osl-nfs', git: 'git@github.com:osuosl-cookbooks/osl-nfs'
+cookbook 'osl-nrpe', git: 'git@github.com:osuosl-cookbooks/osl-nrpe'
+cookbook 'osl-acme', git: 'git@github.com:osuosl-cookbooks/osl-acme'
+cookbook 'osl-letsencrypt-boulder-server', git: 'git@github.com:osuosl-cookbooks/osl-letsencrypt-boulder-server'
+
 cookbook 'yum-qemu-ev', git: 'git@github.com:osuosl-cookbooks/yum-qemu-ev'
 
 metadata
