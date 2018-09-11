@@ -88,6 +88,7 @@ suites:
             - production
             - testing
             - workstation
+          org: 'osuosl-cookbooks'
           override_repos:
             - test-cookbook
           github_insecure_hook: true
