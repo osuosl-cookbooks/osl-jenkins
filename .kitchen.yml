@@ -159,6 +159,7 @@ suites:
               user: <%= ENV['JENKINS_USER'] %>
               api_token: <%= ENV['JENKINS_PASS'] %>
               trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
+        secrets_item: test
       jenkins:
         master:
           listen_address: '0.0.0.0'
