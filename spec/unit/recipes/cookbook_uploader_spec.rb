@@ -5,31 +5,32 @@ describe 'osl-jenkins::cookbook_uploader' do
     context "#{p[:platform]} #{p[:version]}" do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(p) do |node|
-          node.set['osl-jenkins']['cookbook_uploader'] = {
+          node.normal['osl-jenkins']['cookbook_uploader'] = {
             'org' => 'osuosl-cookbooks',
             'chef_repo' => 'osuosl/chef-repo',
             'authorized_teams' => %w(osuosl-cookbooks/staff),
             'default_environments' => %w(production workstation),
             'override_repos' => %w(test-cookbook),
             'github_insecure_hook' => true,
-            'do_not_upload_cookbooks' => true
+            'do_not_upload_cookbooks' => true,
           }
-          node.set['osl-jenkins']['credentials']['git'] = {
+          node.normal['osl-jenkins']['credentials']['git'] = {
             'cookbook_uploader' => {
               user: 'manatee',
-              token: 'token_password'
-            }
+              token: 'token_password',
+            },
           }
-          node.set['osl-jenkins']['credentials']['jenkins'] = {
+          node.normal['osl-jenkins']['credentials']['jenkins'] = {
             'cookbook_uploader' => {
               user: 'manatee',
               api_token: 'api_token',
-              trigger_token: 'trigger_token'
-            }
+              trigger_token: 'trigger_token',
+            },
           }
-        end.converge(described_recipe)
+        end.converge(described_recipe, 'osl-jenkins::default')
       end
       include_context 'common_stubs'
+      include_context 'data_bag_stubs'
       include_context 'cookbook_uploader'
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
@@ -56,7 +57,7 @@ describe 'osl-jenkins::cookbook_uploader' do
                 default_environments_word: '~',
                 do_not_upload_cookbooks: true,
                 github_token: 'token_password',
-                non_bump_message: 'Exiting because comment was not a bump request'
+                non_bump_message: 'Exiting because comment was not a bump request',
               }
             )
         end
@@ -71,7 +72,7 @@ describe 'osl-jenkins::cookbook_uploader' do
               execute_shell: 'echo $payload | /var/lib/jenkins/bin/github_pr_comment_trigger.rb',
               github_url: 'https://github.com/osuosl-cookbooks/test-cookbook',
               non_bump_message: 'Exiting because comment was not a bump request',
-              trigger_token: 'trigger_token'
+              trigger_token: 'trigger_token',
             }
           )
       end
@@ -94,7 +95,7 @@ describe 'osl-jenkins::cookbook_uploader' do
               default_environments_word: '~',
               execute_shell: '/var/lib/jenkins/bin/bump_environments.rb',
               github_url: 'https://github.com/osuosl/chef-repo',
-              trigger_token: 'trigger_token'
+              trigger_token: 'trigger_token',
             }
           )
       end

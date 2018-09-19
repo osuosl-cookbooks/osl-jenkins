@@ -34,10 +34,6 @@ default['osl-jenkins']['cookbook_uploader']['authorized_teams'] = []
 # which is '~' by default, e.g. '!bump patch ~'.
 default['osl-jenkins']['cookbook_uploader']['default_environments'] = []
 
-# String; The path in which to store scripts used by the Jenkins jobs.
-default['osl-jenkins']['cookbook_uploader']['scripts_path'] = \
-  ::File.join(node['jenkins']['master']['home'], 'bin')
-
 # String; The keyword that indicates that the default set of environments
 # specified above should be bumped when used in the !bump command.
 default['osl-jenkins']['cookbook_uploader']['default_environments_word'] = '~'

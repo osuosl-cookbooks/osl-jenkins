@@ -111,8 +111,8 @@ class PackerPipeline
           options: {
             context: t,
             # TODO: make this point to the specific job's console output
-            target_url: "#{ENV['BUILD_URL']}console"
-          }
+            target_url: "#{ENV['BUILD_URL']}console",
+          },
         }
 
         # we will set the GitHub status based on the first stage that we encounter
@@ -161,7 +161,7 @@ class PackerPipeline
     output = {
       'pr' => pr_num,
       'event_type' => event_type,
-      'pr_state' => pr_state
+      'pr_state' => pr_state,
     }
 
     # Create hash of templates and the architectures associated with them.

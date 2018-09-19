@@ -109,6 +109,7 @@ end
 
 # install openstack_taster
 chef_gem 'openstack_taster' do
+  compile_time true
   options '--no-user-install'
   clear_sources true
   action :upgrade

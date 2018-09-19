@@ -5,16 +5,17 @@ describe 'osl-jenkins::packer_pipeline_master' do
     context "#{p[:platform]} #{p[:version]}" do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(p) do |node|
-          node.set['osl-jenkins']['credentials']['jenkins'] = {
+          node.normal['osl-jenkins']['credentials']['jenkins'] = {
             'packer_pipeline' => {
               user: 'manatee',
               api_token: 'token_password',
-              trigger_token: 'trigger_token'
-            }
+              trigger_token: 'trigger_token',
+            },
           }
         end.converge(described_recipe)
       end
       include_context 'common_stubs'
+      include_context 'data_bag_stubs'
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
       end

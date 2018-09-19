@@ -5,11 +5,11 @@ default['osl-jenkins']['site_pr_builder'] = {
     'beaver-barcamp-pelican' => 'osuosl',
     'osuosl-pelican' => 'osuosl',
     'wiki' => 'osuosl',
-    'docs' => 'osuosl'
+    'docs' => 'osuosl',
   },
   'credentials' => {
     'trigger_token' => nil,
     'github_user' => nil,
-    'github_token' => nil
-  }
+    'github_token' => nil,
+  },
 }

@@ -5,22 +5,23 @@ describe 'osl-jenkins::github_comment' do
     context "#{p[:platform]} #{p[:version]}" do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(p) do |node|
-          node.set['osl-jenkins']['credentials']['git'] = {
+          node.normal['osl-jenkins']['credentials']['git'] = {
             'github_comment' => {
               user: 'manatee',
-              token: 'token_password'
-            }
+              token: 'token_password',
+            },
           }
-          node.set['osl-jenkins']['credentials']['jenkins'] = {
+          node.normal['osl-jenkins']['credentials']['jenkins'] = {
             'github_comment' => {
               user: 'manatee',
               pass: 'password',
-              trigger_token: 'trigger_token'
-            }
+              trigger_token: 'trigger_token',
+            },
           }
-        end.converge(described_recipe)
+        end.converge(described_recipe, 'osl-jenkins::default')
       end
       include_context 'common_stubs'
+      include_context 'data_bag_stubs'
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
       end
@@ -47,7 +48,7 @@ describe 'osl-jenkins::github_comment' do
             mode: 0440
           )
       end
-      %w(git octokit).each do |g|
+      %w(git octokit faraday-http-cache).each do |g|
         it do
           expect(chef_run).to install_chef_gem(g).with(compile_time: true)
         end

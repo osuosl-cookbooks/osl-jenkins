@@ -15,6 +15,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+node.default['osl-jenkins']['gems'] = %w(octokit)
 node.default['osl-jenkins']['cookbook_uploader'].tap do |conf|
   conf['authorized_teams'] = %w(osuosl-cookbooks/staff)
   conf['chef_repo'] = 'osuosl/chef-repo'

@@ -15,35 +15,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+node.default['osl-jenkins']['gems'] = %w(git octokit faraday-http-cache)
 include_recipe 'osl-jenkins::master'
 
 bumpzone = node['osl-jenkins']['bumpzone']
-
-# Install necessary gems
-%w(git octokit faraday-http-cache).each do |g|
-  chef_gem g do # ~FC009
-    compile_time true
-  end
-end
-
-[
-  bumpzone['bin_path'],
-  bumpzone['lib_path']
-].each do |d|
-  directory d do
-    recursive true
-  end
-end
+bin_path = node['osl-jenkins']['bin_path']
+lib_path = node['osl-jenkins']['lib_path']
 
 %w(bumpzone.rb checkzone.rb).each do |f|
-  cookbook_file ::File.join(bumpzone['bin_path'], f) do
+  cookbook_file ::File.join(bin_path, f) do
     source "bin/#{f}"
     owner node['jenkins']['master']['user']
     group node['jenkins']['master']['group']
     mode 0550
   end
 
-  cookbook_file ::File.join(bumpzone['lib_path'], f) do
+  cookbook_file ::File.join(lib_path, f) do
     source "lib/#{f}"
     owner node['jenkins']['master']['user']
     group node['jenkins']['master']['group']

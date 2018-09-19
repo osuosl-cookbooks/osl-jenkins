@@ -7,18 +7,18 @@ ChefSpec::Coverage.start! { add_filter 'osl-jenkins' }
 CENTOS_7_OPTS = {
   platform: 'centos',
   version: '7.2.1511',
-  file_cache_path: '/var/chef/cache'
+  file_cache_path: '/var/chef/cache',
 }
 
 CENTOS_6_OPTS = {
   platform: 'centos',
   version: '6.7',
-  file_cache_path: '/var/chef/cache'
+  file_cache_path: '/var/chef/cache',
 }
 
 ALL_PLATFORMS = [
   CENTOS_6_OPTS,
-  CENTOS_7_OPTS
+  CENTOS_7_OPTS,
 ]
 
 RSpec.configure do |config|
@@ -43,7 +43,7 @@ shared_context 'data_bag_stubs' do
     stub_data_bag_item('users', 'alfred').and_return(
       id: 'alfred',
       ssh_keys: [
-        'test_ssh_key'
+        'test_ssh_key',
       ]
     )
 
@@ -58,14 +58,14 @@ shared_context 'data_bag_stubs' do
         'jenkins' => {
           'packer_pipeline' => {
             'public_key' => 'public key for openstack_taster goes here',
-            'private_key' => 'private key for openstack_taster goes here'
-          }
+            'private_key' => 'private key for openstack_taster goes here',
+          },
         },
         'git' => {
           'packer_pipeline' => {
             'user' => 'osuosl-manatee',
-            'token' => 'FAKE_TOKEN'
-          }
+            'token' => 'FAKE_TOKEN',
+          },
         }
       )
   end

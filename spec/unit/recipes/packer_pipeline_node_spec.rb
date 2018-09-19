@@ -55,7 +55,7 @@ describe 'osl-jenkins::packer_pipeline_node' do
           mode: 0600,
           variables: {
             username: 'osuosl-manatee',
-            password: 'FAKE_TOKEN'
+            password: 'FAKE_TOKEN',
           }
         )
       end
