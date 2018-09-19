@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.0.0 (2018-09-19)
+------------------
+- Chef 13 compatibility
+
 1.10.18 (2018-08-24)
 --------------------
 - Update to Jenkins 2.121.3
