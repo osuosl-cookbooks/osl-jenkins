@@ -35,6 +35,7 @@ shared_context 'common_stubs' do
     stub_command("chef gem list -i -v '< 2.0.0' netaddr").and_return(true)
     stub_command("chef gem list -i -v '>= 2.0.0' netaddr").and_return(false)
     stub_command('chef gem list -i kitchen-transport-rsync').and_return(false)
+    stub_command("chef gem list -i -v '= 2.7.5' rubygems")
   end
 end
 
