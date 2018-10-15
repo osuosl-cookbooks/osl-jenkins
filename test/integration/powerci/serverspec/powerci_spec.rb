@@ -112,6 +112,7 @@ describe file('/var/lib/jenkins/config.xml') do
     its(:content) { should match(%r{<image>#{image}</image>}) }
   end
   its(:content) { should match(/<string>JENKINS_SLAVE_SSH_PUBKEY=ssh-rsa AAAAB3.*/) }
+  its(:content) { should match(/<launchTimeoutSeconds>600.*/) }
   its(:content) { should match(%r{<credentialsId>powerci-docker</credentialsId>}) }
   its(:content) { should match(%r{<uri>tcp://127.0.0.1:2375</uri>}) }
   its(:content) do

@@ -98,6 +98,7 @@ module OSLDocker
             new DockerComputerSSHConnector(
               new DockerComputerSSHConnector.ManuallyConfiguredSSHKey('#{ssh_cred_id}', strategy)
             )
+          sshConnector.setLaunchTimeoutSeconds(600)
           ArrayList<DockerTemplate> dkTemplates = new ArrayList<DockerTemplate>();
           #{docker_images}
           ArrayList<DockerCloud> dkCloud = new ArrayList<DockerCloud>();
