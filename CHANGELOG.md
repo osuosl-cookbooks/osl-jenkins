@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.0.1 (2018-10-15)
+------------------
+- Set SSH connection timeout to 600 seconds
+
 2.0.0 (2018-09-19)
 ------------------
 - Chef 13 compatibility
