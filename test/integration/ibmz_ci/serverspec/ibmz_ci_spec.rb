@@ -96,6 +96,7 @@ end
 describe file('/var/lib/jenkins/config.xml') do
   %w(
     osuosl/ubuntu-s390x:16.04
+    osuosl/ubuntu-s390x:18.04
     osuosl/debian-s390x:9
     osuosl/fedora-s390x:28
   ).each do |image|

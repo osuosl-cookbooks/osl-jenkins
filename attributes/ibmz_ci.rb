@@ -1,5 +1,6 @@
 default['osl-jenkins']['ibmz_ci']['docker_images'] = %w(
   osuosl/ubuntu-s390x:16.04
+  osuosl/ubuntu-s390x:18.04
   osuosl/debian-s390x:9
   osuosl/fedora-s390x:28
 )
