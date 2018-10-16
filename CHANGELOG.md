@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.0.2 (2018-10-16)
+------------------
+- Add Ubuntu 18.04 on powerci/ibmz-ci
+
 2.0.1 (2018-10-15)
 ------------------
 - Set SSH connection timeout to 600 seconds
