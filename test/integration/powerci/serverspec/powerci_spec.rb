@@ -99,6 +99,7 @@ end
 describe file('/var/lib/jenkins/config.xml') do
   %w(
     osuosl/ubuntu-ppc64le:16.04
+    osuosl/ubuntu-ppc64le:18.04
     osuosl/ubuntu-ppc64le-cuda:8.0
     osuosl/ubuntu-ppc64le-cuda:8.0-cudnn6
     osuosl/ubuntu-ppc64le-cuda:9.0-cudnn7

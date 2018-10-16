@@ -103,6 +103,8 @@ describe 'osl-jenkins::ibmz_ci' do
         expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
           .with(command: %r{'osuosl/ubuntu-s390x:16.04', // image})
         expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
+          .with(command: %r{'osuosl/ubuntu-s390x:18.04', // image})
+        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
           .with(command: %r{'osuosl/debian-s390x:9', // image})
         expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
           .with(command: %r{'osuosl/fedora-s390x:28', // image})

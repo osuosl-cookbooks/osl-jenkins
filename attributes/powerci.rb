@@ -1,5 +1,6 @@
 default['osl-jenkins']['powerci']['docker_images'] = %w(
   osuosl/ubuntu-ppc64le:16.04
+  osuosl/ubuntu-ppc64le:18.04
   osuosl/ubuntu-ppc64le-cuda:8.0
   osuosl/ubuntu-ppc64le-cuda:8.0-cudnn6
   osuosl/ubuntu-ppc64le-cuda:9.0-cudnn7
