@@ -104,11 +104,19 @@ describe file('/var/lib/jenkins/config.xml') do
     osuosl/ubuntu-ppc64le-cuda:8.0-cudnn6
     osuosl/ubuntu-ppc64le-cuda:9.0-cudnn7
     osuosl/ubuntu-ppc64le-cuda:9.1-cudnn7
+    osuosl/ubuntu-ppc64le-cuda:9.2-cudnn7
     osuosl/debian-ppc64le:9
+    osuosl/debian-ppc64le:buster
+    osuosl/debian-ppc64le:unstable
     osuosl/fedora-ppc64le:26
+    osuosl/fedora-ppc64le:27
+    osuosl/fedora-ppc64le:28
     osuosl/centos-ppc64le:7
     osuosl/centos-ppc64le-cuda:8.0
     osuosl/centos-ppc64le-cuda:8.0-cudnn6
+    osuosl/centos-ppc64le-cuda:9.0-cudnn7
+    osuosl/centos-ppc64le-cuda:9.1-cudnn7
+    osuosl/centos-ppc64le-cuda:9.2-cudnn7
   ).each do |image|
     its(:content) { should match(%r{<image>#{image}</image>}) }
   end
