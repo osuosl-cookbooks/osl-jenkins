@@ -53,7 +53,7 @@ describe 'osl-jenkins::powerci' do
         build-monitor-plugin:1.11+build.201701152243
         build-timeout:1.19
         cloud-stats:0.14
-        config-file-provider:2.16.2
+        config-file-provider:3.3
         copy-to-slave:1.4.4
         credentials:2.1.17
         display-url-api:2.2.0
@@ -63,7 +63,7 @@ describe 'osl-jenkins::powerci' do
         docker-build-publish:1.3.2
         durable-task:1.17
         email-ext:2.62
-        emailext-template:1.0
+        emailext-template:1.1
         embeddable-build-status:1.9
         git:3.9.1
         git-client:2.7.1
@@ -73,6 +73,7 @@ describe 'osl-jenkins::powerci' do
         github-oauth:0.27
         job-restrictions:0.6
         jsch:0.1.54.2
+        junit:1.26.1
         mailer:1.21
         matrix-project:1.13
         openstack-cloud:2.37
