@@ -77,6 +77,7 @@ describe 'osl-jenkins::ibmz_ci' do
         matrix-project:1.13
         pipeline-multibranch-defaults:1.1
         resource-disposer:0.12
+        ssh-slaves:1.28.1
         workflow-api:2.25
         workflow-durable-task-step:2.18
         workflow-job:2.11

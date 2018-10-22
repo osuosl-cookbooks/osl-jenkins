@@ -104,7 +104,7 @@ node.default['osl-jenkins']['plugins'] = %w(
   resource-disposer:0.12
   scm-api:2.2.6
   script-security:1.39
-  ssh-slaves:1.26
+  ssh-slaves:1.28.1
   token-macro:2.4
   workflow-aggregator:2.5
   workflow-api:2.25

@@ -52,25 +52,27 @@ describe 'osl-jenkins::powerci' do
         bouncycastle-api:2.16.3
         build-monitor-plugin:1.11+build.201701152243
         build-timeout:1.19
+        build-token-root:1.4
         cloud-stats:0.14
+        command-launcher:1.2
         config-file-provider:3.3
         copy-to-slave:1.4.4
         credentials:2.1.17
         display-url-api:2.2.0
+        docker-build-publish:1.3.2
         docker-commons:1.11
         docker-java-api:3.0.14
         docker-plugin:1.1.3
-        docker-build-publish:1.3.2
         durable-task:1.17
         email-ext:2.62
         emailext-template:1.1
         embeddable-build-status:1.9
-        git:3.9.1
         git-client:2.7.1
-        github:1.29.2
+        git:3.9.1
         github-api:1.90
         github-branch-source:2.3.6
         github-oauth:0.27
+        github:1.29.2
         job-restrictions:0.6
         jsch:0.1.54.2
         junit:1.26.1
@@ -79,14 +81,13 @@ describe 'osl-jenkins::powerci' do
         openstack-cloud:2.37
         pipeline-multibranch-defaults:1.1
         resource-disposer:0.12
+        ssh-slaves:1.28.1
         structs:1.14
         workflow-api:2.25
         workflow-durable-task-step:2.18
-        command-launcher:1.2
-        build-token-root:1.4
+        workflow-job:2.11
         workflow-step-api:2.16
         workflow-support:2.18
-        workflow-job:2.11
       ).each do |plugins_version|
         plugin, version = plugins_version.split(':')
         it do

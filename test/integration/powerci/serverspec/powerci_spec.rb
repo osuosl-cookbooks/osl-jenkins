@@ -76,7 +76,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     script-security:1.39
     sge-cloud-plugin:1.17
     ssh-credentials:1.14
-    ssh-slaves:1.26
+    ssh-slaves:1.28.1
     structs:1.14
     token-macro:2.4
     workflow-aggregator:2.5

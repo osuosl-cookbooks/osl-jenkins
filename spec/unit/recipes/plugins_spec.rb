@@ -119,7 +119,7 @@ describe 'osl-jenkins::plugins' do
         scm-api:2.2.6
         script-security:1.39
         ssh-agent:1.16
-        ssh-slaves:1.16
+        ssh-slaves:1.28.1
         subversion:2.10.3
         text-finder:1.10
         token-macro:2.1
