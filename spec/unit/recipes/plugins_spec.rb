@@ -90,7 +90,7 @@ describe 'osl-jenkins::plugins' do
         javadoc:1.3
         jquery-detached:1.2.1
         jsch:0.1.54.2
-        junit:1.24
+        junit:1.26.1
         ldap:1.12
         mailer:1.21
         mapdb-api:1.0.6.0
@@ -98,7 +98,7 @@ describe 'osl-jenkins::plugins' do
         matrix-project:1.13
         maven-plugin:3.1.2
         momentjs:1.1.1
-        pam-auth:1.2
+        pam-auth:1.4
         parameterized-trigger:2.35.1
         pipeline-build-step:2.5.1
         pipeline-github-lib:1.0
@@ -119,7 +119,7 @@ describe 'osl-jenkins::plugins' do
         scm-api:2.2.6
         script-security:1.39
         ssh-agent:1.16
-        ssh-slaves:1.16
+        ssh-slaves:1.28.1
         subversion:2.10.3
         text-finder:1.10
         token-macro:2.1
