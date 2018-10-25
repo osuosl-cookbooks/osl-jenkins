@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.0.4 (2018-10-25)
+------------------
+- Various Updates
+
 2.0.3 (2018-10-17)
 ------------------
 - Update docker images for powerci
