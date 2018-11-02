@@ -201,23 +201,6 @@ BatchCloud sge_CGRB_ubuntu = new BatchCloud\(
 
           )
       end
-      it 'Add SGE Cloud: cuda91' do
-        expect(chef_run).to execute_jenkins_script('Add SGE Cloud')
-          .with(
-            command: %r{
-BatchCloud sge_CGRB_ubuntu_cuda91 = new BatchCloud\(
-  'CGRB-ubuntu-cuda91',    // cloudName
-  'docker_gpu@openpower3',   // queueType
-  'docker-gpu-cuda91',   // label
-  1440,         // maximumIdleMinutes
-  'sge.example.org', // hostname
-  22,      // port
-  'username', // username
-  'password' // password
-\)}
-
-          )
-      end
       it 'Add SGE Cloud: cuda92' do
         expect(chef_run).to execute_jenkins_script('Add SGE Cloud')
           .with(
