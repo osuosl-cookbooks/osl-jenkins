@@ -126,60 +126,50 @@ describe 'osl-jenkins::powerci' do
         expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
       end
       it 'should add docker images' do
-        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-          .with(command: %r{'osuosl/ubuntu-ppc64le:16.04', // image})
-        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-          .with(command: %r{'osuosl/ubuntu-ppc64le:18.04', // image})
-        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-          .with(command: %r{'osuosl/ubuntu-ppc64le-cuda:8.0', // image})
-        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-          .with(command: %r{'osuosl/ubuntu-ppc64le-cuda:8.0-cudnn6', // image})
-        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-          .with(command: %r{'osuosl/ubuntu-ppc64le-cuda:9.0-cudnn7', // image})
-        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-          .with(command: %r{'osuosl/ubuntu-ppc64le-cuda:9.1-cudnn7', // image})
-        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-          .with(command: %r{'osuosl/ubuntu-ppc64le-cuda:9.2-cudnn7', // image})
-        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-          .with(command: %r{'osuosl/debian-ppc64le:9', // image})
-        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-          .with(command: %r{'osuosl/debian-ppc64le:buster', // image})
-        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-          .with(command: %r{'osuosl/debian-ppc64le:unstable', // image})
-        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-          .with(command: %r{'osuosl/fedora-ppc64le:26', // image})
-        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-          .with(command: %r{'osuosl/fedora-ppc64le:27', // image})
-        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-          .with(command: %r{'osuosl/fedora-ppc64le:28', // image})
-        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-          .with(command: %r{'osuosl/centos-ppc64le:7', // image})
-        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-          .with(command: %r{'osuosl/centos-ppc64le-cuda:8.0', // image})
-        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-          .with(command: %r{'osuosl/centos-ppc64le-cuda:8.0-cudnn6', // image})
-        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-          .with(command: %r{'osuosl/centos-ppc64le-cuda:9.0-cudnn7', // image})
-        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-          .with(command: %r{'osuosl/centos-ppc64le-cuda:9.1-cudnn7', // image})
-        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-          .with(command: %r{'osuosl/centos-ppc64le-cuda:9.2-cudnn7', // image})
+        %w(
+          osuosl/ubuntu-ppc64le:16.04
+          osuosl/ubuntu-ppc64le:18.04
+          osuosl/ubuntu-ppc64le-cuda:8.0
+          osuosl/ubuntu-ppc64le-cuda:8.0-cudnn6
+          osuosl/ubuntu-ppc64le-cuda:9.0-cudnn7
+          osuosl/ubuntu-ppc64le-cuda:9.1-cudnn7
+          osuosl/ubuntu-ppc64le-cuda:9.2-cudnn7
+          osuosl/debian-ppc64le:9
+          osuosl/debian-ppc64le:buster
+          osuosl/debian-ppc64le:unstable
+          osuosl/fedora-ppc64le:26
+          osuosl/fedora-ppc64le:27
+          osuosl/fedora-ppc64le:28
+          osuosl/centos-ppc64le:7
+          osuosl/centos-ppc64le-cuda:8.0
+          osuosl/centos-ppc64le-cuda:8.0-cudnn6
+          osuosl/centos-ppc64le-cuda:9.0-cudnn7
+          osuosl/centos-ppc64le-cuda:9.1-cudnn7
+          osuosl/centos-ppc64le-cuda:9.2-cudnn7
+        ).each do |image|
+          expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
+            .with(command: %r{'#{image}', // image})
+          expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
+            .with(command: %r{'docker-#{image.tr('/:', '-')}-privileged', // labelString})
+        end
       end
       it 'should add docker hosts' do
-        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-          .with(command: %r{tcp://192.168.0.1:2375})
-        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-          .with(command: %r{tcp://192.168.0.2:2375})
+        [
+          %r{tcp://192.168.0.1:2375},
+          %r{tcp://192.168.0.2:2375},
+        ].each do |line|
+          expect(chef_run).to execute_jenkins_script('Add Docker Cloud').with(command: line)
+        end
       end
       it do
-        expect(chef_run).to execute_jenkins_script('Add GitHub OAuth config')
-          .with(command: /String clientID = '123456789'/)
-        expect(chef_run).to execute_jenkins_script('Add GitHub OAuth config')
-          .with(command: /String clientSecret = '0987654321'/)
-        expect(chef_run).to execute_jenkins_script('Add GitHub OAuth config')
-          .with(command: /\["testadmin"\].each \{ au -> user = BuildPermission.*/)
-        expect(chef_run).to execute_jenkins_script('Add GitHub OAuth config')
-          .with(command: /\["testuser"\].each \{ nu -> user = BuildPermission.*/)
+        [
+          /String clientID = '123456789'/,
+          /String clientSecret = '0987654321'/,
+          /\["testadmin"\].each \{ au -> user = BuildPermission.*/,
+          /\["testuser"\].each \{ nu -> user = BuildPermission.*/,
+        ].each do |line|
+          expect(chef_run).to execute_jenkins_script('Add GitHub OAuth config').with(command: line)
+        end
       end
       # it do
       #   expect(chef_run).to execute_jenkins_script('Add OpenStack Cloud')

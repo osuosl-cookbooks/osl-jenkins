@@ -102,30 +102,33 @@ describe 'osl-jenkins::ibmz_ci' do
         expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
       end
       it 'should add docker images' do
-        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-          .with(command: %r{'osuosl/ubuntu-s390x:16.04', // image})
-        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-          .with(command: %r{'osuosl/ubuntu-s390x:18.04', // image})
-        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-          .with(command: %r{'osuosl/debian-s390x:9', // image})
-        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-          .with(command: %r{'osuosl/fedora-s390x:28', // image})
+        %w(
+          osuosl/ubuntu-s390x:16.04
+          osuosl/ubuntu-s390x:18.04
+          osuosl/debian-s390x:9
+          osuosl/fedora-s390x:28
+        ).each do |image|
+          expect(chef_run).to execute_jenkins_script('Add Docker Cloud').with(command: %r{'#{image}', // image})
+          expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
+            .with(command: %r{'docker-#{image.tr('/:', '-')}-privileged', // labelString})
+        end
       end
       it 'should add docker hosts' do
-        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-          .with(command: %r{tcp://192.168.0.1:2376.*\n.*ibmz_ci_docker-server.*})
-        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-          .with(command: %r{tcp://192.168.0.2:2376.*\n.*ibmz_ci_docker-server.*})
+        [
+          %r{tcp://192.168.0.1:2376.*\n.*ibmz_ci_docker-server.*},
+          %r{tcp://192.168.0.2:2376.*\n.*ibmz_ci_docker-server.*},
+        ].each do |line|
+          expect(chef_run).to execute_jenkins_script('Add Docker Cloud').with(command: line)
+        end
       end
       it do
-        expect(chef_run).to execute_jenkins_script('Add GitHub OAuth config')
-          .with(command: /String clientID = '123456789'/)
-        expect(chef_run).to execute_jenkins_script('Add GitHub OAuth config')
-          .with(command: /String clientSecret = '0987654321'/)
-        expect(chef_run).to execute_jenkins_script('Add GitHub OAuth config')
-          .with(command: /\["testadmin"\].each \{ au -> user = BuildPermission.*/)
-        expect(chef_run).to execute_jenkins_script('Add GitHub OAuth config')
-          .with(command: /\["testuser"\].each \{ nu -> user = BuildPermission.*/)
+        [
+          /String clientSecret = '0987654321'/,
+          /\["testadmin"\].each \{ au -> user = BuildPermission.*/,
+          /\["testuser"\].each \{ nu -> user = BuildPermission.*/,
+        ].each do |line|
+          expect(chef_run).to execute_jenkins_script('Add GitHub OAuth config').with(command: line)
+        end
       end
       it do
         expect(chef_run).to run_ruby_block('Set jenkins username/password if needed')

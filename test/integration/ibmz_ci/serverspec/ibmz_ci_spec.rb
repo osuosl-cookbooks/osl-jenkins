@@ -101,6 +101,8 @@ describe file('/var/lib/jenkins/config.xml') do
     osuosl/fedora-s390x:28
   ).each do |image|
     its(:content) { should match(%r{<image>#{image}</image>}) }
+    its(:content) { should match(%r{<labelString>docker-#{image.tr('/:', '-')}</labelString>}) }
+    its(:content) { should match(%r{<labelString>docker-#{image.tr('/:', '-')}-privileged</labelString>}) }
   end
   its(:content) { should match(/<string>JENKINS_SLAVE_SSH_PUBKEY=ssh-rsa AAAAB3.*/) }
   its(:content) { should match(%r{<credentialsId>ibmz_ci-docker</credentialsId>}) }
