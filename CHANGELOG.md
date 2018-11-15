@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.0.6 (2018-11-15)
+------------------
+- Add privileged docker labels for powerci/ibmz-ci
+
 2.0.5 (2018-11-02)
 ------------------
 - Remove docker-gpu-cuda91 label
