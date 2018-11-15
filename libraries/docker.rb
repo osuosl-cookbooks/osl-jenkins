@@ -198,7 +198,35 @@ module OSLDocker
             '',             // remoteFs
             '50',           // instanceCapStr
           )
+          DockerTemplateBase #{var_name}_privileged_TemplateBase = new DockerTemplateBase(
+             '#{image}', // image
+            '',     // pullCredentialsId
+            '',     // dnsString
+            '',     // network
+            '',     // dockerCommand
+            'ccache:/var/cache/ccache', // volumesString
+            '',     // volumesFromString
+            'JENKINS_SLAVE_SSH_PUBKEY=#{docker_public_key}', // environmentsString
+            '',     // hostname
+            #{memory_limit},   // memoryLimit
+            #{memory_swap},   // memorySwap
+            #{cpu_shared},      // cpuShares
+            '',     // bindPorts
+            false,  // bindAllPorts
+            true,   // privileged
+            false,  // tty
+            '',     // macAddress
+            ''      // extraHostsString
+          );
+          DockerTemplate dk_#{var_name}_privileged_Template = new DockerTemplate(
+            #{var_name}_privileged_TemplateBase, // dockerTemplateBase
+            sshConnector,   // connector
+            '#{label}-privileged', // labelString
+            '',             // remoteFs
+            '50',           // instanceCapStr
+          )
           dkTemplates.add(dk_#{var_name}_Template);
+          dkTemplates.add(dk_#{var_name}_privileged_Template);
 
       EOH
     end
