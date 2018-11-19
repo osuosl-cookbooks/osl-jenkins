@@ -77,7 +77,8 @@ class PackerPipeline
       # this is a dependent template
 
       shell_script_provisioners.each do |ssp|
-        dependent_templates << t if ssp['scripts'].any? { |f| f.include? file }
+        scripts = ssp['scripts'].nil? ? [] : ssp['scripts']
+        dependent_templates << t if scripts.any? { |f| f.include? file }
       end
     end
     dependent_templates
