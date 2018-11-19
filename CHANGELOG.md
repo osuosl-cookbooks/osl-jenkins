@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.0.7 (2018-11-19)
+------------------
+- Fix bug when templates use an inline script
+
 2.0.6 (2018-11-15)
 ------------------
 - Add privileged docker labels for powerci/ibmz-ci
