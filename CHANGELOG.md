@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.0.8 (2019-01-02)
+------------------
+- Rename environment openstack_newton -> openstack_ocata
+
 2.0.7 (2018-11-19)
 ------------------
 - Fix bug when templates use an inline script
