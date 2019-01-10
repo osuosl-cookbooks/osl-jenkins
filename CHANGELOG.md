@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.0.9 (2019-01-10)
+------------------
+- Add CUDA 10.0 images
+
 2.0.8 (2019-01-02)
 ------------------
 - Rename environment openstack_newton -> openstack_ocata
