@@ -98,7 +98,10 @@ describe file('/var/lib/jenkins/config.xml') do
     osuosl/ubuntu-s390x:16.04
     osuosl/ubuntu-s390x:18.04
     osuosl/debian-s390x:9
+    osuosl/debian-s390x:buster
+    osuosl/debian-s390x:unstable
     osuosl/fedora-s390x:28
+    osuosl/fedora-s390x:29
   ).each do |image|
     its(:content) { should match(%r{<image>#{image}</image>}) }
     its(:content) { should match(%r{<labelString>docker-#{image.tr('/:', '-')}</labelString>}) }
