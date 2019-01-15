@@ -82,11 +82,9 @@ suites:
             - 'osuosl-cookbooks/staff'
           chef_repo: 'osuosl/chef-repo'
           default_environments:
-            - openstack_mitaka
-            - phase_out_nginx
+            - openstack_ocata
             - phpbb
             - production
-            - testing
             - workstation
           org: 'osuosl-cookbooks'
           override_repos:
