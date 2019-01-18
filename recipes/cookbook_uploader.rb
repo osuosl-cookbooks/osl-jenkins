@@ -61,6 +61,34 @@ bin_path = node['osl-jenkins']['bin_path']
     )
   end
 end
+lib_path = node['osl-jenkins']['lib_path']
+%w(github_pr_comment_trigger_var.rb bump_environments_var.rb).each do |s|
+  template ::File.join(bin_path, s) do
+    source "#{s}.erb"
+    mode '0550'
+    owner node['jenkins']['master']['user']
+    group node['jenkins']['master']['group']
+    variables(
+      authorized_users:
+        node['osl-jenkins']['cookbook_uploader']['authorized_users'],
+      authorized_orgs:
+        node['osl-jenkins']['cookbook_uploader']['authorized_orgs'],
+      authorized_teams:
+        node['osl-jenkins']['cookbook_uploader']['authorized_teams'],
+      github_token: git_cred['token'],
+      chef_repo: chef_repo,
+      default_environments:
+        node['osl-jenkins']['cookbook_uploader']['default_environments'],
+      default_environments_word:
+        node['osl-jenkins']['cookbook_uploader']['default_environments_word'],
+      all_environments_word:
+        node['osl-jenkins']['cookbook_uploader']['all_environments_word'],
+      non_bump_message: non_bump_message,
+      do_not_upload_cookbooks:
+        node['osl-jenkins']['cookbook_uploader']['do_not_upload_cookbooks']
+    )
+  end
+end
 
 # Create cookbook-uploader jobs for each repo
 execute_shell = 'echo $payload | ' +
