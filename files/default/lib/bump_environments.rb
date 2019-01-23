@@ -11,7 +11,13 @@ require 'octakit'
 require 'set'
 require 'faraday-http-cache'
 
-require 'bump_environments_var'
+require_relative 'bump_environments_var'
+
+DEFAULT_CHEF_ENVS = $DEFAULT_CHEF_ENVS
+DEFAULT_CHEF_ENVS_WORD = $DEFAULT_CHEF_ENVS_WORD
+ALL_CHEF_ENVS_WORD = $ALL_CHEF_ENVS_WORD
+GITHUB_TOKEN = $GITHUB_TOKEN
+CHEF_REPO = $CHEF_REPO
 
 # Github API caching
 stack = Faraday::RackBuilder.new do |builder|
@@ -38,12 +44,12 @@ class BumpEnvironments
 
   def self.verify_default_chef_env
     # If 'default environments' word is found, replace it with the default envs.
-    if @chef_envs.include?($DEFAULT_CHEF_ENVS_WORD)
-      @chef_envs.delete($DEFAULT_CHEF_ENVS_WORD)
-      @chef_envs += $DEFAULT_CHEF_ENVS
+    if @chef_envs.include?(DEFAULT_CHEF_ENVS_WORD)
+      @chef_envs.delete(DEFAULT_CHEF_ENVS_WORD)
+      @chef_envs += DEFAULT_CHEF_ENVS
     end
     # Only note that we're using the defaults if we're using nothing else.
-    @is_default_envs = @chef_envs == $DEFAULT_CHEF_ENVS.to_set
+    @is_default_envs = @chef_envs == DEFAULT_CHEF_ENVS.to_set
   end
 
   def self.verify_all_chef_env
@@ -112,7 +118,7 @@ class BumpEnvironments
 
   def self.create_pr(git, git_branch)
     # Create the PR
-    github = Octokit::Client.new(access_token: '<%= @github_token %>')
+    github = Octokit::Client.new(access_token: GITHUB_TOKEN)
     title = "Bump '#{@cookbook}' cookbook to version #{@version}"
     body = "This automatically generated PR bumps the '#{@cookbook}' cookbook " \
       "to version #{@version} in "
