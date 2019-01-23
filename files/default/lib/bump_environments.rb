@@ -13,6 +13,7 @@ require 'faraday-http-cache'
 
 require_relative 'bump_environments_var'
 
+# Get node attributes from bump_environments_var
 DEFAULT_CHEF_ENVS = $DEFAULT_CHEF_ENVS
 DEFAULT_CHEF_ENVS_WORD = $DEFAULT_CHEF_ENVS_WORD
 ALL_CHEF_ENVS_WORD = $ALL_CHEF_ENVS_WORD
