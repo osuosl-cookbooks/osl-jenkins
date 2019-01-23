@@ -47,49 +47,52 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     git-server:1.7
     handlebars:1.1.1
     icon-shim:2.0.3
-    jackson2-api:2.7.3
+    jackson2-api:2.8.11.2
     job-restrictions:0.6
+    jquery:1.12.4-0
     jquery-detached:1.2.1
     jsch:0.1.54.2
     junit:1.26.1
+    label-linked-jobs:5.1.2
     mailer:1.21
     matrix-auth:1.5
     matrix-project:1.13
     momentjs:1.1.1
+    nodelabelparameter:1.7.2
     openstack-cloud:2.37
     pipeline-build-step:2.5.1
     pipeline-graph-analysis:1.3
     pipeline-input-step:2.8
     pipeline-milestone-step:1.3.1
-    pipeline-model-api:1.1.3
+    pipeline-model-api:1.3.4.1
     pipeline-model-declarative-agent:1.1.1
-    pipeline-model-definition:1.1.3
-    pipeline-model-extensions:1.1.3
+    pipeline-model-definition:1.3.4.1
+    pipeline-model-extensions:1.3.4.1
     pipeline-multibranch-defaults:1.1
     pipeline-rest-api:2.6
-    pipeline-stage-step:2.2
-    pipeline-stage-tags-metadata:1.1.3
+    pipeline-stage-step:2.3
+    pipeline-stage-tags-metadata:1.3.4.1
     pipeline-stage-view:2.6
     plain-credentials:1.4
     resource-disposer:0.12
-    scm-api:2.2.6
-    script-security:1.39
+    scm-api:2.2.7
+    script-security:1.50
     sge-cloud-plugin:1.17
     ssh-credentials:1.14
     ssh-slaves:1.28.1
-    structs:1.14
+    structs:1.17
     token-macro:2.4
     workflow-aggregator:2.5
-    workflow-api:2.25
-    workflow-basic-steps:2.4
-    workflow-cps:2.39
-    workflow-cps-global-lib:2.8
+    workflow-api:2.30
+    workflow-basic-steps:2.6
+    workflow-cps:2.62
+    workflow-cps-global-lib:2.9
     workflow-durable-task-step:2.18
-    workflow-job:2.11
-    workflow-multibranch:2.14
-    workflow-scm-step:2.4
-    workflow-step-api:2.16
-    workflow-support:2.18
+    workflow-job:2.26
+    workflow-multibranch:2.16
+    workflow-scm-step:2.6
+    workflow-step-api:2.18
+    workflow-support:2.22
   ).each do |plugins_version|
     plugin, version = plugins_version.split(':')
     its(:stdout) { should match(/^#{plugin}.*#{version}[\s\(]?/) }
