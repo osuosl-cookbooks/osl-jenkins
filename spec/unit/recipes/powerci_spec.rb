@@ -67,27 +67,43 @@ describe 'osl-jenkins::powerci' do
         email-ext:2.62
         emailext-template:1.1
         embeddable-build-status:1.9
-        git-client:2.7.1
         git:3.9.1
+        git-client:2.7.1
+        github:1.29.2
         github-api:1.90
         github-branch-source:2.3.6
         github-oauth:0.27
-        github:1.29.2
+        jackson2-api:2.8.11.2
         job-restrictions:0.6
+        jquery:1.12.4-0
         jsch:0.1.54.2
         junit:1.26.1
+        label-linked-jobs:5.1.2
         mailer:1.21
         matrix-project:1.13
+        nodelabelparameter:1.7.2
         openstack-cloud:2.37
+        pipeline-model-api:1.3.4.1
+        pipeline-model-definition:1.3.4.1
+        pipeline-model-extensions:1.3.4.1
         pipeline-multibranch-defaults:1.1
+        pipeline-stage-step:2.3
+        pipeline-stage-tags-metadata:1.3.4.1
         resource-disposer:0.12
+        scm-api:2.2.7
+        script-security:1.50
         ssh-slaves:1.28.1
-        structs:1.14
-        workflow-api:2.25
+        structs:1.17
+        workflow-api:2.30
+        workflow-basic-steps:2.6
+        workflow-cps:2.62
+        workflow-cps-global-lib:2.9
         workflow-durable-task-step:2.18
-        workflow-job:2.11
-        workflow-step-api:2.16
-        workflow-support:2.18
+        workflow-job:2.26
+        workflow-multibranch:2.16
+        workflow-scm-step:2.6
+        workflow-step-api:2.18
+        workflow-support:2.22
       ).each do |plugins_version|
         plugin, version = plugins_version.split(':')
         it do
