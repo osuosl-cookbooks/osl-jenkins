@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.0.11 (2019-01-24)
+-------------------
+- Bump to jenkins-2.150.2
+
 2.0.10 (2019-01-15)
 -------------------
 - Remove gwm and phase_out_nginx environments
