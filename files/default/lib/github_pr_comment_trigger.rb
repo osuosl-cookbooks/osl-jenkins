@@ -45,17 +45,23 @@ Octokit.middleware = stack
 # Library for Github PR comment trigger
 class GithubPrCommentTrigger
   @github = Octokit::Client.new(access_token: GITHUB_TOKEN)
+  @level = nil
+  @envs = nil
+  @repo_name = nil
+  @repo_path = nil
+  @issue_number = nil
+  @pr = nil
   
   # Given a GitHub client, a GitHub username, and a GitHub team (of the form
   # "$ORGNAME/$TEAMNAME"), returns whether the given user is a member of the
   # given team.
-  def team_member?(github, team, user)
+  def self.team_member?(team, user)
     org_name, team_name = team.split('/')
-    team_id = github.organization_teams(org_name).find do |t|
+    team_id = @github.organization_teams(org_name).find do |t|
       t.name.casecmp(team_name) == 0
     end.id
     begin
-      github.team_membership(team_id, user)
+      @github.team_membership(team_id, user)
     rescue Octokit::NotFound
       false
     end
@@ -64,24 +70,24 @@ class GithubPrCommentTrigger
   # Given a version string of the form 'x.x.x' and a level 0, 1, or 2, increments
   # the specified level and returns the new version string.  All numbers to the
   # right of the bumped number are reset to 0.
-  def inc_version(v, level)
+  def self.inc_version(v)
     v = v.split('.')
-    v[level] = v[level].to_i.next.to_s
-    (level + 1...3).each { |i| v[i] = '0' }
+    v[@level] = v[@level].to_i.next.to_s
+    (@level + 1...3).each { |i| v[i] = '0' }
     v.join('.')
   end
 
   def self.verify
     d = JSON.load(STDIN.read)
-    GithubPrCommentTrigger.verify_comment_creation
-    GithubPrCommentTrigger.verify_valid_request
-    GithubPrCommentTrigger.verify_issue_is_pr
-    GithubPrCommentTrigger.verify_pr_not_merged
-    GithubPrCommentTrigger.verify_pr_mergeable
-    GithubPrCommentTrigger.verify_commenter_permission
+    GithubPrCommentTrigger.verify_comment_creation(d)
+    GithubPrCommentTrigger.verify_valid_request(d)
+    GithubPrCommentTrigger.verify_issue_is_pr(d)
+    GithubPrCommentTrigger.verify_pr_not_merged(d)
+    GithubPrCommentTrigger.verify_pr_mergeable(d)
+    GithubPrCommentTrigger.verify_commenter_permission(d)
   end
 
-  def self.verify_comment_creation
+  def self.verify_comment_creation(d)
     unless d['action'] == 'created'
       # This isn't an error, we just don't need to do anything, so we exit with a 0.
       $stderr.puts NON_BUMP_MESSAGE
@@ -89,45 +95,44 @@ class GithubPrCommentTrigger
     end
   end
 
-  def self.verify_valid_request
+  def self.verify_valid_request(d)
     # Check if we got a valid request and get the bump level
     comment = d.fetch('comment', {}).fetch('body', '')
     match = comment.match(/^#{COMMAND} (#{LEVELS.keys.join('|')})( \S+(,\S+)*)?$/)
     if match.nil?
       # This isn't an error, we just don't need to do anything, so we exit with a 0.
-      $stderr.puts '<%= @non_bump_message %>'
+      $stderr.puts NON_BUMP_MESSAGE
       exit 0
     end
-    level = match[1]
-    envs = match[2]
-    envs.strip! unless envs.nil?
+    @level = match[1]
+    @envs = match[2]
+    @envs.strip! unless @envs.nil?
   end
 
-  def self.verify_issue_is_pr
+  def self.verify_issue_is_pr(d)
     # Make sure the issue is a PR
     unless d['issue'].key?('pull_request')
       abort 'Error: Cannot merge issue; can only merge PRs.'
     end
   end
 
-  def self.verify_pr_not_merged
+  def self.verify_pr_not_merged(d)
     # Make sure the PR isn't already merged
-    github = Octokit::Client.new(access_token: '<%= @github_token %>')
-    repo_name = d['repository']['name']
-    repo_path = d['repository']['full_name']
-    issue_number = d['issue']['number']
-    pr = github.pull_request(repo_path, issue_number)
-    abort 'Error: Cannot merge PR because it has already been merged.' if pr.merged
+    @repo_name = d['repository']['name']
+    @repo_path = d['repository']['full_name']
+    @issue_number = d['issue']['number']
+    @pr = @github.pull_request(@repo_path, @issue_number)
+    abort 'Error: Cannot merge PR because it has already been merged.' if @pr.merged
   end
 
-  def self.verify_pr_mergeable
+  def self.verify_pr_mergeable(d)
     # Make sure the PR can be merged without conflicts
-    unless pr.mergeable
+    unless @pr.mergeable
       abort 'Error: Cannot merge PR because it would create merge conflicts.'
     end
   end
 
-  def self.verify_commenter_permission
+  def self.verify_commenter_permission(d)
     # Make sure the commenter has permission to perform the merge. The user has
     # permission if their username is in AUTHORIZED_USERS, if one of the
     # organizations they are in is in AUTHORIZED_ORGS, or if one of the teams they
@@ -138,8 +143,8 @@ class GithubPrCommentTrigger
            AUTHORIZED_ORGS.empty? &&
            AUTHORIZED_TEAMS.empty?) ||
            AUTHORIZED_USERS.include?(user) ||
-           AUTHORIZED_ORGS.detect { |o| github.organization_member?(o, user) } ||
-           AUTHORIZED_TEAMS.detect { |t| team_member?(github, t, user) }
+           AUTHORIZED_ORGS.detect { |o| @github.organization_member?(o, user) } ||
+           AUTHORIZED_TEAMS.detect { |t| GithubPrCommentTrigger.team_member?(t, user) }
       abort "Error: Cannot merge PR because user '#{user}' is not authorized."
     end
   end
@@ -147,30 +152,30 @@ class GithubPrCommentTrigger
 
   def self.merge_pr
     # Merge the PR
-    github.merge_pull_request(repo_path, issue_number)
+    @github.merge_pull_request(@repo_path, @issue_number)
 
     # Delete the old branch
-    pr_branch = pr['head']['ref']
-    github.delete_branch(repo_path, pr_branch)
+    pr_branch = @pr['head']['ref']
+    @github.delete_branch(@repo_path, pr_branch)
   end
 
   def self.update_version
     # Set up the git gem
     git = Git.open('.')
-
-    GithubPrCommentTrigger.pull_updated_branch
+    base_branch = GithubPrCommentTrigger.pull_updated_branch(git)
     GithubPrCommentTrigger.update_metadata
     GithubPrCommentTrigger.update_changelog
-    GithubPrCommentTrigger.push_updates
-    GithubPrCommentTrigger.close_pr
+    GithubPrCommentTrigger.push_updates(git, base_branch)
+    GithubPrCommentTrigger.close_pr(base_branch)
     GithubPrCommentTrigger.return_envvars
   end
 
-  def self.pull_updated_branch
+  def self.pull_updated_branch(git)
     # Pull the updated base branch down
-    base_branch = pr['base']['ref']
+    base_branch = @pr['base']['ref']
     git.branch(base_branch).checkout
     git.pull(git.remote('origin'), base_branch)
+    return base_branch
   end
 
   def self.update_metadata
@@ -181,7 +186,7 @@ class GithubPrCommentTrigger
     md = ::File.read(METADATA_FILE).gsub(version_regex) do
       key = Regexp.last_match(1) # The "version" key and some whitespace
       quote = Regexp.last_match(2) # The type of quotation mark used, e.g. " vs '
-      version = inc_version(Regexp.last_match(3), LEVELS[level])
+      version = GithubPrCommentTrigger.inc_version(Regexp.last_match(3))
       # Reconstruct the version line by using the new version with the same spacing
       # and quotation mark types as before
       "#{key}#{quote}#{version}#{quote}"
@@ -200,10 +205,10 @@ class GithubPrCommentTrigger
     ::File.write(CHANGELOG_FILE, cl)
   end
 
-  def self.push_updates
+  def self.push_updates(git, base_branch)
     # Commit changes
     git.add(all: true)
-    git.commit("Automatic #{level}-level version bump to v#{version} by Jenkins")
+    git.commit("Automatic #{@level}-level version bump to v#{version} by Jenkins")
 
     # Create a version tag
     git.add_tag("v#{version}")
@@ -212,28 +217,28 @@ class GithubPrCommentTrigger
     git.push(git.remote('origin'), base_branch, tags: true)
 
     # Upload to the Chef server, freezing, ignoring dependencies
-    $stderr.puts "Uploading #{repo_name} cookbook to the Chef server..."
-    unless <%= @do_not_upload_cookbooks %>
-      `knife cookbook upload #{repo_name} --freeze -o ../`
+    $stderr.puts "Uploading #{@repo_name} cookbook to the Chef server..."
+    unless DO_NOT_UPLOAD_COOKBOOKS
+      `knife cookbook upload #{@repo_name} --freeze -o ../`
     end
   end
 
-  def self.close_pr
+  def self.close_pr(base_branch)
     # Close the PR
     message = "Jenkins has merged this PR into `#{base_branch}` and has " \
-      "automatically performed a #{level}-level version bump to v#{version}.  " \
+      "automatically performed a #{@level}-level version bump to v#{version}.  " \
       'Have a nice day!'
-    github.add_comment(repo_path, issue_number, message)
+    @github.add_comment(@repo_path, @issue_number, message)
   end
 
   def self.return_envvars
     # Return some environment variables for the Chef environment bumper job to use.
     # If we got no envs, the file won't be created and the job won't be triggered.
-    unless envs.nil?
+    unless @envs.nil?
       ::File.write('envvars',
-                   "cookbook=#{repo_name}\n" \
+                   "cookbook=#{@repo_name}\n" \
                    "version=#{version}\n" \
-                   "envs=#{envs}\n" \
+                   "envs=#{@envs}\n" \
                    "pr_link=#{d['issue']['html_url']}")
     end
   end
