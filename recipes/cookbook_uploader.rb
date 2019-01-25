@@ -25,6 +25,10 @@ include_recipe 'osl-jenkins::master'
 # a bump request and the build will be marked as unstable.
 non_bump_message = 'Exiting because comment was not a bump request'.freeze
 
+secrets = credential_secrets
+git_cred = secrets['git']['cookbook_uploader']
+jenkins_cred = secrets['jenkins']['cookbook_uploader']
+
 bin_path = node['osl-jenkins']['bin_path']
 lib_path = node['osl-jenkins']['lib_path']
 chef_repo = node['osl-jenkins']['cookbook_uploader']['chef_repo']
@@ -60,15 +64,11 @@ end
       default_environments: node['osl-jenkins']['cookbook_uploader']['default_environments'],
       default_environments_word: node['osl-jenkins']['cookbook_uploader']['default_environments_word'],
       all_environments_word: node['osl-jenkins']['cookbook_uploader']['all_environments_word'],
-      non_bump_message: non_bump_message
+      non_bump_message: non_bump_message,
       do_not_upload_cookbooks: node['osl-jenkins']['cookbook_uploader']['do_not_upload_cookbooks']
     )
   end
 end
-
-secrets = credential_secrets
-git_cred = secrets['git']['cookbook_uploader']
-jenkins_cred = secrets['jenkins']['cookbook_uploader']
 
 # Create cookbook-uploader jobs for each repo
 org_name = node['osl-jenkins']['cookbook_uploader']['org']
