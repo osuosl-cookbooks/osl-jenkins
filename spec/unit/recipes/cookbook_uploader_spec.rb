@@ -43,9 +43,9 @@ describe 'osl-jenkins::cookbook_uploader' do
       it do
         expect(chef_run).to create_directory('/var/lib/jenkins/bin').with(recursive: true)
       end
-      %w(github_pr_comment_trigger.rb bump_environments.rb).each do |s|
+      %w(github_pr_comment_trigger_var.rb bump_environments_var.rb).each do |s|
         it do
-          expect(chef_run).to create_template(::File.join('/var/lib/jenkins/bin', s))
+          expect(chef_run).to create_template(::File.join('/var/lib/jenkins/lib', s))
             .with(
               variables: {
                 all_environments_word: '*',
@@ -69,7 +69,6 @@ describe 'osl-jenkins::cookbook_uploader' do
         expect(chef_run).to create_template('/var/chef/cache/osuosl-cookbooks/test-cookbook/config.xml')
           .with(
             variables: {
-              execute_shell: 'echo $payload | /var/lib/jenkins/bin/github_pr_comment_trigger.rb',
               github_url: 'https://github.com/osuosl-cookbooks/test-cookbook',
               non_bump_message: 'Exiting because comment was not a bump request',
               trigger_token: 'trigger_token',
@@ -93,7 +92,6 @@ describe 'osl-jenkins::cookbook_uploader' do
             variables: {
               all_environments_word: '*',
               default_environments_word: '~',
-              execute_shell: '/var/lib/jenkins/bin/bump_environments.rb',
               github_url: 'https://github.com/osuosl/chef-repo',
               trigger_token: 'trigger_token',
             }
