@@ -45,7 +45,7 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command><%= @execute_shell %></command>
+      <command>echo $payload | /var/lib/jenkins/bin/github_pr_comment_trigger.rb<command>
     </hudson.tasks.Shell>
   </builders>
   <publishers>

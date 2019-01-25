@@ -20,101 +20,82 @@
 node.default['osl-jenkins']['gems'] = %w(git octokit faraday-http-cache)
 include_recipe 'osl-jenkins::master'
 
-org_name = node['osl-jenkins']['cookbook_uploader']['org']
-chef_repo = node['osl-jenkins']['cookbook_uploader']['chef_repo']
-
 # A build is triggered on every Github comment, but will only succeed if the
-# comment was a bump request.  This message is displayed if the comment was not
+# comment was a bump request.  Non bump error message is displayed if the comment was not
 # a bump request and the build will be marked as unstable.
 non_bump_message = 'Exiting because comment was not a bump request'.freeze
+
+bin_path = node['osl-jenkins']['bin_path']
+lib_path = node['osl-jenkins']['lib_path']
+chef_repo = node['osl-jenkins']['cookbook_uploader']['chef_repo']
+
+%w(bump_environments.rb github_pr_comment_trigger.rb).each do |f|
+  cookbook_file ::File.join(bin_path, f) do
+    source "bin/#{f}"
+    owner node['jenkins']['master']['user']
+    group node['jenkins']['master']['group']
+    mode 0550
+  end
+
+  cookbook_file ::File.join(lib_path, f) do
+    source "lib/#{f}"
+    owner node['jenkins']['master']['user']
+    group node['jenkins']['master']['group']
+    mode 0440
+  end
+end
+
+%w(github_pr_comment_trigger_var.rb bump_environments_var.rb).each do |s|
+  template ::File.join(lib_path, s) do
+    source "#{s}.erb"
+    mode '0550'
+    owner node['jenkins']['master']['user']
+    group node['jenkins']['master']['group']
+    variables(
+      authorized_users: node['osl-jenkins']['cookbook_uploader']['authorized_users'],
+      authorized_orgs: node['osl-jenkins']['cookbook_uploader']['authorized_orgs'],
+      authorized_teams: node['osl-jenkins']['cookbook_uploader']['authorized_teams'],
+      github_token: git_cred['token'],
+      chef_repo: chef_repo,
+      default_environments: node['osl-jenkins']['cookbook_uploader']['default_environments'],
+      default_environments_word: node['osl-jenkins']['cookbook_uploader']['default_environments_word'],
+      all_environments_word: node['osl-jenkins']['cookbook_uploader']['all_environments_word'],
+      non_bump_message: non_bump_message
+      do_not_upload_cookbooks: node['osl-jenkins']['cookbook_uploader']['do_not_upload_cookbooks']
+    )
+  end
+end
 
 secrets = credential_secrets
 git_cred = secrets['git']['cookbook_uploader']
 jenkins_cred = secrets['jenkins']['cookbook_uploader']
 
-# Copy over scripts for Jenkins to run
-bin_path = node['osl-jenkins']['bin_path']
-%w(github_pr_comment_trigger.rb bump_environments.rb).each do |s|
-  template ::File.join(bin_path, s) do
-    source "#{s}.erb"
-    mode '0550'
-    owner node['jenkins']['master']['user']
-    group node['jenkins']['master']['group']
-    variables(
-      authorized_users:
-        node['osl-jenkins']['cookbook_uploader']['authorized_users'],
-      authorized_orgs:
-        node['osl-jenkins']['cookbook_uploader']['authorized_orgs'],
-      authorized_teams:
-        node['osl-jenkins']['cookbook_uploader']['authorized_teams'],
-      github_token: git_cred['token'],
-      chef_repo: chef_repo,
-      default_environments:
-        node['osl-jenkins']['cookbook_uploader']['default_environments'],
-      default_environments_word:
-        node['osl-jenkins']['cookbook_uploader']['default_environments_word'],
-      all_environments_word:
-        node['osl-jenkins']['cookbook_uploader']['all_environments_word'],
-      non_bump_message: non_bump_message,
-      do_not_upload_cookbooks:
-        node['osl-jenkins']['cookbook_uploader']['do_not_upload_cookbooks']
-    )
-  end
-end
-lib_path = node['osl-jenkins']['lib_path']
-%w(github_pr_comment_trigger_var.rb bump_environments_var.rb).each do |s|
-  template ::File.join(bin_path, s) do
-    source "#{s}.erb"
-    mode '0550'
-    owner node['jenkins']['master']['user']
-    group node['jenkins']['master']['group']
-    variables(
-      authorized_users:
-        node['osl-jenkins']['cookbook_uploader']['authorized_users'],
-      authorized_orgs:
-        node['osl-jenkins']['cookbook_uploader']['authorized_orgs'],
-      authorized_teams:
-        node['osl-jenkins']['cookbook_uploader']['authorized_teams'],
-      github_token: git_cred['token'],
-      chef_repo: chef_repo,
-      default_environments:
-        node['osl-jenkins']['cookbook_uploader']['default_environments'],
-      default_environments_word:
-        node['osl-jenkins']['cookbook_uploader']['default_environments_word'],
-      all_environments_word:
-        node['osl-jenkins']['cookbook_uploader']['all_environments_word'],
-      non_bump_message: non_bump_message,
-      do_not_upload_cookbooks:
-        node['osl-jenkins']['cookbook_uploader']['do_not_upload_cookbooks']
-    )
-  end
-end
-
 # Create cookbook-uploader jobs for each repo
-execute_shell = 'echo $payload | ' +
-                ::File.join(bin_path, 'github_pr_comment_trigger.rb')
+org_name = node['osl-jenkins']['cookbook_uploader']['org']
 repo_names = node['osl-jenkins']['cookbook_uploader']['override_repos']
 repo_names = collect_github_repositories(git_cred['token'], org_name) if repo_names.nil? || repo_names.empty?
+
 repo_names.each do |repo_name|
-  xml = ::File.join(Chef::Config[:file_cache_path],
-                    org_name, repo_name, 'config.xml')
+  xml = ::File.join(Chef::Config[:file_cache_path], org_name, repo_name, 'config.xml')
   directory ::File.dirname(xml) do
     recursive true
   end
+
   template xml do
     source 'cookbook-uploader.config.xml.erb'
     variables(
       github_url: "https://github.com/#{org_name}/#{repo_name}",
       trigger_token: jenkins_cred['trigger_token'],
-      execute_shell: execute_shell,
       non_bump_message: non_bump_message
     )
   end
+
   job_name = "cookbook-uploader-#{org_name}-#{repo_name}"
   jenkins_job job_name do
     config xml
     action [:create, :enable]
   end
+
   set_up_github_push(
     git_cred['token'],
     org_name,
@@ -128,24 +109,21 @@ repo_names.each do |repo_name|
 end
 
 # Also create a job for bumping versions in environments
-execute_shell = ::File.join(bin_path, 'bump_environments.rb')
-xml = ::File.join(Chef::Config[:file_cache_path],
-                  chef_repo, 'config.xml')
+xml = ::File.join(Chef::Config[:file_cache_path], chef_repo, 'config.xml')
 directory ::File.dirname(xml) do
   recursive true
 end
+
 template xml do
   source 'environment-bumper.config.xml.erb'
   variables(
     github_url: "https://github.com/#{chef_repo}",
     trigger_token: jenkins_cred['trigger_token'],
-    execute_shell: execute_shell,
-    default_environments_word:
-      node['osl-jenkins']['cookbook_uploader']['default_environments_word'],
-    all_environments_word:
-      node['osl-jenkins']['cookbook_uploader']['all_environments_word']
+    default_environments_word: node['osl-jenkins']['cookbook_uploader']['default_environments_word'],
+    all_environments_word: node['osl-jenkins']['cookbook_uploader']['all_environments_word']
   )
 end
+
 job_name = "environment-bumper-#{chef_repo.tr('/', '-')}"
 jenkins_job job_name do
   config xml
