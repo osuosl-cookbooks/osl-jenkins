@@ -68,14 +68,14 @@ class BumpEnvironments
 
   def self.bump_env
     git = Git.open('.')
-    BumpEnvironments.update_repo(git)
+    BumpEnvironments.update_master(git)
     git_branch = BumpEnvironments.create_new_branch(git)
     BumpEnvironments.update_version
     BumpEnvironments.push_branch(git, git_branch)
     BumpEnvironments.create_pr(git, git_branch)
   end
 
-  def self.update_repo(git)
+  def self.update_master(git)
     git.branch('master').checkout
     git.pull('origin', 'master')
   end
