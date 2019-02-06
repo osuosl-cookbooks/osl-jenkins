@@ -45,7 +45,7 @@ chef_repo = node['osl-jenkins']['cookbook_uploader']['chef_repo']
     source "lib/#{f}"
     owner node['jenkins']['master']['user']
     group node['jenkins']['master']['group']
-    mode 0440
+    mode 0550
   end
 end
 

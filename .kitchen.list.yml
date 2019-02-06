@@ -1,0 +1,16 @@
+>>>>>> 
+No instances for regex `', try running `kitchen list'
+
+
+Usage:
+  kitchen list [INSTANCE|REGEXP|all]
+
+Options:
+  -b, [--bare], [--no-bare]                    # List the name of each instance only, one per line
+  -j, [--json], [--no-json]                    # Print data as JSON
+  -d, [--debug], [--no-debug]                  # [Deprecated] Please use `kitchen diagnose'
+  -l, [--log-level=LOG_LEVEL]                  # Set the log level (debug, info, warn, error, fatal)
+      [--log-overwrite], [--no-log-overwrite]  # Set to false to prevent log overwriting each time Test Kitchen runs
+      [--color], [--no-color]                  # Toggle color output for STDOUT logger
+
+Lists one or more instances
