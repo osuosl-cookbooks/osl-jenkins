@@ -43,7 +43,7 @@ describe 'osl-jenkins::cookbook_uploader' do
       it do
         expect(chef_run).to create_directory('/var/lib/jenkins/bin').with(recursive: true)
       end
-      %w(github_pr_comment_trigger_var.rb bump_environments_var.rb).each do |s|
+      %w(github_pr_comment_trigger.yml bump_environments.yml).each do |s|
         it do
           expect(chef_run).to create_template(::File.join('/var/lib/jenkins/lib', s))
             .with(
