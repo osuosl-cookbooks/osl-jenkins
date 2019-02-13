@@ -49,7 +49,7 @@ chef_repo = node['osl-jenkins']['cookbook_uploader']['chef_repo']
   end
 end
 
-%w(github_pr_comment_trigger_var.rb bump_environments_var.rb).each do |s|
+%w(github_pr_comment_trigger.yml bump_environments.yml).each do |s|
   template ::File.join(lib_path, s) do
     source "#{s}.erb"
     mode '0550'
