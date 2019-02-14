@@ -7,18 +7,10 @@
 
 require 'git'
 require 'json'
+require 'yaml'
 require 'octakit'
 require 'set'
 require 'faraday-http-cache'
-
-require_relative 'bump_environments_var'
-
-# Get node attributes from bump_environments_var
-DEFAULT_CHEF_ENVS = $DEFAULT_CHEF_ENVS
-DEFAULT_CHEF_ENVS_WORD = $DEFAULT_CHEF_ENVS_WORD
-ALL_CHEF_ENVS_WORD = $ALL_CHEF_ENVS_WORD
-GITHUB_TOKEN = $GITHUB_TOKEN
-CHEF_REPO = $CHEF_REPO
 
 # Github API caching
 stack = Faraday::RackBuilder.new do |builder|
@@ -38,24 +30,31 @@ class BumpEnvironments
   @is_default_envs = nil
   @is_all_envs = nil
 
+  def self.load_node_attr
+    attr = YAML.load_file('bump_environments.yml')
+    @default_chef_envs = attr['default_chef_envs'].freeze
+    @default_chef_envs_word = attr['default_chef_envs_word'].freeze
+    @all_chef_envs_word = attr['all_chef_envs_word'].freeze
+    @github_token = attr['github_token'].freeze
+    @chef_repo = attr['chef_repo'].freeze
+  end
+
   def self.verify_chef_env
     BumpEnvironments.verify_default_chef_env 
     BumpEnvironments.verify_all_chef_env
   end
 
   def self.verify_default_chef_env
-    # If 'default environments' word is found, replace it with the default envs.
-    if @chef_envs.include?(DEFAULT_CHEF_ENVS_WORD)
-      @chef_envs.delete(DEFAULT_CHEF_ENVS_WORD)
-      @chef_envs += DEFAULT_CHEF_ENVS
+    if @chef_envs.include?(@default_chef_envs_word)
+      @chef_envs.delete(@default_chef_envs_word)
+      @chef_envs += @default_chef_envs
     end
-    # Only note that we're using the defaults if we're using nothing else.
-    @is_default_envs = @chef_envs == DEFAULT_CHEF_ENVS.to_set
+    # Using the defaults if using nothing else
+    @is_default_envs = @chef_envs == @default_chef_envs.to_set
   end
 
   def self.verify_all_chef_env
-    # If 'all environments' word is found, bump all environments.
-    if @chef_envs.include?(ALL_CHEF_ENVS_WORD)
+    if @chef_envs.include?(@all_chef_envs_word)
       @is_all_envs = true
       @chef_env_files = Dir.glob('environments/*.json')
       @chef_envs = @chef_env_files.map do |f|
@@ -119,10 +118,11 @@ class BumpEnvironments
 
   def self.create_pr(git, git_branch)
     # Create the PR
-    github = Octokit::Client.new(access_token: GITHUB_TOKEN)
+    github = Octokit::Client.new(access_token: @github_token)
     title = "Bump '#{@cookbook}' cookbook to version #{@version}"
     body = "This automatically generated PR bumps the '#{@cookbook}' cookbook " \
       "to version #{@version} in "
+
     if @is_all_envs
       body += 'all environments.'
     elsif is_default_envs
@@ -132,14 +132,17 @@ class BumpEnvironments
       body += 'the following environments:' \
               "\n```\n#{@chef_envs.to_a.join("\n")}\n```"
     end
+
     unless @pr_link.nil? || @pr_link.empty?
       body += "\nThis new version includes the changes from this PR: #{@pr_link}."
     end
-    github.create_pull_request(CHEF_REPO, 'master', git_branch, title, body)
+
+    github.create_pull_request(@chef_repo, 'master', git_branch, title, body)
   end
 
   def self.start
     # TODO: Validate input
+    BumpEnvironments.load_node_attr
     BumpEnvironments.verify_chef_env
     BumpEnvironments.bump_env
   end
