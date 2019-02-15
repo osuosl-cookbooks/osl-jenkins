@@ -41,6 +41,9 @@ class BumpEnvironments
     attr_reader :all_chef_envs_word
     attr_reader :github_token
     attr_reader :chef_repo
+    attr_reader :chef_envs
+    attr_reader :is_default_envs
+    attr_reader :is_all_envs
   end
 
   def self.load_node_attr
