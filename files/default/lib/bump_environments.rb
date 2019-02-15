@@ -22,10 +22,15 @@ Octokit.middleware = stack
 
 # Library to bump environments
 class BumpEnvironments
-  @cookbook = ENV['cookbook']
-  @version = ENV['version']
-  @pr_link = ENV['pr_link']
-  @chef_envs = ENV['envs'].split(',').to_set
+  @default_chef_envs = nil
+  @default_chef_envs_word = nil
+  @all_chef_envs_word = nil
+  @github_token = nil
+  @chef_repo = nil
+  @cookbook = nil
+  @version = nil
+  @pr_link = nil
+  @chef_envs = nil
   @chef_env_files = nil
   @is_default_envs = nil
   @is_all_envs = nil
@@ -37,6 +42,13 @@ class BumpEnvironments
     @all_chef_envs_word = attr['all_chef_envs_word'].freeze
     @github_token = attr['github_token'].freeze
     @chef_repo = attr['chef_repo'].freeze
+  end
+
+  def self.load_env
+    @cookbook = ENV['cookbook']
+    @version = ENV['version']
+    @pr_link = ENV['pr_link']
+    @chef_envs = ENV['envs'].split(',').to_set
   end
 
   def self.verify_chef_env
@@ -143,6 +155,7 @@ class BumpEnvironments
   def self.start
     # TODO: Validate input
     BumpEnvironments.load_node_attr
+    BumpEnvironments.load_env
     BumpEnvironments.verify_chef_env
     BumpEnvironments.bump_env
   end
