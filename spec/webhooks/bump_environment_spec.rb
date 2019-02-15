@@ -114,6 +114,26 @@ describe BumpEnvironments do
   end
 
   context '#verify_all_chef_envs' do
+    before :each do
+      allow(ENV).to receive(:[]).with('cookbook').and_return('cookbooks')
+      allow(ENV).to receive(:[]).with('version').and_return('version')
+      allow(ENV).to receive(:[]).with('pr_link').and_return('pr_link')
+    end
+    it 'includes all environments' do
+      allow(Dir).to receive(:glob).with('environments/*.json').and_return(
+          Dir.glob('../fixtures/chef_envs/*.json')
+      )
+      allow(ENV).to receive(:[]).with('envs').and_return('*')
+      BumpEnvironments.load_node_attr
+      BumpEnvironments.load_envs
+      BumpEnvironments.verify_all_chef_envs
+      
+      expect(BumpEnvironments.is_all_envs).to be true
+      expect(BumpEnvironments.chef_env_files).to contain_exactly(
+        'environments/openstack_ocata.json', 'phpbb.json', 'production.js',
+        'workstation.js'        
+      )
+    end
   end
   
 
