@@ -8,7 +8,7 @@
 require 'git'
 require 'json'
 require 'yaml'
-require 'octakit'
+require 'octokit'
 require 'set'
 require 'faraday-http-cache'
 
