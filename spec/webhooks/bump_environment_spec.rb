@@ -55,6 +55,27 @@ describe BumpEnvironments do
     end
   end
 
+  context '#load_envs' do
+    before :each do
+      allow(ENV).to receive(:[]).with('cookbook').and_return('cookbooks')
+      allow(ENV).to receive(:[]).with('version').and_return('version')
+      allow(ENV).to receive(:[]).with('pr_link').and_return('pr_link')
+      allow(ENV).to receive(:[]).with('envs'). and_return('env1,env2')
+    end
+    it 'loads environment variables' do
+      expect(BumpEnvironments.cookbook).to be_nil
+      expect(BumpEnvironments.version).to be_nil
+      expect(BumpEnvironments.pr_link).to be_nil
+      expect(BumpEnvironments.chef_envs).to be_nil
+      BumpEnvironments.load_envs
+      expect(BumpEnvironments.cookbook).to match(/cookbooks/)
+      expect(BumpEnvironments.version).to match(/version/)
+      expect(BumpEnvironments.pr_link).to match(/pr_link/)
+      puts BumpEnvironments.chef_envs
+      expect(BumpEnvironments.chef_envs).to eql(['env1', 'env2'].to_set)
+    end
+  end
+
   context '#verify_default_chef_envs' do
     before :each do
       allow(ENV).to receive(:[]).with('cookbook').and_return('cookbooks')
@@ -64,7 +85,7 @@ describe BumpEnvironments do
     it 'only includes default environments' do
       allow(ENV).to receive(:[]).with('envs').and_return('~')
       BumpEnvironments.load_node_attr
-      BumpEnvironments.load_env
+      BumpEnvironments.load_envs
       BumpEnvironments.verify_default_chef_envs
       expect(BumpEnvironments.chef_envs).to contain_exactly(
         'openstack_mitaka', 'phase_out_nginx', 'phpbb', 'production', 'testing', 'workstation'
@@ -74,7 +95,7 @@ describe BumpEnvironments do
     it 'includes default and additional environments' do
       allow(ENV).to receive(:[]).with('envs').and_return('~,extra_env')
       BumpEnvironments.load_node_attr
-      BumpEnvironments.load_env
+      BumpEnvironments.load_envs
       BumpEnvironments.verify_default_chef_envs
       expect(BumpEnvironments.chef_envs).to contain_exactly(
         'openstack_mitaka', 'phase_out_nginx', 'phpbb', 'production', 'testing', 'workstation',
@@ -85,12 +106,16 @@ describe BumpEnvironments do
     it 'does not include default environment at all' do
       allow(ENV).to receive(:[]).with('envs').and_return('extra_env')
       BumpEnvironments.load_node_attr
-      BumpEnvironments.load_env
+      BumpEnvironments.load_envs
       BumpEnvironments.verify_default_chef_envs
       expect(BumpEnvironments.chef_envs).to contain_exactly('extra_env')
       expect(BumpEnvironments.is_default_envs).to be false
     end
   end
+
+  context '#verify_all_chef_envs' do
+  end
+  
 
 #  context '#verify_chef_env' do
 #    before :each do
@@ -100,7 +125,7 @@ describe BumpEnvironments do
 #      allow(ENV).to receive(:[]).with('envs').and_return('envs')
 #    end
 #    it 'calls verify functions' do
-#      BumpEnvironments.load_env
+#      BumpEnvironments.load_envs
 #      BumpEnvironments.verify_chef_envs
 #      #expect(BumpEnvironments).to receive(:verify_default_chef_envs)
 #      expect(BumpEnvironments).to receive(:verify_all_chef_envs)
