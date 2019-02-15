@@ -41,6 +41,9 @@ class BumpEnvironments
     attr_reader :all_chef_envs_word
     attr_reader :github_token
     attr_reader :chef_repo
+    attr_reader :cookbook
+    attr_reader :version
+    attr_reader :pr_link
     attr_reader :chef_envs
     attr_reader :is_default_envs
     attr_reader :is_all_envs
@@ -55,7 +58,7 @@ class BumpEnvironments
     @chef_repo = attr['chef_repo'].freeze
   end
 
-  def self.load_env
+  def self.load_envs
     @cookbook = ENV['cookbook']
     @version = ENV['version']
     @pr_link = ENV['pr_link']
@@ -166,7 +169,7 @@ class BumpEnvironments
   def self.start
     # TODO: Validate input
     BumpEnvironments.load_node_attr
-    BumpEnvironments.load_env
+    BumpEnvironments.load_envs
     BumpEnvironments.verify_chef_envs
     BumpEnvironments.bump_env
   end
