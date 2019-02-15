@@ -59,12 +59,12 @@ class BumpEnvironments
     @chef_envs = ENV['envs'].split(',').to_set
   end
 
-  def self.verify_chef_env
-    BumpEnvironments.verify_default_chef_env 
-    BumpEnvironments.verify_all_chef_env
+  def self.verify_chef_envs
+    BumpEnvironments.verify_default_chef_envs
+    BumpEnvironments.verify_all_chef_envs
   end
 
-  def self.verify_default_chef_env
+  def self.verify_default_chef_envs
     if @chef_envs.include?(@default_chef_envs_word)
       @chef_envs.delete(@default_chef_envs_word)
       @chef_envs += @default_chef_envs
@@ -73,7 +73,7 @@ class BumpEnvironments
     @is_default_envs = @chef_envs == @default_chef_envs.to_set
   end
 
-  def self.verify_all_chef_env
+  def self.verify_all_chef_envs
     if @chef_envs.include?(@all_chef_envs_word)
       @is_all_envs = true
       @chef_env_files = Dir.glob('environments/*.json')
@@ -164,7 +164,7 @@ class BumpEnvironments
     # TODO: Validate input
     BumpEnvironments.load_node_attr
     BumpEnvironments.load_env
-    BumpEnvironments.verify_chef_env
+    BumpEnvironments.verify_chef_envs
     BumpEnvironments.bump_env
   end
 end
