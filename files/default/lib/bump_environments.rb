@@ -45,6 +45,7 @@ class BumpEnvironments
     attr_reader :version
     attr_reader :pr_link
     attr_reader :chef_envs
+    attr_reader :chef_env_files
     attr_reader :is_default_envs
     attr_reader :is_all_envs
   end
