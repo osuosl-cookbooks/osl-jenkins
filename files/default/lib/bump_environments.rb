@@ -59,11 +59,6 @@ class BumpEnvironments
     @chef_envs = ENV['envs'].split(',').to_set
   end
 
-  def self.verify_chef_envs
-    BumpEnvironments.verify_default_chef_envs
-    BumpEnvironments.verify_all_chef_envs
-  end
-
   def self.verify_default_chef_envs
     if @chef_envs.include?(@default_chef_envs_word)
       @chef_envs.delete(@default_chef_envs_word)
@@ -83,15 +78,6 @@ class BumpEnvironments
     else
       @chef_env_files = @chef_envs.map { |e| "environments/#{e}.json" }
     end
-  end
-
-  def self.bump_env
-    git = Git.open('.')
-    BumpEnvironments.update_master(git)
-    git_branch = BumpEnvironments.create_new_branch(git)
-    BumpEnvironments.update_version
-    BumpEnvironments.push_branch(git, git_branch)
-    BumpEnvironments.create_pr(git, git_branch)
   end
 
   def self.update_master(git)
@@ -158,6 +144,20 @@ class BumpEnvironments
     end
 
     github.create_pull_request(@chef_repo, 'master', git_branch, title, body)
+  end
+
+  def self.verify_chef_envs
+    BumpEnvironments.verify_default_chef_envs
+    BumpEnvironments.verify_all_chef_envs
+  end
+
+  def self.bump_env
+    git = Git.open('.')
+    BumpEnvironments.update_master(git)
+    git_branch = BumpEnvironments.create_new_branch(git)
+    BumpEnvironments.update_version
+    BumpEnvironments.push_branch(git, git_branch)
+    BumpEnvironments.create_pr(git, git_branch)
   end
 
   def self.start
