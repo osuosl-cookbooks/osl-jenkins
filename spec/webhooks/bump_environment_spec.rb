@@ -36,10 +36,13 @@ end
 
 describe BumpEnvironments do
   let(:github_mock) { double('Octokit', commits: [], issues: [], same_options?: false, auto_paginate: true) }
-  context 'load_node_attr' do
-    it 'Load node attributes' do
+
+  context '#load_node_attr' do
+    before :each do
       allow(YAML).to receive(:load_file).with('bump_environments.yml')
           .and_return(open_yaml('bump_environments.yml'))
+    end
+    it 'load node attributes' do
       BumpEnvironments.load_node_attr
       expect(BumpEnvironments.default_chef_envs).to contain_exactly(
         'openstack_mitaka', 'phase_out_nginx', 'phpbb', 'production', 'testing', 'workstation'
@@ -50,9 +53,19 @@ describe BumpEnvironments do
       expect(BumpEnvironments.github_token).to match(/github_token/)
     end
   end
-#  it 'verify chef env' do
-#    BumpEnvironments.verify_chef_env
-#    expect(self).to receive(:verify_default_chef_env)
-#    expect(self).to receive(:verify_all_chef_env)
+  
+#  context '#verify_chef_env' do
+#    before :each do
+#      allow(ENV).to receive(:[]).with('cookbook').and_return('cookbooks')
+#      allow(ENV).to receive(:[]).with('version').and_return('version')
+#      allow(ENV).to receive(:[]).with('pr_link').and_return('pr_link')
+#      allow(ENV).to receive(:[]).with('envs').and_return('envs')
+#    end
+#    it 'calls verify functions' do
+#      BumpEnvironments.load_env
+#      BumpEnvironments.verify_chef_envs
+#      #expect(BumpEnvironments).to receive(:verify_default_chef_envs)
+#      expect(BumpEnvironments).to receive(:verify_all_chef_envs)
+#    end
 #  end
 end
