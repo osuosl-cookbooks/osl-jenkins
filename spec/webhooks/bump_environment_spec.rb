@@ -127,8 +127,12 @@ describe BumpEnvironments do
       BumpEnvironments.load_node_attr
       BumpEnvironments.load_envs
       BumpEnvironments.verify_all_chef_envs
-      
       expect(BumpEnvironments.is_all_envs).to be true
+      BumpEnvironments.chef_env_files.map do |f|
+        f = f.sub(/(.*)\/(.*)\.json/, 'environments\/\2\.json')
+      end
+
+      puts BumpEnvironments.chef_env_files 
       expect(BumpEnvironments.chef_env_files).to contain_exactly(
         'environments/openstack_ocata.json', 'phpbb.json', 'production.js',
         'workstation.js'        
