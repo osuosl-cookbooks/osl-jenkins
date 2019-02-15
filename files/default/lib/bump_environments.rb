@@ -35,6 +35,14 @@ class BumpEnvironments
   @is_default_envs = nil
   @is_all_envs = nil
 
+  class << self
+    attr_reader :default_chef_envs
+    attr_reader :default_chef_envs_word
+    attr_reader :all_chef_envs_word
+    attr_reader :github_token
+    attr_reader :chef_repo
+  end
+
   def self.load_node_attr
     attr = YAML.load_file('bump_environments.yml')
     @default_chef_envs = attr['default_chef_envs'].freeze
