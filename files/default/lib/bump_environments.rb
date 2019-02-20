@@ -33,7 +33,7 @@ class BumpEnvironments
   @chef_envs = nil
   @chef_env_files = nil
   @is_default_envs = nil
-  @is_all_envs = nil
+  @is_all_envs = false
 
   class << self
     attr_reader :default_chef_envs
