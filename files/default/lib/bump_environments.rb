@@ -33,7 +33,7 @@ class BumpEnvironments
   @chef_envs = nil
   @chef_env_files = nil
   @is_default_envs = nil
-  @is_all_envs = false
+  @is_all_envs = nil
 
   class << self
     attr_reader :default_chef_envs
@@ -83,6 +83,7 @@ class BumpEnvironments
         f.slice(%r{environments/(.*)\.json}, 1)
       end.to_set
     else
+      @is_all_envs = false
       @chef_env_files = @chef_envs.map { |e| "environments/#{e}.json" }
     end
   end
