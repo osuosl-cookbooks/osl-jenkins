@@ -150,4 +150,33 @@ describe BumpEnvironments do
     end
   end
 
+  context '#verify_chef_envs' do
+    before :each do
+      allow(ENV).to receive(:[]).with('cookbook').and_return('cookbooks')
+      allow(ENV).to receive(:[]).with('version').and_return('version')
+      allow(ENV).to receive(:[]).with('pr_link').and_return('pr_link')
+      allow(ENV).to receive(:[]).with('envs').and_return('envs')
+    end
+    it 'very defaults and chef envs' do
+      expect(BumpEnvironments).to receive(:verify_default_chef_envs)
+      expect(BumpEnvironments).to receive(:verify_all_chef_envs)
+      BumpEnvironments.verify_chef_envs 
+    end
+  end
+
+  context '#update_master' do
+    let('git_mock') { double('Git::Base') }
+    before :each do
+      allow(git_mock).to receive(:branch).and_return(git_mock)
+      allow(git_mock).to receive(:checkout)
+      allow(git_mock).to receive(:pull)
+      allow(Git).to receive(:open).and_return(git_mock)
+    end
+    it 'updates master branch' do
+      expect(git_mock).to receive(:branch).with('master').and_return(git_mock)
+      expect(git_mock).to receive(:checkout)
+      expect(git_mock).to receive(:pull).with('origin', 'master')
+      BumpEnvironments.update_master(git_mock)
+    end
+  end
 end
