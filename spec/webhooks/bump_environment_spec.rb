@@ -22,6 +22,12 @@ module SpecHelper
     YAML.load_file(fixture_path(name))
   end
 
+  def glob_env_files()
+    Dir.glob('../fixtures/chef_envs/*.json').map do |f|
+      f.sub(/(.*)\/(.*)\.json/, 'environments/\2.json')
+    end
+  end
+
   def tempfile(file)
     tempfile = Tempfile.new("#{Pathname.new(file).basename}-rspec")
     tempfile.write(::File.read(file))
@@ -36,14 +42,28 @@ end
 
 describe BumpEnvironments do
   let(:github_mock) { double('Octokit', commits: [], issues: [], same_options?: false, auto_paginate: true) }
-
+  let('git_mock') { double('Git::Base') }
   before :each do
+    allow(ENV).to receive(:[]).with('cookbook').and_return('cookbook')
+    allow(ENV).to receive(:[]).with('version').and_return('1.0.0')
+    allow(ENV).to receive(:[]).with('pr_link').and_return('pr_link')
+    allow(Dir).to receive(:glob).with('environments/*.json').and_return(glob_env_files)
     allow(YAML).to receive(:load_file).with('bump_environments.yml')
         .and_return(open_yaml('bump_environments.yml'))
+
+    allow(git_mock).to receive(:branch).and_return(git_mock)
+    allow(git_mock).to receive(:checkout)
+    allow(git_mock).to receive(:pull)
+    allow(Git).to receive(:open).and_return(git_mock)
   end
 
   context '#load_node_attr' do
     it 'load node attributes' do
+      expect(BumpEnvironments.default_chef_envs).to be_nil
+      expect(BumpEnvironments.default_chef_envs_word).to be_nil
+      expect(BumpEnvironments.all_chef_envs_word).to be_nil
+      expect(BumpEnvironments.chef_repo).to be_nil
+      expect(BumpEnvironments.github_token).to be_nil
       BumpEnvironments.load_node_attr
       expect(BumpEnvironments.default_chef_envs).to contain_exactly(
         'openstack_mitaka', 'phase_out_nginx', 'phpbb', 'production', 'testing', 'workstation'
@@ -57,10 +77,7 @@ describe BumpEnvironments do
 
   context '#load_envs' do
     before :each do
-      allow(ENV).to receive(:[]).with('cookbook').and_return('cookbooks')
-      allow(ENV).to receive(:[]).with('version').and_return('version')
-      allow(ENV).to receive(:[]).with('pr_link').and_return('pr_link')
-      allow(ENV).to receive(:[]).with('envs'). and_return('env1,env2')
+      allow(ENV).to receive(:[]).with('envs'). and_return('phpbb,production')
     end
     it 'loads environment variables' do
       expect(BumpEnvironments.cookbook).to be_nil
@@ -68,18 +85,15 @@ describe BumpEnvironments do
       expect(BumpEnvironments.pr_link).to be_nil
       expect(BumpEnvironments.chef_envs).to be_nil
       BumpEnvironments.load_envs
-      expect(BumpEnvironments.cookbook).to match(/cookbooks/)
-      expect(BumpEnvironments.version).to match(/version/)
+      expect(BumpEnvironments.cookbook).to match(/cookbook/)
+      expect(BumpEnvironments.version).to match(/1\.0\.0/)
       expect(BumpEnvironments.pr_link).to match(/pr_link/)
-      expect(BumpEnvironments.chef_envs).to eql(['env1', 'env2'].to_set)
+      expect(BumpEnvironments.chef_envs).to eql(['phpbb', 'production'].to_set)
     end
   end
 
   context '#verify_default_chef_envs' do
     before :each do
-      allow(ENV).to receive(:[]).with('cookbook').and_return('cookbooks')
-      allow(ENV).to receive(:[]).with('version').and_return('version')
-      allow(ENV).to receive(:[]).with('pr_link').and_return('pr_link')
     end
     it 'only includes default environments' do
       allow(ENV).to receive(:[]).with('envs').and_return('~')
@@ -113,18 +127,8 @@ describe BumpEnvironments do
   end
 
   context '#verify_all_chef_envs' do
-    before :each do
-      allow(ENV).to receive(:[]).with('cookbook').and_return('cookbooks')
-      allow(ENV).to receive(:[]).with('version').and_return('version')
-      allow(ENV).to receive(:[]).with('pr_link').and_return('pr_link')
-    end
     it 'includes all environments' do
       allow(ENV).to receive(:[]).with('envs').and_return('*')
-      allow(Dir).to receive(:glob).with('environments/*.json').and_return(
-        Dir.glob('../fixtures/chef_envs/*.json').map do |f|
-          f.sub(/(.*)\/(.*)\.json/, 'environments/\2.json')
-        end
-      )
       BumpEnvironments.load_node_attr
       BumpEnvironments.load_envs
       BumpEnvironments.verify_all_chef_envs
@@ -152,9 +156,6 @@ describe BumpEnvironments do
 
   context '#verify_chef_envs' do
     before :each do
-      allow(ENV).to receive(:[]).with('cookbook').and_return('cookbooks')
-      allow(ENV).to receive(:[]).with('version').and_return('version')
-      allow(ENV).to receive(:[]).with('pr_link').and_return('pr_link')
       allow(ENV).to receive(:[]).with('envs').and_return('envs')
     end
     it 'very defaults and chef envs' do
@@ -165,18 +166,27 @@ describe BumpEnvironments do
   end
 
   context '#update_master' do
-    let('git_mock') { double('Git::Base') }
     before :each do
-      allow(git_mock).to receive(:branch).and_return(git_mock)
-      allow(git_mock).to receive(:checkout)
-      allow(git_mock).to receive(:pull)
-      allow(Git).to receive(:open).and_return(git_mock)
     end
     it 'updates master branch' do
       expect(git_mock).to receive(:branch).with('master').and_return(git_mock)
       expect(git_mock).to receive(:checkout)
       expect(git_mock).to receive(:pull).with('origin', 'master')
       BumpEnvironments.update_master(git_mock)
+    end
+  end
+
+  context '#create_new_branch' do
+    it 'creates new branch for all environments' do
+      BumpEnvironments.verify_all_chef_envs
+      BumpEnvironmnets.update_master(git_mock)
+      BumpEnvironments.create_new_branch(git_mock)
+    end
+    it 'creates new branch for default environments' do
+
+    end
+    it 'creates new branch, not all or default environment' do
+
     end
   end
 end
