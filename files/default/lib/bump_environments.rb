@@ -154,6 +154,11 @@ class BumpEnvironments
     github.create_pull_request(@chef_repo, 'master', git_branch, title, body)
   end
 
+  def self.load_config
+    BumpEnvironments.load_node_attr
+    BumpEnvironments.load_envs
+  end
+
   def self.verify_chef_envs
     BumpEnvironments.verify_default_chef_envs
     BumpEnvironments.verify_all_chef_envs
@@ -170,8 +175,7 @@ class BumpEnvironments
 
   def self.start
     # TODO: Validate input
-    BumpEnvironments.load_node_attr
-    BumpEnvironments.load_envs
+    BumpEnvironments.load_config
     BumpEnvironments.verify_chef_envs
     BumpEnvironments.bump_env
   end
