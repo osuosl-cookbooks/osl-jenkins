@@ -92,13 +92,21 @@ describe BumpEnvironments do
     end
   end
 
+  context '#load_config' do
+    it 'calls load_config' do
+      allow(ENV).to receive(:[]).with('envs').and_return('envs')
+      expect(BumpEnvironments).to receive(:load_node_attr)
+      expect(BumpEnvironments).to receive(:load_envs)
+      BumpEnvironments.load_config
+    end
+  end
+
   context '#verify_default_chef_envs' do
     before :each do
     end
     it 'only includes default environments' do
       allow(ENV).to receive(:[]).with('envs').and_return('~')
-      BumpEnvironments.load_node_attr
-      BumpEnvironments.load_envs
+      BumpEnvironments.load_config
       BumpEnvironments.verify_default_chef_envs
       expect(BumpEnvironments.chef_envs).to contain_exactly(
         'openstack_mitaka', 'phase_out_nginx', 'phpbb', 'production', 'testing', 'workstation'
@@ -107,8 +115,7 @@ describe BumpEnvironments do
     end
     it 'includes default and additional environments' do
       allow(ENV).to receive(:[]).with('envs').and_return('~,extra_env')
-      BumpEnvironments.load_node_attr
-      BumpEnvironments.load_envs
+      BumpEnvironments.load_config
       BumpEnvironments.verify_default_chef_envs
       expect(BumpEnvironments.chef_envs).to contain_exactly(
         'openstack_mitaka', 'phase_out_nginx', 'phpbb', 'production', 'testing', 'workstation',
@@ -118,8 +125,7 @@ describe BumpEnvironments do
     end
     it 'does not include default environment at all' do
       allow(ENV).to receive(:[]).with('envs').and_return('extra_env')
-      BumpEnvironments.load_node_attr
-      BumpEnvironments.load_envs
+      BumpEnvironments.load_config
       BumpEnvironments.verify_default_chef_envs
       expect(BumpEnvironments.chef_envs).to contain_exactly('extra_env')
       expect(BumpEnvironments.is_default_envs).to be false
@@ -129,8 +135,7 @@ describe BumpEnvironments do
   context '#verify_all_chef_envs' do
     it 'includes all environments' do
       allow(ENV).to receive(:[]).with('envs').and_return('*')
-      BumpEnvironments.load_node_attr
-      BumpEnvironments.load_envs
+      BumpEnvironments.load_config
       BumpEnvironments.verify_all_chef_envs
       expect(BumpEnvironments.is_all_envs).to be true
       expect(BumpEnvironments.chef_env_files).to contain_exactly(
@@ -143,8 +148,7 @@ describe BumpEnvironments do
     end
     it 'not include all environments' do
       allow(ENV).to receive(:[]).with('envs').and_return('openstack_ocata,production')
-      BumpEnvironments.load_node_attr
-      BumpEnvironments.load_envs
+      BumpEnvironments.load_config
       BumpEnvironments.verify_all_chef_envs
       expect(BumpEnvironments.is_all_envs).to be false
       expect(BumpEnvironments.chef_envs).to contain_exactly('openstack_ocata', 'production')
@@ -178,9 +182,12 @@ describe BumpEnvironments do
 
   context '#create_new_branch' do
     it 'creates new branch for all environments' do
+      allow(ENV).to receive(:[]).with('envs').and_return('*')
+      BumpEnvironments.load_config
       BumpEnvironments.verify_all_chef_envs
-      BumpEnvironmnets.update_master(git_mock)
+      BumpEnvironments.update_master(git_mock)
       BumpEnvironments.create_new_branch(git_mock)
+      
     end
     it 'creates new branch for default environments' do
 
