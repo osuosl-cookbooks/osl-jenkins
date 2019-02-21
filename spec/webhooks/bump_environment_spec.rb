@@ -71,7 +71,6 @@ describe BumpEnvironments do
       expect(BumpEnvironments.cookbook).to match(/cookbooks/)
       expect(BumpEnvironments.version).to match(/version/)
       expect(BumpEnvironments.pr_link).to match(/pr_link/)
-      puts BumpEnvironments.chef_envs
       expect(BumpEnvironments.chef_envs).to eql(['env1', 'env2'].to_set)
     end
   end
@@ -120,41 +119,35 @@ describe BumpEnvironments do
       allow(ENV).to receive(:[]).with('pr_link').and_return('pr_link')
     end
     it 'includes all environments' do
-      allow(Dir).to receive(:glob).with('environments/*.json').and_return(
-          Dir.glob('../fixtures/chef_envs/*.json')
-      )
       allow(ENV).to receive(:[]).with('envs').and_return('*')
+      allow(Dir).to receive(:glob).with('environments/*.json').and_return(
+        Dir.glob('../fixtures/chef_envs/*.json').map do |f|
+          f.sub(/(.*)\/(.*)\.json/, 'environments/\2.json')
+        end
+      )
       BumpEnvironments.load_node_attr
       BumpEnvironments.load_envs
       BumpEnvironments.verify_all_chef_envs
       expect(BumpEnvironments.is_all_envs).to be true
-
-      env_files_subbed = []
-      BumpEnvironments.chef_env_files.map do |f|
-        env_files_subbed.push(f.sub(/(.*)\/(.*)\.json/, 'environments/\2.json'))
-      end
-      env_files_subbed.to_set
-
-      expect(env_files_subbed).to contain_exactly(
+      expect(BumpEnvironments.chef_env_files).to contain_exactly(
         'environments/openstack_ocata.json', 'environments/phpbb.json',
         'environments/production.json', 'environments/workstation.json'
       )
+      expect(BumpEnvironments.chef_envs).to contain_exactly(
+        'openstack_ocata', 'phpbb', 'production', 'workstation'
+      )
+    end
+    it 'not include all environments' do
+      allow(ENV).to receive(:[]).with('envs').and_return('openstack_ocata,production')
+      BumpEnvironments.load_node_attr
+      BumpEnvironments.load_envs
+      BumpEnvironments.verify_all_chef_envs
+      expect(BumpEnvironments.is_all_envs).to be false
+      expect(BumpEnvironments.chef_envs).to contain_exactly('openstack_ocata', 'production')
+      expect(BumpEnvironments.chef_env_files).to contain_exactly(
+        'environments/openstack_ocata.json', 'environments/production.json'
+      )
     end
   end
-  
 
-#  context '#verify_chef_env' do
-#    before :each do
-#      allow(ENV).to receive(:[]).with('cookbook').and_return('cookbooks')
-#      allow(ENV).to receive(:[]).with('version').and_return('version')
-#      allow(ENV).to receive(:[]).with('pr_link').and_return('pr_link')
-#      allow(ENV).to receive(:[]).with('envs').and_return('envs')
-#    end
-#    it 'calls verify functions' do
-#      BumpEnvironments.load_envs
-#      BumpEnvironments.verify_chef_envs
-#      #expect(BumpEnvironments).to receive(:verify_default_chef_envs)
-#      expect(BumpEnvironments).to receive(:verify_all_chef_envs)
-#    end
-#  end
 end
