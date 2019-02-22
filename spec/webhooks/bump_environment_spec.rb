@@ -42,7 +42,7 @@ end
 
 describe BumpEnvironments do
   let(:github_mock) { double('Octokit', commits: [], issues: [], same_options?: false, auto_paginate: true) }
-  let('git_mock') { double('Git::Base') }
+  let(:git_mock) { double('Git::Base') }
   before :each do
     allow(ENV).to receive(:[]).with('cookbook').and_return('cookbook')
     allow(ENV).to receive(:[]).with('version').and_return('1.0.0')
@@ -50,7 +50,6 @@ describe BumpEnvironments do
     allow(Dir).to receive(:glob).with('environments/*.json').and_return(glob_env_files)
     allow(YAML).to receive(:load_file).with('bump_environments.yml')
         .and_return(open_yaml('bump_environments.yml'))
-
     allow(git_mock).to receive(:branch).and_return(git_mock)
     allow(git_mock).to receive(:checkout)
     allow(git_mock).to receive(:pull)
@@ -102,8 +101,6 @@ describe BumpEnvironments do
   end
 
   context '#verify_default_chef_envs' do
-    before :each do
-    end
     it 'only includes default environments' do
       allow(ENV).to receive(:[]).with('envs').and_return('~')
       BumpEnvironments.load_config
@@ -170,8 +167,6 @@ describe BumpEnvironments do
   end
 
   context '#update_master' do
-    before :each do
-    end
     it 'updates master branch' do
       expect(git_mock).to receive(:branch).with('master').and_return(git_mock)
       expect(git_mock).to receive(:checkout)
@@ -182,18 +177,37 @@ describe BumpEnvironments do
 
   context '#create_new_branch' do
     it 'creates new branch for all environments' do
+      allow(BumpEnvironments).to receive(:create_branch_hash)
+        .with('openstack_ocata,phpbb,production,workstation,1.0.0').and_return(12345)
       allow(ENV).to receive(:[]).with('envs').and_return('*')
+      expect(git_mock).to receive(:branch).with('jenkins/cookbook-1.0.0-all-envs-12345').and_return(git_mock)
+      expect(git_mock).to receive(:checkout)
       BumpEnvironments.load_config
-      BumpEnvironments.verify_all_chef_envs
+      BumpEnvironments.verify_chef_envs
       BumpEnvironments.update_master(git_mock)
       BumpEnvironments.create_new_branch(git_mock)
-      
     end
     it 'creates new branch for default environments' do
-
+      allow(BumpEnvironments).to receive(:create_branch_hash)
+        .with('openstack_mitaka,phase_out_nginx,phpbb,production,testing,workstation,1.0.0').and_return(12345)
+      allow(ENV).to receive(:[]).with('envs').and_return('~')
+      expect(git_mock).to receive(:branch).with('jenkins/cookbook-1.0.0-default-envs-12345').and_return(git_mock)
+      expect(git_mock).to receive(:checkout)
+      BumpEnvironments.load_config
+      BumpEnvironments.verify_chef_envs
+      BumpEnvironments.update_master(git_mock)
+      BumpEnvironments.create_new_branch(git_mock)
     end
     it 'creates new branch, not all or default environment' do
-
+      allow(BumpEnvironments).to receive(:create_branch_hash)
+        .with('phpbb,production,1.0.0').and_return(12345)
+      allow(ENV).to receive(:[]).with('envs').and_return('phpbb,production')
+      expect(git_mock).to receive(:branch).with('jenkins/cookbook-1.0.0-12345').and_return(git_mock)
+      expect(git_mock).to receive(:checkout)
+      BumpEnvironments.load_config
+      BumpEnvironments.verify_chef_envs
+      BumpEnvironments.update_master(git_mock)
+      BumpEnvironments.create_new_branch(git_mock)
     end
   end
 end
