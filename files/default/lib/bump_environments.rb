@@ -113,15 +113,19 @@ class BumpEnvironments
     return git_branch
   end
 
-  def self.update_version
+  def self.update_env_files
     # Replace the old versions with the new versions
     @chef_env_files.each do |f|
-      data = JSON.parse(::File.read(f))
+      BumpEnvironments.update_env_files
+    end
+  end
+
+  def self.update_version(json)
+      data = JSON.parse(::File.read(json))
       if data['cookbook_versions'].include?(@cookbook)
         data['cookbook_versions'][@cookbook] = "= #{@version}"
       end
-      ::File.write(f, JSON.pretty_generate(data) + "\n")
-    end
+      ::File.write(json, JSON.pretty_generate(data) + "\n")
   end
 
   def self.push_branch(git, git_branch)
