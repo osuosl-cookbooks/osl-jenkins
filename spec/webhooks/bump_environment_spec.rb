@@ -23,8 +23,8 @@ module SpecHelper
   end
 
   def glob_env_files()
-    Dir.glob('../fixtures/chef_envs/*.json').map do |f|
-      f.sub(/(.*)\/(.*)\.json/, 'environments/\2.json')
+    Dir.glob('../fixtures/environments/*.json').map do |f|
+      f.sub(/(.*)\/environments\/(.*)\.json/, 'environments/\2.json')
     end
   end
 
@@ -162,6 +162,8 @@ describe BumpEnvironments do
     it 'very defaults and chef envs' do
       expect(BumpEnvironments).to receive(:verify_default_chef_envs)
       expect(BumpEnvironments).to receive(:verify_all_chef_envs)
+      expect(BumpEnvironments.is_all_envs).not_to be_nil
+      expect(BumpEnvironments.is_default_envs).not_to be_nil
       BumpEnvironments.verify_chef_envs 
     end
   end
@@ -208,6 +210,12 @@ describe BumpEnvironments do
       BumpEnvironments.verify_chef_envs
       BumpEnvironments.update_master(git_mock)
       BumpEnvironments.create_new_branch(git_mock)
+    end
+  end
+
+  context 'update_version' do
+    it 'update cookbook version' do
+
     end
   end
 end
