@@ -93,8 +93,12 @@ class BumpEnvironments
     git.pull('origin', 'master')
   end
 
+  def self.create_branch_hash(str)
+    return str.hash % 100_000
+  end
+
   def self.create_new_branch(git)
-    branch_hash = if @is_all_envs
+    envs = if @is_all_envs
                     'all-envs'
                   elsif @is_default_envs
                     'default-envs'
@@ -102,8 +106,9 @@ class BumpEnvironments
                     ''
                   end
     # Add a 5-digit hash of the version and envs so the branch names are unique.
-    branch_hash += "-#{(@chef_envs.to_a << @version).join(',').hash % 100_000}"
-    git_branch = "jenkins/#{@cookbook}-#{@version}-#{branch_hash}"
+    str_to_hash = (@chef_envs.to_a << @version).join(',')
+    branch_hash = "#{create_branch_hash(str_to_hash)}"
+    git_branch = "jenkins/#{@cookbook}-#{@version}-#{envs}-#{branch_hash}"
     git.branch(git_branch).checkout
     return git_branch
   end
