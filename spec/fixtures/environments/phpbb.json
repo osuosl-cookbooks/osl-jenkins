@@ -14,6 +14,7 @@
     "chef-sugar": "= 4.0.0",
     "cluster-search": "= 1.5.0",
     "compat_resource": "= 12.19.0",
+    "cookbook": "= 0.7.0",
     "build-essential": "= 8.1.1",
     "docker": "= 4.9.2",
     "git": "= 4.0.2",
