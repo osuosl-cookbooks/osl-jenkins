@@ -218,7 +218,7 @@ describe BumpEnvironments do
     end
   end
 
-  context 'update_env_files' do
+  context '#update_env_files' do
     before :each do
       allow(ENV).to receive(:[]).with('envs').and_return('*')
     end
@@ -249,7 +249,7 @@ describe BumpEnvironments do
     end
   end
 
-  context 'update_version' do
+  context '#update_version' do
     before :each do
       allow(ENV).to receive(:[]).with('envs').and_return('*')
     end
@@ -271,5 +271,11 @@ describe BumpEnvironments do
       BumpEnvironments.update_version(fixture_path(env_file))
       expect(get_cookbook_version(env_file, BumpEnvironments.cookbook)).to be_nil
     end
+  end
+
+  context '#push_branch' do
+  end
+
+  context 'create_pr'do
   end
 end
