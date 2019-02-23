@@ -48,6 +48,8 @@ class BumpEnvironments
     attr_reader :chef_env_files
     attr_reader :is_default_envs
     attr_reader :is_all_envs
+
+    attr_writer :chef_env_files
   end
 
   def self.load_node_attr
@@ -116,7 +118,7 @@ class BumpEnvironments
   def self.update_env_files
     # Replace the old versions with the new versions
     @chef_env_files.each do |f|
-      BumpEnvironments.update_env_files(f)
+      BumpEnvironments.update_version(f)
     end
   end
 

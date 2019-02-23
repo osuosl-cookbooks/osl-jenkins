@@ -23,7 +23,7 @@ module SpecHelper
   end
 
   def glob_env_files()
-    Dir.glob('../fixtures/environments/*.json').map do |f|
+    Dir.glob(fixture_path('environments/*.json')).map do |f|
       f.sub(/(.*)\/environments\/(.*)\.json/, 'environments/\2.json')
     end
   end
@@ -185,7 +185,7 @@ describe BumpEnvironments do
   context '#create_new_branch' do
     it 'creates new branch for all environments' do
       allow(BumpEnvironments).to receive(:create_branch_hash)
-        .with('production,workstation,openstack_ocata,phpbb,1.0.0').and_return(12345)
+        .with('production,workstation,phpbb,openstack_ocata,1.0.0').and_return(12345)
       allow(ENV).to receive(:[]).with('envs').and_return('*')
       expect(git_mock).to receive(:branch).with('jenkins/cookbook-1.0.0-all-envs-12345').and_return(git_mock)
       expect(git_mock).to receive(:checkout)
@@ -220,8 +220,32 @@ describe BumpEnvironments do
 
   context 'update_env_files' do
     before :each do
+      allow(ENV).to receive(:[]).with('envs').and_return('*')
     end
-    it 'update cookbook version' do
+    it 'update cookbook versions from all environment files' do
+      BumpEnvironments.load_config
+      BumpEnvironments.verify_chef_envs
+      BumpEnvironments.chef_env_files = BumpEnvironments.chef_env_files.map do |file|
+        fixture_path(file)
+      end
+      BumpEnvironments.update_env_files
+      expect(get_cookbook_version('environments/openstack_ocata.json', BumpEnvironments.cookbook)).to eq('= 1.0.0')
+      expect(get_cookbook_version('environments/phpbb.json', BumpEnvironments.cookbook)).to eq('= 1.0.0')
+      expect(get_cookbook_version('environments/production.json', BumpEnvironments.cookbook)).to be_nil
+      expect(get_cookbook_version('environments/workstation.json', BumpEnvironments.cookbook)).to be_nil
+    end
+    it 'reverts changes made by last test' do
+      allow(ENV).to receive(:[]).with('version').and_return('0.7.0')
+      BumpEnvironments.load_config
+      BumpEnvironments.verify_chef_envs
+      BumpEnvironments.chef_env_files = BumpEnvironments.chef_env_files.map do |file|
+        fixture_path(file)
+      end
+      BumpEnvironments.update_env_files
+      expect(get_cookbook_version('environments/openstack_ocata.json', BumpEnvironments.cookbook)).to eq('= 0.7.0')
+      expect(get_cookbook_version('environments/phpbb.json', BumpEnvironments.cookbook)).to eq('= 0.7.0')
+      expect(get_cookbook_version('environments/production.json', BumpEnvironments.cookbook)).to be_nil
+      expect(get_cookbook_version('environments/workstation.json', BumpEnvironments.cookbook)).to be_nil
     end
   end
 
