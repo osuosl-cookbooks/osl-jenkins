@@ -98,7 +98,7 @@ describe BumpEnvironments do
 
   context '#load_config' do
     it 'calls load_config' do
-      allow(ENV).to receive(:[]).with('envs').and_return('envs')
+      allow(ENV).to receive(:[]).with('envs').and_return('phpbb,production')
       expect(BumpEnvironments).to receive(:load_node_attr)
       expect(BumpEnvironments).to receive(:load_envs)
       BumpEnvironments.load_config
@@ -126,10 +126,10 @@ describe BumpEnvironments do
       expect(BumpEnvironments.is_default_envs).to be false
     end
     it 'does not include default environment at all' do
-      allow(ENV).to receive(:[]).with('envs').and_return('extra_env')
+      allow(ENV).to receive(:[]).with('envs').and_return('env')
       BumpEnvironments.load_config
       BumpEnvironments.verify_default_chef_envs
-      expect(BumpEnvironments.chef_envs).to contain_exactly('extra_env')
+      expect(BumpEnvironments.chef_envs).to contain_exactly('env')
       expect(BumpEnvironments.is_default_envs).to be false
     end
   end
@@ -149,13 +149,13 @@ describe BumpEnvironments do
       )
     end
     it 'not include all environments' do
-      allow(ENV).to receive(:[]).with('envs').and_return('openstack_ocata,production')
+      allow(ENV).to receive(:[]).with('envs').and_return('phpbb,production')
       BumpEnvironments.load_config
       BumpEnvironments.verify_all_chef_envs
       expect(BumpEnvironments.is_all_envs).to be false
-      expect(BumpEnvironments.chef_envs).to contain_exactly('openstack_ocata', 'production')
+      expect(BumpEnvironments.chef_envs).to contain_exactly('phpbb', 'production')
       expect(BumpEnvironments.chef_env_files).to contain_exactly(
-        'environments/openstack_ocata.json', 'environments/production.json'
+        'environments/phpbb.json', 'environments/production.json'
       )
     end
   end
