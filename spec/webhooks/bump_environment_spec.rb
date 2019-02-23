@@ -28,6 +28,11 @@ module SpecHelper
     end
   end
 
+  def get_cookbook_version(file, cookbook)
+   data = JSON.parse(::File.read(fixture_path(file)))
+   return data['cookbook_versions'][cookbook]
+  end
+
   def tempfile(file)
     tempfile = Tempfile.new("#{Pathname.new(file).basename}-rspec")
     tempfile.write(::File.read(file))
@@ -180,7 +185,7 @@ describe BumpEnvironments do
   context '#create_new_branch' do
     it 'creates new branch for all environments' do
       allow(BumpEnvironments).to receive(:create_branch_hash)
-        .with('openstack_ocata,phpbb,production,workstation,1.0.0').and_return(12345)
+        .with('production,workstation,openstack_ocata,phpbb,1.0.0').and_return(12345)
       allow(ENV).to receive(:[]).with('envs').and_return('*')
       expect(git_mock).to receive(:branch).with('jenkins/cookbook-1.0.0-all-envs-12345').and_return(git_mock)
       expect(git_mock).to receive(:checkout)
@@ -213,9 +218,34 @@ describe BumpEnvironments do
     end
   end
 
-  context 'update_version' do
+  context 'update_env_files' do
+    before :each do
+    end
     it 'update cookbook version' do
+    end
+  end
 
+  context 'update_version' do
+    before :each do
+      allow(ENV).to receive(:[]).with('envs').and_return('*')
+    end
+    it 'update cookbook version if cookbook is present in specified file' do
+      env_file = 'environments/phpbb.json'
+      BumpEnvironments.load_config
+      BumpEnvironments.update_version(fixture_path(env_file))
+      expect(get_cookbook_version(env_file, BumpEnvironments.cookbook)).to eq('= 1.0.0')
+    end
+    it 'reverts changes made by last test' do
+      env_file = 'environments/phpbb.json'
+      allow(ENV).to receive(:[]).with('version').and_return('0.7.0')
+      BumpEnvironments.load_config
+      BumpEnvironments.update_version(fixture_path(env_file))
+      expect(get_cookbook_version(env_file, BumpEnvironments.cookbook)).to eq('= 0.7.0')
+    end
+    it 'does not change environment cookbook version if cookbook not found' do
+      env_file = 'environments/production.json'
+      BumpEnvironments.update_version(fixture_path(env_file))
+      expect(get_cookbook_version(env_file, BumpEnvironments.cookbook)).to be_nil
     end
   end
 end
