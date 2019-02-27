@@ -63,6 +63,7 @@ describe BumpEnvironments do
     allow(git_mock).to receive(:add).with(all: true)
     allow(git_mock).to receive(:remote).with('origin').and_return(git_remote_mock)
     allow(Git).to receive(:open).and_return(git_mock)
+    allow(Octokit::Client).to receive(:new) { github_mock }
   end
 
   context '#load_node_attr' do
@@ -300,6 +301,28 @@ describe BumpEnvironments do
   end
 
   context 'create_pr'do
-    
+    it 'creates pr for all environments' do
+      allow(ENV).to receive(:[]).with('envs').and_return('*')
+      BumpEnvironments.load_config
+      BumpEnvironments.verify_chef_envs
+      expect(github_mock).to receive(:create_pull_request)
+        .with(
+          'osuosl/chef-repo', 
+          'master',
+          'jenkins/cookbook-1.0.0-12345',
+          "Bump 'cookbook' cookbook to version 1.0.0",
+          "This automatically generated PR bumps the 'cookbook' cookbook to version 1.0.0 in all "\
+          "environments.\nThis new version includes the changes from this PR: pr_link."
+        )
+      BumpEnvironments.create_pr('jenkins/cookbook-1.0.0-12345')
+    end
+    it 'creates pr for default environments' do
+    end
+    it 'creates pr for non-all, non-default environments' do
+    end
+    it 'creates pr when pr_link is nil' do
+    end
+    it 'creates pr when pr_link is empty' do
+    end
   end
 end
