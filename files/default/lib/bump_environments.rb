@@ -179,7 +179,7 @@ class BumpEnvironments
     git = Git.open('.')
     BumpEnvironments.update_master(git)
     git_branch = BumpEnvironments.create_new_branch(git)
-    BumpEnvironments.update_version
+    BumpEnvironments.update_env_files
     BumpEnvironments.push_branch(git, git_branch)
     BumpEnvironments.create_pr(git, git_branch)
   end
