@@ -141,7 +141,7 @@ class BumpEnvironments
     git.push(git.remote('origin'), git_branch, tags: true, force: true)
   end
 
-  def self.create_pr(git, git_branch)
+  def self.create_pr(git_branch)
     # Create the PR
     github = Octokit::Client.new(access_token: @github_token)
     title = "Bump '#{@cookbook}' cookbook to version #{@version}"
@@ -150,7 +150,7 @@ class BumpEnvironments
 
     if @is_all_envs
       body += 'all environments.'
-    elsif is_default_envs
+    elsif @is_default_envs
       body += 'the default set of environments:' \
               "\n```\n#{@chef_envs.to_a.join("\n")}\n```"
     else
@@ -181,7 +181,7 @@ class BumpEnvironments
     git_branch = BumpEnvironments.create_new_branch(git)
     BumpEnvironments.update_env_files
     BumpEnvironments.push_branch(git, git_branch)
-    BumpEnvironments.create_pr(git, git_branch)
+    BumpEnvironments.create_pr(git_branch)
   end
 
   def self.start
