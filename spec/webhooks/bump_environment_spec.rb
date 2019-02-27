@@ -300,7 +300,7 @@ describe BumpEnvironments do
     end
   end
 
-  context 'create_pr'do
+  context '#create_pr'do
     it 'creates pr for all environments' do
       allow(ENV).to receive(:[]).with('envs').and_return('*')
       BumpEnvironments.load_config
@@ -317,12 +317,67 @@ describe BumpEnvironments do
       BumpEnvironments.create_pr('jenkins/cookbook-1.0.0-12345')
     end
     it 'creates pr for default environments' do
+      allow(ENV).to receive(:[]).with('envs').and_return('~')
+      BumpEnvironments.load_config
+      BumpEnvironments.verify_chef_envs
+      expect(github_mock).to receive(:create_pull_request)
+        .with(
+          'osuosl/chef-repo', 
+          'master',
+          'jenkins/cookbook-1.0.0-12345',
+          "Bump 'cookbook' cookbook to version 1.0.0",
+          "This automatically generated PR bumps the 'cookbook' cookbook to version 1.0.0 in the "\
+          "default set of environments:\n```\nopenstack_mitaka\nphase_out_nginx\nphpbb\nproduction"\
+          "\ntesting\nworkstation\n```\n"\
+          "This new version includes the changes from this PR: pr_link."
+        )
+      BumpEnvironments.create_pr('jenkins/cookbook-1.0.0-12345')
     end
     it 'creates pr for non-all, non-default environments' do
+      allow(ENV).to receive(:[]).with('envs').and_return('phpbb,production')
+      BumpEnvironments.load_config
+      BumpEnvironments.verify_chef_envs
+      expect(github_mock).to receive(:create_pull_request)
+        .with(
+          'osuosl/chef-repo', 
+          'master',
+          'jenkins/cookbook-1.0.0-12345',
+          "Bump 'cookbook' cookbook to version 1.0.0",
+          "This automatically generated PR bumps the 'cookbook' cookbook to version 1.0.0 in the "\
+          "following environments:\n```\nphpbb\nproduction\n```\n"\
+          "This new version includes the changes from this PR: pr_link."
+        )
+      BumpEnvironments.create_pr('jenkins/cookbook-1.0.0-12345')
     end
     it 'creates pr when pr_link is nil' do
+      allow(ENV).to receive(:[]).with('pr_link').and_return(nil)
+      allow(ENV).to receive(:[]).with('envs').and_return('*')
+      BumpEnvironments.load_config
+      BumpEnvironments.verify_chef_envs
+      expect(github_mock).to receive(:create_pull_request)
+        .with(
+          'osuosl/chef-repo', 
+          'master',
+          'jenkins/cookbook-1.0.0-12345',
+          "Bump 'cookbook' cookbook to version 1.0.0",
+          "This automatically generated PR bumps the 'cookbook' cookbook to version 1.0.0 in all environments."
+        )
+      BumpEnvironments.create_pr('jenkins/cookbook-1.0.0-12345')
     end
     it 'creates pr when pr_link is empty' do
+      allow(ENV).to receive(:[]).with('pr_link').and_return('')
+      allow(ENV).to receive(:[]).with('envs').and_return('*')
+      BumpEnvironments.load_config
+      BumpEnvironments.verify_chef_envs
+      expect(github_mock).to receive(:create_pull_request)
+        .with(
+          'osuosl/chef-repo', 
+          'master',
+          'jenkins/cookbook-1.0.0-12345',
+          "Bump 'cookbook' cookbook to version 1.0.0",
+          "This automatically generated PR bumps the 'cookbook' cookbook to version 1.0.0 in all environments."
+        )
+      BumpEnvironments.create_pr('jenkins/cookbook-1.0.0-12345')
     end
   end
 end
