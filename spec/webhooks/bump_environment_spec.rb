@@ -62,8 +62,11 @@ describe BumpEnvironments do
     allow(git_mock).to receive(:pull)
     allow(git_mock).to receive(:add).with(all: true)
     allow(git_mock).to receive(:remote).with('origin').and_return(git_remote_mock)
+    allow(git_mock).to receive(:commit)
+    allow(git_mock).to receive(:push)
     allow(Git).to receive(:open).and_return(git_mock)
     allow(Octokit::Client).to receive(:new) { github_mock }
+    allow(github_mock).to receive(:create_pull_request)
   end
 
   context '#load_node_attr' do
@@ -378,6 +381,29 @@ describe BumpEnvironments do
           "This automatically generated PR bumps the 'cookbook' cookbook to version 1.0.0 in all environments."
         )
       BumpEnvironments.create_pr('jenkins/cookbook-1.0.0-12345')
+    end
+  end
+
+  context '#bump_env' do
+    it 'calls bump_env' do
+      allow(BumpEnvironments).to receive(:create_new_branch).with(git_mock)
+        .and_return('jenkins/cookbook-1.0.0-12345')
+      expect(BumpEnvironments).to receive(:update_master).with(git_mock)
+      expect(BumpEnvironments).to receive(:create_new_branch).with(git_mock)
+      expect(BumpEnvironments).to receive(:update_env_files)
+      expect(BumpEnvironments).to receive(:push_branch)
+        .with(git_mock, 'jenkins/cookbook-1.0.0-12345')
+      expect(BumpEnvironments).to receive(:create_pr).with('jenkins/cookbook-1.0.0-12345')
+      BumpEnvironments.bump_env
+    end
+  end
+  
+  context '#start' do
+    it 'calls start' do
+      expect(BumpEnvironments).to receive(:load_config)
+      expect(BumpEnvironments).to receive(:verify_chef_envs)
+      expect(BumpEnvironments).to receive(:bump_env)
+      BumpEnvironments.start
     end
   end
 end
