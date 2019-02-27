@@ -48,7 +48,8 @@ end
 describe BumpEnvironments do
   let(:github_mock) { double('Octokit', commits: [], issues: [], same_options?: false, auto_paginate: true) }
   let(:git_mock) { double('Git::Base') }
-let(:git_remote_mock) { double('Git::Remote') }
+  let(:git_remote_mock) { double('Git::Remote') }
+
   before :each do
     allow(ENV).to receive(:[]).with('cookbook').and_return('cookbook')
     allow(ENV).to receive(:[]).with('version').and_return('1.0.0')
@@ -60,9 +61,7 @@ let(:git_remote_mock) { double('Git::Remote') }
     allow(git_mock).to receive(:checkout)
     allow(git_mock).to receive(:pull)
     allow(git_mock).to receive(:add).with(all: true)
-    allow(git_mock).to receive(:commit)
     allow(git_mock).to receive(:remote).with('origin').and_return(git_remote_mock)
-    allow(git_mock).to receive(:push)
     allow(Git).to receive(:open).and_return(git_mock)
   end
 
@@ -283,21 +282,24 @@ let(:git_remote_mock) { double('Git::Remote') }
       allow(ENV).to receive(:[]).with('envs').and_return('*')
     end
     it 'has changes to commit' do
-      allow(ENV).to receive(:[]).with('version').and_return('1.0.0')
       BumpEnvironments.load_config
       expect(git_mock).to receive(:commit).with('Automatic version bump to v1.0.0 by Jenkins')
-      expect(git_mock).to receive(:push).with(git_remote_mock, 'jenkins/cookbook-1.0.0-12345', tags:true, force:true)
+      expect(git_mock).to receive(:push)
+        .with(git_remote_mock, 'jenkins/cookbook-1.0.0-12345', tags:true, force:true)
       BumpEnvironments.push_branch(git_mock, 'jenkins/cookbook-1.0.0-12345')
     end
     it 'has no change to commit' do
-      allow(ENV).to receive(:[]).with('version').and_return('1.0.0')
+      allow(git_mock).to receive(:commit).and_raise(Git::GitExecuteError)
       BumpEnvironments.load_config
       expect(git_mock).to receive(:commit).with('Automatic version bump to v1.0.0 by Jenkins')
-      expect(git_mock).to receive(:push).with(git_remote_mock, 'jenkins/cookbook-1.0.0-12345', tags:true, force:true)
-      BumpEnvironments.push_branch(git_mock, 'jenkins/cookbook-1.0.0-12345')
+      expect(git_mock).to receive(:push)
+        .with(git_remote_mock, 'jenkins/cookbook-1.0.0-12345', tags:true, force:true)
+      expect{ BumpEnvironments.push_branch(git_mock, 'jenkins/cookbook-1.0.0-12345') }
+        .to output("Unable to commit; were any changes actually made?\n").to_stderr
     end
   end
 
   context 'create_pr'do
+    
   end
 end
