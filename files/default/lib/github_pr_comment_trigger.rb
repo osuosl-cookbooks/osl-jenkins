@@ -40,6 +40,7 @@ class GithubPrCommentTrigger
   @repo_path = nil
   @issue_number = nil
   @pr = nil
+  @version = nil
   @metadata_file = 'metadata.rb'.freeze
   @changelog_file = 'CHANGELOG.md'.freeze
   @command = '!bump'.freeze
@@ -49,11 +50,26 @@ class GithubPrCommentTrigger
     'patch' => 2
   }.freeze
 
+  class << self
+    attr_reader :authorized_user
+    attr_reader :authorized_orgs
+    attr_reader :authorized_teams
+    attr_reader :github_token
+    attr_reader :do_not_upload_cookbooks
+    attr_reader :non_bump_message
+    attr_reader :level
+    attr_reader :envs
+    attr_reader :repo_name
+    attr_reader :repo_path
+    attr_reader :issue_number
+    attr_reader :pr
+    attr_reader :version
+  end
   
-  # Given a GitHub client, a GitHub username, and a GitHub team (of the form
-  # "$ORGNAME/$TEAMNAME"), returns whether the given user is a member of the
-  # given team.
   def self.team_member?(team, user)
+    # Given a GitHub client, a GitHub username, and a GitHub team (of the form
+    # "$ORGNAME/$TEAMNAME"), returns whether the given user is a member of the
+    # given team.
     org_name, team_name = team.split('/')
     team_id = @github.organization_teams(org_name).find do |t|
       t.name.casecmp(team_name) == 0
@@ -65,10 +81,10 @@ class GithubPrCommentTrigger
     end
   end
 
-  # Given a version string of the form 'x.x.x' and a level 0, 1, or 2, increments
-  # the specified level and returns the new version string.  All numbers to the
-  # right of the bumped number are reset to 0.
   def self.inc_version(v)
+    # Given a version string of the form 'x.x.x' and a level 0, 1, or 2, increments
+    # the specified level and returns the new version string.  All numbers to the
+    # right of the bumped number are reset to 0.
     v = v.split('.')
     v[@level] = v[@level].to_i.next.to_s
     (@level + 1...3).each { |i| v[i] = '0' }
@@ -142,7 +158,6 @@ class GithubPrCommentTrigger
   end
 
   def self.merge_pr
-    # Merge the PR
     @github.merge_pull_request(@repo_path, @issue_number)
 
     # Delete the old branch
@@ -161,15 +176,17 @@ class GithubPrCommentTrigger
   def self.update_metadata
     # Bump the cookbook version in metadata.rb
     # Match the line that looks like `version   "1.2.3"`
-    version = '' # Get the version variable in scope
+    @version = '' # Get the version variable in scope
     version_regex = /^(version\s+)(["'])(\d+\.\d+\.\d+)\2$/
     md = ::File.read(@metadata_file).gsub(version_regex) do
-      key = Regexp.last_match(1) # The "version" key and some whitespace
-      quote = Regexp.last_match(2) # The type of quotation mark used, e.g. " vs '
-      version = GithubPrCommentTrigger.inc_version(Regexp.last_match(3))
+      # The "version" key and some whitespace
+      key = Regexp.last_match(1)
+      # The type of quotation mark used, e.g. " vs '
+      quote = Regexp.last_match(2) 
+      @version = GithubPrCommentTrigger.inc_version(Regexp.last_match(3))
       # Reconstruct the version line by using the new version with the same spacing
       # and quotation mark types as before
-      "#{key}#{quote}#{version}#{quote}"
+      "#{key}#{quote}#{@version}#{quote}"
     end
     ::File.write(@metadata_file, md)
 
@@ -177,7 +194,7 @@ class GithubPrCommentTrigger
 
   def self.update_changelog
     # Update the CHANGELOG.md with the PR's title
-    entry = "#{version} (#{Time.now.strftime('%Y-%m-%d')})"
+    entry = "#{@version} (#{Time.now.strftime('%Y-%m-%d')})"
     entry += "\n" + '-' * entry.length
     entry += "\n- #{d['issue']['title']}\n\n"
     # Inject the new entry above the first one we find
@@ -188,10 +205,10 @@ class GithubPrCommentTrigger
   def self.push_updates(git, base_branch)
     # Commit changes
     git.add(all: true)
-    git.commit("Automatic #{@level}-level version bump to v#{version} by Jenkins")
+    git.commit("Automatic #{@level}-level version bump to v#{@version} by Jenkins")
 
     # Create a version tag
-    git.add_tag("v#{version}")
+    git.add_tag("v#{@version}")
 
     # Push back to Github
     git.push(git.remote('origin'), base_branch, tags: true)
@@ -206,7 +223,7 @@ class GithubPrCommentTrigger
   def self.close_pr(base_branch)
     # Close the PR
     message = "Jenkins has merged this PR into `#{base_branch}` and has " \
-      "automatically performed a #{@level}-level version bump to v#{version}.  " \
+      "automatically performed a #{@level}-level version bump to v#{@version}.  " \
       'Have a nice day!'
     @github.add_comment(@repo_path, @issue_number, message)
   end
@@ -217,7 +234,7 @@ class GithubPrCommentTrigger
     unless @envs.nil?
       ::File.write('envvars',
                    "cookbook=#{@repo_name}\n" \
-                   "version=#{version}\n" \
+                   "version=#{@version}\n" \
                    "envs=#{@envs}\n" \
                    "pr_link=#{d['issue']['html_url']}")
     end
