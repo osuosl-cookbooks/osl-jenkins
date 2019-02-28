@@ -13,26 +13,18 @@
 
 require 'git'
 require 'json'
+require 'yaml'
 require 'octokit'
 require 'faraday-http-cache'
 
-require_relative 'github_pr_comment_trigger_var'
-
-AUTHORIZED_USER = $AUTHORIZED_USER
-AUTHORIZED_ORGS = $AUTHORIZED_ORGS
-AUTHORIZED_TEAMS = $AUTHORIZED_TEAMS
-GITHUB_TOKEN = $GITHUB_TOKEN
-DO_NOT_UPLOAD_COOKBOOKS = $DO_NOT_UPLOAD_COOKBOOKS
-NON_BUMP_MESSAGE = $NON_BUMP_MESSAGE
-
-METADATA_FILE = 'metadata.rb'.freeze
-CHANGELOG_FILE = 'CHANGELOG.md'.freeze
-COMMAND = '!bump'.freeze
-LEVELS = {
-  'major' => 0,
-  'minor' => 1,
-  'patch' => 2
-}.freeze
+#METADATA_FILE = 'metadata.rb'.freeze
+#CHANGELOG_FILE = 'CHANGELOG.md'.freeze
+#COMMAND = '!bump'.freeze
+#LEVELS = {
+#  'major' => 0,
+#  'minor' => 1,
+#  'patch' => 2
+#}.freeze
 
 # Github API caching
 stack = Faraday::RackBuilder.new do |builder|
@@ -44,7 +36,13 @@ Octokit.middleware = stack
 
 # Library for Github PR comment trigger
 class GithubPrCommentTrigger
-  @github = Octokit::Client.new(access_token: GITHUB_TOKEN)
+  @github = Octokit::Client.new(access_token: @github_token)
+  @authorized_user = nil
+  @authorized_orgs = nil
+  @authorized_teams = nil
+  @github_token = nil
+  @do_not_upload_cookbooks = nil
+  @non_bump_message = nil
   @level = nil
   @envs = nil
   @repo_name = nil
@@ -77,20 +75,20 @@ class GithubPrCommentTrigger
     v.join('.')
   end
 
-  def self.verify
-    d = JSON.load(STDIN.read)
-    GithubPrCommentTrigger.verify_comment_creation(d)
-    GithubPrCommentTrigger.verify_valid_request(d)
-    GithubPrCommentTrigger.verify_issue_is_pr(d)
-    GithubPrCommentTrigger.verify_pr_not_merged(d)
-    GithubPrCommentTrigger.verify_pr_mergeable(d)
-    GithubPrCommentTrigger.verify_commenter_permission(d)
+  def self.load_node_attr
+    attr = YAML.load_file('github_pr_comment_trigger.yml')
+    @authorized_user = attr['authorized_user']
+    @authorized_orgs = attr['authorized_orgs']
+    @authorized_teams = attr['authorized_teams']
+    @github_token = attr['github_token']
+    @non_bump_message = attr['non_bump_message']
+    @do_not_upload_cookbooks = attr['do_not_upload_cookbooks']
   end
 
   def self.verify_comment_creation(d)
     unless d['action'] == 'created'
       # This isn't an error, we just don't need to do anything, so we exit with a 0.
-      $stderr.puts NON_BUMP_MESSAGE
+      $stderr.puts @non_bump_message
       exit 0
     end
   end
@@ -101,7 +99,7 @@ class GithubPrCommentTrigger
     match = comment.match(/^#{COMMAND} (#{LEVELS.keys.join('|')})( \S+(,\S+)*)?$/)
     if match.nil?
       # This isn't an error, we just don't need to do anything, so we exit with a 0.
-      $stderr.puts NON_BUMP_MESSAGE
+      $stderr.puts @non_bump_message
       exit 0
     end
     @level = match[1]
@@ -134,21 +132,20 @@ class GithubPrCommentTrigger
 
   def self.verify_commenter_permission(d)
     # Make sure the commenter has permission to perform the merge. The user has
-    # permission if their username is in AUTHORIZED_USERS, if one of the
-    # organizations they are in is in AUTHORIZED_ORGS, or if one of the teams they
-    # are in is in AUTHORIZED_TEAMS. If AUTHORIZED_USERS, AUTHORIZED_ORGS, and
-    # AUTHORIZED_TEAMS are all empty, then everyone has permission.
+    # permission if their username is in @authorized_user, if one of the
+    # organizations they are in is in @authorized_orgs, or if one of the teams they
+    # are in is in @authorized_teams. If @authorized_user, @authorized_orgs, and
+    # @authorized_teams are all empty, then everyone has permission.
     user = d['comment']['user']['login']
-    unless (AUTHORIZED_USERS.empty? &&
-           AUTHORIZED_ORGS.empty? &&
-           AUTHORIZED_TEAMS.empty?) ||
-           AUTHORIZED_USERS.include?(user) ||
-           AUTHORIZED_ORGS.detect { |o| @github.organization_member?(o, user) } ||
-           AUTHORIZED_TEAMS.detect { |t| GithubPrCommentTrigger.team_member?(t, user) }
+    unless (@authorized_user.empty? &&
+           @authorized_orgs.empty? &&
+           @authorized_teams.empty?) ||
+           @authorized_user.include?(user) ||
+           @authorized_orgs.detect { |o| @github.organization_member?(o, user) } ||
+           @authorized_teams.detect { |t| GithubPrCommentTrigger.team_member?(t, user) }
       abort "Error: Cannot merge PR because user '#{user}' is not authorized."
     end
   end
-
 
   def self.merge_pr
     # Merge the PR
@@ -157,17 +154,6 @@ class GithubPrCommentTrigger
     # Delete the old branch
     pr_branch = @pr['head']['ref']
     @github.delete_branch(@repo_path, pr_branch)
-  end
-
-  def self.update_version
-    # Set up the git gem
-    git = Git.open('.')
-    base_branch = GithubPrCommentTrigger.pull_updated_branch(git)
-    GithubPrCommentTrigger.update_metadata
-    GithubPrCommentTrigger.update_changelog
-    GithubPrCommentTrigger.push_updates(git, base_branch)
-    GithubPrCommentTrigger.close_pr(base_branch)
-    GithubPrCommentTrigger.return_envvars
   end
 
   def self.pull_updated_branch(git)
@@ -218,7 +204,7 @@ class GithubPrCommentTrigger
 
     # Upload to the Chef server, freezing, ignoring dependencies
     $stderr.puts "Uploading #{@repo_name} cookbook to the Chef server..."
-    unless DO_NOT_UPLOAD_COOKBOOKS
+    unless @do_not_upload_cookbooks
       `knife cookbook upload #{@repo_name} --freeze -o ../`
     end
   end
@@ -243,7 +229,29 @@ class GithubPrCommentTrigger
     end
   end
 
+  def self.verify
+    d = JSON.load(STDIN.read)
+    GithubPrCommentTrigger.verify_comment_creation(d)
+    GithubPrCommentTrigger.verify_valid_request(d)
+    GithubPrCommentTrigger.verify_issue_is_pr(d)
+    GithubPrCommentTrigger.verify_pr_not_merged(d)
+    GithubPrCommentTrigger.verify_pr_mergeable(d)
+    GithubPrCommentTrigger.verify_commenter_permission(d)
+  end
+
+  def self.update_version
+    # Set up the git gem
+    git = Git.open('.')
+    base_branch = GithubPrCommentTrigger.pull_updated_branch(git)
+    GithubPrCommentTrigger.update_metadata
+    GithubPrCommentTrigger.update_changelog
+    GithubPrCommentTrigger.push_updates(git, base_branch)
+    GithubPrCommentTrigger.close_pr(base_branch)
+    GithubPrCommentTrigger.return_envvars
+  end
+
   def self.start
+    GithubPrCommentTrigger.load_node_attr
     GithubPrCommentTrigger.verify
     GithubPrCommentTrigger.merge_pr
     GithubPrCommentTrigger.update_version
