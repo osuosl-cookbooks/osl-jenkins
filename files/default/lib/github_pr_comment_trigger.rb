@@ -17,15 +17,6 @@ require 'yaml'
 require 'octokit'
 require 'faraday-http-cache'
 
-#METADATA_FILE = 'metadata.rb'.freeze
-#CHANGELOG_FILE = 'CHANGELOG.md'.freeze
-#COMMAND = '!bump'.freeze
-#LEVELS = {
-#  'major' => 0,
-#  'minor' => 1,
-#  'patch' => 2
-#}.freeze
-
 # Github API caching
 stack = Faraday::RackBuilder.new do |builder|
   builder.use Faraday::HttpCache, serializer: Marshal, shared_cache: false
@@ -49,6 +40,15 @@ class GithubPrCommentTrigger
   @repo_path = nil
   @issue_number = nil
   @pr = nil
+  @metadata_file = 'metadata.rb'.freeze
+  @changelog_file = 'CHANGELOG.md'.freeze
+  @command = '!bump'.freeze
+  @levels = {
+    'major' => 0,
+    'minor' => 1,
+    'patch' => 2
+  }.freeze
+
   
   # Given a GitHub client, a GitHub username, and a GitHub team (of the form
   # "$ORGNAME/$TEAMNAME"), returns whether the given user is a member of the
@@ -87,18 +87,15 @@ class GithubPrCommentTrigger
 
   def self.verify_comment_creation(d)
     unless d['action'] == 'created'
-      # This isn't an error, we just don't need to do anything, so we exit with a 0.
       $stderr.puts @non_bump_message
       exit 0
     end
   end
 
   def self.verify_valid_request(d)
-    # Check if we got a valid request and get the bump level
     comment = d.fetch('comment', {}).fetch('body', '')
-    match = comment.match(/^#{COMMAND} (#{LEVELS.keys.join('|')})( \S+(,\S+)*)?$/)
+    match = comment.match(/^#{@command} (#{@levels.keys.join('|')})( \S+(,\S+)*)?$/)
     if match.nil?
-      # This isn't an error, we just don't need to do anything, so we exit with a 0.
       $stderr.puts @non_bump_message
       exit 0
     end
@@ -108,14 +105,12 @@ class GithubPrCommentTrigger
   end
 
   def self.verify_issue_is_pr(d)
-    # Make sure the issue is a PR
     unless d['issue'].key?('pull_request')
       abort 'Error: Cannot merge issue; can only merge PRs.'
     end
   end
 
   def self.verify_pr_not_merged(d)
-    # Make sure the PR isn't already merged
     @repo_name = d['repository']['name']
     @repo_path = d['repository']['full_name']
     @issue_number = d['issue']['number']
@@ -124,7 +119,6 @@ class GithubPrCommentTrigger
   end
 
   def self.verify_pr_mergeable(d)
-    # Make sure the PR can be merged without conflicts
     unless @pr.mergeable
       abort 'Error: Cannot merge PR because it would create merge conflicts.'
     end
@@ -169,7 +163,7 @@ class GithubPrCommentTrigger
     # Match the line that looks like `version   "1.2.3"`
     version = '' # Get the version variable in scope
     version_regex = /^(version\s+)(["'])(\d+\.\d+\.\d+)\2$/
-    md = ::File.read(METADATA_FILE).gsub(version_regex) do
+    md = ::File.read(@metadata_file).gsub(version_regex) do
       key = Regexp.last_match(1) # The "version" key and some whitespace
       quote = Regexp.last_match(2) # The type of quotation mark used, e.g. " vs '
       version = GithubPrCommentTrigger.inc_version(Regexp.last_match(3))
@@ -177,7 +171,7 @@ class GithubPrCommentTrigger
       # and quotation mark types as before
       "#{key}#{quote}#{version}#{quote}"
     end
-    ::File.write(METADATA_FILE, md)
+    ::File.write(@metadata_file, md)
 
   end
 
@@ -187,8 +181,8 @@ class GithubPrCommentTrigger
     entry += "\n" + '-' * entry.length
     entry += "\n- #{d['issue']['title']}\n\n"
     # Inject the new entry above the first one we find
-    cl = ::File.read(CHANGELOG_FILE).sub(/^(.*\d+\.\d+\.\d+)/, entry + '\1')
-    ::File.write(CHANGELOG_FILE, cl)
+    cl = ::File.read(@changelog_file).sub(/^(.*\d+\.\d+\.\d+)/, entry + '\1')
+    ::File.write(@changelog_file, cl)
   end
 
   def self.push_updates(git, base_branch)
