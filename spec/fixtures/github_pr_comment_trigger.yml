@@ -1,0 +1,7 @@
+---
+authorized_user: []
+authorized_orgs: []
+authorized_teams: ["osuosl-cookbooks/staff"]
+github_token: 'github_token'
+non_bump_message: 'Exiting because comment was not a bump request'
+do_not_upload_cookbooks: true
