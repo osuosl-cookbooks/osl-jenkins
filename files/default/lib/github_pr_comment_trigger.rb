@@ -64,6 +64,10 @@ class GithubPrCommentTrigger
     attr_reader :issue_number
     attr_reader :pr
     attr_reader :version
+    attr_reader :metadata_file
+    attr_reader :changelog_file
+    attr_reader :command
+    attr_reader :levels
   end
   
   def self.team_member?(team, user)
