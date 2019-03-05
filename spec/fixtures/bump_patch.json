@@ -1,4 +1,4 @@
-﻿{
+{
   "action": "created",
   "issue": {
     "url": "https://api.github.com/repos/osuosl-cookbooks/osl-jenkins/issues/157",
@@ -32,13 +32,13 @@
       "site_admin": false
     },
     "labels": [
-      
+
     ],
     "state": "open",
     "locked": false,
     "assignee": null,
     "assignees": [
-      
+
     ],
     "milestone": null,
     "comments": 0,
@@ -52,7 +52,7 @@
       "diff_url": "https://github.com/osuosl-cookbooks/osl-jenkins/pull/157.diff",
       "patch_url": "https://github.com/osuosl-cookbooks/osl-jenkins/pull/157.patch"
     },
-    "body": "-' Update various plugins which have security 'issues  \  r\n-' Add label-linked-jobs '(and' its 'dependencies)' to powerci and 'ibmz"
+    "body": "-' Update various plugins which have security 'issues\r\n-' Add label-linked-jobs '(and' its 'dependencies)' to powerci and 'ibmz"
   },
   "comment": {
     "url": "https://api.github.com/repos/osuosl-cookbooks/osl-jenkins/issues/comments/457281187",
