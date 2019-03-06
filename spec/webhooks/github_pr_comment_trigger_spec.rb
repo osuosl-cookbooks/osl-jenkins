@@ -117,20 +117,20 @@ describe GithubPrCommentTrigger do
         .to_not output().to_stderr
       GithubPrCommentTrigger.verify_comment_creation(open_json('bump_major.json'))
       puts GithubPrCommentTrigger.level
-      expect(GithubPrCommentTrigger.level).to be_eql('major')
-      expect(GithubPrCommentTrigger.envs).to be_eql('*')
+      expect(GithubPrCommentTrigger.level).to eql('major')
+      expect(GithubPrCommentTrigger.envs).to eql('*')
     end
     it 'comments bump minor' do
       expect{ GithubPrCommentTrigger.verify_comment_creation(open_json('bump_minor.json')) } 
         .to_not output().to_stderr
-      expect(GithubPrCommentTrigger.level).to be_eql('minor')
-      expect(GithubPrCommentTrigger.envs).to be_eql('*')
+      expect(GithubPrCommentTrigger.level).to eql('minor')
+      expect(GithubPrCommentTrigger.envs).to eql('*')
     end
     it 'comments bump patch' do
       expect{ GithubPrCommentTrigger.verify_comment_creation(open_json('bump_patch.json')) } 
         .to_not output().to_stderr
-      expect(GithubPrCommentTrigger.level).to be_eql('patch')
-      expect(GithubPrCommentTrigger.envs).to be_eql('*')
+      expect(GithubPrCommentTrigger.level).to eql('patch')
+      expect(GithubPrCommentTrigger.envs).to eql('*')
     end
   end
 end
