@@ -36,7 +36,7 @@ end
 
 describe GithubPrCommentTrigger do
   let(:github_mock) { double('Octokit', commits: [], issues: [], same_options?: false, auto_paginate: true) }
-
+  let(:not_bump_message) { 'Exiting because comment was not a bump request' }
   before :each do
     allow(Octokit::Client).to receive(:new) { github_mock }
     allow(YAML).to receive(:load_file).with('github_pr_comment_trigger.yml')
@@ -73,25 +73,64 @@ describe GithubPrCommentTrigger do
   context '#verify_comment_creation' do
     it 'has created action' do
       expect{ GithubPrCommentTrigger.verify_comment_creation(open_json('bump_major.json')) }
-        .to_not output().to_stderr
+        .to_not output.to_stderr
       expect{ GithubPrCommentTrigger.verify_comment_creation(open_json('bump_patch.json')) }
-        .to_not output().to_stderr
+        .to_not output.to_stderr
       expect{ GithubPrCommentTrigger.verify_comment_creation(open_json('bump_minor.json')) }
-        .to_not output().to_stderr
+        .to_not output.to_stderr
     end
-    it 'does not have created action' do
-      modified_json_patch = open_json('bump_patch.json')
-      modified_json_minor = open_json('bump_minor.json')
-      modified_json_major = open_json('bump_major.json')
-      modified_json_patch['action'] = 'not_created'
-      modified_json_minor['action'] = 'not_created'
-      modified_json_major['action'] = 'not_created'
-      expect{ GithubPrCommentTrigger.verify_comment_creation(modified_json_patch) }
-        .to output('Exiting because comment was not a bump request').to_stderr
-      expect{ GithubPrCommentTrigger.verify_comment_creation(modified_json_minor) }
-        .to output('Exiting because comment was not a bump request').to_stderr
-      expect{ GithubPrCommentTrigger.verify_comment_creation(modified_json_major) }
-        .to output('Exiting because comment was not a bump request').to_stderr
+    it 'does not have created action (bump patch)' do
+      begin
+        modified_json_patch = open_json('bump_patch.json')
+        modified_json_patch['action'] = 'not_created'
+        expect{ GithubPrCommentTrigger.verify_comment_creation(modified_json_patch) }
+          .to output('Exiting because comment was not a bump request').to_stderr
+      rescue SystemExit => e
+        expect(e.status).to eq(0)
+      end
+    end
+    it 'does not have created action (bump patch)' do
+      begin
+        modified_json_minor = open_json('bump_minor.json')
+        modified_json_minor['action'] = 'not_created'
+        expect{ GithubPrCommentTrigger.verify_comment_creation(modified_json_minor) }
+          .to output('Exiting because comment was not a bump request').to_stderr
+      rescue SystemExit => e
+        expect(e.status).to eq(0)
+      end
+    end
+    it 'does not have created action (bump patch)' do
+      begin
+        modified_json_major = open_json('bump_major.json')
+        modified_json_major['action'] = 'not_created'
+        expect{ GithubPrCommentTrigger.verify_comment_creation(modified_json_major) }
+          .to output('Exiting because comment was not a bump request').to_stderr
+      rescue SystemExit => e
+        expect(e.status).to eq(0)
+      end
+    end
+  end
+
+  context '#verify_valid_request' do
+    it 'comments bump major' do
+      expect{ GithubPrCommentTrigger.verify_comment_creation(open_json('bump_major.json')) } 
+        .to_not output().to_stderr
+      GithubPrCommentTrigger.verify_comment_creation(open_json('bump_major.json'))
+      puts GithubPrCommentTrigger.level
+      expect(GithubPrCommentTrigger.level).to be_eql('major')
+      expect(GithubPrCommentTrigger.envs).to be_eql('*')
+    end
+    it 'comments bump minor' do
+      expect{ GithubPrCommentTrigger.verify_comment_creation(open_json('bump_minor.json')) } 
+        .to_not output().to_stderr
+      expect(GithubPrCommentTrigger.level).to be_eql('minor')
+      expect(GithubPrCommentTrigger.envs).to be_eql('*')
+    end
+    it 'comments bump patch' do
+      expect{ GithubPrCommentTrigger.verify_comment_creation(open_json('bump_patch.json')) } 
+        .to_not output().to_stderr
+      expect(GithubPrCommentTrigger.level).to be_eql('patch')
+      expect(GithubPrCommentTrigger.envs).to be_eql('*')
     end
   end
 end
