@@ -70,11 +70,28 @@ describe GithubPrCommentTrigger do
     end
   end
 
-  context '#verify _comment_creation' do
+  context '#verify_comment_creation' do
     it 'has created action' do
-
+      expect{ GithubPrCommentTrigger.verify_comment_creation(open_json('bump_major.json')) }
+        .to_not output().to_stderr
+      expect{ GithubPrCommentTrigger.verify_comment_creation(open_json('bump_patch.json')) }
+        .to_not output().to_stderr
+      expect{ GithubPrCommentTrigger.verify_comment_creation(open_json('bump_minor.json')) }
+        .to_not output().to_stderr
     end
     it 'does not have created action' do
-
+      modified_json_patch = open_json('bump_patch.json')
+      modified_json_minor = open_json('bump_minor.json')
+      modified_json_major = open_json('bump_major.json')
+      modified_json_patch['action'] = 'not_created'
+      modified_json_minor['action'] = 'not_created'
+      modified_json_major['action'] = 'not_created'
+      expect{ GithubPrCommentTrigger.verify_comment_creation(modified_json_patch) }
+        .to output('Exiting because comment was not a bump request').to_stderr
+      expect{ GithubPrCommentTrigger.verify_comment_creation(modified_json_minor) }
+        .to output('Exiting because comment was not a bump request').to_stderr
+      expect{ GithubPrCommentTrigger.verify_comment_creation(modified_json_major) }
+        .to output('Exiting because comment was not a bump request').to_stderr
+    end
   end
 end
