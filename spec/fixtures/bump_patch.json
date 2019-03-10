@@ -83,7 +83,7 @@
     "created_at": "2019-01-24T17:19:59Z",
     "updated_at": "2019-01-24T17:19:59Z",
     "author_association": "CONTRIBUTOR",
-    "body": "!bump' patch '*"
+    "body": "!bump patch *"
   },
   "repository": {
     "id": 25012382,
