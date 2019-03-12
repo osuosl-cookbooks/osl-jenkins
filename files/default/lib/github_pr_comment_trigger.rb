@@ -135,7 +135,9 @@ class GithubPrCommentTrigger
     @repo_path = d['repository']['full_name']
     @issue_number = d['issue']['number']
     @pr = @github.pull_request(@repo_path, @issue_number)
-    abort 'Error: Cannot merge PR because it has already been merged.' if @pr.merged
+    if @pr.merged
+      abort 'Error: Cannot merge PR because it has already been merged.'
+    end
   end
 
   def self.verify_pr_mergeable(d)
