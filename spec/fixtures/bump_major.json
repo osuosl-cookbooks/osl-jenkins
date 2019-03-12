@@ -10,7 +10,7 @@
     "id":341100354,
     "node_id":"MDExOlB1bGxSZXF1ZXN0MjAxMzU0MTE4",
     "number":143,
-    "title":"Chef' 13 'compatibility",
+    "title":"Chef 13 compatibility",
     "user":{  
       "login":"eldebrim",
       "id":16765525,
@@ -36,7 +36,7 @@
         "id":410763745,
         "node_id":"MDU6TGFiZWw0MTA3NjM3NDU=",
         "url":"https://api.github.com/repos/osuosl-cookbooks/osl-jenkins/labels/Ready%20for%20Review",
-        "name":"Ready' for 'Review",
+        "name":"Ready for Review",
         "color":"fbca04",
         "default":false
       }
@@ -119,7 +119,7 @@
       "site_admin":false
     },
     "html_url":"https://github.com/osuosl-cookbooks/osl-jenkins",
-    "description":"Manages' Jenkins Master '&' Slave 'Servers",
+    "description":"Manages Jenkins Master & Slave Servers",
     "fork":false,
     "url":"https://api.github.com/repos/osuosl-cookbooks/osl-jenkins",
     "forks_url":"https://api.github.com/repos/osuosl-cookbooks/osl-jenkins/forks",
