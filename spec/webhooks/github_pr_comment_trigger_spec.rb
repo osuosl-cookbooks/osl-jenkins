@@ -36,11 +36,13 @@ end
 
 describe GithubPrCommentTrigger do
   let(:github_mock) { double('Octokit', commits: [], issues: [], same_options?: false, auto_paginate: true) }
+  let(:sawyer_mock) { double('Sawyer', merged: false) }
   let(:non_bump_message) { 'Exiting because comment was not a bump request' }
   before :each do
     allow(Octokit::Client).to receive(:new) { github_mock }
     allow(YAML).to receive(:load_file).with('github_pr_comment_trigger.yml')
       .and_return(open_yaml('github_pr_comment_trigger.yml'))
+    allow(github_mock).to receive(:pull_request) { sawyer_mock }
   end
 
   context 'default class variables' do
@@ -72,38 +74,38 @@ describe GithubPrCommentTrigger do
 
   context '#verify_comment_creation' do
     it 'has created action' do
-      expect{ GithubPrCommentTrigger.verify_comment_creation(open_json('bump_major.json')) }
+      expect { GithubPrCommentTrigger.verify_comment_creation(open_json('bump_major.json')) }
         .to_not output.to_stderr
-      expect{ GithubPrCommentTrigger.verify_comment_creation(open_json('bump_patch.json')) }
+      expect { GithubPrCommentTrigger.verify_comment_creation(open_json('bump_patch.json')) }
         .to_not output.to_stderr
-      expect{ GithubPrCommentTrigger.verify_comment_creation(open_json('bump_minor.json')) }
+      expect { GithubPrCommentTrigger.verify_comment_creation(open_json('bump_minor.json')) }
         .to_not output.to_stderr
     end
     it 'does not have created action (bump patch)' do
       begin
         modified_json = open_json('bump_patch.json')
         modified_json['action'] = 'not_created'
-        expect{ GithubPrCommentTrigger.verify_comment_creation(modified_json) }
+        expect { GithubPrCommentTrigger.verify_comment_creation(modified_json) }
           .to output(non_bump_message).to_stderr
       rescue SystemExit => e
         expect(e.status).to eq(0)
       end
     end
-    it 'does not have created action (bump patch)' do
+    it 'does not have created action (bump minor)' do
       begin
         modified_json = open_json('bump_minor.json')
         modified_json['action'] = 'not_created'
-        expect{ GithubPrCommentTrigger.verify_comment_creation(modified_json) }
+        expect { GithubPrCommentTrigger.verify_comment_creation(modified_json) }
           .to output(non_bump_message).to_stderr
       rescue SystemExit => e
         expect(e.status).to eq(0)
       end
     end
-    it 'does not have created action (bump patch)' do
+    it 'does not have created action (bump major)' do
       begin
         modified_json = open_json('bump_major.json')
         modified_json['action'] = 'not_created'
-        expect{ GithubPrCommentTrigger.verify_comment_creation(modified_json) }
+        expect { GithubPrCommentTrigger.verify_comment_creation(modified_json) }
           .to output(non_bump_message).to_stderr
       rescue SystemExit => e
         expect(e.status).to eq(0)
@@ -113,19 +115,19 @@ describe GithubPrCommentTrigger do
 
   context '#verify_valid_request' do
     it 'comments bump major' do
-      expect{ GithubPrCommentTrigger.verify_valid_request(open_json('bump_major.json')) } 
+      expect { GithubPrCommentTrigger.verify_valid_request(open_json('bump_major.json')) } 
         .to_not output().to_stderr
       expect(GithubPrCommentTrigger.level).to eql('major')
       expect(GithubPrCommentTrigger.envs).to eql('*')
     end
     it 'comments bump minor' do
-      expect{ GithubPrCommentTrigger.verify_valid_request(open_json('bump_minor.json')) } 
+      expect { GithubPrCommentTrigger.verify_valid_request(open_json('bump_minor.json')) } 
         .to_not output().to_stderr
       expect(GithubPrCommentTrigger.level).to eql('minor')
       expect(GithubPrCommentTrigger.envs).to eql('*')
     end
     it 'comments bump patch' do
-      expect{ GithubPrCommentTrigger.verify_valid_request(open_json('bump_patch.json')) } 
+      expect { GithubPrCommentTrigger.verify_valid_request(open_json('bump_patch.json')) } 
         .to_not output().to_stderr
       expect(GithubPrCommentTrigger.level).to eql('patch')
       expect(GithubPrCommentTrigger.envs).to eql('*')
@@ -134,7 +136,7 @@ describe GithubPrCommentTrigger do
       begin
         modified_json = open_json('bump_major.json')
         modified_json['comment']['body'] = '!bump  major  *'
-        expect{ GithubPrCommentTrigger.verify_valid_request(modified_json) }
+        expect { GithubPrCommentTrigger.verify_valid_request(modified_json) }
           .to output(non_bump_message).to_stderr
       rescue SystemExit => e
         expect(e.status).to eq(0)
@@ -143,7 +145,7 @@ describe GithubPrCommentTrigger do
     it 'does not include env in comment' do
       modified_json = open_json('bump_major.json')
       modified_json['comment']['body'] = '!bump major'
-      expect{ GithubPrCommentTrigger.verify_valid_request(modified_json) } 
+      expect { GithubPrCommentTrigger.verify_valid_request(modified_json) } 
         .to_not output().to_stderr
       expect(GithubPrCommentTrigger.level).to eql('major')
       expect(GithubPrCommentTrigger.envs).to be_nil
@@ -159,7 +161,6 @@ describe GithubPrCommentTrigger do
       begin
         modified_json = open_json('bump_major.json')
         modified_json['issue'].delete('pull_request')
-        puts modified_json['issue']['pull_request']
         expect { GithubPrCommentTrigger.verify_issue_is_pr(modified_json) }
           .to output('Error: Cannot merge issue; can only merge PRs.').to_stderr
       rescue SystemExit => e
@@ -170,16 +171,22 @@ describe GithubPrCommentTrigger do
 
   context 'verify_pr_not_merged' do
     it 'pr is not yet merged' do
-      expect{ GithubPrCommentTrigger.verify_pr_not_merged(open_json('bump_major.json')) }
+      expect { GithubPrCommentTrigger.verify_pr_not_merged(open_json('bump_major.json')) }
         .to_not output().to_stderr
       expect(GithubPrCommentTrigger.repo_name).to eql('osl-jenkins')
       expect(GithubPrCommentTrigger.repo_path).to eql('osuosl-cookbooks/osl-jenkins')
       expect(GithubPrCommentTrigger.issue_number).to eq(143)
-#Add Sawyer
-      expect(GithubPrCommentTrigger.pr).to eq
+      expect(GithubPrCommentTrigger.pr).to eq(sawyer_mock)
     end
     it 'pr is already merged' do
-      
+      begin
+        let(:sawyer_merged_mock) { double('Sawyer', merged: true) }
+        allow('github_mock').to receive(:pull_request) { sawyer_merged_mock }
+        expect { GithubPrCommentTrigger.verify_pr_not_merged(open_json('bump_major.json')) }
+          .to output('Error: Cannot merge PR because it has already been merged.').to_stderr
+      rescue SystemExit => e
+        expect(e.status).to eq(1)
+      end
     end
   end
 end
