@@ -71,31 +71,6 @@ class GithubPrCommentTrigger
     attr_reader :levels
   end
   
-  def self.team_member?(team, user)
-    # Given a GitHub client, a GitHub username, and a GitHub team (of the form
-    # "$ORGNAME/$TEAMNAME"), returns whether the given user is a member of the
-    # given team.
-    org_name, team_name = team.split('/')
-    team_id = @github.organization_teams(org_name).find do |t|
-      t.name.casecmp(team_name) == 0
-    end.id
-    begin
-      @github.team_membership(team_id, user)
-    rescue Octokit::NotFound
-      false
-    end
-  end
-
-  def self.inc_version(v)
-    # Given a version string of the form 'x.x.x' and a level 0, 1, or 2, increments
-    # the specified level and returns the new version string.  All numbers to the
-    # right of the bumped number are reset to 0.
-    v = v.split('.')
-    v[@level] = v[@level].to_i.next.to_s
-    (@level + 1...3).each { |i| v[i] = '0' }
-    v.join('.')
-  end
-
   def self.load_node_attr
     attr = YAML.load_file('github_pr_comment_trigger.yml')
     @authorized_user = attr['authorized_user']
@@ -151,6 +126,21 @@ class GithubPrCommentTrigger
     end
   end
 
+  def self.team_member?(team, user)
+    # Given a GitHub client, a GitHub username, and a GitHub team (of the form
+    # "$ORGNAME/$TEAMNAME"), returns whether the given user is a member of the
+    # given team.
+    org_name, team_name = team.split('/')
+    team_id = @github.organization_teams(org_name).find do |t|
+      t.name.casecmp(team_name) == 0
+    end.id
+    begin
+      @github.team_membership(team_id, user)
+    rescue Octokit::NotFound
+      false
+    end
+  end
+
   def self.verify_commenter_permission(d)
     # Make sure the commenter has permission to perform the merge. The user has
     # permission if their username is in @authorized_user, if one of the
@@ -182,6 +172,16 @@ class GithubPrCommentTrigger
     git.branch(base_branch).checkout
     git.pull(git.remote('origin'), base_branch)
     return base_branch
+  end
+
+  def self.inc_version(v)
+    # Given a version string of the form 'x.x.x' and a level 0, 1, or 2, increments
+    # the specified level and returns the new version string.  All numbers to the
+    # right of the bumped number are reset to 0.
+    v = v.split('.')
+    v[@level] = v[@level].to_i.next.to_s
+    (@level + 1...3).each { |i| v[i] = '0' }
+    v.join('.')
   end
 
   def self.update_metadata
