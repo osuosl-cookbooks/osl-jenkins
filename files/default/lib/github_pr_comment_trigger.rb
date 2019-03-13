@@ -27,7 +27,7 @@ Octokit.middleware = stack
 
 # Library for Github PR comment trigger
 class GithubPrCommentTrigger
-  @github = Octokit::Client.new(access_token: @github_token)
+  @github = nil
   @authorized_user = nil
   @authorized_orgs = nil
   @authorized_teams = nil
@@ -51,6 +51,7 @@ class GithubPrCommentTrigger
   }.freeze
 
   class << self
+    attr_reader :github
     attr_reader :authorized_user
     attr_reader :authorized_orgs
     attr_reader :authorized_teams
@@ -103,6 +104,10 @@ class GithubPrCommentTrigger
     @github_token = attr['github_token']
     @non_bump_message = attr['non_bump_message']
     @do_not_upload_cookbooks = attr['do_not_upload_cookbooks']
+  end
+
+  def self.setup_github
+    @github = Octokit::Client.new(access_token: @github_token)
   end
 
   def self.verify_comment_creation(d)
@@ -269,6 +274,7 @@ class GithubPrCommentTrigger
 
   def self.start
     GithubPrCommentTrigger.load_node_attr
+    GithubPrCommentTrigger.setup_github
     GithubPrCommentTrigger.verify
     GithubPrCommentTrigger.merge_pr
     GithubPrCommentTrigger.update_version
