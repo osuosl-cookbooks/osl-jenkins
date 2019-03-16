@@ -22,6 +22,12 @@ module SpecHelper
     YAML.load_file(fixture_path(name))
   end
 
+  def modify_node_attr(orig_attr, modified_attr)
+    modified_attr.each do |key, val|
+      orig_attr[key] = val
+    end
+  end
+
   def tempfile(file)
     tempfile = Tempfile.new("#{Pathname.new(file).basename}-rspec")
     tempfile.write(::File.read(file))
@@ -241,6 +247,13 @@ describe GithubPrCommentTrigger do
   end
 
   context '#verify_commenter_permission' do
-
+    it 'verify authorized_user/orgs/teams are all empty' do
+      modified_attr = { 'authorized_teams' => [] }
+      allow(YAML).to receive(:load_file).and_call_original
+      allow(YAML).to receive(:load_file).with('github_pr_comment_trigger.yml')
+        .and_return(modify_node_attr(open_yaml('github_pr_comment_trigger.yml'), modified_attr))
+      GithubPrCommentTrigger.load_node_attr
+      puts GithubPrCommentTrigger.authorized_teams.length
+    end
   end
 end
