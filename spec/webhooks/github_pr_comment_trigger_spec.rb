@@ -39,6 +39,10 @@ describe GithubPrCommentTrigger do
   let(:sawyer_mock) { double('Sawyer', :merged => false, :mergeable => true) }
   let(:sawyer_merged_mock) { double('Sawyer', :merged => true, :mergeable => true) }
   let(:sawyer_unmergeable_mock) { double('Sawyer', :merged => false, :mergeable => false) }
+  let(:sawyer_teams_mock) {[
+    double('Sawyer', :name => 'team1', :id => 1),
+    double('Sawyer', :name => 'team2', :id => 2)
+  ]}
   # non_bump_message with newline character to match puts output
   let(:non_bump_message) { "Exiting because comment was not a bump request\n" }
 
@@ -210,5 +214,33 @@ describe GithubPrCommentTrigger do
           .to raise_error(SystemExit)
       end.to output.to_stderr
     end
+  end
+
+  context '#team_member?' do
+    it 'finds user in team' do
+      allow(github_mock).to receive(:organization_teams).with('test_orgs').and_return(sawyer_teams_mock)
+      allow(github_mock).to receive(:team_membership).with(1, 'test_user').and_return(sawyer_mock)
+      GithubPrCommentTrigger.setup_github
+      expect(GithubPrCommentTrigger.team_member?('test_orgs/team1', 'test_user'))
+        .to eq(sawyer_mock)
+    end
+    it 'does not find user in team' do
+      allow(github_mock).to receive(:organization_teams).with('test_orgs').and_return(sawyer_teams_mock)
+      allow(github_mock).to receive(:team_membership).with(1, 'test_user').and_raise(Octokit::NotFound)
+      GithubPrCommentTrigger.setup_github
+      expect(GithubPrCommentTrigger.team_member?('test_orgs/team1', 'test_user'))
+        .to be false
+    end
+# Is it safe to assume team always in org?
+#    it 'does not find team in org' do
+#      allow(github_mock).to receive(:organization_teams).with('test_orgs').and_return(sawyer_teams_mock)
+#      GithubPrCommentTrigger.setup_github
+#      expect(GithubPrCommentTrigger.team_member?('test_orgs/team3', 'test_user'))
+#        .to be false
+#    end
+  end
+
+  context '#verify_commenter_permission' do
+
   end
 end
