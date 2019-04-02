@@ -26,6 +26,7 @@ module SpecHelper
     modified_attr.each do |key, val|
       orig_attr[key] = val
     end
+    return orig_attr
   end
 
   def tempfile(file)
@@ -46,8 +47,8 @@ describe GithubPrCommentTrigger do
   let(:sawyer_merged_mock) { double('Sawyer', :merged => true, :mergeable => true) }
   let(:sawyer_unmergeable_mock) { double('Sawyer', :merged => false, :mergeable => false) }
   let(:sawyer_teams_mock) {[
-    double('Sawyer', :name => 'team1', :id => 1),
-    double('Sawyer', :name => 'team2', :id => 2)
+    double('Sawyer', :name => 'staff', :id => 1),
+    double('Sawyer', :name => 'chefs', :id => 2)
   ]}
   # non_bump_message with newline character to match puts output
   let(:non_bump_message) { "Exiting because comment was not a bump request\n" }
@@ -218,42 +219,104 @@ describe GithubPrCommentTrigger do
       expect do
         expect { GithubPrCommentTrigger.verify_pr_mergeable(json) }
           .to raise_error(SystemExit)
-      end.to output.to_stderr
+      end.to output("Error: Cannot merge PR because it would create merge conflicts.\n").to_stderr
     end
   end
 
   context '#team_member?' do
     it 'finds user in team' do
-      allow(github_mock).to receive(:organization_teams).with('test_orgs').and_return(sawyer_teams_mock)
+      allow(github_mock).to receive(:organization_teams).with('osuosl-cookbooks').and_return(sawyer_teams_mock)
       allow(github_mock).to receive(:team_membership).with(1, 'test_user').and_return(sawyer_mock)
       GithubPrCommentTrigger.setup_github
-      expect(GithubPrCommentTrigger.team_member?('test_orgs/team1', 'test_user'))
+      expect(GithubPrCommentTrigger.team_member?('osuosl-cookbooks/staff', 'test_user'))
         .to eq(sawyer_mock)
     end
     it 'does not find user in team' do
-      allow(github_mock).to receive(:organization_teams).with('test_orgs').and_return(sawyer_teams_mock)
+      allow(github_mock).to receive(:organization_teams).with('osuosl-cookbooks').and_return(sawyer_teams_mock)
       allow(github_mock).to receive(:team_membership).with(1, 'test_user').and_raise(Octokit::NotFound)
       GithubPrCommentTrigger.setup_github
-      expect(GithubPrCommentTrigger.team_member?('test_orgs/team1', 'test_user'))
+      expect(GithubPrCommentTrigger.team_member?('osuosl-cookbooks/staff', 'test_user'))
         .to be false
     end
 # Is it safe to assume team always in org?
-#    it 'does not find team in org' do
-#      allow(github_mock).to receive(:organization_teams).with('test_orgs').and_return(sawyer_teams_mock)
-#      GithubPrCommentTrigger.setup_github
-#      expect(GithubPrCommentTrigger.team_member?('test_orgs/team3', 'test_user'))
-#        .to be false
-#    end
+    it 'does not find team in org' do
+      allow(github_mock).to receive(:organization_teams).with('osuosl-cookbooks').and_return(sawyer_teams_mock)
+      GithubPrCommentTrigger.setup_github
+      expect { GithubPrCommentTrigger.team_member?('osuosl-cookbooks/not_team', 'test_user') }
+        .to raise_error(NoMethodError)
+    end
   end
 
   context '#verify_commenter_permission' do
-    it 'verify authorized_user/orgs/teams are all empty' do
+    it 'passes when authorized_user/orgs/teams are all empty' do
       modified_attr = { 'authorized_teams' => [] }
+      json = open_json('bump_major.json')
       allow(YAML).to receive(:load_file).and_call_original
       allow(YAML).to receive(:load_file).with('github_pr_comment_trigger.yml')
         .and_return(modify_node_attr(open_yaml('github_pr_comment_trigger.yml'), modified_attr))
       GithubPrCommentTrigger.load_node_attr
-      puts GithubPrCommentTrigger.authorized_teams.length
+      GithubPrCommentTrigger.setup_github
+      expect { GithubPrCommentTrigger.verify_commenter_permission(json) }
+        .to_not output.to_stderr
+    end
+    it 'passes when user is in authorized_users' do
+      modified_attr = {
+        'authrized_users' => ['eldebrim'],
+        'authorized_teams' => []
+      }
+      json = open_json('bump_major.json')
+      allow(YAML).to receive(:load_file).and_call_original
+      allow(YAML).to receive(:load_file).with('github_pr_comment_trigger.yml')
+        .and_return(modify_node_attr(open_yaml('github_pr_comment_trigger.yml'), modified_attr))
+      GithubPrCommentTrigger.load_node_attr
+      GithubPrCommentTrigger.setup_github
+      expect { GithubPrCommentTrigger.verify_commenter_permission(json) }
+        .to_not output.to_stderr
+    end
+    it 'passes when one of user\'s org is in authorized_orgs' do
+      modified_attr = {
+        'authrized_users' => [],
+        'authorized_orgs' => ['test_org'],
+        'authorized_teams' => []
+      }
+      json = open_json('bump_major.json')
+      allow(YAML).to receive(:load_file).and_call_original
+      allow(YAML).to receive(:load_file).with('github_pr_comment_trigger.yml')
+        .and_return(modify_node_attr(open_yaml('github_pr_comment_trigger.yml'), modified_attr))
+      allow(github_mock).to receive(:organization_member?).with('test_org', 'eldebrim').and_return(true)
+      GithubPrCommentTrigger.load_node_attr
+      GithubPrCommentTrigger.setup_github
+      expect { GithubPrCommentTrigger.verify_commenter_permission(json) }
+        .to_not output.to_stderr
+    end
+    it 'passes when one of user\'s team is in authorized_teams' do
+      json = open_json('bump_major.json')
+      allow(github_mock).to receive(:organization_teams).with('osuosl-cookbooks').and_return(sawyer_teams_mock)
+      allow(github_mock).to receive(:team_membership).with(1, 'eldebrim').and_return(sawyer_mock)
+      GithubPrCommentTrigger.load_node_attr
+      GithubPrCommentTrigger.setup_github
+      expect { GithubPrCommentTrigger.verify_commenter_permission(json) }
+        .to_not output.to_stderr
+    end
+    it 'aborts when none of above conditions are met' do
+      modified_attr = {
+        'authrized_users' => ['not_user'],
+        'authorized_orgs' => ['not_org'],
+        'authorized_teams' => ['osuosl-cookbooks/staff']
+      }
+      json = open_json('bump_major.json')
+      allow(YAML).to receive(:load_file).and_call_original
+      allow(YAML).to receive(:load_file).with('github_pr_comment_trigger.yml')
+        .and_return(modify_node_attr(open_yaml('github_pr_comment_trigger.yml'), modified_attr))
+      allow(github_mock).to receive(:organization_member?).with('not_org', 'eldebrim').and_return(false)
+      allow(github_mock).to receive(:organization_teams).with('osuosl-cookbooks').and_return(sawyer_teams_mock)
+      allow(github_mock).to receive(:team_membership).with(1, 'eldebrim').and_raise(Octokit::NotFound)
+      GithubPrCommentTrigger.load_node_attr
+      GithubPrCommentTrigger.setup_github
+      expect do
+        expect { GithubPrCommentTrigger.verify_commenter_permission(json) }
+          .to raise_error(SystemExit)
+      end.to output("Error: Cannot merge PR because user 'eldebrim' is not authorized.\n").to_stderr
     end
   end
 end
