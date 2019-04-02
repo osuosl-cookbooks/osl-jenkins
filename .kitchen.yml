@@ -2,8 +2,7 @@
 driver:
   flavor_ref: 'm1.medium'
   network_ref:
-  #  - vlan42
-    - public1
+    - public2
   security_groups:
     - default
     - github
@@ -273,7 +272,6 @@ suites:
     nodes_path: test/integration/nodes
     provisioner: chef_zero
     run_list:
-      - recipe[osl-docker::powerci]
       - recipe[osl-jenkins::powerci]
       - recipe[jenkins_test]
     excludes:
@@ -308,7 +306,6 @@ suites:
     nodes_path: test/integration/nodes
     provisioner: chef_zero
     run_list:
-      - recipe[osl-docker::ibmz_ci]
       - recipe[osl-jenkins::ibmz_ci]
       - recipe[jenkins_test]
     driver_config:

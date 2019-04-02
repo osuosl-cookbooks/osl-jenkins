@@ -37,12 +37,12 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     durable-task:1.17
     external-monitor-job:1.4
     ghprb:1.42.0
-    git:3.9.1
+    git:3.9.3
     git-client:2.7.1
     github:1.29.2
     github-api:1.90
     github-branch-source:2.3.6
-    github-oauth:0.22.3
+    github-oauth:0.31
     github-organization-folder:1.6
     gitlab-plugin:1.4.4
     git-server:1.7
@@ -59,7 +59,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     mailer:1.21
     mapdb-api:1.0.6.0
     matrix-auth:1.5
-    matrix-project:1.13
+    matrix-project:1.14
     maven-plugin:3.1.2
     momentjs:1.1.1
     pam-auth:1.4
@@ -81,27 +81,27 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     plain-credentials:1.4
     run-condition:1.0
     scm-api:2.2.7
-    script-security:1.50
+    script-security:1.56
     ssh-agent:1.16
     ssh-credentials:1.14
     ssh-slaves:1.28.1
     structs:1.17
     subversion:2.10.3
     text-finder:1.10
-    token-macro:2.1
+    token-macro:2.7
     translation:1.16
     windows-slaves:1.1
     workflow-aggregator:2.5
     workflow-api:2.30
     workflow-basic-steps:2.6
-    workflow-cps:2.62
+    workflow-cps:2.65
     workflow-cps-global-lib:2.9
     workflow-durable-task-step:2.18
     workflow-job:2.26
     workflow-multibranch:2.16
     workflow-scm-step:2.6
-    workflow-step-api:2.18
-    workflow-support:2.22
+    workflow-step-api:2.19
+    workflow-support:3.2
     ws-cleanup:0.28
   ).each do |plugins_version|
     plugin, version = plugins_version.split(':')
