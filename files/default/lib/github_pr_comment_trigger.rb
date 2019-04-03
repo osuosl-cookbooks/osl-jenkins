@@ -201,7 +201,6 @@ class GithubPrCommentTrigger
       "#{key}#{quote}#{@version}#{quote}"
     end
     ::File.write(@metadata_file, md)
-
   end
 
   def self.update_changelog

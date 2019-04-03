@@ -29,6 +29,15 @@ module SpecHelper
     return orig_attr
   end
 
+  def metadata_version
+    version_regex = /^(version\s+)(["'])(\d+\.\d+\.\d+)\2$/
+    return open_fixture('metadata.rb').match(version_regex)[0]
+  end
+
+  def revert_metadata
+
+  end
+
   def tempfile(file)
     tempfile = Tempfile.new("#{Pathname.new(file).basename}-rspec")
     tempfile.write(::File.read(file))
@@ -66,6 +75,10 @@ describe GithubPrCommentTrigger do
     allow(YAML).to receive(:load_file).with('github_pr_comment_trigger.yml')
       .and_return(open_yaml('github_pr_comment_trigger.yml'))
     allow(STDIN).to receive(:read).and_return(open_fixture('bump_major.json'))
+    allow(::File).to receive(:read).and_call_original
+    allow(::File).to receive(:read).with('metadata.rb').and_return(open_fixture('metadata.rb'))
+    allow(::File).to receive(:read).with('CHANGELOG.md').and_return(open_fixture('CHANGELOG.md'))
+#    allow(::File).to receive(:write).with('metadata.rb', md).and_return(::File.write(fixture_path('metadata.rb', md)))
     allow(github_mock).to receive(:pull_request) { major_pr_mock }
     allow(github_mock).to receive(:organization_teams).with('osuosl-cookbooks').and_return(teams_mock)
     allow(github_mock).to receive(:team_membership).with(1, 'eldebrim').and_return(sawyer_mock)
@@ -382,6 +395,25 @@ describe GithubPrCommentTrigger do
       GithubPrCommentTrigger.setup_github
       GithubPrCommentTrigger.verify
       expect(GithubPrCommentTrigger.inc_version('2.6.13')).to eql('3.0.0')
+    end
+  end
+  
+  context '#update_metadata' do
+    it 'update metadata.rb with bump patch' do
+      allow(STDIN).to receive(:read).and_return(open_fixture('bump_patch.json'))
+      GithubPrCommentTrigger.load_node_attr
+      GithubPrCommentTrigger.setup_github
+      GithubPrCommentTrigger.verify
+      GithubPrCommentTrigger.update_metadata
+      puts GithubPrCommentTrigger.version
+      expect(metadata_version).to eql("version          '2.0.12'")
+      revert_metadata
+    end
+    it 'update metadata.rb with bump minor' do
+    end
+    it 'update metadata.rb with bump major' do
+    end
+    it 'update metadata.rb with double quote' do
     end
   end
 end
