@@ -185,12 +185,12 @@ class GithubPrCommentTrigger
     v.join('.')
   end
 
-  def self.update_metadata
+  def self.update_metadata(metadata_file)
     # Bump the cookbook version in metadata.rb
     # Match the line that looks like `version   "1.2.3"`
     @version = '' # Get the version variable in scope
     version_regex = /^(version\s+)(["'])(\d+\.\d+\.\d+)\2$/
-    md = ::File.read(@metadata_file).gsub(version_regex) do
+    md = ::File.read(metadata_file).gsub(version_regex) do
       # The "version" key and some whitespace
       key = Regexp.last_match(1)
       # The type of quotation mark used, e.g. " vs '
@@ -200,17 +200,17 @@ class GithubPrCommentTrigger
       # and quotation mark types as before
       "#{key}#{quote}#{@version}#{quote}"
     end
-    ::File.write(@metadata_file, md)
+    ::File.write(metadata_file, md)
   end
 
-  def self.update_changelog
+  def self.update_changelog(changelog_file)
     # Update the CHANGELOG.md with the PR's title
     entry = "#{@version} (#{Time.now.strftime('%Y-%m-%d')})"
     entry += "\n" + '-' * entry.length
     entry += "\n- #{d['issue']['title']}\n\n"
     # Inject the new entry above the first one we find
-    cl = ::File.read(@changelog_file).sub(/^(.*\d+\.\d+\.\d+)/, entry + '\1')
-    ::File.write(@changelog_file, cl)
+    cl = ::File.read(changelog_file).sub(/^(.*\d+\.\d+\.\d+)/, entry + '\1')
+    ::File.write(changelog_file, cl)
   end
 
   def self.push_updates(git, base_branch)
@@ -265,8 +265,8 @@ class GithubPrCommentTrigger
     # Set up the git gem
     git = Git.open('.')
     base_branch = GithubPrCommentTrigger.pull_updated_branch(git)
-    GithubPrCommentTrigger.update_metadata
-    GithubPrCommentTrigger.update_changelog
+    GithubPrCommentTrigger.update_metadata(@metadata_file)
+    GithubPrCommentTrigger.update_changelog(@changelog_file)
     GithubPrCommentTrigger.push_updates(git, base_branch)
     GithubPrCommentTrigger.close_pr(base_branch)
     GithubPrCommentTrigger.return_envvars
