@@ -436,9 +436,19 @@ describe GithubPrCommentTrigger do
       GithubPrCommentTrigger.setup_github
       GithubPrCommentTrigger.verify
       GithubPrCommentTrigger.update_metadata(fixture_path('metadata.rb'))
+      # If quotation marks causing problems, comment the line below and run rspec to correct quotation marks
       expect(metadata_version).to eql("version          \"3.0.0\"")
       change_metadata_quote(/"/, "'")
       revert_metadata
+    end
+  end
+
+  context '#update_changelog' do
+    it 'update CHANGELOG.md with bump patch' do
+    end
+    it 'update CHANGELOG.md with bump minor' do
+    end
+    it 'update CHANGELOG.md with bump major' do
     end
   end
 end
