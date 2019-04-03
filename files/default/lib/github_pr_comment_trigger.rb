@@ -216,7 +216,7 @@ class GithubPrCommentTrigger
     # Update the CHANGELOG.md with the PR's title
     entry = "#{@version} (#{Time.now.strftime('%Y-%m-%d')})"
     entry += "\n" + '-' * entry.length
-    entry += "\n- #{d['issue']['title']}\n\n"
+    entry += "\n- #{@title}\n\n"
     # Inject the new entry above the first one we find
     cl = ::File.read(changelog_file).sub(/^(.*\d+\.\d+\.\d+)/, entry + '\1')
     ::File.write(changelog_file, cl)
@@ -256,7 +256,7 @@ class GithubPrCommentTrigger
                    "cookbook=#{@repo_name}\n" \
                    "version=#{@version}\n" \
                    "envs=#{@envs}\n" \
-                   "pr_link=#{d['issue']['html_url']}")
+                   "pr_link=#{@pr_link}")
     end
   end
 
