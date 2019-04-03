@@ -129,6 +129,30 @@ describe GithubPrCommentTrigger do
     end
   end
 
+  context '#load_issue' do
+    it 'loads bump_patch.json issue data to class variables' do
+      GithubPrCommentTrigger.load_issue(open_json('bump_patch.json'))
+      expect(GithubPrCommentTrigger.title)
+        .to eql('Export data from check-size to node_exporter for prometheus metrics')
+      expect(GithubPrCommentTrigger.pr_link)
+        .to eql('https://github.com/osuosl-cookbooks/osl-mirror/pull/78')
+    end
+    it 'loads bump_minor.json issue data to class variables' do
+      GithubPrCommentTrigger.load_issue(open_json('bump_minor.json'))
+      expect(GithubPrCommentTrigger.title)
+        .to eql('Add IBM-Z recipe and other fixes')
+      expect(GithubPrCommentTrigger.pr_link)
+        .to eql('https://github.com/osuosl-cookbooks/osl-jenkins/pull/127')
+    end
+    it 'loads bump_major.json issue data to class variables' do
+      GithubPrCommentTrigger.load_issue(open_json('bump_major.json'))
+      expect(GithubPrCommentTrigger.title)
+        .to eql('Chef 13 compatibility')
+      expect(GithubPrCommentTrigger.pr_link)
+        .to eql('https://github.com/osuosl-cookbooks/osl-jenkins/pull/143')
+    end
+  end
+
   context '#verify_comment_creation' do
     it 'has created action' do
       expect { GithubPrCommentTrigger.verify_comment_creation(open_json('bump_major.json')) }
