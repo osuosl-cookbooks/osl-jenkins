@@ -41,6 +41,8 @@ class GithubPrCommentTrigger
   @issue_number = nil
   @pr = nil
   @version = nil
+  @title = nil
+  @pr_link = nil
   @metadata_file = 'metadata.rb'.freeze
   @changelog_file = 'CHANGELOG.md'.freeze
   @command = '!bump'.freeze
@@ -65,6 +67,8 @@ class GithubPrCommentTrigger
     attr_reader :issue_number
     attr_reader :pr
     attr_reader :version
+    attr_reader :title
+    attr_reader :pr_link
     attr_reader :metadata_file
     attr_reader :changelog_file
     attr_reader :command
@@ -90,6 +94,11 @@ class GithubPrCommentTrigger
       $stderr.puts @non_bump_message
       exit 0
     end
+  end
+
+  def self.load_issue(d)
+    @title = d['issue']['title']
+    @pr_link = d['issue']['html_url']
   end
 
   def self.verify_valid_request(d)
@@ -253,6 +262,7 @@ class GithubPrCommentTrigger
 
   def self.verify
     d = JSON.load(STDIN.read)
+    GithubPrCommentTrigger.load_issue(d)
     GithubPrCommentTrigger.verify_comment_creation(d)
     GithubPrCommentTrigger.verify_valid_request(d)
     GithubPrCommentTrigger.verify_issue_is_pr(d)
