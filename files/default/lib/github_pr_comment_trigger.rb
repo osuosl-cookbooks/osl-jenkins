@@ -162,13 +162,13 @@ class GithubPrCommentTrigger
     @github.merge_pull_request(@repo_path, @issue_number)
 
     # Delete the old branch
-    pr_branch = @pr['head']['ref']
+    pr_branch = @pr.head.ref
     @github.delete_branch(@repo_path, pr_branch)
   end
 
   def self.pull_updated_branch(git)
     # Pull the updated base branch down
-    base_branch = @pr['base']['ref']
+    base_branch = @pr.base.ref
     git.branch(base_branch).checkout
     git.pull(git.remote('origin'), base_branch)
     return base_branch
