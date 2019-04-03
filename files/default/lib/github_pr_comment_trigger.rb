@@ -178,9 +178,10 @@ class GithubPrCommentTrigger
     # Given a version string of the form 'x.x.x' and a level 0, 1, or 2, increments
     # the specified level and returns the new version string.  All numbers to the
     # right of the bumped number are reset to 0.
+    level = @levels[@level]
     v = v.split('.')
-    v[@level] = v[@level].to_i.next.to_s
-    (@level + 1...3).each { |i| v[i] = '0' }
+    v[level] = v[level].to_i.next.to_s
+    (level + 1...3).each { |i| v[i] = '0' }
     v.join('.')
   end
 
