@@ -24,7 +24,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     cloudbees-folder:6.0.3
     cloud-stats:0.11
     command-launcher:1.2
-    config-file-provider:3.3
+    config-file-provider:3.6
     credentials:2.1.17
     credentials-binding:1.15
     display-url-api:2.2.0
@@ -34,15 +34,15 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     docker-plugin:1.1.3
     docker-workflow:1.15.1
     durable-task:1.17
-    email-ext:2.62
+    email-ext:2.66
     emailext-template:1.1
     embeddable-build-status:1.9
-    git:3.9.1
+    git:3.9.3
     git-client:2.7.1
     github:1.29.2
     github-api:1.90
     github-branch-source:2.3.6
-    github-oauth:0.27
+    github-oauth:0.31
     git-server:1.7
     handlebars:1.1.1
     icon-shim:2.0.3
@@ -55,7 +55,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     label-linked-jobs:5.1.2
     mailer:1.21
     matrix-auth:1.5
-    matrix-project:1.13
+    matrix-project:1.14
     momentjs:1.1.1
     nodelabelparameter:1.7.2
     pipeline-build-step:2.5.1
@@ -74,22 +74,22 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     plain-credentials:1.4
     resource-disposer:0.12
     scm-api:2.2.7
-    script-security:1.50
+    script-security:1.56
     ssh-credentials:1.14
     ssh-slaves:1.28.1
     structs:1.17
-    token-macro:2.4
+    token-macro:2.7
     workflow-aggregator:2.5
     workflow-api:2.30
     workflow-basic-steps:2.6
-    workflow-cps:2.62
+    workflow-cps:2.65
     workflow-cps-global-lib:2.9
     workflow-durable-task-step:2.18
     workflow-job:2.26
     workflow-multibranch:2.16
     workflow-scm-step:2.6
-    workflow-step-api:2.18
-    workflow-support:2.22
+    workflow-step-api:2.19
+    workflow-support:3.2
   ).each do |plugins_version|
     plugin, version = plugins_version.split(':')
     its(:stdout) { should match(/^#{plugin}.*#{version}[\s\(]?/) }
