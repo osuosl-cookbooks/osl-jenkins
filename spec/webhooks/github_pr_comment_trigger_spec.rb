@@ -43,15 +43,18 @@ end
 
 describe GithubPrCommentTrigger do
   let(:github_mock) { double('Octokit', commits: [], issues: [], same_options?: false, auto_paginate: true) }
+  let(:git_mock) { double('Git:Base') }
   let(:sawyer_mock) { double('Sawyer', :merged => false, :mergeable => true) }
   let(:sawyer_merged_mock) { double('Sawyer', :merged => true, :mergeable => true) }
   let(:sawyer_unmergeable_mock) { double('Sawyer', :merged => false, :mergeable => false) }
   let(:head_ref_mock) { double('Sawyer', :ref => 'eldebrim/chef13') }
+  let(:base_ref_mock) { double('Sawyer', :ref => 'master') }
   let(:major_pr_mock) { double(
     'Sawyer', :merged => false, :mergeable => true,
-    :head => head_ref_mock
+    :head => head_ref_mock,
+    :base => base_ref_mock
   )}
-  let(:sawyer_teams_mock) {[
+  let(:teams_mock) {[
     double('Sawyer', :name => 'staff', :id => 1),
     double('Sawyer', :name => 'chefs', :id => 2)
   ]}
@@ -62,9 +65,17 @@ describe GithubPrCommentTrigger do
     allow(Octokit::Client).to receive(:new) { github_mock }
     allow(YAML).to receive(:load_file).with('github_pr_comment_trigger.yml')
       .and_return(open_yaml('github_pr_comment_trigger.yml'))
+    allow(STDIN).to receive(:read).and_return(open_fixture('bump_major.json'))
     allow(github_mock).to receive(:pull_request) { major_pr_mock }
-    allow(github_mock).to receive(:organization_teams).with('osuosl-cookbooks').and_return(sawyer_teams_mock)
+    allow(github_mock).to receive(:organization_teams).with('osuosl-cookbooks').and_return(teams_mock)
     allow(github_mock).to receive(:team_membership).with(1, 'eldebrim').and_return(sawyer_mock)
+    allow(github_mock).to receive(:team_membership).with(1, 'ramereth').and_return(sawyer_mock)
+    allow(github_mock).to receive(:merge_pull_request).with('osuosl-cookbooks/osl-jenkins', 143)
+    allow(github_mock).to receive(:delete_branch).with('osuosl-cookbooks/osl-jenkins', 'eldebrim/chef13')
+    allow(git_mock).to receive(:branch).with('master').and_return(git_mock)
+    allow(git_mock).to receive(:checkout)
+    allow(git_mock).to receive(:pull).with(git_mock, 'master')
+    allow(git_mock).to receive(:remote).with('origin').and_return(git_mock)
   end
 
   context 'default class variables' do
@@ -319,9 +330,9 @@ describe GithubPrCommentTrigger do
       end.to output("Error: Cannot merge PR because user 'eldebrim' is not authorized.\n").to_stderr
     end
   end
+
   context '#verify' do
     it 'verifies without error, calls other verify functions' do
-      allow(STDIN).to receive(:read).and_return(open_fixture('bump_major.json'))
       expect(GithubPrCommentTrigger).to receive(:verify_comment_creation)
       expect(GithubPrCommentTrigger).to receive(:verify_valid_request)
       expect(GithubPrCommentTrigger).to receive(:verify_issue_is_pr)
@@ -331,15 +342,46 @@ describe GithubPrCommentTrigger do
       expect { GithubPrCommentTrigger.verify }.to_not output.to_stderr
     end
   end
+
   context '#merge_pr' do
     it 'merges_pr' do
-      allow(STDIN).to receive(:read).and_return(open_fixture('bump_major.json'))
-      allow(github_mock).to receive(:merge_pull_request).with('osuosl-cookbooks/osl-jenkins', 143)
-      allow(github_mock).to receive(:delete_branch).with('osuosl-cookbooks/osl-jenkins', 'eldebrim/chef13')
       GithubPrCommentTrigger.load_node_attr
       GithubPrCommentTrigger.setup_github
       GithubPrCommentTrigger.verify
       expect { GithubPrCommentTrigger.merge_pr }.to_not raise_error
+    end
+  end
+
+  context '#pull_updated_branch' do
+    it 'pulls updated branch' do
+      GithubPrCommentTrigger.load_node_attr
+      GithubPrCommentTrigger.setup_github
+      GithubPrCommentTrigger.verify
+      expect(GithubPrCommentTrigger.pull_updated_branch(git_mock)).to eql('master')
+    end
+  end
+
+  context '#inc_version' do
+    it 'bump patch' do
+      allow(STDIN).to receive(:read).and_return(open_fixture('bump_patch.json'))
+      GithubPrCommentTrigger.load_node_attr
+      GithubPrCommentTrigger.setup_github
+      GithubPrCommentTrigger.verify
+      expect(GithubPrCommentTrigger.inc_version('2.6.13')).to eql('2.6.14')
+    end
+    it 'bump minor' do
+      allow(STDIN).to receive(:read).and_return(open_fixture('bump_minor.json'))
+      GithubPrCommentTrigger.load_node_attr
+      GithubPrCommentTrigger.setup_github
+      GithubPrCommentTrigger.verify
+      expect(GithubPrCommentTrigger.inc_version('2.6.13')).to eql('2.7.0')
+    end
+    it 'bump major' do
+      allow(STDIN).to receive(:read).and_return(open_fixture('bump_major.json'))
+      GithubPrCommentTrigger.load_node_attr
+      GithubPrCommentTrigger.setup_github
+      GithubPrCommentTrigger.verify
+      expect(GithubPrCommentTrigger.inc_version('2.6.13')).to eql('3.0.0')
     end
   end
 end
