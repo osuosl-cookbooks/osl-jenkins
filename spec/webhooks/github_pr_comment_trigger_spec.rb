@@ -35,7 +35,14 @@ module SpecHelper
   end
 
   def revert_metadata
+    version_regex = /^(version\s+)(["'])(\d+\.\d+\.\d+)\2$/
+    orig_md = open_fixture('metadata.rb').gsub(version_regex, "version          '2.0.11'")
+    ::File.write(fixture_path('metadata.rb'), orig_md)
+  end
 
+  def change_metadata_quote(regex, quote)
+    md = open_fixture('metadata.rb').gsub(regex, quote)
+    ::File.write(fixture_path('metadata.rb'), md)
   end
 
   def tempfile(file)
@@ -75,10 +82,6 @@ describe GithubPrCommentTrigger do
     allow(YAML).to receive(:load_file).with('github_pr_comment_trigger.yml')
       .and_return(open_yaml('github_pr_comment_trigger.yml'))
     allow(STDIN).to receive(:read).and_return(open_fixture('bump_major.json'))
-    allow(::File).to receive(:read).and_call_original
-    allow(::File).to receive(:read).with('metadata.rb').and_return(open_fixture('metadata.rb'))
-    allow(::File).to receive(:read).with('CHANGELOG.md').and_return(open_fixture('CHANGELOG.md'))
-#    allow(::File).to receive(:write).with('metadata.rb', md).and_return(::File.write(fixture_path('metadata.rb', md)))
     allow(github_mock).to receive(:pull_request) { major_pr_mock }
     allow(github_mock).to receive(:organization_teams).with('osuosl-cookbooks').and_return(teams_mock)
     allow(github_mock).to receive(:team_membership).with(1, 'eldebrim').and_return(sawyer_mock)
@@ -404,16 +407,38 @@ describe GithubPrCommentTrigger do
       GithubPrCommentTrigger.load_node_attr
       GithubPrCommentTrigger.setup_github
       GithubPrCommentTrigger.verify
-      GithubPrCommentTrigger.update_metadata
-      puts GithubPrCommentTrigger.version
+      GithubPrCommentTrigger.update_metadata(fixture_path('metadata.rb'))
       expect(metadata_version).to eql("version          '2.0.12'")
       revert_metadata
     end
     it 'update metadata.rb with bump minor' do
+      allow(STDIN).to receive(:read).and_return(open_fixture('bump_minor.json'))
+      GithubPrCommentTrigger.load_node_attr
+      GithubPrCommentTrigger.setup_github
+      GithubPrCommentTrigger.verify
+      GithubPrCommentTrigger.update_metadata(fixture_path('metadata.rb'))
+      expect(metadata_version).to eql("version          '2.1.0'")
+      revert_metadata
     end
     it 'update metadata.rb with bump major' do
+      allow(STDIN).to receive(:read).and_return(open_fixture('bump_major.json'))
+      GithubPrCommentTrigger.load_node_attr
+      GithubPrCommentTrigger.setup_github
+      GithubPrCommentTrigger.verify
+      GithubPrCommentTrigger.update_metadata(fixture_path('metadata.rb'))
+      expect(metadata_version).to eql("version          '3.0.0'")
+      revert_metadata
     end
     it 'update metadata.rb with double quote' do
+      allow(STDIN).to receive(:read).and_return(open_fixture('bump_major.json'))
+      change_metadata_quote(/'/, "\"")
+      GithubPrCommentTrigger.load_node_attr
+      GithubPrCommentTrigger.setup_github
+      GithubPrCommentTrigger.verify
+      GithubPrCommentTrigger.update_metadata(fixture_path('metadata.rb'))
+      expect(metadata_version).to eql("version          \"3.0.0\"")
+      change_metadata_quote(/"/, "'")
+      revert_metadata
     end
   end
 end
