@@ -232,7 +232,9 @@ class GithubPrCommentTrigger
 
     # Push back to Github
     git.push(git.remote('origin'), base_branch, tags: true)
+  end
 
+  def self.upload_cookbook
     # Upload to the Chef server, freezing, ignoring dependencies
     $stderr.puts "Uploading #{@repo_name} cookbook to the Chef server..."
     unless @do_not_upload_cookbooks
@@ -278,6 +280,7 @@ class GithubPrCommentTrigger
     GithubPrCommentTrigger.update_metadata(@metadata_file)
     GithubPrCommentTrigger.update_changelog(@changelog_file)
     GithubPrCommentTrigger.push_updates(git, base_branch)
+    GithubPrCommentTrigger.upload_cookbook
     GithubPrCommentTrigger.close_pr(base_branch)
     GithubPrCommentTrigger.return_envvars
   end
