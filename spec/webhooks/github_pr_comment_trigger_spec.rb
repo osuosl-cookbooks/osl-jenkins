@@ -45,6 +45,22 @@ module SpecHelper
     ::File.write(fixture_path('metadata.rb'), md)
   end
 
+  def changelog_version
+    version_regex = /^(.*\d+\.\d+\.\d+)/
+    return open_fixture('CHANGELOG.md').match(version_regex)[0]
+  end
+
+  def changelog_version_title
+    entry_regex = /^(\d+\.\d+\.\d+)(.*)\n(-*)\n(.*)\n\n/
+    return open_fixture('CHANGELOG.md').match(entry_regex)[4]
+  end
+
+  def revert_changelog
+    entry_regex = /^(.*\d+\.\d+\.\d+)(.*\n)*(2\.0\.11)/
+    orig_cl = open_fixture('CHANGELOG.md').sub(entry_regex, '2.0.11')
+    ::File.write(fixture_path('CHANGELOG.md'), orig_cl)
+  end
+
   def tempfile(file)
     tempfile = Tempfile.new("#{Pathname.new(file).basename}-rspec")
     tempfile.write(::File.read(file))
@@ -469,10 +485,43 @@ describe GithubPrCommentTrigger do
 
   context '#update_changelog' do
     it 'update CHANGELOG.md with bump patch' do
+      allow(STDIN).to receive(:read).and_return(open_fixture('bump_patch.json'))
+      GithubPrCommentTrigger.load_node_attr
+      GithubPrCommentTrigger.setup_github
+      GithubPrCommentTrigger.verify
+      GithubPrCommentTrigger.update_metadata(fixture_path('metadata.rb'))
+      GithubPrCommentTrigger.update_changelog(fixture_path('CHANGELOG.md'))
+      expect(changelog_version).to eql('2.0.12')
+      expect(changelog_version_title)
+        .to eql('- Export data from check-size to node_exporter for prometheus metrics')
+      revert_metadata
+      revert_changelog
     end
     it 'update CHANGELOG.md with bump minor' do
+      allow(STDIN).to receive(:read).and_return(open_fixture('bump_minor.json'))
+      GithubPrCommentTrigger.load_node_attr
+      GithubPrCommentTrigger.setup_github
+      GithubPrCommentTrigger.verify
+      GithubPrCommentTrigger.update_metadata(fixture_path('metadata.rb'))
+      GithubPrCommentTrigger.update_changelog(fixture_path('CHANGELOG.md'))
+      expect(changelog_version).to eql('2.1.0')
+      expect(changelog_version_title)
+        .to eql('- Add IBM-Z recipe and other fixes')
+      revert_metadata
+      revert_changelog
     end
     it 'update CHANGELOG.md with bump major' do
+      allow(STDIN).to receive(:read).and_return(open_fixture('bump_major.json'))
+      GithubPrCommentTrigger.load_node_attr
+      GithubPrCommentTrigger.setup_github
+      GithubPrCommentTrigger.verify
+      GithubPrCommentTrigger.update_metadata(fixture_path('metadata.rb'))
+      GithubPrCommentTrigger.update_changelog(fixture_path('CHANGELOG.md'))
+      expect(changelog_version).to eql('3.0.0')
+      expect(changelog_version_title)
+        .to eql('- Chef 13 compatibility')
+      revert_metadata
+      revert_changelog
     end
   end
 end
