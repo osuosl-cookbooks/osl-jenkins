@@ -98,12 +98,14 @@ describe GithubPrCommentTrigger do
     allow(YAML).to receive(:load_file).with('github_pr_comment_trigger.yml')
       .and_return(open_yaml('github_pr_comment_trigger.yml'))
     allow(STDIN).to receive(:read).and_return(open_fixture('bump_major.json'))
+    allow(Git).to receive(:open).with('.').and_return(git_mock)
     allow(github_mock).to receive(:pull_request) { major_pr_mock }
     allow(github_mock).to receive(:organization_teams).with('osuosl-cookbooks').and_return(teams_mock)
     allow(github_mock).to receive(:team_membership).with(1, 'eldebrim').and_return(sawyer_mock)
     allow(github_mock).to receive(:team_membership).with(1, 'ramereth').and_return(sawyer_mock)
     allow(github_mock).to receive(:merge_pull_request).with('osuosl-cookbooks/osl-jenkins', 143)
     allow(github_mock).to receive(:delete_branch).with('osuosl-cookbooks/osl-jenkins', 'eldebrim/chef13')
+    allow(github_mock).to receive(:add_comment)
     allow(git_mock).to receive(:branch).with('master').and_return(git_mock)
     allow(git_mock).to receive(:checkout)
     allow(git_mock).to receive(:pull).with(git_mock, 'master')
@@ -112,7 +114,6 @@ describe GithubPrCommentTrigger do
     allow(git_mock).to receive(:commit)
     allow(git_mock).to receive(:add_tag)
     allow(git_mock).to receive(:push).with(git_mock, 'master', tags: true)
-    allow(git_mock).to receive(:add_comment)
     allow(GithubPrCommentTrigger).to receive(:`)
   end
 
@@ -419,6 +420,7 @@ describe GithubPrCommentTrigger do
       GithubPrCommentTrigger.load_node_attr
       GithubPrCommentTrigger.setup_github
       GithubPrCommentTrigger.verify
+      expect(git_mock).to receive(:branch).with('master')
       expect(GithubPrCommentTrigger.pull_updated_branch(git_mock)).to eql('master')
     end
   end
@@ -803,6 +805,29 @@ describe GithubPrCommentTrigger do
       )
       GithubPrCommentTrigger.return_envvars
       revert_metadata
+    end
+  end
+
+  context '#update_version' do
+    it 'updates cookbook version' do
+      allow(::File).to receive(:write)
+      allow(GithubPrCommentTrigger).to receive(:update_metadata).and_call_original
+      allow(GithubPrCommentTrigger).to receive(:update_metadata).with('metadata.rb')
+        .and_return(GithubPrCommentTrigger.update_metadata(fixture_path('metadata.rb')))
+      allow(GithubPrCommentTrigger).to receive(:update_changelog).and_call_original
+      allow(GithubPrCommentTrigger).to receive(:update_changelog).with('CHANGELOG.md')
+        .and_return(GithubPrCommentTrigger.update_metadata(fixture_path('CHANGELOG.md')))
+      expect(GithubPrCommentTrigger).to receive(:pull_updated_branch).with(git_mock)
+      expect(GithubPrCommentTrigger).to receive(:update_metadata)
+      expect(GithubPrCommentTrigger).to receive(:update_changelog)
+      expect(GithubPrCommentTrigger).to receive(:push_updates).with(git_mock, 'master')
+      expect(GithubPrCommentTrigger).to receive(:upload_cookbook)
+      expect(GithubPrCommentTrigger).to receive(:close_pr).with('master')
+      expect(GithubPrCommentTrigger).to receive(:return_envvars)
+      GithubPrCommentTrigger.load_node_attr
+      GithubPrCommentTrigger.setup_github
+      GithubPrCommentTrigger.verify
+      GithubPrCommentTrigger.update_version
     end
   end
 end
