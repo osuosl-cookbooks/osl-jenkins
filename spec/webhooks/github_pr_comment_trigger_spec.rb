@@ -108,6 +108,11 @@ describe GithubPrCommentTrigger do
     allow(git_mock).to receive(:checkout)
     allow(git_mock).to receive(:pull).with(git_mock, 'master')
     allow(git_mock).to receive(:remote).with('origin').and_return(git_mock)
+    allow(git_mock).to receive(:add).with(all: true)
+    allow(git_mock).to receive(:commit)
+    allow(git_mock).to receive(:add_tag)
+    allow(git_mock).to receive(:push).with(git_mock, 'master', tags: true)
+    allow(GithubPrCommentTrigger).to receive(:`)
   end
 
   context 'default class variables' do
@@ -505,8 +510,7 @@ describe GithubPrCommentTrigger do
       GithubPrCommentTrigger.update_metadata(fixture_path('metadata.rb'))
       GithubPrCommentTrigger.update_changelog(fixture_path('CHANGELOG.md'))
       expect(changelog_version).to eql('2.1.0')
-      expect(changelog_version_title)
-        .to eql('- Add IBM-Z recipe and other fixes')
+      expect(changelog_version_title).to eql('- Add IBM-Z recipe and other fixes')
       revert_metadata
       revert_changelog
     end
@@ -518,10 +522,108 @@ describe GithubPrCommentTrigger do
       GithubPrCommentTrigger.update_metadata(fixture_path('metadata.rb'))
       GithubPrCommentTrigger.update_changelog(fixture_path('CHANGELOG.md'))
       expect(changelog_version).to eql('3.0.0')
-      expect(changelog_version_title)
-        .to eql('- Chef 13 compatibility')
+      expect(changelog_version_title).to eql('- Chef 13 compatibility')
       revert_metadata
       revert_changelog
+    end
+  end
+
+  context '#push_updates' do
+    it 'pushes patch updates to git' do
+      allow(STDIN).to receive(:read).and_return(open_fixture('bump_patch.json'))
+      expect(git_mock).to receive(:add).with(all:true)
+      expect(git_mock).to receive(:commit).with('Automatic patch-level version bump to v2.0.12 by Jenkins')
+      expect(git_mock).to receive(:add_tag).with('v2.0.12')
+      expect(git_mock).to receive(:push).with(git_mock, 'master', tags:true)
+      GithubPrCommentTrigger.load_node_attr
+      GithubPrCommentTrigger.setup_github
+      GithubPrCommentTrigger.verify
+      GithubPrCommentTrigger.update_metadata(fixture_path('metadata.rb'))
+      GithubPrCommentTrigger.push_updates(git_mock, 'master')
+      revert_metadata
+    end
+    it 'pushes minor updates to git' do
+      allow(STDIN).to receive(:read).and_return(open_fixture('bump_minor.json'))
+      expect(git_mock).to receive(:add).with(all:true)
+      expect(git_mock).to receive(:commit).with('Automatic minor-level version bump to v2.1.0 by Jenkins')
+      expect(git_mock).to receive(:add_tag).with('v2.1.0')
+      expect(git_mock).to receive(:push).with(git_mock, 'master', tags:true)
+      GithubPrCommentTrigger.load_node_attr
+      GithubPrCommentTrigger.setup_github
+      GithubPrCommentTrigger.verify
+      GithubPrCommentTrigger.update_metadata(fixture_path('metadata.rb'))
+      GithubPrCommentTrigger.push_updates(git_mock, 'master')
+      revert_metadata
+    end
+    it 'pushes patch updates to git' do
+      allow(STDIN).to receive(:read).and_return(open_fixture('bump_major.json'))
+      expect(git_mock).to receive(:add).with(all:true)
+      expect(git_mock).to receive(:commit).with('Automatic major-level version bump to v3.0.0 by Jenkins')
+      expect(git_mock).to receive(:add_tag).with('v3.0.0')
+      expect(git_mock).to receive(:push).with(git_mock, 'master', tags:true)
+      GithubPrCommentTrigger.load_node_attr
+      GithubPrCommentTrigger.setup_github
+      GithubPrCommentTrigger.verify
+      GithubPrCommentTrigger.update_metadata(fixture_path('metadata.rb'))
+      GithubPrCommentTrigger.push_updates(git_mock, 'master')
+      revert_metadata
+    end
+  end
+
+  context '#upload_cookbook' do
+    it 'uploads bump patch cookbook' do
+      modified_attr = {
+        'do_not_upload_cookbooks' => false
+      }
+      allow(YAML).to receive(:load_file).and_call_original
+      allow(YAML).to receive(:load_file).with('github_pr_comment_trigger.yml')
+        .and_return(modify_node_attr(open_yaml('github_pr_comment_trigger.yml'), modified_attr))
+      allow(STDIN).to receive(:read).and_return(open_fixture('bump_patch.json'))
+      GithubPrCommentTrigger.load_node_attr
+      GithubPrCommentTrigger.setup_github
+      GithubPrCommentTrigger.verify
+      expect(GithubPrCommentTrigger).to receive(:`).with('knife cookbook upload osl-mirror --freeze -o ../')
+      expect { GithubPrCommentTrigger.upload_cookbook }
+        .to output("Uploading osl-mirror cookbook to the Chef server...\n").to_stderr
+    end
+    it 'uploads bump minor cookbook' do
+      modified_attr = {
+        'do_not_upload_cookbooks' => false
+      }
+      allow(YAML).to receive(:load_file).and_call_original
+      allow(YAML).to receive(:load_file).with('github_pr_comment_trigger.yml')
+        .and_return(modify_node_attr(open_yaml('github_pr_comment_trigger.yml'), modified_attr))
+      allow(STDIN).to receive(:read).and_return(open_fixture('bump_minor.json'))
+      GithubPrCommentTrigger.load_node_attr
+      GithubPrCommentTrigger.setup_github
+      GithubPrCommentTrigger.verify
+      expect(GithubPrCommentTrigger).to receive(:`).with('knife cookbook upload osl-jenkins --freeze -o ../')
+      expect { GithubPrCommentTrigger.upload_cookbook }
+        .to output("Uploading osl-jenkins cookbook to the Chef server...\n").to_stderr
+    end
+    it 'uploads bump major cookbook' do
+      modified_attr = {
+        'do_not_upload_cookbooks' => false
+      }
+      allow(YAML).to receive(:load_file).and_call_original
+      allow(YAML).to receive(:load_file).with('github_pr_comment_trigger.yml')
+        .and_return(modify_node_attr(open_yaml('github_pr_comment_trigger.yml'), modified_attr))
+      allow(STDIN).to receive(:read).and_return(open_fixture('bump_major.json'))
+      GithubPrCommentTrigger.load_node_attr
+      GithubPrCommentTrigger.setup_github
+      GithubPrCommentTrigger.verify
+      expect(GithubPrCommentTrigger).to receive(:`).with('knife cookbook upload osl-jenkins --freeze -o ../')
+      expect { GithubPrCommentTrigger.upload_cookbook }
+        .to output("Uploading osl-jenkins cookbook to the Chef server...\n").to_stderr
+    end
+    it 'does not upload when @do_not_upload_cookbooks is true' do
+      allow(STDIN).to receive(:read).and_return(open_fixture('bump_major.json'))
+      GithubPrCommentTrigger.load_node_attr
+      GithubPrCommentTrigger.setup_github
+      GithubPrCommentTrigger.verify
+      expect(GithubPrCommentTrigger).to_not receive(:`)
+      expect { GithubPrCommentTrigger.upload_cookbook }
+        .to output("Uploading osl-jenkins cookbook to the Chef server...\n").to_stderr
     end
   end
 end
