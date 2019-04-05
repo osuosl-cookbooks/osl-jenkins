@@ -102,7 +102,7 @@ class GithubPrCommentTrigger
   end
 
   def self.verify_valid_request(d)
-    comment = d.fetch('comment', {}).fetch('body', '')
+    comment = d['comment']['body']
     match = comment.match(/^#{@command} (#{@levels.keys.join('|')})( \S+(,\S+)*)?$/)
     if match.nil?
       $stderr.puts @non_bump_message
