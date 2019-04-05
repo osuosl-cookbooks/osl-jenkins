@@ -24,7 +24,7 @@ module SpecHelper
 
   def glob_env_files
     Dir.glob(fixture_path('environments/*.json')).map do |f|
-      f.sub(%r{/(.*)\/environments\/(.*)\.json/}, 'environments/\2.json')
+      f.sub(%r{(.*)\/environments\/(.*)\.json}, 'environments/\2.json')
     end
   end
 
