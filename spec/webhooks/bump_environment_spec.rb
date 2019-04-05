@@ -193,7 +193,7 @@ describe BumpEnvironments do
   context '#create_new_branch' do
     it 'creates new branch for all environments' do
       allow(BumpEnvironments).to receive(:create_branch_hash)
-        .with('production,workstation,phpbb,openstack_ocata,1.0.0').and_return(12345)
+        .with('openstack_ocata,phpbb,production,workstation,1.0.0').and_return(12345)
       allow(ENV).to receive(:[]).with('envs').and_return('*')
       expect(git_mock).to receive(:branch).with('jenkins/cookbook-1.0.0-all-envs-12345').and_return(git_mock)
       expect(git_mock).to receive(:checkout)

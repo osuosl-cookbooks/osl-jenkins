@@ -80,7 +80,7 @@ class BumpEnvironments
   def self.verify_all_chef_envs
     if @chef_envs.include?(@all_chef_envs_word)
       @is_all_envs = true
-      @chef_env_files = Dir.glob('environments/*.json')
+      @chef_env_files = Dir.glob('environments/*.json').sort
       @chef_envs = @chef_env_files.map do |f|
         f.slice(%r{environments/(.*)\.json}, 1)
       end.to_set
