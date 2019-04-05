@@ -75,7 +75,7 @@ end
 
 describe GithubPrCommentTrigger do
   let(:github_mock) { double('Octokit', commits: [], issues: [], same_options?: false, auto_paginate: true) }
-  let(:git_mock) { double('Git:Base') }
+  let(:git_mock) { double('Git::Base') }
   let(:sawyer_mock) { double('Sawyer', :merged => false, :mergeable => true) }
   let(:sawyer_merged_mock) { double('Sawyer', :merged => true, :mergeable => true) }
   let(:sawyer_unmergeable_mock) { double('Sawyer', :merged => false, :mergeable => false) }
@@ -812,22 +812,29 @@ describe GithubPrCommentTrigger do
     it 'updates cookbook version' do
       allow(::File).to receive(:write)
       allow(GithubPrCommentTrigger).to receive(:update_metadata).and_call_original
-      allow(GithubPrCommentTrigger).to receive(:update_metadata).with('metadata.rb')
-        .and_return(GithubPrCommentTrigger.update_metadata(fixture_path('metadata.rb')))
       allow(GithubPrCommentTrigger).to receive(:update_changelog).and_call_original
-      allow(GithubPrCommentTrigger).to receive(:update_changelog).with('CHANGELOG.md')
-        .and_return(GithubPrCommentTrigger.update_metadata(fixture_path('CHANGELOG.md')))
-      expect(GithubPrCommentTrigger).to receive(:pull_updated_branch).with(git_mock)
-      expect(GithubPrCommentTrigger).to receive(:update_metadata)
-      expect(GithubPrCommentTrigger).to receive(:update_changelog)
-      expect(GithubPrCommentTrigger).to receive(:push_updates).with(git_mock, 'master')
-      expect(GithubPrCommentTrigger).to receive(:upload_cookbook)
-      expect(GithubPrCommentTrigger).to receive(:close_pr).with('master')
-      expect(GithubPrCommentTrigger).to receive(:return_envvars)
+      allow(GithubPrCommentTrigger).to receive(:update_metadata).with('metadata.rb') do
+        GithubPrCommentTrigger.update_metadata(fixture_path('metadata.rb'))
+      end
+      allow(GithubPrCommentTrigger).to receive(:update_changelog).with('CHANGELOG.md') do
+        GithubPrCommentTrigger.update_changelog(fixture_path('CHANGELOG.md'))
+      end
       GithubPrCommentTrigger.load_node_attr
       GithubPrCommentTrigger.setup_github
       GithubPrCommentTrigger.verify
-      GithubPrCommentTrigger.update_version
+      expect { GithubPrCommentTrigger.update_version }
+        .to output("Uploading osl-jenkins cookbook to the Chef server...\n").to_stderr
+    end
+  end
+
+  context '#start' do
+    it 'load attributes, verify comment, and if conditions met, merge to master and upload cookbook' do
+      expect(GithubPrCommentTrigger).to receive(:load_node_attr)
+      expect(GithubPrCommentTrigger).to receive(:setup_github)
+      expect(GithubPrCommentTrigger).to receive(:verify)
+      expect(GithubPrCommentTrigger).to receive(:merge_pr)
+      expect(GithubPrCommentTrigger).to receive(:update_version)
+      GithubPrCommentTrigger.start
     end
   end
 end
