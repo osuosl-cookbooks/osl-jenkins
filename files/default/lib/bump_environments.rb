@@ -96,23 +96,23 @@ class BumpEnvironments
   end
 
   def self.create_branch_hash(str)
-    return str.hash % 100_000
+    str.hash % 100_000
   end
 
   def self.create_new_branch(git)
     envs = if @is_all_envs
-                    '-all-envs'
-                  elsif @is_default_envs
-                    '-default-envs'
-                  else
-                    ''
-                  end
+             '-all-envs'
+           elsif @is_default_envs
+             '-default-envs'
+           else
+             ''
+           end
     # Add a 5-digit hash of the version and envs so the branch names are unique.
     str_to_hash = (@chef_envs.to_a << @version).join(',')
-    branch_hash = "#{BumpEnvironments.create_branch_hash(str_to_hash)}"
+    branch_hash = BumpEnvironments.create_branch_hash(str_to_hash).to_s
     git_branch = "jenkins/#{@cookbook}-#{@version}#{envs}-#{branch_hash}"
     git.branch(git_branch).checkout
-    return git_branch
+    git_branch
   end
 
   def self.update_env_files
@@ -124,10 +124,8 @@ class BumpEnvironments
 
   def self.update_version(file)
     data = JSON.parse(::File.read(file))
-    if data['cookbook_versions'].include?(@cookbook)
-      data['cookbook_versions'][@cookbook] = "= #{@version}"
-      ::File.write(file, JSON.pretty_generate(data) + "\n")
-    end
+    data['cookbook_versions'][@cookbook] = "= #{@version}" if data['cookbook_versions'].include?(@cookbook)
+    ::File.write(file, JSON.pretty_generate(data) + "\n")
   end
 
   def self.push_branch(git, git_branch)
@@ -148,19 +146,17 @@ class BumpEnvironments
     body = "This automatically generated PR bumps the '#{@cookbook}' cookbook " \
       "to version #{@version} in "
 
-    if @is_all_envs
-      body += 'all environments.'
-    elsif @is_default_envs
-      body += 'the default set of environments:' \
-              "\n```\n#{@chef_envs.to_a.join("\n")}\n```"
-    else
-      body += 'the following environments:' \
-              "\n```\n#{@chef_envs.to_a.join("\n")}\n```"
-    end
+    body += if @is_all_envs
+              'all environments.'
+            elsif @is_default_envs
+              'the default set of environments:' \
+                      "\n```\n#{@chef_envs.to_a.join("\n")}\n```"
+            else
+              'the following environments:' \
+                      "\n```\n#{@chef_envs.to_a.join("\n")}\n```"
+            end
 
-    unless @pr_link.nil? || @pr_link.empty?
-      body += "\nThis new version includes the changes from this PR: #{@pr_link}."
-    end
+    body += "\nThis new version includes the changes from this PR: #{@pr_link}." unless @pr_link.nil? || @pr_link.empty?
 
     github.create_pull_request(@chef_repo, 'master', git_branch, title, body)
   end

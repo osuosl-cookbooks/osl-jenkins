@@ -49,7 +49,7 @@ class GithubPrCommentTrigger
   @levels = {
     'major' => 0,
     'minor' => 1,
-    'patch' => 2
+    'patch' => 2,
   }.freeze
 
   class << self
@@ -74,7 +74,7 @@ class GithubPrCommentTrigger
     attr_reader :command
     attr_reader :levels
   end
-  
+
   def self.load_node_attr
     attr = YAML.load_file('github_pr_comment_trigger.yml')
     @authorized_user = attr['authorized_user']
@@ -90,10 +90,8 @@ class GithubPrCommentTrigger
   end
 
   def self.verify_comment_creation(d)
-    unless d['action'] == 'created'
-      $stderr.puts @non_bump_message
-      exit 0
-    end
+    $stderr.puts @non_bump_message unless d['action'] == 'created'
+    exit 0 unless d['action'] == 'created'
   end
 
   def self.load_issue(d)
@@ -114,9 +112,7 @@ class GithubPrCommentTrigger
   end
 
   def self.verify_issue_is_pr(d)
-    unless d['issue'].key?('pull_request')
-      abort 'Error: Cannot merge issue; can only merge PRs.'
-    end
+    abort 'Error: Cannot merge issue; can only merge PRs.' unless d['issue'].key?('pull_request')
   end
 
   def self.verify_pr_not_merged(d)
@@ -124,15 +120,11 @@ class GithubPrCommentTrigger
     @repo_path = d['repository']['full_name']
     @issue_number = d['issue']['number']
     @pr = @github.pull_request(@repo_path, @issue_number)
-    if @pr.merged
-      abort 'Error: Cannot merge PR because it has already been merged.'
-    end
+    abort 'Error: Cannot merge PR because it has already been merged.' if @pr.merged
   end
 
-  def self.verify_pr_mergeable(d)
-    unless @pr.mergeable
-      abort 'Error: Cannot merge PR because it would create merge conflicts.'
-    end
+  def self.verify_pr_mergeable(_d)
+    abort 'Error: Cannot merge PR because it would create merge conflicts.' unless @pr.mergeable
   end
 
   def self.team_member?(team, user)
@@ -180,7 +172,7 @@ class GithubPrCommentTrigger
     base_branch = @pr.base.ref
     git.branch(base_branch).checkout
     git.pull(git.remote('origin'), base_branch)
-    return base_branch
+    base_branch
   end
 
   def self.inc_version(v)
@@ -203,7 +195,7 @@ class GithubPrCommentTrigger
       # The "version" key and some whitespace
       key = Regexp.last_match(1)
       # The type of quotation mark used, e.g. " vs '
-      quote = Regexp.last_match(2) 
+      quote = Regexp.last_match(2)
       @version = GithubPrCommentTrigger.inc_version(Regexp.last_match(3))
       # Reconstruct the version line by using the new version with the same spacing
       # and quotation mark types as before
@@ -237,9 +229,7 @@ class GithubPrCommentTrigger
   def self.upload_cookbook
     # Upload to the Chef server, freezing, ignoring dependencies
     $stderr.puts "Uploading #{@repo_name} cookbook to the Chef server..."
-    unless @do_not_upload_cookbooks
-      `knife cookbook upload #{@repo_name} --freeze -o ../`
-    end
+    `knife cookbook upload #{@repo_name} --freeze -o ../` unless @do_not_upload_cookbooks
   end
 
   def self.close_pr(base_branch)
@@ -253,13 +243,11 @@ class GithubPrCommentTrigger
   def self.return_envvars
     # Return some environment variables for the Chef environment bumper job to use.
     # If we got no envs, the file won't be created and the job won't be triggered.
-    unless @envs.nil?
-      ::File.write('envvars',
-                   "cookbook=#{@repo_name}\n" \
-                   "version=#{@version}\n" \
-                   "envs=#{@envs}\n" \
-                   "pr_link=#{@pr_link}")
-    end
+    ::File.write('envvars',
+                 "cookbook=#{@repo_name}\n" \
+                 "version=#{@version}\n" \
+                 "envs=#{@envs}\n" \
+                 "pr_link=#{@pr_link}") unless @envs.nil?
   end
 
   def self.verify

@@ -26,12 +26,12 @@ module SpecHelper
     modified_attr.each do |key, val|
       orig_attr[key] = val
     end
-    return orig_attr
+    orig_attr
   end
 
   def metadata_version
     version_regex = /^(version\s+)(["'])(\d+\.\d+\.\d+)\2$/
-    return open_fixture('metadata.rb').match(version_regex)[0]
+    open_fixture('metadata.rb').match(version_regex)[0]
   end
 
   def revert_metadata
@@ -47,12 +47,12 @@ module SpecHelper
 
   def changelog_version
     version_regex = /^(.*\d+\.\d+\.\d+)/
-    return open_fixture('CHANGELOG.md').match(version_regex)[0]
+    open_fixture('CHANGELOG.md').match(version_regex)[0]
   end
 
   def changelog_version_title
     entry_regex = /^(\d+\.\d+\.\d+)(.*)\n(-*)\n(.*)\n\n/
-    return open_fixture('CHANGELOG.md').match(entry_regex)[4]
+    open_fixture('CHANGELOG.md').match(entry_regex)[4]
   end
 
   def revert_changelog
@@ -76,27 +76,31 @@ end
 describe GithubPrCommentTrigger do
   let(:github_mock) { double('Octokit', commits: [], issues: [], same_options?: false, auto_paginate: true) }
   let(:git_mock) { double('Git::Base') }
-  let(:sawyer_mock) { double('Sawyer', :merged => false, :mergeable => true) }
-  let(:sawyer_merged_mock) { double('Sawyer', :merged => true, :mergeable => true) }
-  let(:sawyer_unmergeable_mock) { double('Sawyer', :merged => false, :mergeable => false) }
-  let(:head_ref_mock) { double('Sawyer', :ref => 'eldebrim/chef13') }
-  let(:base_ref_mock) { double('Sawyer', :ref => 'master') }
-  let(:major_pr_mock) { double(
-    'Sawyer', :merged => false, :mergeable => true,
-    :head => head_ref_mock,
-    :base => base_ref_mock
-  )}
-  let(:teams_mock) {[
-    double('Sawyer', :name => 'staff', :id => 1),
-    double('Sawyer', :name => 'chefs', :id => 2)
-  ]}
+  let(:sawyer_mock) { double('Sawyer', merged: false, mergeable: true) }
+  let(:sawyer_merged_mock) { double('Sawyer', merged: true, mergeable: true) }
+  let(:sawyer_unmergeable_mock) { double('Sawyer', merged: false, mergeable: false) }
+  let(:head_ref_mock) { double('Sawyer', ref: 'eldebrim/chef13') }
+  let(:base_ref_mock) { double('Sawyer', ref: 'master') }
+  let(:major_pr_mock) do
+    double(
+      'Sawyer', merged: false, mergeable: true,
+                head: head_ref_mock,
+                base: base_ref_mock
+    )
+  end
+  let(:teams_mock) do
+    [
+      double('Sawyer', name: 'staff', id: 1),
+      double('Sawyer', name: 'chefs', id: 2),
+    ]
+  end
   # non_bump_message with newline character to match puts output
   let(:non_bump_message) { "Exiting because comment was not a bump request\n" }
 
   before :each do
     allow(Octokit::Client).to receive(:new) { github_mock }
     allow(YAML).to receive(:load_file).with('github_pr_comment_trigger.yml')
-      .and_return(open_yaml('github_pr_comment_trigger.yml'))
+                                      .and_return(open_yaml('github_pr_comment_trigger.yml'))
     allow(STDIN).to receive(:read).and_return(open_fixture('bump_major.json'))
     allow(Git).to receive(:open).with('.').and_return(git_mock)
     allow(github_mock).to receive(:pull_request) { major_pr_mock }
@@ -213,19 +217,19 @@ describe GithubPrCommentTrigger do
 
   context '#verify_valid_request' do
     it 'comments bump major' do
-      expect { GithubPrCommentTrigger.verify_valid_request(open_json('bump_major.json')) } 
+      expect { GithubPrCommentTrigger.verify_valid_request(open_json('bump_major.json')) }
         .to_not output.to_stderr
       expect(GithubPrCommentTrigger.level).to eql('major')
       expect(GithubPrCommentTrigger.envs).to eql('*')
     end
     it 'comments bump minor' do
-      expect { GithubPrCommentTrigger.verify_valid_request(open_json('bump_minor.json')) } 
+      expect { GithubPrCommentTrigger.verify_valid_request(open_json('bump_minor.json')) }
         .to_not output.to_stderr
       expect(GithubPrCommentTrigger.level).to eql('minor')
       expect(GithubPrCommentTrigger.envs).to eql('*')
     end
     it 'comments bump patch' do
-      expect { GithubPrCommentTrigger.verify_valid_request(open_json('bump_patch.json')) } 
+      expect { GithubPrCommentTrigger.verify_valid_request(open_json('bump_patch.json')) }
         .to_not output.to_stderr
       expect(GithubPrCommentTrigger.level).to eql('patch')
       expect(GithubPrCommentTrigger.envs).to eql('*')
@@ -241,7 +245,7 @@ describe GithubPrCommentTrigger do
     it 'does not include env in comment' do
       modified_json = open_json('bump_major.json')
       modified_json['comment']['body'] = '!bump major'
-      expect { GithubPrCommentTrigger.verify_valid_request(modified_json) } 
+      expect { GithubPrCommentTrigger.verify_valid_request(modified_json) }
         .to_not output.to_stderr
       expect(GithubPrCommentTrigger.level).to eql('major')
       expect(GithubPrCommentTrigger.envs).to be_nil
@@ -316,7 +320,7 @@ describe GithubPrCommentTrigger do
       expect(GithubPrCommentTrigger.team_member?('osuosl-cookbooks/staff', 'eldebrim'))
         .to be false
     end
-# Is it safe to assume team always in org?
+    # Is it safe to assume team always in org?
     it 'does not find team in org' do
       GithubPrCommentTrigger.setup_github
       expect { GithubPrCommentTrigger.team_member?('osuosl-cookbooks/not_team', 'eldebrim') }
@@ -330,7 +334,7 @@ describe GithubPrCommentTrigger do
       json = open_json('bump_major.json')
       allow(YAML).to receive(:load_file).and_call_original
       allow(YAML).to receive(:load_file).with('github_pr_comment_trigger.yml')
-        .and_return(modify_node_attr(open_yaml('github_pr_comment_trigger.yml'), modified_attr))
+                                        .and_return(modify_node_attr(open_yaml('github_pr_comment_trigger.yml'), modified_attr))
       GithubPrCommentTrigger.load_node_attr
       GithubPrCommentTrigger.setup_github
       expect { GithubPrCommentTrigger.verify_commenter_permission(json) }
@@ -339,12 +343,12 @@ describe GithubPrCommentTrigger do
     it 'passes when user is in authorized_users' do
       modified_attr = {
         'authrized_users' => ['eldebrim'],
-        'authorized_teams' => []
+        'authorized_teams' => [],
       }
       json = open_json('bump_major.json')
       allow(YAML).to receive(:load_file).and_call_original
       allow(YAML).to receive(:load_file).with('github_pr_comment_trigger.yml')
-        .and_return(modify_node_attr(open_yaml('github_pr_comment_trigger.yml'), modified_attr))
+                                        .and_return(modify_node_attr(open_yaml('github_pr_comment_trigger.yml'), modified_attr))
       GithubPrCommentTrigger.load_node_attr
       GithubPrCommentTrigger.setup_github
       expect { GithubPrCommentTrigger.verify_commenter_permission(json) }
@@ -354,12 +358,12 @@ describe GithubPrCommentTrigger do
       modified_attr = {
         'authrized_users' => [],
         'authorized_orgs' => ['test_org'],
-        'authorized_teams' => []
+        'authorized_teams' => [],
       }
       json = open_json('bump_major.json')
       allow(YAML).to receive(:load_file).and_call_original
       allow(YAML).to receive(:load_file).with('github_pr_comment_trigger.yml')
-        .and_return(modify_node_attr(open_yaml('github_pr_comment_trigger.yml'), modified_attr))
+                                        .and_return(modify_node_attr(open_yaml('github_pr_comment_trigger.yml'), modified_attr))
       allow(github_mock).to receive(:organization_member?).with('test_org', 'eldebrim').and_return(true)
       GithubPrCommentTrigger.load_node_attr
       GithubPrCommentTrigger.setup_github
@@ -377,12 +381,12 @@ describe GithubPrCommentTrigger do
       modified_attr = {
         'authrized_users' => ['not_user'],
         'authorized_orgs' => ['not_org'],
-        'authorized_teams' => ['osuosl-cookbooks/staff']
+        'authorized_teams' => ['osuosl-cookbooks/staff'],
       }
       json = open_json('bump_major.json')
       allow(YAML).to receive(:load_file).and_call_original
       allow(YAML).to receive(:load_file).with('github_pr_comment_trigger.yml')
-        .and_return(modify_node_attr(open_yaml('github_pr_comment_trigger.yml'), modified_attr))
+                                        .and_return(modify_node_attr(open_yaml('github_pr_comment_trigger.yml'), modified_attr))
       allow(github_mock).to receive(:organization_member?).with('not_org', 'eldebrim').and_return(false)
       allow(github_mock).to receive(:team_membership).with(1, 'eldebrim').and_raise(Octokit::NotFound)
       GithubPrCommentTrigger.load_node_attr
@@ -448,7 +452,7 @@ describe GithubPrCommentTrigger do
       expect(GithubPrCommentTrigger.inc_version('2.6.13')).to eql('3.0.0')
     end
   end
-  
+
   context '#update_metadata' do
     it 'update metadata.rb with bump patch' do
       allow(STDIN).to receive(:read).and_return(open_fixture('bump_patch.json'))
@@ -456,7 +460,7 @@ describe GithubPrCommentTrigger do
       GithubPrCommentTrigger.setup_github
       GithubPrCommentTrigger.verify
       GithubPrCommentTrigger.update_metadata(fixture_path('metadata.rb'))
-      #expect(metadata_version).to eql("version          '2.0.12'")
+      # expect(metadata_version).to eql("version          '2.0.12'")
       revert_metadata
     end
     it 'update metadata.rb with bump minor' do
@@ -465,7 +469,7 @@ describe GithubPrCommentTrigger do
       GithubPrCommentTrigger.setup_github
       GithubPrCommentTrigger.verify
       GithubPrCommentTrigger.update_metadata(fixture_path('metadata.rb'))
-      #expect(metadata_version).to eql("version          '2.1.0'")
+      # expect(metadata_version).to eql("version          '2.1.0'")
       revert_metadata
     end
     it 'update metadata.rb with bump major' do
@@ -479,13 +483,13 @@ describe GithubPrCommentTrigger do
     end
     it 'update metadata.rb with double quote' do
       allow(STDIN).to receive(:read).and_return(open_fixture('bump_major.json'))
-      change_metadata_quote(/'/, "\"")
+      change_metadata_quote(/'/, '"')
       GithubPrCommentTrigger.load_node_attr
       GithubPrCommentTrigger.setup_github
       GithubPrCommentTrigger.verify
       GithubPrCommentTrigger.update_metadata(fixture_path('metadata.rb'))
       # If quotation marks causing problems, comment the line below and run rspec to correct quotation marks
-      expect(metadata_version).to eql("version          \"3.0.0\"")
+      expect(metadata_version).to eql('version          "3.0.0"')
       change_metadata_quote(/"/, "'")
       revert_metadata
     end
@@ -534,10 +538,10 @@ describe GithubPrCommentTrigger do
   context '#push_updates' do
     it 'pushes patch updates to git' do
       allow(STDIN).to receive(:read).and_return(open_fixture('bump_patch.json'))
-      expect(git_mock).to receive(:add).with(all:true)
+      expect(git_mock).to receive(:add).with(all: true)
       expect(git_mock).to receive(:commit).with('Automatic patch-level version bump to v2.0.12 by Jenkins')
       expect(git_mock).to receive(:add_tag).with('v2.0.12')
-      expect(git_mock).to receive(:push).with(git_mock, 'master', tags:true)
+      expect(git_mock).to receive(:push).with(git_mock, 'master', tags: true)
       GithubPrCommentTrigger.load_node_attr
       GithubPrCommentTrigger.setup_github
       GithubPrCommentTrigger.verify
@@ -547,10 +551,10 @@ describe GithubPrCommentTrigger do
     end
     it 'pushes minor updates to git' do
       allow(STDIN).to receive(:read).and_return(open_fixture('bump_minor.json'))
-      expect(git_mock).to receive(:add).with(all:true)
+      expect(git_mock).to receive(:add).with(all: true)
       expect(git_mock).to receive(:commit).with('Automatic minor-level version bump to v2.1.0 by Jenkins')
       expect(git_mock).to receive(:add_tag).with('v2.1.0')
-      expect(git_mock).to receive(:push).with(git_mock, 'master', tags:true)
+      expect(git_mock).to receive(:push).with(git_mock, 'master', tags: true)
       GithubPrCommentTrigger.load_node_attr
       GithubPrCommentTrigger.setup_github
       GithubPrCommentTrigger.verify
@@ -560,10 +564,10 @@ describe GithubPrCommentTrigger do
     end
     it 'pushes patch updates to git' do
       allow(STDIN).to receive(:read).and_return(open_fixture('bump_major.json'))
-      expect(git_mock).to receive(:add).with(all:true)
+      expect(git_mock).to receive(:add).with(all: true)
       expect(git_mock).to receive(:commit).with('Automatic major-level version bump to v3.0.0 by Jenkins')
       expect(git_mock).to receive(:add_tag).with('v3.0.0')
-      expect(git_mock).to receive(:push).with(git_mock, 'master', tags:true)
+      expect(git_mock).to receive(:push).with(git_mock, 'master', tags: true)
       GithubPrCommentTrigger.load_node_attr
       GithubPrCommentTrigger.setup_github
       GithubPrCommentTrigger.verify
@@ -576,11 +580,11 @@ describe GithubPrCommentTrigger do
   context '#upload_cookbook' do
     it 'uploads bump patch cookbook' do
       modified_attr = {
-        'do_not_upload_cookbooks' => false
+        'do_not_upload_cookbooks' => false,
       }
       allow(YAML).to receive(:load_file).and_call_original
       allow(YAML).to receive(:load_file).with('github_pr_comment_trigger.yml')
-        .and_return(modify_node_attr(open_yaml('github_pr_comment_trigger.yml'), modified_attr))
+                                        .and_return(modify_node_attr(open_yaml('github_pr_comment_trigger.yml'), modified_attr))
       allow(STDIN).to receive(:read).and_return(open_fixture('bump_patch.json'))
       GithubPrCommentTrigger.load_node_attr
       GithubPrCommentTrigger.setup_github
@@ -591,11 +595,11 @@ describe GithubPrCommentTrigger do
     end
     it 'uploads bump minor cookbook' do
       modified_attr = {
-        'do_not_upload_cookbooks' => false
+        'do_not_upload_cookbooks' => false,
       }
       allow(YAML).to receive(:load_file).and_call_original
       allow(YAML).to receive(:load_file).with('github_pr_comment_trigger.yml')
-        .and_return(modify_node_attr(open_yaml('github_pr_comment_trigger.yml'), modified_attr))
+                                        .and_return(modify_node_attr(open_yaml('github_pr_comment_trigger.yml'), modified_attr))
       allow(STDIN).to receive(:read).and_return(open_fixture('bump_minor.json'))
       GithubPrCommentTrigger.load_node_attr
       GithubPrCommentTrigger.setup_github
@@ -606,11 +610,11 @@ describe GithubPrCommentTrigger do
     end
     it 'uploads bump major cookbook' do
       modified_attr = {
-        'do_not_upload_cookbooks' => false
+        'do_not_upload_cookbooks' => false,
       }
       allow(YAML).to receive(:load_file).and_call_original
       allow(YAML).to receive(:load_file).with('github_pr_comment_trigger.yml')
-        .and_return(modify_node_attr(open_yaml('github_pr_comment_trigger.yml'), modified_attr))
+                                        .and_return(modify_node_attr(open_yaml('github_pr_comment_trigger.yml'), modified_attr))
       allow(STDIN).to receive(:read).and_return(open_fixture('bump_major.json'))
       GithubPrCommentTrigger.load_node_attr
       GithubPrCommentTrigger.setup_github
@@ -629,11 +633,11 @@ describe GithubPrCommentTrigger do
         .to output("Uploading osl-jenkins cookbook to the Chef server...\n").to_stderr
     end
   end
-  
+
   context 'close_pr' do
     it 'closes bump patch pr with message' do
-      message = "Jenkins has merged this PR into `master` and has " \
-        "automatically performed a patch-level version bump to v2.0.12.  " \
+      message = 'Jenkins has merged this PR into `master` and has ' \
+        'automatically performed a patch-level version bump to v2.0.12.  ' \
         'Have a nice day!'
       allow(STDIN).to receive(:read).and_return(open_fixture('bump_patch.json'))
       expect(github_mock).to receive(:add_comment)
@@ -646,8 +650,8 @@ describe GithubPrCommentTrigger do
       revert_metadata
     end
     it 'closes bump minor pr with message' do
-      message = "Jenkins has merged this PR into `master` and has " \
-        "automatically performed a minor-level version bump to v2.1.0.  " \
+      message = 'Jenkins has merged this PR into `master` and has ' \
+        'automatically performed a minor-level version bump to v2.1.0.  ' \
         'Have a nice day!'
       allow(STDIN).to receive(:read).and_return(open_fixture('bump_minor.json'))
       expect(github_mock).to receive(:add_comment)
@@ -660,8 +664,8 @@ describe GithubPrCommentTrigger do
       revert_metadata
     end
     it 'closes bump major pr with message' do
-      message = "Jenkins has merged this PR into `master` and has " \
-        "automatically performed a major-level version bump to v3.0.0.  " \
+      message = 'Jenkins has merged this PR into `master` and has ' \
+        'automatically performed a major-level version bump to v3.0.0.  ' \
         'Have a nice day!'
       allow(STDIN).to receive(:read).and_return(open_fixture('bump_major.json'))
       expect(github_mock).to receive(:add_comment)
@@ -690,7 +694,7 @@ describe GithubPrCommentTrigger do
         "cookbook=osl-mirror\n" \
         "version=2.0.12\n" \
         "envs=*\n" \
-        "pr_link=https://github.com/osuosl-cookbooks/osl-mirror/pull/78"
+        'pr_link=https://github.com/osuosl-cookbooks/osl-mirror/pull/78'
       )
       GithubPrCommentTrigger.return_envvars
       revert_metadata
@@ -706,7 +710,7 @@ describe GithubPrCommentTrigger do
         "cookbook=osl-jenkins\n" \
         "version=2.1.0\n" \
         "envs=*\n" \
-        "pr_link=https://github.com/osuosl-cookbooks/osl-jenkins/pull/127"
+        'pr_link=https://github.com/osuosl-cookbooks/osl-jenkins/pull/127'
       )
       GithubPrCommentTrigger.return_envvars
       revert_metadata
@@ -722,7 +726,7 @@ describe GithubPrCommentTrigger do
         "cookbook=osl-jenkins\n" \
         "version=3.0.0\n" \
         "envs=*\n" \
-        "pr_link=https://github.com/osuosl-cookbooks/osl-jenkins/pull/143"
+        'pr_link=https://github.com/osuosl-cookbooks/osl-jenkins/pull/143'
       )
       GithubPrCommentTrigger.return_envvars
       revert_metadata
@@ -747,7 +751,7 @@ describe GithubPrCommentTrigger do
         "cookbook=osl-jenkins\n" \
         "version=3.0.0\n" \
         "envs=~\n" \
-        "pr_link=https://github.com/osuosl-cookbooks/osl-jenkins/pull/143"
+        'pr_link=https://github.com/osuosl-cookbooks/osl-jenkins/pull/143'
       )
       GithubPrCommentTrigger.return_envvars
       revert_metadata
@@ -765,7 +769,7 @@ describe GithubPrCommentTrigger do
         "cookbook=osl-jenkins\n" \
         "version=3.0.0\n" \
         "envs=production\n" \
-        "pr_link=https://github.com/osuosl-cookbooks/osl-jenkins/pull/143"
+        'pr_link=https://github.com/osuosl-cookbooks/osl-jenkins/pull/143'
       )
       GithubPrCommentTrigger.return_envvars
       revert_metadata
@@ -783,7 +787,7 @@ describe GithubPrCommentTrigger do
         "cookbook=osl-jenkins\n" \
         "version=3.0.0\n" \
         "envs=dev,staging\n" \
-        "pr_link=https://github.com/osuosl-cookbooks/osl-jenkins/pull/143"
+        'pr_link=https://github.com/osuosl-cookbooks/osl-jenkins/pull/143'
       )
       GithubPrCommentTrigger.return_envvars
       revert_metadata
@@ -801,7 +805,7 @@ describe GithubPrCommentTrigger do
         "cookbook=osl-jenkins\n" \
         "version=3.0.0\n" \
         "envs=~,staging\n" \
-        "pr_link=https://github.com/osuosl-cookbooks/osl-jenkins/pull/143"
+        'pr_link=https://github.com/osuosl-cookbooks/osl-jenkins/pull/143'
       )
       GithubPrCommentTrigger.return_envvars
       revert_metadata

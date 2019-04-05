@@ -22,15 +22,15 @@ module SpecHelper
     YAML.load_file(fixture_path(name))
   end
 
-  def glob_env_files()
+  def glob_env_files
     Dir.glob(fixture_path('environments/*.json')).map do |f|
-      f.sub(/(.*)\/environments\/(.*)\.json/, 'environments/\2.json')
+      f.sub(%r{/(.*)\/environments\/(.*)\.json/}, 'environments/\2.json')
     end
   end
 
   def get_cookbook_version(file, cookbook)
-   data = JSON.parse(::File.read(fixture_path(file)))
-   return data['cookbook_versions'][cookbook]
+    data = JSON.parse(::File.read(fixture_path(file)))
+    data['cookbook_versions'][cookbook]
   end
 
   def tempfile(file)
@@ -56,7 +56,7 @@ describe BumpEnvironments do
     allow(ENV).to receive(:[]).with('pr_link').and_return('pr_link')
     allow(Dir).to receive(:glob).with('environments/*.json').and_return(glob_env_files)
     allow(YAML).to receive(:load_file).with('bump_environments.yml')
-        .and_return(open_yaml('bump_environments.yml'))
+                                      .and_return(open_yaml('bump_environments.yml'))
     allow(git_mock).to receive(:branch).and_return(git_mock)
     allow(git_mock).to receive(:checkout)
     allow(git_mock).to receive(:pull)
@@ -82,7 +82,7 @@ describe BumpEnvironments do
       )
       expect(BumpEnvironments.default_chef_envs_word).to match(/~/)
       expect(BumpEnvironments.all_chef_envs_word).to match(/\*/)
-      expect(BumpEnvironments.chef_repo).to match(/osuosl\/chef-repo/)
+      expect(BumpEnvironments.chef_repo).to match(%r{osuosl\/chef-repo})
       expect(BumpEnvironments.github_token).to match(/github_token/)
     end
   end
@@ -100,7 +100,7 @@ describe BumpEnvironments do
       expect(BumpEnvironments.cookbook).to match(/cookbook/)
       expect(BumpEnvironments.version).to match(/1\.0\.0/)
       expect(BumpEnvironments.pr_link).to match(/pr_link/)
-      expect(BumpEnvironments.chef_envs).to eql(['phpbb', 'production'].to_set)
+      expect(BumpEnvironments.chef_envs).to eql(%w(phpbb production).to_set)
     end
   end
 
@@ -177,7 +177,7 @@ describe BumpEnvironments do
       expect(BumpEnvironments).to receive(:verify_all_chef_envs)
       expect(BumpEnvironments.is_all_envs).not_to be_nil
       expect(BumpEnvironments.is_default_envs).not_to be_nil
-      BumpEnvironments.verify_chef_envs 
+      BumpEnvironments.verify_chef_envs
     end
   end
 
@@ -289,7 +289,7 @@ describe BumpEnvironments do
       BumpEnvironments.load_config
       expect(git_mock).to receive(:commit).with('Automatic version bump to v1.0.0 by Jenkins')
       expect(git_mock).to receive(:push)
-        .with(git_remote_mock, 'jenkins/cookbook-1.0.0-12345', tags:true, force:true)
+        .with(git_remote_mock, 'jenkins/cookbook-1.0.0-12345', tags: true, force: true)
       BumpEnvironments.push_branch(git_mock, 'jenkins/cookbook-1.0.0-12345')
     end
     it 'has no change to commit' do
@@ -297,20 +297,20 @@ describe BumpEnvironments do
       BumpEnvironments.load_config
       expect(git_mock).to receive(:commit).with('Automatic version bump to v1.0.0 by Jenkins')
       expect(git_mock).to receive(:push)
-        .with(git_remote_mock, 'jenkins/cookbook-1.0.0-12345', tags:true, force:true)
-      expect{ BumpEnvironments.push_branch(git_mock, 'jenkins/cookbook-1.0.0-12345') }
+        .with(git_remote_mock, 'jenkins/cookbook-1.0.0-12345', tags: true, force: true)
+      expect { BumpEnvironments.push_branch(git_mock, 'jenkins/cookbook-1.0.0-12345') }
         .to output("Unable to commit; were any changes actually made?\n").to_stderr
     end
   end
 
-  context '#create_pr'do
+  context '#create_pr' do
     it 'creates pr for all environments' do
       allow(ENV).to receive(:[]).with('envs').and_return('*')
       BumpEnvironments.load_config
       BumpEnvironments.verify_chef_envs
       expect(github_mock).to receive(:create_pull_request)
         .with(
-          'osuosl/chef-repo', 
+          'osuosl/chef-repo',
           'master',
           'jenkins/cookbook-1.0.0-12345',
           "Bump 'cookbook' cookbook to version 1.0.0",
@@ -325,14 +325,14 @@ describe BumpEnvironments do
       BumpEnvironments.verify_chef_envs
       expect(github_mock).to receive(:create_pull_request)
         .with(
-          'osuosl/chef-repo', 
+          'osuosl/chef-repo',
           'master',
           'jenkins/cookbook-1.0.0-12345',
           "Bump 'cookbook' cookbook to version 1.0.0",
           "This automatically generated PR bumps the 'cookbook' cookbook to version 1.0.0 in the "\
           "default set of environments:\n```\nopenstack_mitaka\nphase_out_nginx\nphpbb\nproduction"\
           "\ntesting\nworkstation\n```\n"\
-          "This new version includes the changes from this PR: pr_link."
+          'This new version includes the changes from this PR: pr_link.'
         )
       BumpEnvironments.create_pr('jenkins/cookbook-1.0.0-12345')
     end
@@ -342,13 +342,13 @@ describe BumpEnvironments do
       BumpEnvironments.verify_chef_envs
       expect(github_mock).to receive(:create_pull_request)
         .with(
-          'osuosl/chef-repo', 
+          'osuosl/chef-repo',
           'master',
           'jenkins/cookbook-1.0.0-12345',
           "Bump 'cookbook' cookbook to version 1.0.0",
           "This automatically generated PR bumps the 'cookbook' cookbook to version 1.0.0 in the "\
           "following environments:\n```\nphpbb\nproduction\n```\n"\
-          "This new version includes the changes from this PR: pr_link."
+          'This new version includes the changes from this PR: pr_link.'
         )
       BumpEnvironments.create_pr('jenkins/cookbook-1.0.0-12345')
     end
@@ -359,7 +359,7 @@ describe BumpEnvironments do
       BumpEnvironments.verify_chef_envs
       expect(github_mock).to receive(:create_pull_request)
         .with(
-          'osuosl/chef-repo', 
+          'osuosl/chef-repo',
           'master',
           'jenkins/cookbook-1.0.0-12345',
           "Bump 'cookbook' cookbook to version 1.0.0",
@@ -374,7 +374,7 @@ describe BumpEnvironments do
       BumpEnvironments.verify_chef_envs
       expect(github_mock).to receive(:create_pull_request)
         .with(
-          'osuosl/chef-repo', 
+          'osuosl/chef-repo',
           'master',
           'jenkins/cookbook-1.0.0-12345',
           "Bump 'cookbook' cookbook to version 1.0.0",
@@ -387,7 +387,7 @@ describe BumpEnvironments do
   context '#bump_env' do
     it 'calls bump_env' do
       allow(BumpEnvironments).to receive(:create_new_branch).with(git_mock)
-        .and_return('jenkins/cookbook-1.0.0-12345')
+                                                            .and_return('jenkins/cookbook-1.0.0-12345')
       expect(BumpEnvironments).to receive(:update_master).with(git_mock)
       expect(BumpEnvironments).to receive(:create_new_branch).with(git_mock)
       expect(BumpEnvironments).to receive(:update_env_files)
@@ -397,7 +397,7 @@ describe BumpEnvironments do
       BumpEnvironments.bump_env
     end
   end
-  
+
   context '#start' do
     it 'calls start' do
       expect(BumpEnvironments).to receive(:load_config)
