@@ -21,6 +21,7 @@ node.default['osl-jenkins']['cookbook_uploader'].tap do |conf|
   conf['chef_repo'] = 'osuosl/chef-repo'
   conf['default_environments'] = %w(
     openstack_ocata
+    openstack_pike
     phpbb
     production
     workstation
