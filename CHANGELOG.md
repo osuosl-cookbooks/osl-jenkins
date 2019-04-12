@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.1.1 (2019-04-12)
+------------------
+- Add openstack_pike environment to default bump
+
 2.1.0 (2019-04-03)
 ------------------
 - Update to Jenkins 2.164.1 and bump upstream cookbook to latest
