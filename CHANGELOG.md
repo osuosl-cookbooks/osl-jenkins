@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.2.1 (2019-04-15)
+------------------
+- Bump to jenkins-2.164.2
+
 2.2.0 (2019-04-15)
 ------------------
 - Refactor plugins attribute to use hash instead of array
