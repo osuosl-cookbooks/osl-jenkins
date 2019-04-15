@@ -4,94 +4,94 @@
 #   plugin ->
 #     println ("${plugin.getShortName()}:${plugin.getVersion()}")
 # }
-default['osl-jenkins']['restart_plugins'] = %w(
-  structs:1.17
-  credentials:2.1.17
-  ssh-credentials:1.14
-)
-default['osl-jenkins']['plugins'] = %w(
-  ace-editor:1.1
-  ant:1.8
-  antisamy-markup-formatter:1.3
-  apache-httpcomponents-client-4-api:4.5.5-3.0
-  authentication-tokens:1.3
-  bouncycastle-api:2.16.3
-  branch-api:2.0.8
-  build-token-root:1.4
-  cloudbees-folder:6.0.3
-  command-launcher:1.2
-  conditional-buildstep:1.3.1
-  copyartifact:1.41
-  credentials-binding:1.15
-  cvs:2.12
-  display-url-api:2.2.0
-  docker-commons:1.8
-  docker-workflow:1.14
-  durable-task:1.17
-  external-monitor-job:1.4
-  ghprb:1.42.0
-  git:3.9.3
-  git-client:2.7.1
-  github:1.29.2
-  github-api:1.90
-  github-branch-source:2.3.6
-  github-oauth:0.31
-  github-organization-folder:1.6
-  gitlab-plugin:1.4.4
-  git-server:1.7
-  handlebars:1.1.1
-  icon-shim:2.0.3
-  instant-messaging:1.35
-  ircbot:2.27
-  jackson2-api:2.8.11.2
-  javadoc:1.3
-  jquery-detached:1.2.1
-  jsch:0.1.54.2
-  junit:1.26.1
-  ldap:1.12
-  mailer:1.21
-  mapdb-api:1.0.6.0
-  matrix-auth:1.5
-  matrix-project:1.14
-  maven-plugin:3.1.2
-  momentjs:1.1.1
-  pam-auth:1.4
-  parameterized-trigger:2.35.1
-  pipeline-build-step:2.5.1
-  pipeline-github-lib:1.0
-  pipeline-graph-analysis:1.3
-  pipeline-input-step:2.8
-  pipeline-milestone-step:1.3.1
-  pipeline-model-api:1.3.4.1
-  pipeline-model-declarative-agent:1.1.1
-  pipeline-model-definition:1.3.4.1
-  pipeline-model-extensions:1.3.4.1
-  pipeline-rest-api:2.6
-  pipeline-stage-step:2.3
-  pipeline-stage-tags-metadata:1.3.4.1
-  pipeline-stage-view:2.6
-  pipeline-utility-steps:1.4.0
-  plain-credentials:1.4
-  run-condition:1.0
-  scm-api:2.2.7
-  script-security:1.56
-  ssh-agent:1.16
-  ssh-slaves:1.28.1
-  subversion:2.10.3
-  text-finder:1.10
-  token-macro:2.7
-  translation:1.16
-  windows-slaves:1.1
-  workflow-aggregator:2.5
-  workflow-api:2.30
-  workflow-basic-steps:2.6
-  workflow-cps:2.65
-  workflow-cps-global-lib:2.9
-  workflow-durable-task-step:2.18
-  workflow-job:2.26
-  workflow-multibranch:2.16
-  workflow-scm-step:2.6
-  workflow-step-api:2.19
-  workflow-support:3.2
-  ws-cleanup:0.28
-)
+default['osl-jenkins']['restart_plugins'].tap do |p|
+  p['structs'] = '1.17'
+  p['credentials'] = '2.1.17'
+  p['ssh-credentials'] = '1.14'
+end
+default['osl-jenkins']['plugins'].tap do |p|
+  p['ace-editor'] = '1.1'
+  p['ant'] = '1.8'
+  p['antisamy-markup-formatter'] = '1.3'
+  p['apache-httpcomponents-client-4-api'] = '4.5.5-3.0'
+  p['authentication-tokens'] = '1.3'
+  p['bouncycastle-api'] = '2.16.3'
+  p['branch-api'] = '2.0.8'
+  p['build-token-root'] = '1.4'
+  p['cloudbees-folder'] = '6.0.3'
+  p['command-launcher'] = '1.2'
+  p['conditional-buildstep'] = '1.3.1'
+  p['copyartifact'] = '1.41'
+  p['credentials-binding'] = '1.15'
+  p['cvs'] = '2.12'
+  p['display-url-api'] = '2.2.0'
+  p['docker-commons'] = '1.11'
+  p['docker-workflow'] = '1.15.1'
+  p['durable-task'] = '1.17'
+  p['external-monitor-job'] = '1.4'
+  p['ghprb'] = '1.42.0'
+  p['git'] = '3.9.3'
+  p['git-client'] = '2.7.1'
+  p['github'] = '1.29.2'
+  p['github-api'] = '1.90'
+  p['github-branch-source'] = '2.3.6'
+  p['github-oauth'] = '0.31'
+  p['github-organization-folder'] = '1.6'
+  p['gitlab-plugin'] = '1.4.4'
+  p['git-server'] = '1.7'
+  p['handlebars'] = '1.1.1'
+  p['icon-shim'] = '2.0.3'
+  p['instant-messaging'] = '1.35'
+  p['ircbot'] = '2.30'
+  p['jackson2-api'] = '2.8.11.2'
+  p['javadoc'] = '1.3'
+  p['jquery-detached'] = '1.2.1'
+  p['jsch'] = '0.1.54.2'
+  p['junit'] = '1.26.1'
+  p['ldap'] = '1.12'
+  p['mailer'] = '1.21'
+  p['mapdb-api'] = '1.0.6.0'
+  p['matrix-auth'] = '1.5'
+  p['matrix-project'] = '1.14'
+  p['maven-plugin'] = '3.1.2'
+  p['momentjs'] = '1.1.1'
+  p['pam-auth'] = '1.4'
+  p['parameterized-trigger'] = '2.35.1'
+  p['pipeline-build-step'] = '2.5.1'
+  p['pipeline-github-lib'] = '1.0'
+  p['pipeline-graph-analysis'] = '1.3'
+  p['pipeline-input-step'] = '2.8'
+  p['pipeline-milestone-step'] = '1.3.1'
+  p['pipeline-model-api'] = '1.3.4.1'
+  p['pipeline-model-declarative-agent'] = '1.1.1'
+  p['pipeline-model-definition'] = '1.3.4.1'
+  p['pipeline-model-extensions'] = '1.3.4.1'
+  p['pipeline-rest-api'] = '2.6'
+  p['pipeline-stage-step'] = '2.3'
+  p['pipeline-stage-tags-metadata'] = '1.3.4.1'
+  p['pipeline-stage-view'] = '2.6'
+  p['pipeline-utility-steps'] = '1.4.0'
+  p['plain-credentials'] = '1.4'
+  p['run-condition'] = '1.0'
+  p['scm-api'] = '2.2.7'
+  p['script-security'] = '1.56'
+  p['ssh-agent'] = '1.16'
+  p['ssh-slaves'] = '1.28.1'
+  p['subversion'] = '2.10.3'
+  p['text-finder'] = '1.10'
+  p['token-macro'] = '2.7'
+  p['translation'] = '1.16'
+  p['windows-slaves'] = '1.1'
+  p['workflow-aggregator'] = '2.5'
+  p['workflow-api'] = '2.30'
+  p['workflow-basic-steps'] = '2.6'
+  p['workflow-cps'] = '2.65'
+  p['workflow-cps-global-lib'] = '2.9'
+  p['workflow-durable-task-step'] = '2.18'
+  p['workflow-job'] = '2.26'
+  p['workflow-multibranch'] = '2.16'
+  p['workflow-scm-step'] = '2.6'
+  p['workflow-step-api'] = '2.19'
+  p['workflow-support'] = '3.2'
+  p['ws-cleanup'] = '0.28'
+end
