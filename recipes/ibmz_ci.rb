@@ -50,6 +50,7 @@ node.default['osl-jenkins']['plugins'].tap do |p|
   p['cloud-stats'] = '0.11'
   p['config-file-provider'] = '3.6'
   p['docker-build-publish'] = '1.3.2'
+  p['docker-custom-build-environment'] = '1.7.3'
   p['docker-java-api'] = '3.0.14'
   p['docker-plugin'] = '1.1.3'
   p['docker-workflow'] = '1.15.1'
