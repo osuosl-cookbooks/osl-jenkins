@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.2.0 (2019-04-15)
+------------------
+- Refactor plugins attribute to use hash instead of array
+
 2.1.1 (2019-04-12)
 ------------------
 - Add openstack_pike environment to default bump
