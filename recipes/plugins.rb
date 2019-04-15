@@ -17,8 +17,7 @@
 # limitations under the License.
 
 # Install plugins that need to be loaded later for Chef to function and require a Jenkins restart immediately
-node['osl-jenkins']['restart_plugins'].each do |plugins_version|
-  p, v = plugins_version.split(':')
+node['osl-jenkins']['restart_plugins'].each do |p, v|
   jenkins_plugin p do
     version v
     install_deps false
@@ -29,8 +28,7 @@ end
 reload_file = ::File.join(Chef::Config[:file_cache_path], 'reload-jenkins')
 
 # Install plugins that can allow for Jenkins restarts later
-node['osl-jenkins']['plugins'].each do |plugins_version|
-  p, v = plugins_version.split(':')
+node['osl-jenkins']['plugins'].each do |p, v|
   jenkins_plugin p do
     version v
     install_deps false

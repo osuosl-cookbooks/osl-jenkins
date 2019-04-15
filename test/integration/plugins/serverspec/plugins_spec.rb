@@ -32,8 +32,8 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     credentials-binding:1.15
     cvs:2.12
     display-url-api:2.2.0
-    docker-commons:1.8
-    docker-workflow:1.14
+    docker-commons:1.11
+    docker-workflow:1.15.1
     durable-task:1.17
     external-monitor-job:1.4
     ghprb:1.42.0
@@ -49,7 +49,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     handlebars:1.1.1
     icon-shim:2.0.3
     instant-messaging:1.35
-    ircbot:2.27
+    ircbot:2.30
     jackson2-api:2.8.11.2
     javadoc:1.3
     jquery-detached:1.2.1
