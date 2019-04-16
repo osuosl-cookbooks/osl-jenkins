@@ -61,6 +61,7 @@ describe 'osl-jenkins::powerci' do
         display-url-api:2.2.0
         docker-build-publish:1.3.2
         docker-commons:1.11
+        docker-custom-build-environment:1.7.3
         docker-java-api:3.0.14
         docker-plugin:1.1.3
         durable-task:1.17
