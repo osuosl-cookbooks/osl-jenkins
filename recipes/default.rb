@@ -22,24 +22,27 @@ node.default['java']['jdk_version'] = '8'
 
 include_recipe 'java'
 
+ohai 'jenkins_reload_passwd' do
+  action :nothing
+  plugin 'etc'
+end
+
 group 'alfred' do
+  gid 10000
   action :create
+  notifies :reload, 'ohai[jenkins_reload_passwd]', :immediately
 end
 
 user 'alfred' do
   manage_home true
-  gid 'alfred'
+  uid 10000
+  gid 10000
   system true
   shell '/bin/bash'
   home '/home/alfred'
   action :create
+  notifies :reload, 'ohai[jenkins_reload_passwd]', :immediately
 end
-
-# This is necessary due to a bug in the upstream "ssh_keys" cookbook
-ohai 'jenkins_reload_passwd' do
-  action :nothing
-  plugin 'etc'
-end.run_action(:reload)
 
 node.default['ssh_keys']['alfred'] = 'alfred'
 include_recipe 'ssh-keys'
