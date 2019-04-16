@@ -8,6 +8,7 @@ end
 
 describe group('alfred') do
   it { should exist }
+  it { should have_gid 10000 }
 end
 
 describe user('alfred') do
@@ -15,6 +16,7 @@ describe user('alfred') do
   it { should belong_to_group 'alfred' }
   it { should have_login_shell '/bin/bash' }
   it { should have_home_directory '/home/alfred' }
+  it { should have_uid 10000 }
 end
 
 describe file('/home/alfred/.ssh/authorized_keys') do
