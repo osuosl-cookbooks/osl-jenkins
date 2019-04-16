@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.2.3 (2019-04-16)
+------------------
+- Set alfred gid/uid to something static
+
 2.2.2 (2019-04-16)
 ------------------
 - Add docker-custom-build-environment plugin on powerci and ibmz-ci instances
