@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.2.2 (2019-04-16)
+------------------
+- Add docker-custom-build-environment plugin on powerci and ibmz-ci instances
+
 2.2.1 (2019-04-15)
 ------------------
 - Bump to jenkins-2.164.2
