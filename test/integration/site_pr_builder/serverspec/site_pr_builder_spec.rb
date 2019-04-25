@@ -1,7 +1,4 @@
-require 'serverspec'
 require 'spec_helper'
-
-set :backend, :exec
 
 describe 'site_pr_builder' do
   it_behaves_like 'jenkins_server'

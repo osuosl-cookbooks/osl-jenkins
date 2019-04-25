@@ -1,9 +1,6 @@
-require 'serverspec'
 require 'net/http'
 require 'open-uri'
 require 'uri'
-
-set :backend, :exec
 
 shared_examples_for 'jenkins_server' do
   # Copied from jenkins cookbook helper library

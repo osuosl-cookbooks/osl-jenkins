@@ -1,7 +1,3 @@
-require 'serverspec'
-
-set :backend, :exec
-
 RSpec.configure do |config|
   config.before(:all) do
     config.path = '/opt/chef/embedded/bin:/usr/local/sbin:

@@ -1,4 +1,3 @@
-require 'serverspec'
 require 'spec_helper'
 
 describe file('/home/alfred/.gitconfig') do

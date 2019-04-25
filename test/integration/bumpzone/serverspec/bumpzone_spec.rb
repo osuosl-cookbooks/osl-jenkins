@@ -1,7 +1,3 @@
-require 'spec_helper'
-
-set :backend, :exec
-
 describe 'bindzone' do
   it_behaves_like 'jenkins_server'
 end

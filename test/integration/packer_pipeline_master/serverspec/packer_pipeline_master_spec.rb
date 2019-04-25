@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-set :backend, :exec
-
 describe 'packer_pipeline_master' do
   it_behaves_like 'jenkins_server'
 end

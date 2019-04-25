@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-set :backend, :exec
-
 describe 'plugins' do
   it_behaves_like 'jenkins_server'
 end

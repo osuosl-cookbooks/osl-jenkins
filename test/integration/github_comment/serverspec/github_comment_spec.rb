@@ -1,7 +1,4 @@
-require 'serverspec'
 require 'spec_helper'
-
-set :backend, :exec
 
 describe file('/var/lib/jenkins/plugins/ghprb.jpi') do
   it { should be_file }
