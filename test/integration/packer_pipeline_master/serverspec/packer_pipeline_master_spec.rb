@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'packer_pipeline_master' do
   it_behaves_like 'jenkins_server'
 end

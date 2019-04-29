@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'powerci' do
   it_behaves_like 'jenkins_server'
 end

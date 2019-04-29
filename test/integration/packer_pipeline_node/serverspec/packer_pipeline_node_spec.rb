@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe file('/home/alfred/.gitconfig') do
   it { should exist }
   it { should be_a_file }

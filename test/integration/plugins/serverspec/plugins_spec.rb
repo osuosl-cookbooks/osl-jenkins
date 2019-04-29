@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'plugins' do
   it_behaves_like 'jenkins_server'
 end
