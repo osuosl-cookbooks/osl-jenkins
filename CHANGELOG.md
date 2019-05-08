@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.2.4 (2019-05-08)
+------------------
+- Add credentials access to users on powerci & ibmz-ci
+
 2.2.3 (2019-04-16)
 ------------------
 - Set alfred gid/uid to something static
