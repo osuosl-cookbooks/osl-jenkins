@@ -90,6 +90,10 @@ module OSLGithubOauth
           user.each { p, u -> auth_strategy.add(p, u) }
         }
         userPermissions = [
+          "com.cloudbees.plugins.credentials.CredentialsProvider.Create",
+          "com.cloudbees.plugins.credentials.CredentialsProvider.Delete",
+          "com.cloudbees.plugins.credentials.CredentialsProvider.Update",
+          "com.cloudbees.plugins.credentials.CredentialsProvider.View",
           "hudson.model.Item.Build",
           "hudson.model.Item.Cancel",
           "hudson.model.Item.Configure",
