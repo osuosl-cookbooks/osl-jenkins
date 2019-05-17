@@ -32,7 +32,9 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     credentials-binding:1.18
     cvs:2.12
     display-url-api:2.2.0
+    docker-build-publish:1.3.2
     docker-commons:1.15
+    docker-custom-build-environment:1.7.3
     docker-workflow:1.18
     durable-task:1.17
     external-monitor-job:1.4

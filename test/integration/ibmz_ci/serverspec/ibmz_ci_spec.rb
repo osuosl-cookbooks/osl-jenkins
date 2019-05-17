@@ -25,15 +25,9 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     cloud-stats:0.11
     command-launcher:1.2
     config-file-provider:3.6
-    credentials:2.1.17
-    credentials-binding:1.15
     display-url-api:2.2.0
-    docker-build-publish:1.3.2
-    docker-commons:1.11
-    docker-custom-build-environment:1.7.3
     docker-java-api:3.0.14
     docker-plugin:1.1.3
-    docker-workflow:1.15.1
     durable-task:1.17
     email-ext:2.66
     emailext-template:1.1
@@ -47,7 +41,6 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     git-server:1.7
     handlebars:1.1.1
     icon-shim:2.0.3
-    jackson2-api:2.8.11.2
     job-restrictions:0.6
     jquery:1.12.4-0
     jquery-detached:1.2.1
@@ -63,14 +56,10 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     pipeline-graph-analysis:1.3
     pipeline-input-step:2.8
     pipeline-milestone-step:1.3.1
-    pipeline-model-api:1.3.4.1
     pipeline-model-declarative-agent:1.1.1
-    pipeline-model-definition:1.3.4.1
-    pipeline-model-extensions:1.3.4.1
     pipeline-multibranch-defaults:1.1
     pipeline-rest-api:2.6
     pipeline-stage-step:2.3
-    pipeline-stage-tags-metadata:1.3.4.1
     pipeline-stage-view:2.6
     plain-credentials:1.4
     resource-disposer:0.12
