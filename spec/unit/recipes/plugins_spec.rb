@@ -38,7 +38,7 @@ describe 'osl-jenkins::plugins' do
       end
       %w(
         structs:1.17
-        credentials:2.1.17
+        credentials:2.1.18
         ssh-credentials:1.14
       ).each do |plugins_version|
         plugin, version = plugins_version.split(':')
@@ -65,11 +65,13 @@ describe 'osl-jenkins::plugins' do
         command-launcher:1.2
         conditional-buildstep:1.3.1
         copyartifact:1.41
-        credentials-binding:1.15
+        credentials-binding:1.18
         cvs:2.12
         display-url-api:2.2.0
-        docker-commons:1.11
-        docker-workflow:1.15.1
+        docker-build-publish:1.3.2
+        docker-commons:1.15
+        docker-custom-build-environment:1.7.3
+        docker-workflow:1.18
         durable-task:1.17
         external-monitor-job:1.4
         ghprb:1.42.0
@@ -86,7 +88,7 @@ describe 'osl-jenkins::plugins' do
         icon-shim:2.0.3
         instant-messaging:1.35
         ircbot:2.30
-        jackson2-api:2.8.11.2
+        jackson2-api:2.9.8
         javadoc:1.3
         jquery-detached:1.2.1
         jsch:0.1.54.2
@@ -105,13 +107,13 @@ describe 'osl-jenkins::plugins' do
         pipeline-graph-analysis:1.3
         pipeline-input-step:2.8
         pipeline-milestone-step:1.3.1
-        pipeline-model-api:1.3.4.1
+        pipeline-model-api:1.3.8
         pipeline-model-declarative-agent:1.1.1
-        pipeline-model-definition:1.3.4.1
-        pipeline-model-extensions:1.3.4.1
+        pipeline-model-definition:1.3.8
+        pipeline-model-extensions:1.3.8
         pipeline-rest-api:2.6
         pipeline-stage-step:2.3
-        pipeline-stage-tags-metadata:1.3.4.1
+        pipeline-stage-tags-metadata:1.3.8
         pipeline-stage-view:2.6
         pipeline-utility-steps:1.4.0
         plain-credentials:1.4

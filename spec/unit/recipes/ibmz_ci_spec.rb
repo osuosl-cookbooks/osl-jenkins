@@ -56,9 +56,6 @@ describe 'osl-jenkins::ibmz_ci' do
         command-launcher:1.2
         config-file-provider:3.6
         display-url-api:2.2.0
-        docker-build-publish:1.3.2
-        docker-commons:1.11
-        docker-custom-build-environment:1.7.3
         docker-java-api:3.0.14
         docker-plugin:1.1.3
         durable-task:1.17
@@ -71,7 +68,6 @@ describe 'osl-jenkins::ibmz_ci' do
         github-api:1.90
         github-branch-source:2.3.6
         github-oauth:0.31
-        jackson2-api:2.8.11.2
         job-restrictions:0.6
         jquery:1.12.4-0
         jsch:0.1.54.2
@@ -80,12 +76,8 @@ describe 'osl-jenkins::ibmz_ci' do
         mailer:1.21
         matrix-project:1.14
         nodelabelparameter:1.7.2
-        pipeline-model-api:1.3.4.1
-        pipeline-model-definition:1.3.4.1
-        pipeline-model-extensions:1.3.4.1
         pipeline-multibranch-defaults:1.1
         pipeline-stage-step:2.3
-        pipeline-stage-tags-metadata:1.3.4.1
         resource-disposer:0.12
         scm-api:2.2.7
         script-security:1.56
