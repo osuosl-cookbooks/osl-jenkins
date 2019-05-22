@@ -1,6 +1,7 @@
 ---
 verifier:
   name: inspec
+
 driver:
   flavor_ref: 'm1.medium'
   network_ref:
@@ -27,6 +28,7 @@ provisioner:
 suites:
   - name: default
     run_list:
+      - recipe[jenkins_test]
       - recipe[osl-jenkins::default]
   - name: master
     driver:
@@ -34,6 +36,7 @@ suites:
         - default
         - github
     run_list:
+      - recipe[jenkins_test]
       - recipe[osl-jenkins::master]
     attributes:
       osl-jenkins:

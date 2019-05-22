@@ -12,3 +12,8 @@ jenkins_script 'Set anonymous to Admin' do
     instance.save()
   EOH
 end
+
+cookbook_file '/tmp/jenkin_is_ready.rb' do
+  source 'jenkin_is_ready.rb'
+  mode '0755'
+end
