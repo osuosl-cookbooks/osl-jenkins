@@ -6,7 +6,7 @@ RSpec.configure do |config|
 end
 
 describe package('knife-backup') do
-  it { should be_installed.by('gem').with_version('0.0.10') }
+  its('version') { should eq '0.0.10' }
 end
 
 describe file('/var/chef-backup-for-rdiff') do
