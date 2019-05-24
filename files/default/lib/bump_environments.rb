@@ -116,15 +116,32 @@ class BumpEnvironments
   end
 
   def self.update_env_files
+    # Check whether it is a new cookbook
+    new = BumpEnvironments.is_new_cookbook
+
     # Replace the old versions with the new versions
     @chef_env_files.each do |f|
-      BumpEnvironments.update_version(f)
+      BumpEnvironments.update_version(f, new)
     end
   end
 
-  def self.update_version(file)
+  def self.is_new_cookbook()
+    @chef_env_files.each do |f|
+      data = JSON.parse(::File.read(f))
+      if data['cookbook_versions'].include?(@cookbook)
+        return false
+      end
+    end
+    return true
+  end
+
+  def self.update_version(file, new)
     data = JSON.parse(::File.read(file))
-    data['cookbook_versions'][@cookbook] = "= #{@version}" if data['cookbook_versions'].include?(@cookbook)
+    # If new cookbook, else if the cookbook exist in environments
+    if new or data['cookbook_versions'].include?(@cookbook)
+      data['cookbook_versions'][@cookbook] = "= #{@version}"
+    end
+
     ::File.write(file, JSON.pretty_generate(data) + "\n")
   end
 
