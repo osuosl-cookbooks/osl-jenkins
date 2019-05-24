@@ -3,6 +3,7 @@ require 'rspec/mocks'
 require 'tempfile'
 require 'pathname'
 require 'yaml'
+require 'json'
 require_relative '../../files/default/lib/bump_environments'
 
 module SpecHelper
@@ -31,6 +32,24 @@ module SpecHelper
   def get_cookbook_version(file, cookbook)
     data = JSON.parse(::File.read(fixture_path(file)))
     data['cookbook_versions'][cookbook]
+  end
+
+  def revert_environments()
+    update_environment('openstack_ocata.json', 'cookbook', '= 0.7.0')
+    update_environment('phpbb.json', 'cookbook', '= 0.7.0')
+    update_environment('production.json', 'cookbook', nil)
+    update_environment('workstation.json', 'cookbook', nil)
+  end
+
+  def update_environment(file, cookbook, version)
+    file = 'environments/' + file
+    data = JSON.parse(::File.read(fixture_path(file)))
+    if version
+      data['cookbook_versions'][cookbook] = version
+    else
+      data['cookbook_versions'].delete(cookbook)
+    end
+    ::File.write(fixture_path(file), JSON.pretty_generate(data) + "\n")
   end
 
   def tempfile(file)
@@ -241,15 +260,7 @@ describe BumpEnvironments do
       expect(get_cookbook_version('environments/phpbb.json', BumpEnvironments.cookbook)).to eq('= 1.0.0')
       expect(get_cookbook_version('environments/production.json', BumpEnvironments.cookbook)).to be_nil
       expect(get_cookbook_version('environments/workstation.json', BumpEnvironments.cookbook)).to be_nil
-    end
-    it 'reverts changes made by last test' do
-      allow(ENV).to receive(:[]).with('version').and_return('0.7.0')
-      BumpEnvironments.load_config
-      BumpEnvironments.verify_chef_envs
-      BumpEnvironments.chef_env_files = BumpEnvironments.chef_env_files.map do |file|
-        fixture_path(file)
-      end
-      BumpEnvironments.update_env_files
+      revert_environments
       expect(get_cookbook_version('environments/openstack_ocata.json', BumpEnvironments.cookbook)).to eq('= 0.7.0')
       expect(get_cookbook_version('environments/phpbb.json', BumpEnvironments.cookbook)).to eq('= 0.7.0')
       expect(get_cookbook_version('environments/production.json', BumpEnvironments.cookbook)).to be_nil
@@ -266,12 +277,7 @@ describe BumpEnvironments do
       BumpEnvironments.load_config
       BumpEnvironments.update_version(fixture_path(env_file))
       expect(get_cookbook_version(env_file, BumpEnvironments.cookbook)).to eq('= 1.0.0')
-    end
-    it 'reverts changes made by last test' do
-      env_file = 'environments/phpbb.json'
-      allow(ENV).to receive(:[]).with('version').and_return('0.7.0')
-      BumpEnvironments.load_config
-      BumpEnvironments.update_version(fixture_path(env_file))
+      revert_environments
       expect(get_cookbook_version(env_file, BumpEnvironments.cookbook)).to eq('= 0.7.0')
     end
     it 'does not change environment cookbook version if cookbook not found' do
