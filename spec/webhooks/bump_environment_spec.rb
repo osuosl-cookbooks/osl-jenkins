@@ -39,6 +39,10 @@ module SpecHelper
     update_environment('phpbb.json', 'cookbook', '= 0.7.0')
     update_environment('production.json', 'cookbook', nil)
     update_environment('workstation.json', 'cookbook', nil)
+    update_environment('openstack_ocata.json', 'new-cookbook', nil)
+    update_environment('phpbb.json', 'new-cookbook', nil)
+    update_environment('production.json', 'new-cookbook', nil)
+    update_environment('workstation.json', 'new-cookbook', nil)
   end
 
   def update_environment(file, cookbook, version)
@@ -255,6 +259,7 @@ describe BumpEnvironments do
       BumpEnvironments.chef_env_files = BumpEnvironments.chef_env_files.map do |file|
         fixture_path(file)
       end
+      revert_environments
       BumpEnvironments.update_env_files
       expect(get_cookbook_version('environments/openstack_ocata.json', BumpEnvironments.cookbook)).to eq('= 1.0.0')
       expect(get_cookbook_version('environments/phpbb.json', BumpEnvironments.cookbook)).to eq('= 1.0.0')
@@ -263,6 +268,26 @@ describe BumpEnvironments do
       revert_environments
       expect(get_cookbook_version('environments/openstack_ocata.json', BumpEnvironments.cookbook)).to eq('= 0.7.0')
       expect(get_cookbook_version('environments/phpbb.json', BumpEnvironments.cookbook)).to eq('= 0.7.0')
+      expect(get_cookbook_version('environments/production.json', BumpEnvironments.cookbook)).to be_nil
+      expect(get_cookbook_version('environments/workstation.json', BumpEnvironments.cookbook)).to be_nil
+    end
+
+    it 'uploads new cookbook' do
+      allow(ENV).to receive(:[]).with('cookbook').and_return('new-cookbook')
+      BumpEnvironments.load_config
+      BumpEnvironments.verify_chef_envs
+      BumpEnvironments.chef_env_files = BumpEnvironments.chef_env_files.map do |file|
+        fixture_path(file)
+      end
+      revert_environments
+      BumpEnvironments.update_env_files
+      expect(get_cookbook_version('environments/openstack_ocata.json', BumpEnvironments.cookbook)).to eq('= 1.0.0')
+      expect(get_cookbook_version('environments/phpbb.json', BumpEnvironments.cookbook)).to eq('= 1.0.0')
+      expect(get_cookbook_version('environments/production.json', BumpEnvironments.cookbook)).to eq('= 1.0.0')
+      expect(get_cookbook_version('environments/workstation.json', BumpEnvironments.cookbook)).to eq('= 1.0.0')
+      revert_environments
+      expect(get_cookbook_version('environments/openstack_ocata.json', BumpEnvironments.cookbook)).to be_nil
+      expect(get_cookbook_version('environments/phpbb.json', BumpEnvironments.cookbook)).to be_nil
       expect(get_cookbook_version('environments/production.json', BumpEnvironments.cookbook)).to be_nil
       expect(get_cookbook_version('environments/workstation.json', BumpEnvironments.cookbook)).to be_nil
     end
@@ -275,14 +300,23 @@ describe BumpEnvironments do
     it 'update cookbook version if cookbook is present in specified file' do
       env_file = 'environments/phpbb.json'
       BumpEnvironments.load_config
-      BumpEnvironments.update_version(fixture_path(env_file))
+      revert_environments
+      BumpEnvironments.update_version(fixture_path(env_file), false)
       expect(get_cookbook_version(env_file, BumpEnvironments.cookbook)).to eq('= 1.0.0')
       revert_environments
       expect(get_cookbook_version(env_file, BumpEnvironments.cookbook)).to eq('= 0.7.0')
     end
     it 'does not change environment cookbook version if cookbook not found' do
       env_file = 'environments/production.json'
-      BumpEnvironments.update_version(fixture_path(env_file))
+      BumpEnvironments.update_version(fixture_path(env_file), false)
+      expect(get_cookbook_version(env_file, BumpEnvironments.cookbook)).to be_nil
+    end
+    it 'adds new cookbook to environment' do
+      env_file = 'environments/production.json'
+      revert_environments
+      BumpEnvironments.update_version(fixture_path(env_file), true)
+      expect(get_cookbook_version(env_file, BumpEnvironments.cookbook)).to eq('= 1.0.0')
+      revert_environments
       expect(get_cookbook_version(env_file, BumpEnvironments.cookbook)).to be_nil
     end
   end
