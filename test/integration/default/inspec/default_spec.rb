@@ -21,5 +21,3 @@ describe file('/home/alfred/.ssh/authorized_keys') do
   it { should be_owned_by 'alfred' }
   it { should be_grouped_into 'alfred' }
 end
-
-
