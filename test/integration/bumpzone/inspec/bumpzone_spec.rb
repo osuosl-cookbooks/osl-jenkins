@@ -1,5 +1,3 @@
-# -*- encoding : utf-8 -*-
-
 describe command('curl -k https://127.0.0.1/job/bumpzone/ -o /dev/null -v 2>&1') do
   its('stdout') { should match(/X-Jenkins-Session:/) }
   its('exit_status') { should eq 0 }
