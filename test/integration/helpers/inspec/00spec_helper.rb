@@ -25,7 +25,7 @@ end
 #   its('stdout') { should match(%r{Location: https://localhost/}) }
 # end
 
-describe http('http://localhost/', 
+describe http('http://localhost/',
               enable_remote_worker: true) do
   its('status') { should cmp 302 }
   its('headers.Location') { should eq 'https://localhost/' }
@@ -35,7 +35,7 @@ end
 #   its('stdout') { should match(/Jenkins 2.150.2/) }
 # end
 
-describe http('https://localhost/about/', 
+describe http('https://localhost/about/',
               enable_remote_worker: true,
               ssl_verify: false) do
   its('body') { should match(/Jenkins 2.150.2/) }
