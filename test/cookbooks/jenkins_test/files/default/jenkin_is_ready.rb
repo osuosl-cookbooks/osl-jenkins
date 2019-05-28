@@ -1,6 +1,8 @@
-# -*- encoding : utf-8 -*-
+require 'net/http'
+require 'open-uri'
+require 'uri'
+require 'openssl'
 
-# Copied from jenkins cookbook helper library
 begin
   open('https://localhost/whoAmI/', ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE)
 rescue SocketError,
