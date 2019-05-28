@@ -48,11 +48,13 @@ suites:
   - name: haproxy
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     run_list:
+      - recipe[jenkins_test]
       - recipe[certificate::manage_by_attributes]
       - recipe[osl-jenkins::haproxy]
       - recipe[osl-haproxy::default]
   - name: chef_backup
     run_list:
+      - recipe[jenkins_test]
       - recipe[osl-jenkins::chef_backup]
     attributes:
       jenkins:
@@ -61,17 +63,21 @@ suites:
           group: centos
   - name: chef_ci_cookbook_template
     run_list:
+      - recipe[jenkins_test]
       - recipe[osl-jenkins::chef_ci_cookbook_template]
   - name: plugins
     run_list:
+      - recipe[jenkins_test]
       - recipe[osl-jenkins::master]
       - recipe[osl-jenkins::plugins]
   - name: ftp
     run_list:
+      - recipe[jenkins_test]
       - recipe[osl-jenkins::ftp]
   - name: cookbook-uploader
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     run_list:
+      - recipe[jenkins_test]
       - recipe[osl-jenkins::cookbook_uploader]
     provisioner: chef_zero
     driver:
@@ -110,6 +116,7 @@ suites:
   - name: jenkins1
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     run_list:
+      - recipe[jenkins_test]
       - recipe[osl-jenkins::jenkins1]
     driver:
       security_groups:
@@ -167,6 +174,7 @@ suites:
   - name: bumpzone
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     run_list:
+      - recipe[jenkins_test]
       - recipe[osl-jenkins::bumpzone]
     provisioner: chef_zero
     driver:
@@ -192,6 +200,7 @@ suites:
           listen_address: '0.0.0.0'
   - name: github_comment
     run_list:
+      - recipe[jenkins_test]
       - recipe[osl-jenkins::github_comment]
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     provisioner: chef_zero
@@ -220,6 +229,7 @@ suites:
           listen_address: '0.0.0.0'
   - name: packer_pipeline_master
     run_list:
+      - recipe[jenkins_test]
       - recipe[osl-jenkins::packer_pipeline_master]
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     provisioner: chef_zero
@@ -246,6 +256,7 @@ suites:
             listen_address: '0.0.0.0'
   - name: site_pr_builder
     run_list:
+      - recipe[jenkins_test]
       - recipe[osl-jenkins::site_pr_builder]
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     provisioner: chef_zero
@@ -276,6 +287,7 @@ suites:
     nodes_path: test/integration/nodes
     provisioner: chef_zero
     run_list:
+      - recipe[jenkins_test]
       - recipe[osl-jenkins::powerci]
       - recipe[jenkins_test]
     excludes:
@@ -305,6 +317,7 @@ suites:
     nodes_path: test/integration/nodes
     provisioner: chef_zero
     run_list:
+      - recipe[jenkins_test]
       - recipe[osl-jenkins::ibmz_ci]
       - recipe[jenkins_test]
     driver_config:
@@ -336,6 +349,7 @@ suites:
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     data_bags_path: test/integration/data_bags
     run_list:
+      - recipe[jenkins_test]
       - recipe[osl-jenkins::packer_pipeline_node]
     excludes:
       - centos-6
