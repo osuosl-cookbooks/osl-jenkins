@@ -81,7 +81,7 @@ suites:
             - 'osuosl-cookbooks/staff'
           chef_repo: 'osuosl/chef-repo'
           default_environments:
-            - openstack_ocata
+            - openstack_pike
             - openstack_pike
             - phpbb
             - production
