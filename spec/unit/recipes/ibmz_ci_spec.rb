@@ -24,23 +24,6 @@ describe 'osl-jenkins::ibmz_ci' do
             },
           }
         )
-        stub_data_bag_item('docker', 'client-fauxhai-local').and_return(
-          key: 'key',
-          cert: 'cert',
-          chain: 'chain'
-        )
-        stub_search('node', 'roles:ibmz_ci_docker').and_return(
-          [
-            {
-              ipaddress: '192.168.0.1',
-              fqdn: 's390x-docker1.example.org',
-            },
-            {
-              ipaddress: '192.168.0.2',
-              fqdn: 's390x-docker2.example.org',
-            },
-          ]
-        )
       end
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
@@ -107,32 +90,6 @@ describe 'osl-jenkins::ibmz_ci' do
       end
       it do
         expect(chef_run).to create_jenkins_password_credentials('ibmz_ci')
-      end
-      it do
-        expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-      end
-      it 'should add docker images' do
-        %w(
-          osuosl/ubuntu-s390x:16.04
-          osuosl/ubuntu-s390x:18.04
-          osuosl/debian-s390x:9
-          osuosl/debian-s390x:buster
-          osuosl/debian-s390x:unstable
-          osuosl/fedora-s390x:28
-          osuosl/fedora-s390x:29
-        ).each do |image|
-          expect(chef_run).to execute_jenkins_script('Add Docker Cloud').with(command: %r{'#{image}', // image})
-          expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
-            .with(command: %r{'docker-#{image.tr('/:', '-')}-privileged', // labelString})
-        end
-      end
-      it 'should add docker hosts' do
-        [
-          %r{tcp://192.168.0.1:2376.*\n.*ibmz_ci_docker-server.*},
-          %r{tcp://192.168.0.2:2376.*\n.*ibmz_ci_docker-server.*},
-        ].each do |line|
-          expect(chef_run).to execute_jenkins_script('Add Docker Cloud').with(command: line)
-        end
       end
       it do
         [

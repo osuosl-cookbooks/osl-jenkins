@@ -85,23 +85,3 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     its(:stdout) { should match(/^#{plugin}.*#{version}[\s\(]?/) }
   end
 end
-
-describe file('/var/lib/jenkins/config.xml') do
-  %w(
-    osuosl/ubuntu-s390x:16.04
-    osuosl/ubuntu-s390x:18.04
-    osuosl/debian-s390x:9
-    osuosl/debian-s390x:buster
-    osuosl/debian-s390x:unstable
-    osuosl/fedora-s390x:28
-    osuosl/fedora-s390x:29
-  ).each do |image|
-    its(:content) { should match(%r{<image>#{image}</image>}) }
-    its(:content) { should match(%r{<labelString>docker-#{image.tr('/:', '-')}</labelString>}) }
-    its(:content) { should match(%r{<labelString>docker-#{image.tr('/:', '-')}-privileged</labelString>}) }
-  end
-  its(:content) { should match(/<string>JENKINS_SLAVE_SSH_PUBKEY=ssh-rsa AAAAB3.*/) }
-  its(:content) { should match(%r{<credentialsId>ibmz_ci-docker</credentialsId>}) }
-  its(:content) { should match(%r{<uri>tcp://127.0.0.1:2376</uri>}) }
-  its(:content) { should match(%r{<credentialsId>ibmz_ci_docker-server</credentialsId>}) }
-end
