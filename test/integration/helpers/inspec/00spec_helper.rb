@@ -37,11 +37,11 @@ end
 #   its('stdout') { should match(%r{Location: https://localhost/}) }
 # end
 
-describe command('curl -v http://localhost/ 2>&1') do
+describe command('curl -v http://localhost/ 2>&1 | iconv -f US-ASCII -t UTF-8') do
   its('stdout') { should match(%r{HTTP/1.1 302 Found}) }
   its('stdout') { should match(%r{Location: https://localhost/}) }
 end
 
-describe command('curl -k https://localhost/about/') do
+describe command('curl -k https://localhost/about/ | iconv -f US-ASCII -t UTF-8') do
   its('stdout') { should match(/Jenkins 2.164.2/) }
 end
