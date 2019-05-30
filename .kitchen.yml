@@ -286,11 +286,6 @@ suites:
             - 'osuosl-manatee'
             - <%= ENV['GITHUB_USER'] %>
           normal_users: []
-          sge:
-            hostname: 'sge.example.org'
-            username: 'username'
-            password: 'password'
-            port: 22
           oauth:
             powerci:
               client_id: <%= ENV['GITHUB_CLIENT_ID'] %>
