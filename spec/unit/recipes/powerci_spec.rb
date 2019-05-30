@@ -11,12 +11,6 @@ describe 'osl-jenkins::powerci' do
         stub_data_bag_item('osl_jenkins', 'powerci').and_return(
           admin_users: ['testadmin'],
           normal_users: ['testuser'],
-          'sge' => {
-            username: 'username',
-            password: 'password',
-            hostname: 'sge.example.org',
-            port: 22,
-          },
           'oauth' => {
             'powerci' => {
               client_id: '123456789',
@@ -118,17 +112,6 @@ describe 'osl-jenkins::powerci' do
         )
       end
       it do
-        expect(chef_run).to install_jenkins_plugin('sge-cloud-plugin').with(
-          version: '1.17',
-          install_deps: false,
-          source: 'http://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/sge-cloud-plugin/' \
-                  '1.17/sge-cloud-plugin-1.17.hpi'
-        )
-      end
-      it do
-        expect(chef_run.jenkins_plugin('sge-cloud-plugin')).to notify('jenkins_command[safe-restart]')
-      end
-      it do
         expect(chef_run).to create_jenkins_password_credentials('powerci')
       end
       it do
@@ -190,40 +173,6 @@ describe 'osl-jenkins::powerci' do
       # it do
       #   expect(chef_run).to execute_jenkins_script('Add OpenStack Cloud')
       # end
-      it 'Add SGE Cloud: default' do
-        expect(chef_run).to execute_jenkins_script('Add SGE Cloud')
-          .with(
-            command: %r{
-BatchCloud sge_CGRB_ubuntu = new BatchCloud\(
-  'CGRB-ubuntu',    // cloudName
-  'docker_gpu',   // queueType
-  'docker-gpu',   // label
-  1440,         // maximumIdleMinutes
-  'sge.example.org', // hostname
-  22,      // port
-  'username', // username
-  'password' // password
-\)}
-
-          )
-      end
-      it 'Add SGE Cloud: cuda92' do
-        expect(chef_run).to execute_jenkins_script('Add SGE Cloud')
-          .with(
-            command: %r{
-BatchCloud sge_CGRB_ubuntu_cuda92 = new BatchCloud\(
-  'CGRB-ubuntu-cuda92',    // cloudName
-  'docker_gpu@openpower2',   // queueType
-  'docker-gpu-cuda92',   // label
-  1440,         // maximumIdleMinutes
-  'sge.example.org', // hostname
-  22,      // port
-  'username', // username
-  'password' // password
-\)}
-
-          )
-      end
       it do
         expect(chef_run).to run_ruby_block('Set jenkins username/password if needed')
       end

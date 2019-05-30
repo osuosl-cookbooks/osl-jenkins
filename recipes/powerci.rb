@@ -20,7 +20,6 @@
 class ::Chef::Recipe
   include OSLDocker::Helper
   include OSLOpenStack::Helper
-  include OSLSGE::Helper
   include OSLGithubOauth::Helper
 end
 
@@ -30,7 +29,6 @@ admin_users = secrets['admin_users']
 normal_users = secrets['normal_users']
 client_id = secrets['oauth']['powerci']['client_id']
 client_secret = secrets['oauth']['powerci']['client_secret']
-sge = secrets['sge']
 powerci = node['osl-jenkins']['powerci']
 
 ruby_block 'Set jenkins username/password if needed' do
@@ -69,13 +67,6 @@ include_recipe 'osl-jenkins::master'
 jenkins_plugin 'copy-to-slave' do
   source 'http://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/copy-to-slave/1.4.4/copy-to-slave-1.4.4.hpi'
   version '1.4.4'
-  install_deps false
-  notifies :execute, 'jenkins_command[safe-restart]', :immediately
-end
-
-jenkins_plugin 'sge-cloud-plugin' do
-  source 'http://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/sge-cloud-plugin/1.17/sge-cloud-plugin-1.17.hpi'
-  version '1.17'
   install_deps false
   notifies :execute, 'jenkins_command[safe-restart]', :immediately
 end
@@ -123,30 +114,6 @@ docker_cloud =
 
 # openstack_cloud = add_openstack_cloud
 
-sge_cloud = header_sge_cloud
-# Default label for GPU jobs
-sge_cloud +=
-  add_sge_cloud(
-    'CGRB-ubuntu',
-    'docker_gpu',
-    'docker-gpu',
-    sge['hostname'],
-    sge['username'],
-    sge['password'],
-    sge['port']
-  )
-# Label for using CUDA 9.2
-sge_cloud +=
-  add_sge_cloud(
-    'CGRB-ubuntu-cuda92',
-    'docker_gpu@openpower2',
-    'docker-gpu-cuda92',
-    sge['hostname'],
-    sge['username'],
-    sge['password'],
-    sge['port']
-  )
-
 github_oauth =
   add_github_oauth(
     client_id,
@@ -164,10 +131,6 @@ end
 # jenkins_script 'Add OpenStack Cloud' do
 #   command openstack_cloud
 # end
-
-jenkins_script 'Add SGE Cloud' do
-  command sge_cloud
-end
 
 jenkins_script 'Add GitHub OAuth config' do
   command github_oauth

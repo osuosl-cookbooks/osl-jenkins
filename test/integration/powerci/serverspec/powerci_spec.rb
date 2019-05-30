@@ -67,7 +67,6 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     resource-disposer:0.12
     scm-api:2.2.7
     script-security:1.56
-    sge-cloud-plugin:1.17
     ssh-credentials:1.14
     ssh-slaves:1.28.1
     structs:1.17
@@ -126,32 +125,4 @@ describe file('/var/lib/jenkins/config.xml') do
   its(:content) { should match(/<launchTimeoutSeconds>600.*/) }
   its(:content) { should match(%r{<credentialsId>powerci-docker</credentialsId>}) }
   its(:content) { should match(%r{<uri>tcp://127.0.0.1:2375</uri>}) }
-  its(:content) do
-    should match(%r{
-    <org.jenkinsci.plugins.sge.BatchCloud plugin="sge-cloud-plugin@1.17">
-      <name>CGRB-ubuntu</name>
-      <cloudName>CGRB-ubuntu</cloudName>
-      <queueType>docker_gpu</queueType>
-      <label>docker-gpu</label>
-      <maximumIdleMinutes>1440</maximumIdleMinutes>
-      <hostname>sge.example.org</hostname>
-      <port>22</port>
-      <username>username</username>
-      <password>\{.*\}</password>
-    <\/org.jenkinsci.plugins.sge.BatchCloud>})
-  end
-  its(:content) do
-    should match(%r{
-    <org.jenkinsci.plugins.sge.BatchCloud plugin="sge-cloud-plugin@1.17">
-      <name>CGRB-ubuntu-cuda92</name>
-      <cloudName>CGRB-ubuntu-cuda92</cloudName>
-      <queueType>docker_gpu@openpower2</queueType>
-      <label>docker-gpu-cuda92</label>
-      <maximumIdleMinutes>1440</maximumIdleMinutes>
-      <hostname>sge.example.org</hostname>
-      <port>22</port>
-      <username>username</username>
-      <password>\{.*\}</password>
-    <\/org.jenkinsci.plugins.sge.BatchCloud>})
-  end
 end
