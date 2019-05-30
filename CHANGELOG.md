@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.2.7 (2019-05-30)
+------------------
+- Remove SGE backend to powerci
+
 2.2.6 (2019-05-29)
 ------------------
 - Remove openstack_ocata environment since it's no longer used
