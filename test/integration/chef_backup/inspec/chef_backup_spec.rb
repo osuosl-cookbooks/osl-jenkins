@@ -11,6 +11,6 @@ end
 
 describe file('/var/chef-backup-for-rdiff') do
   it { should be_directory }
-  it { should be_owned_by 'centos' }
-  it { should be_grouped_into 'centos' }
+  its('owner') { should eq 'centos' }
+  its('group') { should eq 'centos' }
 end
