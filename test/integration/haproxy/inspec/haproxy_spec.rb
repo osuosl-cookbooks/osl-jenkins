@@ -3,9 +3,9 @@ describe package('haproxy') do
 end
 
 describe file('/etc/haproxy/haproxy.cfg') do
-  it { should contain '/etc/pki/tls/wildcard.pem' }
-  it { should contain 'maxconn 2000' }
-  it { should contain 'backend servers-http' }
-  it { should contain 'redirect scheme https' }
-  it { should_not contain 'option httpchk' }
+  its('content') { should match(%r{/etc/pki/tls/wildcard.pem'} }
+  its('content') { should match(/maxconn 2000/) }
+  its('content') { should match(/backend servers-http/) }
+  its('content') { should match(/redirect scheme https/) }
+  its('content') { should_not match(/option httpchk/) }
 end

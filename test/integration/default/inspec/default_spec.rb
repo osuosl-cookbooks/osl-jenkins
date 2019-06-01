@@ -4,20 +4,20 @@ end
 
 describe group('alfred') do
   it { should exist }
-  it { should have_gid 10000 }
+  its('gid') { should eq 10000 }
 end
 
 describe user('alfred') do
   it { should exist }
-  it { should belong_to_group 'alfred' }
-  it { should have_login_shell '/bin/bash' }
-  it { should have_home_directory '/home/alfred' }
-  it { should have_uid 10000 }
+  its('group') { should eq 'alfred' }
+  its('shell') { should eq '/bin/bash' }
+  its('home') { should eq '/home/alfred' }
+  its('uid') { should eq 10000 }
 end
 
 describe file('/home/alfred/.ssh/authorized_keys') do
   it { should be_file }
-  it { should be_mode 600 }
-  it { should be_owned_by 'alfred' }
-  it { should be_grouped_into 'alfred' }
+  its('mode') { should cmp 0600 }
+  its('owner') { should eq 'alfred' }
+  its('group') { should eq 'alfred' }
 end

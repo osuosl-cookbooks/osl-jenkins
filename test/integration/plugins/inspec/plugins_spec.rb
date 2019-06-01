@@ -1,9 +1,5 @@
-describe 'plugins' do
-  it_behaves_like 'jenkins_server'
-end
-
 describe file('/var/log/jenkins/jenkins.log') do
-  its(:content) { should_not match(/SEVERE: Failed Loading plugin/) }
+  its('content') { should_not match(/SEVERE: Failed Loading plugin/) }
 end
 
 describe file('/tmp/kitchen/cache/reload-jenkins') do
@@ -103,6 +99,6 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     ws-cleanup:0.28
   ).each do |plugins_version|
     plugin, version = plugins_version.split(':')
-    its(:stdout) { should match(/^#{plugin}.*#{version}[\s\(]?/) }
+    its('stdout') { should match(/^#{plugin}.*#{version}[\s\(]?/) }
   end
 end
