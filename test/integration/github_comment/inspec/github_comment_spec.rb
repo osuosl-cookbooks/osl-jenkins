@@ -24,4 +24,3 @@ end
 describe http('https://127.0.0.1/job/github_comment/', enable_remote_worker: true, ssl_verify: false) do
   its('body') { should match(/X-Jenkins-Session:/) }
 end
-
