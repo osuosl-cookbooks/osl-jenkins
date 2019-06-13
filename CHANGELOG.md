@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.2.9 (2019-06-13)
+------------------
+- Remove openstack_pike environment
+
 2.2.8 (2019-06-11)
 ------------------
 - Add openstack_queens environment to default bump
