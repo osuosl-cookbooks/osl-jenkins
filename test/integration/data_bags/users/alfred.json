@@ -1,5 +1,10 @@
 {
   "id": "alfred",
+  "uid": 10000,
+  "gid": 10000,
+  "manage_home": true,
+  "shell": "/bin/bash",
+  "groups": [ "alfred" ],
   "ssh_keys": [
     "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCyMMKbEFl9P9afj8qm2i3xymIi2Ivfqi4mhCIMLAJoiQmjDCv8LqqAyRZuLJawH3w9AHqapKab1cyyhF9q8bVhT8i6eqOOJKh8WOjjZSdJ14a2gctzJyVqZDILFhSDG0N2Ivfqi4mhCIMLx/cFigKMbcw9yZW9q8bVhT8i6eQve6CTxnuWwCynnSaL4md8HIgils79FqQvkHdkNG1Kox9XsB4DOIH9G7AYuIOWef36ZmgGgKNAqSWun7SyLwzcmcA54UpDJDoz0QCL3vigHAWhmD5sI83nUpe0BJLOcemkonRcyytmYbiLuWwCynnSaLBw0XKNAJoiQmjDCv8L/dtnGAqnHNchL4sz username@osuosl.org"
     ]
