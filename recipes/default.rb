@@ -27,22 +27,7 @@ ohai 'jenkins_reload_passwd' do
   plugin 'etc'
 end
 
-group 'alfred' do
-  gid 10000
-  action :create
+users_manage 'alfred' do
+  group_id 10000
   notifies :reload, 'ohai[jenkins_reload_passwd]', :immediately
 end
-
-user 'alfred' do
-  manage_home true
-  uid 10000
-  gid 10000
-  system true
-  shell '/bin/bash'
-  home '/home/alfred'
-  action :create
-  notifies :reload, 'ohai[jenkins_reload_passwd]', :immediately
-end
-
-node.default['ssh_keys']['alfred'] = 'alfred'
-include_recipe 'ssh-keys'
