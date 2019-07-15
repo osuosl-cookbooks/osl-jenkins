@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.3.0 (2019-07-15)
+------------------
+- Convert to using users_manage resource
+
 2.2.9 (2019-06-13)
 ------------------
 - Remove openstack_pike environment
