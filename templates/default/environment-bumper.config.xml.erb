@@ -60,7 +60,7 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command><%= @execute_shell %></command>
+      <command>/var/lib/jenkins/bin/bump_environments.rb</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers/>
