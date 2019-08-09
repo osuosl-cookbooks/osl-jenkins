@@ -28,7 +28,6 @@ suites:
   - name: default
     run_list:
       - recipe[osl-jenkins::default]
-      - recipe[jenkins_test]
   - name: master
     driver:
       security_groups:

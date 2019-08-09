@@ -1,10 +1,7 @@
-# describe command('curl -k https://127.0.0.1/job/packer_pipeline/ -o /dev/null -v 2>&1') do
-#   its(:stdout) { should match(/X-Jenkins-Session:/) }
-#   its(:exit_status) { should eq 0 }
-# end
-
-describe http('https://127.0.0.1/job/packer_pipeline/', enable_remote_worker: true, ssl_verify: false) do
-  its('body') { should match(/X-Jenkins-Session:/) }
+describe command('curl -k https://127.0.0.1/job/packer_pipeline/ -o /dev/null -v 2>&1 \
+                 | iconv -f US-ASCII -t UTF-8') do
+  its('stdout') { should match(/X-Jenkins-Session:/) }
+  its('exit_status') { should eq 0 }
 end
 
 describe file('/var/lib/jenkins/lib/packer_pipeline.rb') do
