@@ -3,7 +3,7 @@ describe package('haproxy') do
 end
 
 describe file('/etc/haproxy/haproxy.cfg') do
-  its('content') { should match(%r{/etc/pki/tls/wildcard.pem'}) }
+  its('content') { should match(%r{/etc/pki/tls/wildcard.pem}) }
   its('content') { should match(/maxconn 2000/) }
   its('content') { should match(/backend servers-http/) }
   its('content') { should match(/redirect scheme https/) }
