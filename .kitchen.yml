@@ -50,11 +50,9 @@ suites:
       - recipe[certificate::manage_by_attributes]
       - recipe[osl-jenkins::haproxy]
       - recipe[osl-haproxy::default]
-      - recipe[jenkins_test]
   - name: chef_backup
     run_list:
       - recipe[osl-jenkins::chef_backup]
-      - recipe[jenkins_test]
     attributes:
       jenkins:
         master:
@@ -63,7 +61,6 @@ suites:
   - name: chef_ci_cookbook_template
     run_list:
       - recipe[osl-jenkins::chef_ci_cookbook_template]
-      - recipe[jenkins_test]
   - name: plugins
     run_list:
       - recipe[osl-jenkins::master]
@@ -72,7 +69,6 @@ suites:
   - name: ftp
     run_list:
       - recipe[osl-jenkins::ftp]
-      - recipe[jenkins_test]
   - name: cookbook-uploader
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     run_list:
