@@ -1,11 +1,9 @@
 describe file('/home/alfred/.gitconfig') do
   it { should exist }
   it { should be_a_file }
-  its('content') do
-    should match(%r{pr  = "!f() { git fetch -fu ${2:-$(git remote |
-  grep ^upstream || echo origin)} refs/pull/$1/head:pr/$1
-  && git checkout pr/$1; }; f}x).after(/[alias]/)
-  end
+  its('content') { should match(%r{\[alias\]\n\s*pr\s*=\s"!f\(\)\s\{\sgit\sfetch\s-fu\s\$\{2:-\$\(git\sremote\s\|\
+grep\s\^upstream\s\|\|\secho\sorigin\)\}\srefs\/pull\/\$1\/head:pr\/\$1\s&&\sgit\s\
+checkout\spr\/\$1;\s\};\sf"}) }
 end
 
 describe file('/home/alfred/workspace') do
