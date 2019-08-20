@@ -1,5 +1,5 @@
 describe command('/opt/chef/embedded/bin/gem list') do
-  its('stdout') { should match(%r{knife-backup\s\(0.0.10\)}) }
+  its('stdout') { should match(/knife-backup\s\(0.0.10\)/) }
 end
 
 describe file('/var/chef-backup-for-rdiff') do
