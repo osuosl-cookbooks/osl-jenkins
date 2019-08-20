@@ -6,6 +6,8 @@ describe 'osl-jenkins::packer_pipeline_node' do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(p) do |node|
           node.automatic['kernel']['machine'] = 'ppc64le'
+          node.automatic['filesystem2']['by_mountpoint']
+          node.normal['ibm_power']['cpu']['cpu_model'] = 'power8'
         end.converge(described_recipe)
       end
 
