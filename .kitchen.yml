@@ -343,7 +343,6 @@ suites:
     data_bags_path: test/integration/data_bags
     run_list:
       - recipe[osl-jenkins::packer_pipeline_node]
-      - recipe[jenkins_test]
     excludes:
       - centos-6
     attributes:
