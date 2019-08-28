@@ -1,6 +1,6 @@
-describe command('curl -k https://127.0.0.1/job/packer_pipeline/ -o /dev/null -v 2>&1 | iconv -f US-ASCII -t UTF-8') do
-  its('stdout') { should match(/X-Jenkins-Session:/) }
-  its('exit_status') { should eq 0 }
+describe http('https://127.0.0.1/job/packer_pipeline/', enable_remote_worker: true, ssl_verify: false) do
+  its('status') { should eq 200 }
+  its('headers.X-Jenkins') { should_not eq nil }
 end
 
 describe file('/var/lib/jenkins/lib/packer_pipeline.rb') do

@@ -1,6 +1,6 @@
-describe command('curl -k https://127.0.0.1/job/bumpzone/ -o /dev/null -v 2>&1') do
-  its('stdout') { should match(/X-Jenkins-Session:/) }
-  its('exit_status') { should eq 0 }
+describe http('https://127.0.0.1/job/bumpzone/', enable_remote_worker: true, ssl_verify: false) do
+  its('status') { should eq 200 }
+  its('headers.X-Jenkins') { should_not eq nil }
 end
 
 describe file('/var/lib/jenkins/lib/bumpzone.rb') do
