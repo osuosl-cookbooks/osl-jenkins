@@ -20,11 +20,11 @@ end
   end
 end
 
-describe command('curl -v http://localhost/ 2>&1 | iconv -f US-ASCII -t UTF-8') do
-  its('stdout') { should match(%r{HTTP/1.1 302 Found}) }
-  its('stdout') { should match(%r{Location: https://localhost/}) }
+describe http('http://127.0.0.1/', enable_remote_worker: true) do
+  its('status') { should eq 302 }
+  its('headers.Location') { should match(%r{https://127.0.0.1/}) }
 end
 
-describe command('curl -k https://localhost/about/ | iconv -f US-ASCII -t UTF-8') do
-  its('stdout') { should match(/Jenkins 2.164.2/) }
+describe http('https://127.0.0.1/about/', enable_remote_worker: true, ssl_verify: false) do
+  its('body') { should match(/Jenkins 2.164.2/) }
 end

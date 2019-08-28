@@ -1,5 +1,4 @@
-describe command('curl -k https://127.0.0.1/job/packer_pipeline/ -o /dev/null -v 2>&1 \
-                 | iconv -f US-ASCII -t UTF-8') do
+describe command('curl -k https://127.0.0.1/job/packer_pipeline/ -o /dev/null -v 2>&1 | iconv -f US-ASCII -t UTF-8') do
   its('stdout') { should match(/X-Jenkins-Session:/) }
   its('exit_status') { should eq 0 }
 end
