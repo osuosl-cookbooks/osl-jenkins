@@ -1,4 +1,6 @@
 ---
+verifier:
+  name: inspec
 driver:
   flavor_ref: 'm1.medium'
   network_ref:
@@ -33,6 +35,7 @@ suites:
         - github
     run_list:
       - recipe[osl-jenkins::master]
+      - recipe[jenkins_test]
     attributes:
       osl-jenkins:
         credentials:
@@ -62,6 +65,7 @@ suites:
     run_list:
       - recipe[osl-jenkins::master]
       - recipe[osl-jenkins::plugins]
+      - recipe[jenkins_test]
   - name: ftp
     run_list:
       - recipe[osl-jenkins::ftp]
@@ -69,6 +73,7 @@ suites:
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     run_list:
       - recipe[osl-jenkins::cookbook_uploader]
+      - recipe[jenkins_test]
     provisioner: chef_zero
     driver:
       security_groups:
@@ -107,6 +112,7 @@ suites:
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     run_list:
       - recipe[osl-jenkins::jenkins1]
+      - recipe[jenkins_test]
     driver:
       security_groups:
         - default
@@ -164,6 +170,7 @@ suites:
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     run_list:
       - recipe[osl-jenkins::bumpzone]
+      - recipe[jenkins_test]
     provisioner: chef_zero
     driver:
       security_groups:
@@ -189,6 +196,7 @@ suites:
   - name: github_comment
     run_list:
       - recipe[osl-jenkins::github_comment]
+      - recipe[jenkins_test]
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     provisioner: chef_zero
     driver:
@@ -217,6 +225,7 @@ suites:
   - name: packer_pipeline_master
     run_list:
       - recipe[osl-jenkins::packer_pipeline_master]
+      - recipe[jenkins_test]
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     provisioner: chef_zero
     driver:
@@ -243,6 +252,7 @@ suites:
   - name: site_pr_builder
     run_list:
       - recipe[osl-jenkins::site_pr_builder]
+      - recipe[jenkins_test]
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     provisioner: chef_zero
     driver:
