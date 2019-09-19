@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.3.1 (2019-09-19)
+------------------
+- Remove reliance on chef-sugar since we don't need it here anyway
+
 2.3.0 (2019-07-15)
 ------------------
 - Convert to using users_manage resource
