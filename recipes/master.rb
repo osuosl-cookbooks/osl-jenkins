@@ -116,7 +116,7 @@ cookbook_file git_config_path do
   group node['jenkins']['master']['group']
 end
 
-node.deep_fetch('osl-jenkins', 'gems').each do |g|
+node['osl-jenkins']['gems'].each do |g|
   chef_gem g do # ~FC009
     compile_time true
   end
