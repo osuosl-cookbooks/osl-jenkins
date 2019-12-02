@@ -20,11 +20,11 @@ end
   end
 end
 
-describe http('http://127.0.0.1/', enable_remote_worker: true) do
+describe http('http://127.0.0.1/') do
   its('status') { should eq 302 }
   its('headers.Location') { should match(%r{https://127.0.0.1/}) }
 end
 
-describe http('https://127.0.0.1/about/', enable_remote_worker: true, ssl_verify: false) do
+describe http('https://127.0.0.1/about/', ssl_verify: false) do
   its('body') { should match(/Jenkins 2.164.2/) }
 end
