@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.4.0 (2019-12-02)
+------------------
+- Chef 14
+
 2.3.2 (2019-12-02)
 ------------------
 - Ensure we only install < 2.0 for openstack_taster
