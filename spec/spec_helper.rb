@@ -2,27 +2,24 @@ require 'chefspec'
 require 'chefspec/berkshelf'
 require_relative 'support/matchers'
 
-ChefSpec::Coverage.start! { add_filter 'osl-jenkins' }
-
-CENTOS_7_OPTS = {
+CENTOS_7 = {
   platform: 'centos',
-  version: '7.4.1708',
-  file_cache_path: '/var/chef/cache',
+  version: '7',
 }
 
-CENTOS_6_OPTS = {
+CENTOS_6 = {
   platform: 'centos',
-  version: '6.9',
-  file_cache_path: '/var/chef/cache',
+  version: '6',
 }
 
 ALL_PLATFORMS = [
-  CENTOS_6_OPTS,
-  CENTOS_7_OPTS,
+  CENTOS_6,
+  CENTOS_7,
 ]
 
 RSpec.configure do |config|
-  config.log_level = :fatal
+  config.log_level = :warn
+  config.file_cache_path = '/var/chef/cache'
 end
 
 shared_context 'common_stubs' do

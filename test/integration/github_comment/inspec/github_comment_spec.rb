@@ -16,7 +16,7 @@ describe file('/var/lib/jenkins/lib/github_comment.rb') do
   its('group') { should eq 'jenkins' }
 end
 
-describe http('https://127.0.0.1/job/github_comment/', enable_remote_worker: true, ssl_verify: false) do
+describe http('https://127.0.0.1/job/github_comment/', ssl_verify: false) do
   its('status') { should eq 200 }
   its('headers.X-Jenkins') { should_not eq nil }
 end

@@ -66,7 +66,7 @@ if platform_family?('rhel')
     # latest 1.8.x.
     node.default['git']['version'] = '1.8.5.5'
     node.default['git']['checksum'] = '106b480e2b3ae8b02e5b6b099d7a4049f2b1128659ac81f317267d2ed134679f'
-    include_recipe 'build-essential'
+    build_essential 'osl-jenkins-master'
     include_recipe 'git::source'
 
     # Also create a symlink for when /usr/local/bin isn't in PATH.

@@ -87,4 +87,4 @@ def set_up_github_push(github_token, org_name, repo_name, job_name,
     end
   end
 end
-# rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+# rubocop:enable

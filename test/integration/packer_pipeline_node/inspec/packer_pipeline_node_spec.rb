@@ -50,7 +50,7 @@ end
 
 describe gem('openstack_taster', '/opt/chef/embedded/bin/gem') do
   it { should be_installed }
-  its('version') { should < '2.0' }
+  its('version') { should >= '2.0' }
 end
 
 describe command('berks version') do

@@ -1,4 +1,4 @@
-describe http('https://127.0.0.1/job/packer_pipeline/', enable_remote_worker: true, ssl_verify: false) do
+describe http('https://127.0.0.1/job/packer_pipeline/', ssl_verify: false) do
   its('status') { should eq 200 }
   its('headers.X-Jenkins') { should_not eq nil }
 end

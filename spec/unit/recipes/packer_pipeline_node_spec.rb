@@ -1,7 +1,7 @@
 require_relative '../../spec_helper.rb'
 
 describe 'osl-jenkins::packer_pipeline_node' do
-  [CENTOS_7_OPTS].each do |p|
+  [CENTOS_7].each do |p|
     context "special things for #{p[:platform]} #{p[:version]} on ppc64le arch" do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(p) do |node|
@@ -16,6 +16,10 @@ describe 'osl-jenkins::packer_pipeline_node' do
 
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
+      end
+
+      it do
+        expect(chef_run).to install_build_essential('osl-jenkins-packer-pipeline-node').with(compile_time: true)
       end
 
       it do
@@ -73,7 +77,7 @@ describe 'osl-jenkins::packer_pipeline_node' do
       it do
         expect(chef_run).to upgrade_chef_gem('openstack_taster').with(
           options: '--no-user-install',
-          version: '< 2.0',
+          version: '>= 2.0',
           clear_sources: true
         )
       end

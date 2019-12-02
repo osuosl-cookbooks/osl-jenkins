@@ -3,5 +3,5 @@ describe package('chefdk') do
 end
 
 describe command('chef --version') do
-  its('stdout') { should match(/2\.6\.3/) }
+  its('stdout') { should match(/3\.12\.15\.1/) }
 end

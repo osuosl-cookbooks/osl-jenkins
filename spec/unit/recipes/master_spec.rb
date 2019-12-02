@@ -21,9 +21,12 @@ describe 'osl-jenkins::master' do
         expect(chef_run).to install_package('jenkins').with(version: '2.164.2-1.1', flush_cache: { before: true })
       end
       case p
-      when CENTOS_6_OPTS
+      when CENTOS_6
         it do
           expect(chef_run).to create_link('/usr/bin/git').with(to: '/usr/local/bin/git')
+        end
+        it do
+          expect(chef_run).to install_build_essential('osl-jenkins-master')
         end
       end
       it do
