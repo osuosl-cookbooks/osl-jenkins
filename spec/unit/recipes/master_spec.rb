@@ -25,6 +25,9 @@ describe 'osl-jenkins::master' do
         it do
           expect(chef_run).to create_link('/usr/bin/git').with(to: '/usr/local/bin/git')
         end
+        it do
+          expect(chef_run).to install_build_essential('osl-jenkins-master')
+        end
       end
       it do
         expect(chef_run).to create_cookbook_file('/var/lib/jenkins/.gitconfig')

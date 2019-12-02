@@ -22,8 +22,9 @@
 include_recipe 'osl-jenkins::default'
 
 # install dependencies for gem dependencies at compile time so that chef_gem can use them
-node.override['build-essential']['compile_time'] = true
-include_recipe 'build-essential::default'
+build_essential 'osl-jenkins-packer-pipeline-node' do
+  compile_time true
+end
 
 # setup qemu so that we can build images!
 include_recipe 'yum-qemu-ev::default'

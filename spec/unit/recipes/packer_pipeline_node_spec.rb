@@ -19,6 +19,10 @@ describe 'osl-jenkins::packer_pipeline_node' do
       end
 
       it do
+        expect(chef_run).to install_build_essential('osl-jenkins-packer-pipeline-node').with(compile_time: true)
+      end
+
+      it do
         expect(chef_run).to create_file('/home/alfred/.ssh/packer_alfred_id').with(
           user: 'alfred',
           group: 'alfred',
