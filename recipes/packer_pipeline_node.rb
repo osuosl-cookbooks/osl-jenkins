@@ -111,7 +111,7 @@ end
 # install openstack_taster
 chef_gem 'openstack_taster' do
   compile_time true
-  version '< 2.0'
+  version Chef::VERSION.to_i < 14 ? '< 2.0' : '>= 2.0'
   options '--no-user-install'
   clear_sources true
   action :upgrade
