@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'osl-jenkins::chef_ci_cookbook_template' do
-  [CENTOS_6_OPTS, CENTOS_7_OPTS].each do |p|
+  ALL_PLATFORMS.each do |p|
     context "on #{p[:platform]} #{p[:version]}" do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(p).converge(described_recipe)

@@ -1,7 +1,7 @@
 require_relative '../../spec_helper.rb'
 
 describe 'osl-jenkins::packer_pipeline_node' do
-  [CENTOS_7_OPTS].each do |p|
+  [CENTOS_7].each do |p|
     context "special things for #{p[:platform]} #{p[:version]} on ppc64le arch" do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(p) do |node|
