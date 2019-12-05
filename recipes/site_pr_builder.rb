@@ -47,6 +47,6 @@ site_pr_builder['sites_to_build'].each do |site, org|
 
   jenkins_job job_name do
     config site_pr_builder_xml
-    action [:create, :enable]
+    action :create
   end
 end

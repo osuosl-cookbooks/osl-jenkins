@@ -82,15 +82,15 @@ end
 
 jenkins_job 'bumpzone' do
   config bumpzone_xml
-  action [:create, :enable]
+  action :create
 end
 
 jenkins_job 'checkzone' do
   config checkzone_xml
-  action [:create, :enable]
+  action :create
 end
 
 jenkins_job 'update-zonefiles' do
   config update_zonefiles_xml
-  action [:create, :enable]
+  action :create
 end

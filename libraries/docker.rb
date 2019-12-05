@@ -184,6 +184,7 @@ module OSLDocker
             #{memory_limit},   // memoryLimit
             #{memory_swap},   // memorySwap
             #{cpu_shared},      // cpuShares
+            null,   // shmSize
             '',     // bindPorts
             false,  // bindAllPorts
             false,  // privileged
@@ -211,6 +212,7 @@ module OSLDocker
             #{memory_limit},   // memoryLimit
             #{memory_swap},   // memorySwap
             #{cpu_shared},      // cpuShares
+            null,   // shmSize
             '',     // bindPorts
             false,  // bindAllPorts
             true,   // privileged

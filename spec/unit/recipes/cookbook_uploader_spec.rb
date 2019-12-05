@@ -81,10 +81,6 @@ describe 'osl-jenkins::cookbook_uploader' do
           .with(config: '/var/chef/cache/osuosl-cookbooks/test-cookbook/config.xml')
       end
       it do
-        expect(chef_run).to enable_jenkins_job('cookbook-uploader-osuosl-cookbooks-test-cookbook')
-          .with(config: '/var/chef/cache/osuosl-cookbooks/test-cookbook/config.xml')
-      end
-      it do
         expect(chef_run).to create_directory('/var/chef/cache/osuosl/chef-repo').with(recursive: true)
       end
       it do
@@ -101,10 +97,6 @@ describe 'osl-jenkins::cookbook_uploader' do
       end
       it do
         expect(chef_run).to create_jenkins_job('environment-bumper-osuosl-chef-repo')
-          .with(config: '/var/chef/cache/osuosl/chef-repo/config.xml')
-      end
-      it do
-        expect(chef_run).to enable_jenkins_job('environment-bumper-osuosl-chef-repo')
           .with(config: '/var/chef/cache/osuosl/chef-repo/config.xml')
       end
     end

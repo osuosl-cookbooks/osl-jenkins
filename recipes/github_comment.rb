@@ -48,5 +48,5 @@ end
 
 jenkins_job 'github_comment' do
   config github_comment_xml
-  action [:create, :enable]
+  action :create
 end

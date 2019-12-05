@@ -85,7 +85,7 @@ repo_names.each do |repo_name|
   job_name = "cookbook-uploader-#{org_name}-#{repo_name}"
   jenkins_job job_name do
     config xml
-    action [:create, :enable]
+    action :create
   end
   set_up_github_push(
     git_cred['token'],
@@ -121,5 +121,5 @@ end
 job_name = "environment-bumper-#{chef_repo.tr('/', '-')}"
 jenkins_job job_name do
   config xml
-  action [:create, :enable]
+  action :create
 end
