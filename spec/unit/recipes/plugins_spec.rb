@@ -37,9 +37,9 @@ describe 'osl-jenkins::plugins' do
         end
       end
       %w(
-        structs:1.17
-        credentials:2.1.18
-        ssh-credentials:1.14
+        structs:1.20
+        credentials:2.3.0
+        ssh-credentials:1.18
       ).each do |plugins_version|
         plugin, version = plugins_version.split(':')
         it do
@@ -56,8 +56,9 @@ describe 'osl-jenkins::plugins' do
         ace-editor:1.1
         ant:1.8
         antisamy-markup-formatter:1.3
-        apache-httpcomponents-client-4-api:4.5.5-3.0
+        apache-httpcomponents-client-4-api:4.5.10-2.0
         authentication-tokens:1.3
+        authorize-project:1.3.0
         bouncycastle-api:2.16.3
         branch-api:2.0.8
         build-token-root:1.4
@@ -76,31 +77,31 @@ describe 'osl-jenkins::plugins' do
         external-monitor-job:1.4
         ghprb:1.42.0
         git:3.9.3
-        git-client:2.7.1
+        git-client:3.0.0
         github:1.29.2
         github-api:1.90
         github-branch-source:2.3.6
-        github-oauth:0.31
+        github-oauth:0.33
         github-organization-folder:1.6
-        gitlab-plugin:1.4.4
+        gitlab-plugin:1.5.13
         git-server:1.7
         handlebars:1.1.1
         icon-shim:2.0.3
-        instant-messaging:1.35
-        ircbot:2.30
+        instant-messaging:1.38
+        ircbot:2.31
         jackson2-api:2.9.8
         javadoc:1.3
         jquery-detached:1.2.1
-        jsch:0.1.54.2
+        jsch:0.1.55.1
         junit:1.26.1
         ldap:1.12
         mailer:1.21
         mapdb-api:1.0.6.0
         matrix-auth:2.5
         matrix-project:1.14
-        maven-plugin:3.1.2
+        maven-plugin:3.4
         momentjs:1.1.1
-        pam-auth:1.4
+        pam-auth:1.6
         parameterized-trigger:2.35.1
         pipeline-build-step:2.5.1
         pipeline-github-lib:1.0
@@ -118,26 +119,27 @@ describe 'osl-jenkins::plugins' do
         pipeline-utility-steps:1.4.0
         plain-credentials:1.4
         run-condition:1.0
-        scm-api:2.2.7
-        script-security:1.56
+        scm-api:2.6.3
+        script-security:1.68
         ssh-agent:1.16
         ssh-slaves:1.28.1
         subversion:2.10.3
         text-finder:1.10
-        token-macro:2.7
+        token-macro:2.10
         translation:1.16
+        trilead-api:1.0.5
         windows-slaves:1.1
         workflow-aggregator:2.5
-        workflow-api:2.30
+        workflow-api:2.33
         workflow-basic-steps:2.6
-        workflow-cps:2.65
-        workflow-cps-global-lib:2.9
+        workflow-cps:2.71
+        workflow-cps-global-lib:2.15
         workflow-durable-task-step:2.18
         workflow-job:2.26
         workflow-multibranch:2.16
-        workflow-scm-step:2.6
-        workflow-step-api:2.19
-        workflow-support:3.2
+        workflow-scm-step:2.7
+        workflow-step-api:2.20
+        workflow-support:3.3
         ws-cleanup:0.28
       ).each do |plugins_version|
         plugin, version = plugins_version.split(':')

@@ -64,5 +64,5 @@ end
 # the groovy script will be a fresh version checked out from the packer-templates repo everytime.
 jenkins_job 'packer_pipeline' do
   config packer_pipeline_xml
-  action [:create, :enable]
+  action :create
 end
