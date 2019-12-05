@@ -13,7 +13,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     build-monitor-plugin:1.11\+build.201701152243
     build-timeout:1.19
     build-token-root:1.4
-    cloudbees-folder:6.0.3
+    cloudbees-folder:6.9
     cloud-stats:0.14
     command-launcher:1.2
     config-file-provider:3.6
@@ -41,7 +41,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     junit:1.26.1
     label-linked-jobs:5.1.2
     mailer:1.21
-    matrix-auth:1.5
+    matrix-auth:2.5
     matrix-project:1.14
     momentjs:1.1.1
     nodelabelparameter:1.7.2

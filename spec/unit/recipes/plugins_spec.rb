@@ -61,7 +61,7 @@ describe 'osl-jenkins::plugins' do
         bouncycastle-api:2.16.3
         branch-api:2.0.8
         build-token-root:1.4
-        cloudbees-folder:6.0.3
+        cloudbees-folder:6.9
         command-launcher:1.2
         conditional-buildstep:1.3.1
         copyartifact:1.41
@@ -96,7 +96,7 @@ describe 'osl-jenkins::plugins' do
         ldap:1.12
         mailer:1.21
         mapdb-api:1.0.6.0
-        matrix-auth:1.5
+        matrix-auth:2.5
         matrix-project:1.14
         maven-plugin:3.1.2
         momentjs:1.1.1
