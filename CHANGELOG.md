@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.4.1 (2019-12-05)
+------------------
+- Update matrix-auth and cloudbees-folder for security issues
+
 2.4.0 (2019-12-02)
 ------------------
 - Chef 14
