@@ -89,7 +89,8 @@ include_recipe 'osl-jenkins::plugins'
 secrets = credential_secrets
 
 # This is necessary in order to create Jenkins jobs with security enabled.
-node.run_state[:jenkins_private_key] = secrets['jenkins_private_key'] # ~FC001
+node.run_state[:jenkins_username] = secrets['jenkins_username'] # ~FC001
+node.run_state[:jenkins_password] = secrets['jenkins_password'] # ~FC001
 
 # Add git credentials into Jenkins
 secrets['git'].to_a.each do |git_id, cred|
