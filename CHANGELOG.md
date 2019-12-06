@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.5.1 (2019-12-06)
+------------------
+- Use username/password for cli executor instead of ssh key
+
 2.5.0 (2019-12-05)
 ------------------
 - Bump to jenkins-2.190.3 and other various fixes
