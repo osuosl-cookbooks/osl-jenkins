@@ -1,23 +1,30 @@
 {
   "git": {
-    "encrypted_data": "rmUXmmGYVcj5gCGO4IH+cJhb3daF2HLTVKQa2QIcMCOEPdf67HZDy7tCT6Qs\nYs3HXFdCH5Z9Roq56u2ZsDv6vQ52fonuE9xgIeRezeE3gP76AhaasfJBDBVG\nFsTQIyPPToRGiaSBKbfI/xzxxUilrzXMB6vntPQtXK9kusf/axrNvpZxICnn\nl8ezKWjDiiqe24KOOepX9rMId3wFLDSp5UC4vY07V+llm9LQyAzqa0sJLBkc\nuz1WWkI2kxPHmtCyDYE+l+OM5sGXf39qO2WRVEQurdwtsyoVqS3orUldB4pX\nBR1VfZWKF/Fk3DRHMKdk/mc436OciDxLzfsZhmKQWuhJsv1tUgdiYNluy8ui\nwWRDJ3jmYGtWQv8qY1uXaVcp\n",
-    "hmac": "4T8pQgDanud6GnvSAFDf0TaQx/PuHuhxGezENqrn+mg=\n",
-    "iv": "tJ/YHyV1BEVRbqvXWJ8Hbw==\n",
+    "encrypted_data": "DkVGgOu+tNvyY6+CwiYeTmn06roteiZc2UnhHFSxUo/A+J9U4KQAMNetg6ZZ\n7dolBSPB1IHNbIn7FiswXJs3VwU1z6wisZTm/OkGtTWsxInbyaMTow6PmDkh\ndIt2v1uGJyjXF3DzZVDKhN2OH77tTAQEzdl+TA2ymug+G86wDUJWsVFKtAGt\nu3MhtQPyKZt18hMtNKaOh9OHWMNom+Ii8cDL3j0mjvBiJCvE6H/EQaLcVFVA\ndRZ2pvJAkxHKlFzFCmSIVFc3XNZLkHxPsSlyw3T9AOZIe2S1HL0m3Yew3wWM\nYXKKl74mypCLV4rWXSuYu4/k6IILKVMZ1Ag6ep1M0GbwA5ndGNTWHLh6uGCk\naNNNleoJm1SUQhpSYPExV6cI\n",
+    "hmac": "VD6XbmEt+hZuX3lygzIz7U+r6FMLuw+c5SMmZDwQzWc=\n",
+    "iv": "O2oix9qRKHZxBLccLTcHxg==\n",
     "version": 2,
     "cipher": "aes-256-cbc"
   },
   "id": "jenkins1",
   "jenkins": {
-    "encrypted_data": "jm3C8dhXB170TU4u4bGXPu7kOTTZH0z61VCMvWZ9YO3aundAPf+Dotd+wXZ2\nLpszRMPJE5fbZxl7o5ix4lQCarGBBa0JAdCvxZwh02mFGFnjITE7NsbsYVbr\nbW/+Fy1lAJS11h9h6BUot4Ppqhbmk1X2ARrMSKLQcKeoYoVdkdzuvDb9PegK\nM9ViWdBvYBo1viqYOauYqU/17cuP6yjul/buulLJKf5zwo19NjtzwHxotdsH\n/BE5Us+1cSSgnX2r/f0Tnhzuyujg8P8DJgv+w1URU7mgqFclOVJHSZW0uWXi\njrSCeDgkXM8HRBSaYxAyDSdX1SA7gtX+3i/tgYP9LWh+YMsU2kQABKd3Ogbu\nCJgIbMRPqr2jgzMSdPSC3NHd1zdA0Y8T9b6WRHFlqySy9YFjMW4NNknRJ9NS\nXhsD8Cr+H0vbHv/TZ/UHczz1dCdq0vlAEEZll9bJrLM2Iz5PYyFcNoWR5+Mb\nunHXwMmRH2nVlgmjKxbH6We5Y1SHtnh5h/XLliTV541II+aofoGVyPBM33xO\nLh0ZNEGjToYL7ZrWVwZxNyLPA34lStWF9A4YQrBmNlcsydBHhQwCgPJvs7CS\nHQIX0fsiduyQJ7mJWrfmQGS2S3ybkebCdGhOc2lINgXCU6cDA6/1uZa5FMt0\nVGveg2zH6etuDO8G6i7OgqnBa9RTboSV4Whr6XH8SHLKoGhS65qgofBXXtnC\n3DUTj6YpYP5ZrqNHYGhPY2FSSCcKeW8wdpxuYdQihpyXvAk3k90YlyLa8dGQ\nH4Kka9uCFesMqMQp01krXN1lwiQhbs+m08p9lo6o1Wvm/1sRpNo/Af3F0RyS\nF/b0JMOhDJXf34WmENOAiWbH7fFcM4K79oVZGsZMDxKxBTFgukdfk2VKuKZ/\nY7elsJvPIccZ5Vmfz2m9IE/Q1P30ulvOvs28FTDtgIMFICouuXAtkQOIQQBp\nN+kz4bfEgZ7pekty8XrmdI9W6oJ4WUjq0pU9tL8ryhehgiV6BRPwvCAnDBq4\naw08sSZRdBeZSTPg1dqnoZV4J7Lmzba8T3GoTG3fqUvTXVm8Olf39tEztmyq\nqOjv/8CK824qJJTRGM2bGdh+RQG+lvozAQk3M8ERp3hxHze8glevxF0Hgxtr\neFl/tIINrboFVScYRLXXZnLbXFD4G16f7ZoXACQPScdYSjR3bs6bA0hklPwI\n/nrFz5iyWMFeYp/ADrlSM3Jm1I4SP1Bqf+nbPQKIJhiDSv685UO2oxbwW+Ff\nIQUoGGCrxLudykmEJDu279ums0mOvA9co6cVa4ziMFX6Nho1B7VDa41FwgXG\n7kvTvBImA4/sRgat1BuhGWHAzRtoBV2I+5yWwDDjIxuihEK1WBJEC3s48aaY\n+j1mrv9ZRV2j5NZx9UAjvbbeGk1HhbrPfAm8QKYrDcvn+Ml9YVK3RZ2qdd1W\nQSAYJpMNZsU=\n",
-    "hmac": "qb2xE1gpBnPmRgWgf4kVXgjHtABzHqApxyUpW/l3nmI=\n",
-    "iv": "Nv9LaAell8JQN7cLl+PTyQ==\n",
+    "encrypted_data": "wmpa18jadCjv/MfqjCOq33KK00TzXFczHuk47xNhKR/T5HThwpF4W+uPm3Sg\nAUjskYtJKi1bNaUIJfQ8AHmjBlhUki411o0O8iU+XCzpvDHvdDdmq/72d8zN\nKFbrJJVszmr1FgB5cTOijmza1EnY2norSLYVBpE90T25NKnbsEeoRF/RGJPG\nBM4j+JHzetaY7FZUF+5hOy96mQW5Zd0PPgaMIxV1NPXttkK0jf33plgLTtJS\n42zAnKgHQcUPkZnGoVS6lLJn0WOmF2Fl+67WYSvWBxYGMQrgEi5sbrHPQNha\njWKezEZMATCLu7gZ+IHN9J6XV5oJi4FG5q9LKesEPj1Dp7slOo6lEY+N1Oxe\n3ToCYghGw0oTtkC+Mdt0uCiwaTyZZYO6+uD6XhyB1ytwgMJq38MbDh3O6KwC\nHiFzfTXLweCssfjwoiHikZjsmDR1heU1ekVFZuaJpdmnm+Ucthw2K1slk+Pu\nG/wNq58ODEfWaKdmMM1/KGMJAflwy5I2nGqY5AZH/jzqiGxv0aZW++Brfhux\nUORkgMakxlXvU9NHr5BG5ltBHGVOMvjQUvv0fYKfmkwcfdLNOYlGm98uIq7P\nNMTVyE5hJt214PdRftDwDK15VX+BpOxChs6KhU7dAvNkyk68B3pp2X04qfo9\nXZ19yXsGnX6rvcgCZ8S3TuskteRQIo32mEhep2fibA76Hdeg/EwETrbfBgXO\nWfm02hzifwi/wNVbM2NebKw6cc//owBlvhl56WGqm7XnahyUX+QqBCaGmQKa\nTJy2vaNMYr0vy8nfpUiDf3Sn43b3L1JN7kGbe6ZrZXDS77/pdk4ZmXNEvw8U\nDb7sPFPeQw8avfApTruNRBaRtydN7V9G40IVfb0rkRXmWp85ovyYrJ/2VfUq\nnC7jboOJwstv5cXU0Ya+dRy1fzwr624ahGGvRd2eqyRI1jG33nK+f9swtw/M\nn4RqLbuvkFNNY1v95FXn0nG0H91hh5UzJ8qLY4gbDgqrFrD0us8nFP/O4QkP\nw6UpU1Xp/oIdV06g2NZQbIVnj0HDtepGNrDYbByp94Btb24HHOwQCPS7rub5\nCPyHyjvuX3x5tAcQuN4pmuJV6+Agha3kLjmXClER3MQK4LMSGTgba9C7bcYI\nAgG655ZMmjmRJifGZusyYschQbg89euXzV83FbfAoLYnfMX2C87F5ga+vGuX\n2oCj5HB2rFCxqKTaFSA3mHt+o8moWkA5dGD9TrcdYUQVxAXIU/f9CkMYEMXP\n77h8i79pg9nHnNU9AelYA/QeGDhLHT3A7eX4ggTWPf5ZWbq/R+cSBcRr0/Wm\nWug/z59aIOyDO5npQUIyDYSojSrXzCjRKbj+z1AUwCY9puNHuxr1JstwDbfe\nWvwOgloEkALonWBfeX2SkGbWMclYDNXQBjkErKm/YR7d/8bLSdNPBN9Z4caM\nZyRGItqN1OY=\n",
+    "hmac": "zOEMMrReG/F0KslqMxyebvWiO/W+LfjQRgAtfrKM4Eo=\n",
+    "iv": "inAeVxlBNISa3JQpz13hTw==\n",
     "version": 2,
     "cipher": "aes-256-cbc"
   },
-  "jenkins_private_key": {
-    "encrypted_data": "wj8/1DeyDXtxnTzKGC2U4NDo0kzjWD7nw0y1kSyQyWLJ6X7cZkZLlIKjJYzF\nKUv3yzOxAI/pU2jLYzM9xbDtbL1Adj0pWvGrTJMEA0CrraEnN+TnL98Z2OpJ\n3VGKCOJ5j2HANeuF3/sczvW29lntKSrkoiZTJRPxTZ6lL9vjkVC8MdVyMeHO\nawi6uv1dYX1ZiVKXfnkp+us10GEj1jkZ7DMW3uTzlcHYEvzuliSkGj7XcMev\ntjD/qSRwfyAHb7mkQecX4nbmEXdZcouyKdwzydAKj5pjeAAMKd+n2X3iuOkb\noiEMSOnqnel1DGG6z01QuBvbTD3WuWDK+CKUji1VscCk2std5FnkFWEbZIqX\ngWVrhrw/C5Q5mBu1SHKywacsboJPnc+NE8KnvXsMSoa7mnHUuAFrDWXBYv+p\nQN2VghwuLgZ32hzsNVnaPU8iuOkhsCybB3O47Yc22duTU6F7EpFZRLVigHHa\n841+R6VU+oQJuv5AshjscgIKxUPFIStJ4WlRywo465GPFdEmkQoIixuhzi+P\n8omVgBwubEhHGIizEh5/dTZvjX+t413h3gLoO0u5sWTzOrKri8p5gSATy5Ww\nFSgrNwAYP0TsA2qysztyNvteeJk5gKTE0+3t/0DMQrRJUODzs7rWAYlRO4Fz\nB14CeRbWY0v8Rgm+0ozvtqWEh27NrCvMYpuELjUcnK2+n9Sat03IQiRolJz/\nH3SM0LeIKsvYFjlDY8SwyrtjBgFacHBHO93VXknv8nsfcXQExhJVLYO6+ApD\n6lqSUfKN4zNJhvXa44Hlew7UnKV6H8GR+5lKV9uqDQUXyRU1NKZ6ZH4A+zqW\nqKIrFcGtpW5f8810cA8ehq++HGCCiMTZKNX2QvTooyozX+IKlgCPgURMzXfw\ndnsww8+u5LWIIp8Zmf8Nfb0pTLa1GcLXNogQTLU7WMu5ndKGrdbDJ/EEYwGA\n0Uu3r8O+iYrh2rM7Cql/1g==\n",
-    "hmac": "ooNmdXpTCWS6Dys6uYvCMFFHnxFITnrlVsmWe8gOqY0=\n",
-    "iv": "rWjg/uOajNCw2/FdqytPpQ==\n",
+  "jenkins_username": {
+    "encrypted_data": "IYVLT4H30SW0T7rxOyxubqnGlgRLgFoWRX+2IADkuFE=\n",
+    "hmac": "maPTRQGnYZMhHEg4Sc3rn7KJEfF4yPrG+F9KzvBDYrk=\n",
+    "iv": "iUyn86pWbp9pJp6uE8vzTQ==\n",
+    "version": 2,
+    "cipher": "aes-256-cbc"
+  },
+  "jenkins_password": {
+    "encrypted_data": "HIdnU7IiYm4G9+RoAhO0hr7PUgLT9uIRBeTaFZhkIZM=\n",
+    "hmac": "f2RheFTqNAmR9Rtw+aBwh8qHFlqQiRAS+lkRwsrxkr0=\n",
+    "iv": "VTwMo5a/T1m2Jnh6UMb/AQ==\n",
     "version": 2,
     "cipher": "aes-256-cbc"
   }
