@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.5.3 (2019-12-11)
+------------------
+- Migrate away from using poise-python
+
 2.5.2 (2019-12-09)
 ------------------
 - Add openstack_rocky environment
