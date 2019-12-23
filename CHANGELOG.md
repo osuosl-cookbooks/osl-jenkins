@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.6.0 (2019-12-23)
+------------------
+- Chef 14 post-migration fixes
+
 2.5.4 (2019-12-18)
 ------------------
 - Remove openstack_queens
