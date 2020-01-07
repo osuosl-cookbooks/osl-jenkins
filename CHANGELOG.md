@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.6.1 (2020-01-07)
+------------------
+- Use vhost hostname for jenkins server webhooks
+
 2.6.0 (2019-12-23)
 ------------------
 - Chef 14 post-migration fixes
