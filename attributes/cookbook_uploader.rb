@@ -2,6 +2,9 @@
 ### Attributes that you probably want to override:
 ###
 
+# String; jenkins server vhost
+default['osl-jenkins']['cookbook_uploader']['jenkins_server'] = 'jenkins.osuosl.org'
+
 # String; name of GitHub organization that contains your cookbooks.
 default['osl-jenkins']['cookbook_uploader']['org'] = ''
 

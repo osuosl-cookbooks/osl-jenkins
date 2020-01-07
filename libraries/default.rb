@@ -1,5 +1,5 @@
 def public_address
-  node.fetch('fqdn', {}) || node['ipaddress']
+  node['osl-jenkins']['cookbook_uploader']['jenkins_server']
 end
 
 def credential_secrets
