@@ -57,6 +57,7 @@ describe 'osl-jenkins::ibmz_ci' do
         cloud-stats:0.11
         command-launcher:1.2
         config-file-provider:3.6
+        disable-github-multibranch-status:1.1
         display-url-api:2.3.2
         docker-java-api:3.0.14
         docker-plugin:1.1.9
@@ -84,6 +85,7 @@ describe 'osl-jenkins::ibmz_ci' do
         maven-plugin:3.4
         nodelabelparameter:1.7.2
         pam-auth:1.6
+        pipeline-githubnotify-step:1.0.4
         pipeline-multibranch-defaults:1.1
         pipeline-stage-step:2.3
         resource-disposer:0.12
