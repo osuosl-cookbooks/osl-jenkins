@@ -54,6 +54,7 @@ describe 'osl-jenkins::powerci' do
         config-file-provider:3.6
         copy-to-slave:1.4.4
         config-file-provider:3.6
+        disable-github-multibranch-status:1.1
         display-url-api:2.3.2
         docker-java-api:3.0.14
         docker-plugin:1.1.9
