@@ -24,7 +24,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     credentials:2.3.0
     credentials-binding:1.18
     cvs:2.12
-    display-url-api:2.2.0
+    display-url-api:2.3.2
     docker-build-publish:1.3.2
     docker-commons:1.15
     docker-custom-build-environment:1.7.3
@@ -32,7 +32,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     durable-task:1.17
     external-monitor-job:1.4
     ghprb:1.42.0
-    git:3.9.3
+    git:4.0.0
     git-client:3.0.0
     github:1.29.2
     github-api:1.90
@@ -51,7 +51,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     jsch:0.1.55.1
     junit:1.26.1
     ldap:1.12
-    mailer:1.21
+    mailer:1.30
     mapdb-api:1.0.6.0
     matrix-auth:2.5
     matrix-project:1.14
@@ -95,7 +95,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     workflow-durable-task-step:2.18
     workflow-job:2.26
     workflow-multibranch:2.16
-    workflow-scm-step:2.7
+    workflow-scm-step:2.9
     workflow-step-api:2.20
     workflow-support:3.3
     ws-cleanup:0.28

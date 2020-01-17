@@ -18,14 +18,14 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     cloud-stats:0.11
     command-launcher:1.2
     config-file-provider:3.6
-    display-url-api:2.2.0
+    display-url-api:2.3.2
     docker-java-api:3.0.14
     docker-plugin:1.1.9
     durable-task:1.17
     email-ext:2.66
     emailext-template:1.1
     embeddable-build-status:2.0.3
-    git:3.9.3
+    git:4.0.0
     git-client:3.0.0
     github:1.29.2
     github-api:1.90
@@ -43,7 +43,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     jsch:0.1.55.1
     junit:1.26.1
     label-linked-jobs:5.1.2
-    mailer:1.21
+    mailer:1.30
     matrix-auth:2.5
     matrix-project:1.14
     maven-plugin:3.4
@@ -76,7 +76,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     workflow-durable-task-step:2.18
     workflow-job:2.26
     workflow-multibranch:2.16
-    workflow-scm-step:2.7
+    workflow-scm-step:2.9
     workflow-step-api:2.20
     workflow-support:3.3
   ).each do |plugins_version|
