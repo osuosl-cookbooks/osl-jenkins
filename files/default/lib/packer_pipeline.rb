@@ -166,7 +166,7 @@ class PackerPipeline
     }
 
     # Create hash of templates and the architectures associated with them.
-    %w(ppc64 x86_64).each do |arch|
+    %w(aarch64 ppc64 x86_64).each do |arch|
       output[arch] = templates.select { |t| t.include? arch }.to_ary
     end
 
