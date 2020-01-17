@@ -47,6 +47,7 @@ node.default['osl-jenkins']['plugins'].tap do |p|
   p['build-timeout'] = '1.19'
   p['cloud-stats'] = '0.14'
   p['config-file-provider'] = '3.6'
+  p['disable-github-multibranch-status'] = '1.1'
   p['docker-java-api'] = '3.0.14'
   p['docker-plugin'] = '1.1.9'
   p['email-ext'] = '2.66'
@@ -57,6 +58,7 @@ node.default['osl-jenkins']['plugins'].tap do |p|
   p['label-linked-jobs'] = '5.1.2'
   p['nodelabelparameter'] = '1.7.2'
   p['openstack-cloud'] = '2.37'
+  p['pipeline-githubnotify-step'] = '1.0.4'
   p['pipeline-multibranch-defaults'] = '1.1'
   p['resource-disposer'] = '0.12'
 end
