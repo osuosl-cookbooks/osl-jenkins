@@ -15,7 +15,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-node.default['osl-jenkins']['gems'] = %w(git octokit faraday-http-cache)
+node.default['osl-jenkins']['gems'] += %w(git octokit faraday-http-cache)
 include_recipe 'osl-jenkins::master'
 
 bumpzone = node['osl-jenkins']['bumpzone']

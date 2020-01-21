@@ -18,7 +18,7 @@
 
 # Installs necessary gems
 
-node.default['osl-jenkins']['gems'] = %w(git octokit faraday-http-cache)
+node.default['osl-jenkins']['gems'] += %w(git octokit faraday-http-cache)
 
 # Sets up the master for packer_pipeline
 

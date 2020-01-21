@@ -90,6 +90,15 @@ describe 'osl-jenkins::jenkins1' do
       it do
         expect(chef_run).to install_package('graphviz')
       end
+      %w(
+        faraday-http-cache
+        git
+        octokit
+      ).each do |gem|
+        it do
+          expect(chef_run).to install_chef_gem(gem).with(compile_time: true)
+        end
+      end
     end
   end
 end

@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-node.default['osl-jenkins']['gems'] = %w(git octokit faraday-http-cache)
+node.default['osl-jenkins']['gems'] += %w(git octokit faraday-http-cache)
 include_recipe 'osl-jenkins::master'
 
 org_name = node['osl-jenkins']['cookbook_uploader']['org']

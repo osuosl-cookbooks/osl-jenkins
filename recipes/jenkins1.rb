@@ -15,7 +15,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-node.default['osl-jenkins']['gems'] = %w(octokit)
 node.default['osl-jenkins']['cookbook_uploader'].tap do |conf|
   conf['authorized_teams'] = %w(osuosl-cookbooks/staff)
   conf['chef_repo'] = 'osuosl/chef-repo'
@@ -28,14 +27,15 @@ node.default['osl-jenkins']['cookbook_uploader'].tap do |conf|
   conf['org'] = 'osuosl-cookbooks'
 end
 node.default['osl-jenkins']['secrets_item'] = 'jenkins1'
+node.default['osl-jenkins']['bumpzone']['dns_master'] = 'util'
 
-include_recipe 'osl-jenkins::master'
 include_recipe 'osl-jenkins::chef_ci_cookbook_template'
 include_recipe 'osl-jenkins::cookbook_uploader'
 include_recipe 'osl-jenkins::github_comment'
 include_recipe 'osl-jenkins::bumpzone'
 include_recipe 'osl-jenkins::site_pr_builder'
 include_recipe 'osl-jenkins::packer_pipeline_master'
+include_recipe 'osl-jenkins::master'
 include_recipe 'base::python'
 
 # depends for sphinx compilation
