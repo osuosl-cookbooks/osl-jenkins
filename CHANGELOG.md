@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.7.0 (2020-02-12)
+------------------
+- Update osl-haproxy version
+
 2.6.4 (2020-01-21)
 ------------------
 - Add plugins to PowerCI and IBMZ
