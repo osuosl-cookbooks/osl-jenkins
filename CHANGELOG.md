@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.7.1 (2020-03-31)
+------------------
+- Pin java cookbook to < 8.0
+
 2.7.0 (2020-02-12)
 ------------------
 - Update osl-haproxy version
