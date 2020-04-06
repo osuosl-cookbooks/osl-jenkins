@@ -25,7 +25,7 @@ site_pr_builder['sites_to_build'].each do |site, org|
   repo = "#{org}/#{site}"
   github_url = "https://github.com/#{repo}"
   rsync_target = "/var/www/staging.osuosl.org/htdocs/#{site}-$ghprbPullId"
-  site_url = "http://#{site}-$ghprbPullId.staging.osuosl.org"
+  site_url = "https://#{site}-$ghprbPullId.staging.osuosl.org"
 
   site_pr_builder_xml = ::File.join(Chef::Config[:file_cache_path], job_name, 'config.xml')
 

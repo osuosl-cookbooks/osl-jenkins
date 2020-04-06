@@ -113,7 +113,7 @@ exec scripts/build.sh
               <properties>
 repo=<%= @repo %>
 pr_id=$ghprbPullId
-message=This PR has been automatically built and can be viewed here: http://<%= @name %>-$ghprbPullId.staging.osuosl.org
+message=This PR has been automatically built and can be viewed here: https://<%= @name %>-$ghprbPullId.staging.osuosl.org
               </properties>
             </hudson.plugins.parameterizedtrigger.PredefinedBuildParameters>
           </configs>
