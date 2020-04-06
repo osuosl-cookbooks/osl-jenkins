@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.7.2 (2020-04-06)
+------------------
+- Use https for pelican staging
+
 2.7.1 (2020-03-31)
 ------------------
 - Pin java cookbook to < 8.0
