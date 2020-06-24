@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: osl-jenkins
+# Cookbook:: osl-jenkins
 # Recipe:: packer_pipeline
 #
-# Copyright 2015, Oregon State University
+# Copyright:: 2015-2020, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -32,14 +32,14 @@ cookbook_file ::File.join(bin_path, 'packer_pipeline.rb') do
   source 'bin/packer_pipeline.rb'
   owner node['jenkins']['master']['user']
   group node['jenkins']['master']['group']
-  mode 0550
+  mode '550'
 end
 
 cookbook_file ::File.join(lib_path, 'packer_pipeline.rb') do
   source 'lib/packer_pipeline.rb'
   owner node['jenkins']['master']['user']
   group node['jenkins']['master']['group']
-  mode 0440
+  mode '440'
 end
 
 # define the path where the packer_pipeline job's xml would be temporarily cached on the machine
@@ -53,7 +53,7 @@ end
 
 template packer_pipeline_xml do
   source 'packer_pipeline.config.xml.erb'
-  mode 0440
+  mode '440'
   variables(
     trigger_token: jenkins_credentials['trigger_token']
   )

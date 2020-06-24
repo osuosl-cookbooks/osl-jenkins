@@ -159,7 +159,7 @@ describe 'osl-jenkins::master' do
             .and_raise(Net::HTTPServerException.new(
                          'osl_jenkins databag not found',
                          Net::HTTPResponse.new('1.1', '503', '')
-            ))
+                       ))
         end
         it do
           expect { chef_run }.to raise_error(Net::HTTPServerException, 'osl_jenkins databag not found')

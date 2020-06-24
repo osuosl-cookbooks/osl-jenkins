@@ -2,7 +2,7 @@
 # Cookbook:: osl-jenkins
 # Recipe:: bumpzone
 #
-# Copyright:: 2017, Oregon State University
+# Copyright:: 2017-2020, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,14 +27,14 @@ lib_path = node['osl-jenkins']['lib_path']
     source "bin/#{f}"
     owner node['jenkins']['master']['user']
     group node['jenkins']['master']['group']
-    mode 0550
+    mode '550'
   end
 
   cookbook_file ::File.join(lib_path, f) do
     source "lib/#{f}"
     owner node['jenkins']['master']['user']
     group node['jenkins']['master']['group']
-    mode 0440
+    mode '440'
   end
 end
 
@@ -55,7 +55,7 @@ end
 
 template bumpzone_xml do
   source 'bumpzone.config.xml.erb'
-  mode 0440
+  mode '440'
   variables(
     github_url: bumpzone['github_url'],
     trigger_token: jenkins_cred['trigger_token']
@@ -64,7 +64,7 @@ end
 
 template checkzone_xml do
   source 'checkzone.config.xml.erb'
-  mode 0440
+  mode '440'
   variables(
     github_url: bumpzone['github_url'],
     trigger_token: jenkins_cred['trigger_token']
@@ -73,14 +73,14 @@ end
 
 template update_zonefiles_xml do
   source 'update-zonefiles.config.xml.erb'
-  mode 0440
+  mode '440'
   variables(
     github_url: bumpzone['github_url'],
     dns_master: bumpzone['dns_master']
   )
 end
 
-jenkins_job 'bumpzone' do # ~FC005
+jenkins_job 'bumpzone' do
   config bumpzone_xml
   action :create
 end

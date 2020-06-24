@@ -42,7 +42,7 @@ describe 'osl-jenkins::site_pr_builder' do
           expect(chef_run).to create_template("/var/chef/cache/#{job}/config.xml")
             .with(
               source: 'site_pr_builder_config.xml.erb',
-              mode: 0440
+              mode: '440'
             )
         end
       end

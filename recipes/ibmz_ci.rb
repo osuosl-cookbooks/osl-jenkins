@@ -2,7 +2,7 @@
 # Cookbook:: osl-jenkins
 # Recipe:: ibmz_ci
 #
-# Copyright:: 2018, Oregon State University
+# Copyright:: 2018-2020, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -37,8 +37,8 @@ ruby_block 'Set jenkins username/password if needed' do
   block do
     if ::File.exist?('/var/lib/jenkins/config.xml') &&
        ::File.foreach('/var/lib/jenkins/config.xml').grep(/GithubSecurityRealm/).any?
-      node.run_state[:jenkins_username] = secrets['git']['ibmz_ci']['user'] # ~FC001
-      node.run_state[:jenkins_password] = secrets['git']['ibmz_ci']['token'] # ~FC001
+      node.run_state[:jenkins_username] = secrets['git']['ibmz_ci']['user']
+      node.run_state[:jenkins_password] = secrets['git']['ibmz_ci']['token']
     end
   end
 end
