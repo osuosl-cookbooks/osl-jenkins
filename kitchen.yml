@@ -23,6 +23,9 @@ provisioner:
           key_file: wildcard.key
           chain_file: wildcard-bundle.crt
           combined_file: true
+  enforce_idempotency: true
+  multiple_converge: 2
+  deprecations_as_errors: true
 
 suites:
   - name: default
@@ -280,7 +283,10 @@ suites:
           listen_address: '0.0.0.0'
   - name: powerci
     nodes_path: test/integration/nodes
-    provisioner: chef_zero
+    provisioner: 
+      name: chef_zero
+      enforce_idempotency: false
+      multiple_converge: 1
     run_list:
       - recipe[osl-jenkins::powerci]
       - recipe[jenkins_test]
