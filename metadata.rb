@@ -9,7 +9,7 @@ issues_url       'https://github.com/osuosl-cookbooks/osl-jenkins/issues'
 source_url       'https://github.com/osuosl-cookbooks/osl-jenkins'
 
 depends          'base', '>= 2.6.0'
-depends          'git'
+depends          'osl-git'
 depends          'java', '< 8.0'
 depends          'jenkins', '~> 7.1.0'
 depends          'osl-haproxy'

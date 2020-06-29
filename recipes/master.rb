@@ -59,7 +59,7 @@ include_recipe 'certificate::manage_by_attributes'
 include_recipe 'osl-jenkins::haproxy'
 include_recipe 'osl-haproxy::default'
 
-include_recipe 'git'
+include_recipe 'osl-git'
 
 jenkins_command 'safe-restart' do
   action :nothing

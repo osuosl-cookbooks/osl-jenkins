@@ -1,4 +1,7 @@
-describe command('/opt/chef/embedded/bin/ruby /tmp/jenkin_is_ready.rb') do
+chef_installed = inspec.file('/opt/chef/bin/chef-client').exist?
+chef = chef_installed ? 'chef' : 'cinc'
+
+describe command("/opt/#{chef}/embedded/bin/ruby /tmp/jenkin_is_ready.rb") do
   its('exit_status') { should cmp 0 }
 end
 
