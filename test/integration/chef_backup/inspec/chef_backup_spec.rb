@@ -1,4 +1,7 @@
-describe command('/opt/chef/embedded/bin/gem list') do
+chef_installed = inspec.file('opt/chef/bin/chef-client').exist?
+chef = chef_installed ? 'chef' : 'cinc'
+
+describe command("/opt/#{chef}/embedded/bin/gem list") do
   its('stdout') { should match(/knife-backup\s\(0.0.10\)/) }
 end
 
