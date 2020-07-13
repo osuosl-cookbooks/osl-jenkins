@@ -22,12 +22,6 @@ node.default['java']['jdk_version'] = '8'
 
 include_recipe 'java'
 
-ohai 'jenkins_reload_passwd' do
-  action :nothing
-  plugin 'etc'
-end
-
 users_manage 'alfred' do
   group_id 10000
-  notifies :reload, 'ohai[jenkins_reload_passwd]', :immediately
 end
