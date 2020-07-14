@@ -15,7 +15,10 @@ describe file('/var/lib/jenkins/bin/bumpzone.rb') do
   its('group') { should eq 'jenkins' }
 end
 
-describe command('/opt/chef/embedded/bin/gem list --local') do
+chef_installed = inspec.file('/opt/chef/bin/chef-client').exist?
+chef = chef_installed ? 'chef' : 'cinc'
+
+describe command("/opt/#{chef}/embedded/bin/gem list --local") do
   %w(git octokit).each do |g|
     its('stdout') { should match(/^#{g}/) }
   end
