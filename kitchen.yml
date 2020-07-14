@@ -33,6 +33,11 @@ suites:
       - recipe[osl-jenkins::default]
   - name: master
     driver:
+    provisioner:
+      name: chef_zero
+      # disabled due to upstream issues
+      enforce_idempotency: false
+      multiple_converge: 1
       security_groups:
         - default
         - github
@@ -62,6 +67,11 @@ suites:
           user: centos
           group: centos
   - name: chef_ci_cookbook_template
+    provisioner:
+      name: chef_zero
+      # disabled due to issues with base::chefdk
+      enforce_idempotency: false
+      multiple_converge: 1
     run_list:
       - recipe[osl-jenkins::chef_ci_cookbook_template]
   - name: plugins
@@ -79,7 +89,9 @@ suites:
       - recipe[jenkins_test]
     provisioner:
       name: chef_zero
+      # disabled due to osl-jenkins::master
       enforce_idempotency: false
+      multiple_converge: 1
     driver:
       security_groups:
         - default
@@ -120,7 +132,9 @@ suites:
       - recipe[jenkins_test]
     provisioner:
       name: chef_zero
+      # disabled due to osl-jenkins::master
       enforce_idempotency: false
+      multiple_converge: 1
     driver:
       security_groups:
         - default
@@ -181,7 +195,9 @@ suites:
       - recipe[jenkins_test]
     provisioner:
       name: chef_zero
+      # disabled due to osl-jenkins::master
       enforce_idempotency: false
+      multiple_converge: 1
     driver:
       security_groups:
         - default
@@ -210,7 +226,9 @@ suites:
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     provisioner:
       name: chef_zero
+      # disabled due to osl-jenkins::master
       enforce_idempotency: false
+      multiple_converge: 1
     driver:
       security_groups:
         - default
@@ -241,7 +259,9 @@ suites:
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     provisioner:
       name: chef_zero
+      # disabled due to osl-jenkins::master
       enforce_idempotency: false
+      multiple_converge: 1
     driver:
       security_groups:
         - default
@@ -270,7 +290,9 @@ suites:
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     provisioner:
       name: chef_zero
+      # disabled due to osl-jenkins::master
       enforce_idempotency: false
+      multiple_converge: 1
     driver:
       security_groups:
         - default
@@ -330,7 +352,9 @@ suites:
     nodes_path: test/integration/nodes
     provisioner:
       name: chef_zero
+      # disabled due to osl-jenkins::master
       enforce_idempotency: false
+      multiple_converge: 1
     run_list:
       - recipe[osl-jenkins::ibmz_ci]
       - recipe[jenkins_test]
