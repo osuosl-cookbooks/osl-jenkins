@@ -18,7 +18,7 @@ end
 shared_context 'common_stubs' do
   before do
     stub_data_bag_item('osl_jenkins', 'secrets')
-      .and_raise(Net::HTTPServerException.new(
+      .and_raise(Net::HTTPClientException.new(
                    'Not Found',
                    Net::HTTPResponse.new('1.1', '404', '')
                  ))

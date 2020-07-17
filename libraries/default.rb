@@ -7,7 +7,7 @@ def credential_secrets
     node['osl-jenkins']['secrets_databag'],
     node['osl-jenkins']['secrets_item']
   )
-rescue Net::HTTPServerException => e
+rescue Net::HTTPClientException => e
   databag = "#{node['osl-jenkins']['secrets_databag']}:#{node['osl-jenkins']['secrets_item']}"
   if e.response.code == '404'
     Chef::Log.warn("Could not find databag '#{databag}'; falling back to default attributes.")

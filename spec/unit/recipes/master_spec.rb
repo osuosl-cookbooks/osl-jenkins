@@ -156,13 +156,13 @@ describe 'osl-jenkins::master' do
         end
         before do
           stub_data_bag_item('osl_jenkins', 'secrets')
-            .and_raise(Net::HTTPServerException.new(
+            .and_raise(Net::HTTPClientException.new(
                          'osl_jenkins databag not found',
                          Net::HTTPResponse.new('1.1', '503', '')
                        ))
         end
         it do
-          expect { chef_run }.to raise_error(Net::HTTPServerException, 'osl_jenkins databag not found')
+          expect { chef_run }.to raise_error(Net::HTTPClientException, 'osl_jenkins databag not found')
         end
       end
     end
