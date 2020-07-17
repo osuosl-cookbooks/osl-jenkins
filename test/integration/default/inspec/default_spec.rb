@@ -19,5 +19,5 @@ describe file('/home/alfred/.ssh/authorized_keys') do
   it { should be_file }
   its('mode') { should cmp 0600 }
   its('owner') { should eq 'alfred' }
-  its('group') { should eq 'alfred' }
+  its('group') { should eq 'root' }
 end
