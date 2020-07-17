@@ -320,6 +320,7 @@ suites:
     nodes_path: test/integration/nodes
     provisioner: 
       name: chef_zero
+      # disabled due to osl-jenkis::master
       enforce_idempotency: false
       multiple_converge: 1
     run_list:
@@ -384,6 +385,11 @@ suites:
               user: 'jenkins'
               private_key: "-----BEGIN RSA PRIVATE KEY-----\nMIIEogIBAAKCAQEAqAickUPOP01HPxBnnceszXu3p6/HPkNCLCF4ZtEj6IUb+V23\nMDZk1U6ENnzri5Uxt9hfAqzF2fo5qfQKDGbaNp19EtbCIAWlm6fMkAPdJJn8wB/G\nVufUlaufW4F2jNK8Bcd3EFjy9OiJrfobvCV75vgb/mfvUhRrPbfMW8dhCU+egKP9\nH85d6hG0r3y26TaB0AZ3p1y/Px+m6ojUodCyqgsDxVH+qh/DdN1zw1jgSaiwedyJ\n/fSMZUUMyUkwou+oyUFbQANqjPFFxPND65ojKzgTPOG0SoDCCKoRXY/7pr6e+Eum\nlhurW1ZdVrLrBfRT2o6tFwYstVkN+uOraDaj6wIDAQABAoIBAAdq4eZztM4MjkGV\nas2HO/SSKohHdScldu1VyOfZAZnJDnQSk/yX2hmkbqetGgS+YER6U69dixpVNmhv\nMmZbv/Q7PYMwYb9iIG5fmOMemIt+FK8yd+HsN/Enc1BpxZ7vyocCyBm7o3X2MeWx\nLbo/eVm3yByR3/milx1RWL8QbRMpE0gTQkMMeBPNygRzKJecs6nY+VpNJ2f89lbx\ngjWQLswqZdFdLV0YSVuIbJHy+syTCo0c6fPcnQbjsWYm95wT+T18zDI54L3x/8BY\n5iyKTRVfDhy0de+/MG9Ty7SvDuQ/M6m08HaEkRE0PI16eWch5ge5YCzncBgt7DrG\nbf3ZoMkCgYEA1ILGhpKu9Dx6754t/0+SUdNsEZ8LqjIny7mOJjaGh+ge3D2yZmbv\n7orI82YGPqyZ05ry5+NBGc33yNQCpxnhMx5tMRRqQWQ6AFElubzsjvGKrcobHrt0\neV4THqMjqMZ978LPpkb4P9/bzAL8TfoJgCDldr5OtLVVJC1WRimLFAcCgYEAymu4\nnyQFYsBy8oew2Shv9EvVUJf6kL8QmrDcI5KiAVBI5JB5CZfm9v+w2mntmT8YrIq3\nzs+zR85d9uXB6aGENgCpAoZhxOqH3ieOT+raY1HSm4lg2mKdep4A9KHutM6L6I7k\n2KAahOYrkXDS8MrZ0pu3M9gWVF9nyB19C6sxH/0CgYAFSD7hB3Jb1ckEfb0M9JBh\ngkzUX0yt7VM56CHVZ1OOu0FRHiN6EiLynfaCvk13b1jffqF9DBQJLSp0jniGaMlF\nOQNjzesaNwCOE3ZJmJ2UrAJTcYudBvHNNn5pK4ruXgixVflNW8Q96jWPa5+T3Jwx\n2B98BRz1tvAn1wym789qLwKBgHTshFholjPUtpEhkCXgFcsngrBrGXFC7HRudLqX\nmLzpgzGDwmaoN+G1EJMZXQWITNhdyI7NquFvcxeK39f0VEpdV0L+HLuCPbk1YB8J\nqdx1BxKQ6EE9dXm+iw7D+v610FslL0tyL99UlRYN9crhYbEmAU0RJNTXxzrwzapP\n2LCBAoGAN+xSHVXIFLbADXnAJTU/tqi/7ZPGybX3TJEkLTzgw5aYB5PWFPWFKPgL\nOT4dGkaWOe55eVZ2Qz4WlhLc38fbjIcAl3/yAnK9SbvxBpvO7LEGj4XOzVzrzU6H\nlacuYndx6mBU0Ya5Ldx5sLpoZz7JU1j6Kl31kC45qLY0dVLCLCU=\n-----END RSA PRIVATE KEY-----"
   - name: packer_pipeline_node
+    provisioner:
+      name: chef_zero
+      # disabled due to base::chefdk
+      enforce_idempotency: false
+      multiple_converge: 1
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     data_bags_path: test/integration/data_bags
     run_list:
