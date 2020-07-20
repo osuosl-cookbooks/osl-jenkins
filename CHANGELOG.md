@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.8.0 (2020-07-20)
+------------------
+- Chef 15 fixes
+
 2.7.2 (2020-04-06)
 ------------------
 - Use https for pelican staging
