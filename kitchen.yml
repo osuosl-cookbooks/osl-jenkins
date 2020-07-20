@@ -75,6 +75,10 @@ suites:
     run_list:
       - recipe[osl-jenkins::chef_ci_cookbook_template]
   - name: plugins
+    provisioner:
+      name: chef_zero
+      enforce_idempotency: false
+      multiple_converge: 1
     run_list:
       - recipe[osl-jenkins::master]
       - recipe[osl-jenkins::plugins]
