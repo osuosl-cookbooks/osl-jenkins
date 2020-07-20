@@ -30,7 +30,7 @@ describe 'osl-jenkins::packer_pipeline_master' do
             source: 'bin/packer_pipeline.rb',
             owner: 'jenkins',
             group: 'jenkins',
-            mode: 0550
+            mode: '550'
           )
       end
       it do
@@ -39,7 +39,7 @@ describe 'osl-jenkins::packer_pipeline_master' do
             source: 'lib/packer_pipeline.rb',
             owner: 'jenkins',
             group: 'jenkins',
-            mode: 0440
+            mode: '440'
           )
       end
       %w(git octokit faraday-http-cache).each do |g|
@@ -62,7 +62,7 @@ describe 'osl-jenkins::packer_pipeline_master' do
         expect(chef_run).to create_template('/var/chef/cache/packer_pipeline/config.xml')
           .with(
             source: 'packer_pipeline.config.xml.erb',
-            mode: 0440
+            mode: '440'
           )
       end
     end

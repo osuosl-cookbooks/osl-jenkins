@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: osl-jenkins
+# Cookbook:: osl-jenkins
 # Recipe:: powerci
 #
-# Copyright 2017, Oregon State University
+# Copyright:: 2017-2020, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -35,8 +35,8 @@ ruby_block 'Set jenkins username/password if needed' do
   block do
     if ::File.exist?('/var/lib/jenkins/config.xml') &&
        ::File.foreach('/var/lib/jenkins/config.xml').grep(/GithubSecurityRealm/).any?
-      node.run_state[:jenkins_username] = secrets['git']['powerci']['user'] # ~FC001
-      node.run_state[:jenkins_password] = secrets['git']['powerci']['token'] # ~FC001
+      node.run_state[:jenkins_username] = secrets['git']['powerci']['user']
+      node.run_state[:jenkins_password] = secrets['git']['powerci']['token']
     end
   end
 end
@@ -124,7 +124,7 @@ github_oauth =
     normal_users
   )
 
-jenkins_script 'Add Docker Cloud' do # ~FC005
+jenkins_script 'Add Docker Cloud' do
   command docker_cloud
 end
 

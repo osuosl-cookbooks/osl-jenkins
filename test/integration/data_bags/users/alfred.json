@@ -1,7 +1,6 @@
 {
   "id": "alfred",
   "uid": 10000,
-  "gid": 10000,
   "manage_home": true,
   "shell": "/bin/bash",
   "groups": [ "alfred" ],

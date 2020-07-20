@@ -16,6 +16,7 @@ cookbook 'osl-nfs', git: 'git@github.com:osuosl-cookbooks/osl-nfs'
 cookbook 'osl-nrpe', git: 'git@github.com:osuosl-cookbooks/osl-nrpe'
 cookbook 'osl-selinux', git: 'git@github.com:osuosl-cookbooks/osl-selinux'
 cookbook 'osl-acme', git: 'git@github.com:osuosl-cookbooks/osl-acme'
+cookbook 'osl-git', git: 'git@github.com:osuosl-cookbooks/osl-git'
 cookbook 'yum-qemu-ev', git: 'git@github.com:osuosl-cookbooks/yum-qemu-ev'
 
 metadata

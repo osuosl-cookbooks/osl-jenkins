@@ -26,7 +26,7 @@ describe 'osl-jenkins::packer_pipeline_node' do
         expect(chef_run).to create_file('/home/alfred/.ssh/packer_alfred_id').with(
           user: 'alfred',
           group: 'alfred',
-          mode: 0600,
+          mode: '600',
           content: 'private key for openstack_taster goes here'
         )
       end
@@ -35,7 +35,7 @@ describe 'osl-jenkins::packer_pipeline_node' do
         expect(chef_run).to create_file('/home/alfred/.ssh/packer_alfred_id.pub').with(
           user: 'alfred',
           group: 'alfred',
-          mode: 0600,
+          mode: '600',
           content: 'public key for openstack_taster goes here'
         )
       end
@@ -58,7 +58,7 @@ describe 'osl-jenkins::packer_pipeline_node' do
         expect(chef_run).to create_template('/home/alfred/.git-credentials').with(
           user: 'alfred',
           group: 'alfred',
-          mode: 0600,
+          mode: '600',
           variables: {
             username: 'osuosl-manatee',
             password: 'FAKE_TOKEN',
@@ -70,7 +70,7 @@ describe 'osl-jenkins::packer_pipeline_node' do
         expect(chef_run).to create_file('/home/alfred/openstack_credentials.json').with(
           user: 'alfred',
           group: 'alfred',
-          mode: 0600
+          mode: '600'
         )
       end
 

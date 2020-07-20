@@ -36,7 +36,7 @@ describe 'osl-jenkins::github_comment' do
             source: 'bin/github_comment.rb',
             owner: 'jenkins',
             group: 'jenkins',
-            mode: 0550
+            mode: '550'
           )
       end
       it do
@@ -45,7 +45,7 @@ describe 'osl-jenkins::github_comment' do
             source: 'lib/github_comment.rb',
             owner: 'jenkins',
             group: 'jenkins',
-            mode: 0440
+            mode: '440'
           )
       end
       %w(git octokit faraday-http-cache).each do |g|
@@ -68,7 +68,7 @@ describe 'osl-jenkins::github_comment' do
         expect(chef_run).to create_template('/var/chef/cache/github_comment/config.xml')
           .with(
             source: 'github_comment.config.xml.erb',
-            mode: 0440
+            mode: '440'
           )
       end
     end

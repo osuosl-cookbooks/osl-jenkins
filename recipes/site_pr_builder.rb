@@ -2,7 +2,7 @@
 # Cookbook:: osl-jenkins
 # Recipe:: github_comment
 #
-# Copyright:: 2017, Oregon State University
+# Copyright:: 2017-2020, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ site_pr_builder['sites_to_build'].each do |site, org|
 
   template site_pr_builder_xml do
     source 'site_pr_builder_config.xml.erb'
-    mode 0440
+    mode '440'
     variables(
       name: site,
       repo: repo,

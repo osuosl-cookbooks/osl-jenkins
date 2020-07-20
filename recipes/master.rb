@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: osl-jenkins
+# Cookbook:: osl-jenkins
 # Recipe:: master
 #
-# Copyright 2015, Oregon State University
+# Copyright:: 2015-2020, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ include_recipe 'certificate::manage_by_attributes'
 include_recipe 'osl-jenkins::haproxy'
 include_recipe 'osl-haproxy::default'
 
-include_recipe 'git'
+include_recipe 'osl-git'
 
 jenkins_command 'safe-restart' do
   action :nothing
@@ -70,8 +70,8 @@ include_recipe 'osl-jenkins::plugins'
 secrets = credential_secrets
 
 # This is necessary in order to create Jenkins jobs with security enabled.
-node.run_state[:jenkins_username] = secrets['jenkins_username'] # ~FC001
-node.run_state[:jenkins_password] = secrets['jenkins_password'] # ~FC001
+node.run_state[:jenkins_username] = secrets['jenkins_username']
+node.run_state[:jenkins_password] = secrets['jenkins_password']
 
 # Add git credentials into Jenkins
 secrets['git'].to_a.each do |git_id, cred|
@@ -100,7 +100,7 @@ cookbook_file git_config_path do
 end
 
 node['osl-jenkins']['gems'].each do |g|
-  chef_gem g do # ~FC009
+  chef_gem g do
     compile_time true
   end
 end

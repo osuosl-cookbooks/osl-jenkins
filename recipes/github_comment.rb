@@ -2,7 +2,7 @@
 # Cookbook:: osl-jenkins
 # Recipe:: github_comment
 #
-# Copyright:: 2017, Oregon State University
+# Copyright:: 2017-2020, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,14 +25,14 @@ cookbook_file ::File.join(bin_path, 'github_comment.rb') do
   source 'bin/github_comment.rb'
   owner node['jenkins']['master']['user']
   group node['jenkins']['master']['group']
-  mode 0550
+  mode '550'
 end
 
 cookbook_file ::File.join(lib_path, 'github_comment.rb') do
   source 'lib/github_comment.rb'
   owner node['jenkins']['master']['user']
   group node['jenkins']['master']['group']
-  mode 0440
+  mode '440'
 end
 
 github_comment_xml = ::File.join(Chef::Config[:file_cache_path], 'github_comment', 'config.xml')
@@ -43,7 +43,7 @@ end
 
 template github_comment_xml do
   source 'github_comment.config.xml.erb'
-  mode 0440
+  mode '440'
 end
 
 jenkins_job 'github_comment' do

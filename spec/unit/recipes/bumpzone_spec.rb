@@ -37,7 +37,7 @@ describe 'osl-jenkins::bumpzone' do
               source: "bin/#{f}",
               owner: 'jenkins',
               group: 'jenkins',
-              mode: 0550
+              mode: '550'
             )
         end
         it do
@@ -46,7 +46,7 @@ describe 'osl-jenkins::bumpzone' do
               source: "lib/#{f}",
               owner: 'jenkins',
               group: 'jenkins',
-              mode: 0440
+              mode: '440'
             )
         end
       end
@@ -65,7 +65,7 @@ describe 'osl-jenkins::bumpzone' do
         expect(chef_run).to create_template('/var/chef/cache/bumpzone/config.xml')
           .with(
             source: 'bumpzone.config.xml.erb',
-            mode: 0440,
+            mode: '440',
             variables: {
               github_url: 'https://github.com/osuosl/zonefiles.git',
               trigger_token: 'trigger_token',
@@ -76,7 +76,7 @@ describe 'osl-jenkins::bumpzone' do
         expect(chef_run).to create_template('/var/chef/cache/checkzone/config.xml')
           .with(
             source: 'checkzone.config.xml.erb',
-            mode: 0440,
+            mode: '440',
             variables: {
               github_url: 'https://github.com/osuosl/zonefiles.git',
               trigger_token: 'trigger_token',
@@ -87,7 +87,7 @@ describe 'osl-jenkins::bumpzone' do
         expect(chef_run).to create_template('/var/chef/cache/update-zonefiles/config.xml')
           .with(
             source: 'update-zonefiles.config.xml.erb',
-            mode: 0440,
+            mode: '440',
             variables: {
               github_url: 'https://github.com/osuosl/zonefiles.git',
               dns_master: 'dns_master',

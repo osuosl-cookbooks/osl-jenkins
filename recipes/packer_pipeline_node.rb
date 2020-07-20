@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: osl-jenkins
+# Cookbook:: osl-jenkins
 # Recipe:: packer_pipeline
 #
-# Copyright 2015, Oregon State University
+# Copyright:: 2015-2020, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ template '/home/alfred/.git-credentials' do
   owner 'alfred'
   group 'alfred'
   source 'git_credentials.erb'
-  mode 0600
+  mode '600'
   variables(
     username: github_credentials['user'],
     password: github_credentials['token']
@@ -83,7 +83,7 @@ file '/home/alfred/.ssh/packer_alfred_id.pub' do
   content openstack_access_keys['public_key']
   owner 'alfred'
   group 'alfred'
-  mode 0600
+  mode '600'
 end
 
 # this is the private key part of the above keypair to actually ssh into
@@ -92,7 +92,7 @@ file '/home/alfred/.ssh/packer_alfred_id' do
   content openstack_access_keys['private_key']
   owner 'alfred'
   group 'alfred'
-  mode 0600
+  mode '600'
 end
 
 # put the credentials for accessing openstack in alfred's home dir from the
@@ -103,7 +103,7 @@ node.override['osl-jenkins']['secrets_item'] = 'packer_pipeline_creds'
 openstack_credentials = credential_secrets[node['kernel']['machine']]
 file '/home/alfred/openstack_credentials.json' do
   content openstack_credentials.to_json
-  mode 0600
+  mode '600'
   owner 'alfred'
   group 'alfred'
 end

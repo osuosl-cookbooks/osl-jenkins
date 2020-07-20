@@ -56,7 +56,7 @@ describe BumpZone do
         expect(BumpZone.pr_merged(open_json('open_pr_payload.json'))).to_not eq nil
         expect(BumpZone.pr_merged(
                  open_json('open_pr_payload.json')
-        )).to output('Not a merged PR, skipping...').to_stdout
+               )).to output('Not a merged PR, skipping...').to_stdout
       rescue SystemExit => e
         expect(e.status).to eq 0
       end
@@ -168,12 +168,12 @@ describe BumpZone do
     it 'oneline soa' do
       expect(BumpZone.new_serial(
                open_fixture('oneline-soa'), 'db.osuosl.org'
-      )).to eq Time.new.strftime('%Y%m%d00').to_i
+             )).to eq Time.new.strftime('%Y%m%d00').to_i
     end
     it 'multiline soa' do
       expect(BumpZone.new_serial(
                open_fixture('multiline-soa'), 'db.osuosl.org'
-      )).to eq Time.new.strftime('%Y%m%d00').to_i
+             )).to eq Time.new.strftime('%Y%m%d00').to_i
     end
     it 'increment oneline soa' do
       soa = 'osuosl.org.     86400   IN  SOA ns1.auth.osuosl.org. hostmaster.osuosl.org. ' \

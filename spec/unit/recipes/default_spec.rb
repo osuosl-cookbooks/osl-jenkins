@@ -14,12 +14,6 @@ describe 'osl-jenkins::default' do
       it do
         expect(chef_run).to create_users_manage('alfred').with(group_id: 10000)
       end
-      it do
-        expect(chef_run.users_manage('alfred')).to notify('ohai[jenkins_reload_passwd]').to(:reload).immediately
-      end
-      it do
-        expect(chef_run.ohai('jenkins_reload_passwd')).to do_nothing
-      end
     end
   end
 end
