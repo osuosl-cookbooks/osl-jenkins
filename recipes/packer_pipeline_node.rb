@@ -30,8 +30,8 @@ end
 include_recipe 'yum-qemu-ev::default'
 include_recipe 'base::kvm'
 
-# setup chefdk so that we have berks
-include_recipe 'base::chefdk'
+# setup cinc_workstation so that we have berks
+include_recipe 'base::cinc_workstation'
 
 # setup packer so that we can build images
 include_recipe 'base::packer'
