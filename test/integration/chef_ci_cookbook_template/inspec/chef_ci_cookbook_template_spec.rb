@@ -1,7 +1,7 @@
-describe package('chefdk') do
+describe package('cinc-workstation') do
   it { should be_installed }
 end
 
 describe command('chef --version') do
-  its('stdout') { should match(/3\.12\.15\.1/) }
+  its('stdout') { should match(/0\.18\.3/) }
 end

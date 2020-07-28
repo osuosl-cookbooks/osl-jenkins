@@ -67,11 +67,6 @@ suites:
           user: centos
           group: centos
   - name: chef_ci_cookbook_template
-    provisioner:
-      name: chef_zero
-      # disabled due to issues with base::chefdk
-      enforce_idempotency: false
-      multiple_converge: 1
     run_list:
       - recipe[osl-jenkins::chef_ci_cookbook_template]
   - name: plugins
@@ -391,7 +386,7 @@ suites:
   - name: packer_pipeline_node
     provisioner:
       name: chef_zero
-      # disabled due to base::chefdk
+      # disabled due to ohai_plugin[ibm_power]
       enforce_idempotency: false
       multiple_converge: 1
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
