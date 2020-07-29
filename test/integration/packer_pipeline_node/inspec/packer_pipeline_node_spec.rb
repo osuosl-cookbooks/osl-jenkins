@@ -51,7 +51,7 @@ describe file("/opt/#{chef}/embedded/bin/openstack_taster") do
   it { should be_executable }
 end
 
-describe gem('openstack_taster', "/opt/${chef}/embedded/bin/gem") do
+describe gem('openstack_taster', "/opt/#{chef}/embedded/bin/gem") do
   it { should be_installed }
   its('version') { should >= '2.0' }
 end
