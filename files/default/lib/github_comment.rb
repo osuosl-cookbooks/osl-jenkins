@@ -1,4 +1,4 @@
-#!/opt/chef/embedded/bin/ruby
+#!/opt/cinc/embedded/bin/ruby
 require 'git'
 require 'json'
 require 'octokit'
