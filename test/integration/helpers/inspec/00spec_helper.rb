@@ -10,11 +10,11 @@ describe package('java-1.8.0-openjdk') do
 end
 
 describe package('jenkins') do
-  its('version') { should eq '2.190.3-1.1' }
+  its('version') { should eq '2.235.3-1.1' }
 end
 
 describe command('yum versionlock') do
-  its('stdout') { should match(/^0:jenkins-2.190.3-1.1.x86_64$/) }
+  its('stdout') { should match(/^0:jenkins-2.235.3-1.1.x86_64$/) }
 end
 
 %w(80 443 8080).each do |p|
@@ -29,5 +29,5 @@ describe http('http://127.0.0.1/') do
 end
 
 describe http('https://127.0.0.1/about/', ssl_verify: false) do
-  its('body') { should match(/Jenkins 2.190.3/) }
+  its('body') { should match(/Jenkins 2.235.3/) }
 end
