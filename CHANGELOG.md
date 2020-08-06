@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.8.3 (2020-08-06)
+------------------
+- Bump to jenkins 2.235.3
+
 2.8.2 (2020-07-29)
 ------------------
 - Update ruby paths in scripts to Cinc ruby
