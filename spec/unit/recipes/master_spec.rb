@@ -13,12 +13,12 @@ describe 'osl-jenkins::master' do
       it do
         expect(chef_run).to add_yum_version_lock('jenkins')
           .with(
-            version: '2.190.3',
+            version: '2.235.3',
             release: '1.1'
           )
       end
       it do
-        expect(chef_run).to install_package('jenkins').with(version: '2.190.3-1.1', flush_cache: { before: true })
+        expect(chef_run).to install_package('jenkins').with(version: '2.235.3-1.1', flush_cache: { before: true })
       end
       it do
         expect(chef_run).to create_cookbook_file('/var/lib/jenkins/.gitconfig')

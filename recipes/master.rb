@@ -20,7 +20,7 @@
 # Don't automatically update jenkins
 node.override['yum-cron']['yum_parameter'] = '-x jenkins'
 
-node.default['jenkins']['master']['version'] = '2.190.3-1.1'
+node.default['jenkins']['master']['version'] = '2.235.3-1.1'
 node.default['jenkins']['master']['listen_address'] = '127.0.0.1'
 node.default['jenkins']['executor']['protocol'] = 'http'
 
