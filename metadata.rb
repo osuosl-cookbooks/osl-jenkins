@@ -18,4 +18,6 @@ depends          'certificate'
 depends          'users'
 depends          'yum-plugin-versionlock'
 depends          'yum-qemu-ev'
+
 supports         'centos', '~> 7.0'
+supports         'centos', '~> 8.0'
