@@ -40,6 +40,10 @@ end
 log 'Safe Restart Jenkins' do
   message 'Safe Restart Jenkins'
   only_if { ::File.exist?(reload_file) }
+end
+
+notify_group 'Safe Restart Jenkins Notify' do
+  only_if { ::File.exist?(reload_file) }
   notifies :execute, 'jenkins_command[safe-restart]', :immediately
 end
 

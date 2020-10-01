@@ -1,4 +1,4 @@
-require_relative '../../spec_helper.rb'
+require_relative '../../spec_helper'
 
 describe 'osl-jenkins::packer_pipeline_node' do
   [CENTOS_7].each do |p|
