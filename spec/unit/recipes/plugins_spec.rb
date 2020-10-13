@@ -35,6 +35,9 @@ describe 'osl-jenkins::plugins' do
         it do
           expect(chef_run).to write_log('Safe Restart Jenkins').with(message: 'Safe Restart Jenkins')
         end
+        it do
+          expect(chef_run.notify_group('Safe Restart Jenkins Notify')).to notify('jenkins_command[safe-restart]').immediately
+        end
       end
       %w(
         structs:1.20

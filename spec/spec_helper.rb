@@ -22,11 +22,7 @@ shared_context 'common_stubs' do
                    'Not Found',
                    Net::HTTPResponse.new('1.1', '404', '')
                  ))
-    stub_command("chef gem list -i -v '< 2.0.0' netaddr").and_return(true)
-    stub_command("chef gem list -i -v '< 4.0.0' kitchen-terraform").and_return(true)
-    stub_command("chef gem list -i -v '>= 2.0.0' netaddr").and_return(false)
-    stub_command('chef gem list -i kitchen-transport-rsync').and_return(false)
-    stub_command("chef gem list -i -v '= 2.7.5' rubygems")
+    stub_command("/opt/cinc-workstation/embedded/bin/gem list -i -v '< 1.1.0.rc1' bcrypt_pbkdf")
     stub_command('/opt/os-client/bin/pip freeze | grep -q python-openstackclient==3.14.3')
   end
 end
