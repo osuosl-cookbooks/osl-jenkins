@@ -15,9 +15,6 @@ describe 'osl-jenkins::plugins' do
         expect { chef_run }.to_not raise_error
       end
       it do
-        expect(chef_run).to_not write_log('Safe Restart Jenkins').with(message: 'Safe Restart Jenkins')
-      end
-      it do
         expect(chef_run).to delete_file('/var/chef/cache/reload-jenkins')
       end
       it do
@@ -31,9 +28,6 @@ describe 'osl-jenkins::plugins' do
         before do
           allow(File).to receive(:exist?).and_call_original
           allow(File).to receive(:exist?).with('/var/chef/cache/reload-jenkins').and_return(true)
-        end
-        it do
-          expect(chef_run).to write_log('Safe Restart Jenkins').with(message: 'Safe Restart Jenkins')
         end
         it do
           expect(chef_run.notify_group('Safe Restart Jenkins Notify')).to notify('jenkins_command[safe-restart]').immediately
