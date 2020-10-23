@@ -6,7 +6,7 @@ require_relative '../../files/default/lib/packer_pipeline'
 
 module SpecHelper
   def fixture_path(name)
-    File.join(File.expand_path('../../fixtures', __FILE__), name)
+    File.join(File.expand_path('../fixtures', __dir__), name)
   end
 
   def open_fixture(name)

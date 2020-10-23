@@ -1,4 +1,4 @@
-require_relative '../../spec_helper.rb'
+require_relative '../../spec_helper'
 
 describe 'osl-jenkins::packer_pipeline_node' do
   [CENTOS_7].each do |p|
@@ -13,6 +13,11 @@ describe 'osl-jenkins::packer_pipeline_node' do
 
       include_context 'common_stubs'
       include_context 'data_bag_stubs'
+      before do
+        stub_command('/opt/os-client/bin/pip -V | grep -q "^pip 9.0.1"').and_return(true)
+        stub_command('/opt/os-client/bin/easy_install --version | grep -q "^setuptools 28.8.0"').and_return(true)
+        stub_command('/opt/os-client/bin/pip freeze | grep -q dogpile && /opt/os-client/bin/pip freeze | grep -q python-openstackclient==3.14.3').and_return(true)
+      end
 
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error

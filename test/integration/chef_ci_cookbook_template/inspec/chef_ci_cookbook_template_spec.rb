@@ -3,5 +3,5 @@ describe package('cinc-workstation') do
 end
 
 describe command('chef --version') do
-  its('stdout') { should match(/0\.18\.3/) }
+  its('stdout') { should match(/20\.9\.158/) }
 end

@@ -20,7 +20,7 @@
 # Don't automatically update jenkins
 node.override['yum-cron']['yum_parameter'] = '-x jenkins'
 
-node.default['jenkins']['master']['version'] = '2.235.3-1.1'
+node.default['jenkins']['master']['version'] = '2.249.1-1.1'
 node.default['jenkins']['master']['listen_address'] = '127.0.0.1'
 node.default['jenkins']['executor']['protocol'] = 'http'
 
@@ -46,6 +46,7 @@ yum_version_lock 'jenkins' do
   version_split = node['jenkins']['master']['version'].split('-')
   version version_split[0]
   release version_split[1]
+  arch 'noarch'
 end
 
 include_recipe 'java'

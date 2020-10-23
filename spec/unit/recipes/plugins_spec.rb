@@ -15,13 +15,10 @@ describe 'osl-jenkins::plugins' do
         expect { chef_run }.to_not raise_error
       end
       it do
-        expect(chef_run).to_not write_log('Safe Restart Jenkins').with(message: 'Safe Restart Jenkins')
-      end
-      it do
         expect(chef_run).to delete_file('/var/chef/cache/reload-jenkins')
       end
       it do
-        expect(chef_run.log('Safe Restart Jenkins')).to notify('jenkins_command[safe-restart]').immediately
+        expect(chef_run.notify_group('Safe Restart Jenkins Notify')).to notify('jenkins_command[safe-restart]').immediately
       end
       context 'installed new plugin' do
         cached(:chef_run) do
@@ -33,7 +30,7 @@ describe 'osl-jenkins::plugins' do
           allow(File).to receive(:exist?).with('/var/chef/cache/reload-jenkins').and_return(true)
         end
         it do
-          expect(chef_run).to write_log('Safe Restart Jenkins').with(message: 'Safe Restart Jenkins')
+          expect(chef_run.notify_group('Safe Restart Jenkins Notify')).to notify('jenkins_command[safe-restart]').immediately
         end
       end
       %w(

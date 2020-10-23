@@ -60,13 +60,13 @@ def set_up_github_push(github_token, org_name, repo_name, job_name,
     "/buildWithParameters?token=#{trigger_token}")
 
   # Get all hooks that we may have created in the past
-  # rubocop:disable Style/MultilineOperationIndentation
+  # rubocop:disable Layout/MultilineOperationIndentation
   existing_hooks = hooks.select do |h|
     h['name'] == type &&
     h['events'] == events &&
     h['config']['content_type'] == content_type
   end
-  # rubocop:enable Style/MultilineOperationIndentation
+  # rubocop:enable Layout/MultilineOperationIndentation
 
   hook_config = {
     url: url,

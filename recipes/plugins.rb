@@ -37,10 +37,9 @@ node['osl-jenkins']['plugins'].each do |p, v|
   end
 end
 
-log 'Safe Restart Jenkins' do
-  message 'Safe Restart Jenkins'
-  only_if { ::File.exist?(reload_file) }
+notify_group 'Safe Restart Jenkins Notify' do
   notifies :execute, 'jenkins_command[safe-restart]', :immediately
+  only_if { ::File.exist?(reload_file) }
 end
 
 file reload_file do
