@@ -24,8 +24,6 @@ node.default['jenkins']['master']['version'] = '2.249.1-1.1'
 node.default['jenkins']['master']['listen_address'] = '127.0.0.1'
 node.default['jenkins']['executor']['protocol'] = 'http'
 
-node.default['java']['jdk_version'] = '8'
-
 # Manually set the jenkins java attribute to stop jenkins being restarted
 # every chef run due to logic in
 # https://github.com/chef-cookbooks/jenkins/blob/master/attributes/default.rb#L45-L53
@@ -49,7 +47,8 @@ yum_version_lock 'jenkins' do
   arch 'noarch'
 end
 
-include_recipe 'java'
+openjdk_pkg_install '8'
+
 include_recipe 'jenkins::master'
 
 edit_resource(:package, 'jenkins') do

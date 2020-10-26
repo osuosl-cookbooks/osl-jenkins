@@ -12,6 +12,9 @@ describe 'osl-jenkins::default' do
         expect { chef_run }.to_not raise_error
       end
       it do
+        expect(chef_run).to install_openjdk_pkg_install('8')
+      end
+      it do
         expect(chef_run).to create_users_manage('alfred').with(group_id: 10000)
       end
     end

@@ -18,9 +18,7 @@
 #
 
 # jenkins 1.612 and above requires java 7
-node.default['java']['jdk_version'] = '8'
-
-include_recipe 'java'
+openjdk_pkg_install '8'
 
 users_manage 'alfred' do
   group_id 10000

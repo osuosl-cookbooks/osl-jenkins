@@ -22,6 +22,9 @@ describe 'osl-jenkins::master' do
         expect(chef_run).to install_package('jenkins').with(version: '2.249.1-1.1', flush_cache: { before: true })
       end
       it do
+        expect(chef_run).to install_openjdk_pkg_install('8')
+      end
+      it do
         expect(chef_run).to create_cookbook_file('/var/lib/jenkins/.gitconfig')
           .with(
             source: 'gitconfig',
