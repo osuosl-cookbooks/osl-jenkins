@@ -15,7 +15,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-node.default['osl-jenkins']['gems'] = %w(octokit)
+%w(git faraday-http-cache).each do |p|
+  chef_gem p do
+    compile_time true
+  end
+end
 node.default['osl-jenkins']['cookbook_uploader'].tap do |conf|
   conf['authorized_teams'] = %w(osuosl-cookbooks/staff)
   conf['chef_repo'] = 'osuosl/chef-repo'
