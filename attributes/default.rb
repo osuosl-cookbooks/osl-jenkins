@@ -64,9 +64,6 @@ default['osl-jenkins']['secrets_item'] = 'secrets'
 ### Attributes that can be set separately in each recipe
 ###
 
-# String: The names of chef gems to install
-default['osl-jenkins']['gems'] = []
-
 # String: The paths of Jenkins binaries and libraries
 default['osl-jenkins']['bin_path'] =  ::File.join(node['jenkins']['master']['home'], 'bin')
 default['osl-jenkins']['lib_path'] = ::File.join(node['jenkins']['master']['home'], 'lib')

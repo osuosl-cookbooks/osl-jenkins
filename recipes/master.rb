@@ -99,12 +99,6 @@ cookbook_file git_config_path do
   group node['jenkins']['master']['group']
 end
 
-node['osl-jenkins']['gems'].each do |g|
-  chef_gem g do
-    compile_time true
-  end
-end
-
 [
   node['osl-jenkins']['bin_path'],
   node['osl-jenkins']['lib_path'],
