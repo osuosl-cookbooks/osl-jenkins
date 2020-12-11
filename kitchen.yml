@@ -102,7 +102,7 @@ suites:
             - 'osuosl-cookbooks/staff'
           chef_repo: 'osuosl/chef-repo'
           default_environments:
-            - openstack_rocky
+            - openstack_stein
             - phpbb
             - production
             - workstation
@@ -317,7 +317,7 @@ suites:
           listen_address: '0.0.0.0'
   - name: powerci
     nodes_path: test/integration/nodes
-    provisioner: 
+    provisioner:
       name: chef_zero
       # disabled due to osl-jenkis::master
       enforce_idempotency: false
