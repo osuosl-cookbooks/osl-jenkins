@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.11.1 (2020-12-11)
+-------------------
+- Update openstack environment name
+
 2.11.0 (2020-11-03)
 -------------------
 - install gems directly
