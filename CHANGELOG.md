@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.11.2 (2021-01-13)
+-------------------
+- Temporarily disable installation of the openstack_taster gem
+
 2.11.1 (2020-12-11)
 -------------------
 - Update openstack environment name
