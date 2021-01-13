@@ -79,13 +79,13 @@ describe 'osl-jenkins::packer_pipeline_node' do
         )
       end
 
-      it do
-        expect(chef_run).to upgrade_chef_gem('openstack_taster').with(
-          options: '--no-user-install',
-          version: '>= 2.0',
-          clear_sources: true
-        )
-      end
+      # it do
+      #   expect(chef_run).to upgrade_chef_gem('openstack_taster').with(
+      #     options: '--no-user-install',
+      #     version: '>= 2.0',
+      #     clear_sources: true
+      #   )
+      # end
     end
   end
 end

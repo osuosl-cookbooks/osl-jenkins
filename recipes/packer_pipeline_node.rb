@@ -2,7 +2,7 @@
 # Cookbook:: osl-jenkins
 # Recipe:: packer_pipeline
 #
-# Copyright:: 2015-2020, Oregon State University
+# Copyright:: 2015-2021, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -109,10 +109,11 @@ file '/home/alfred/openstack_credentials.json' do
 end
 
 # install openstack_taster
-chef_gem 'openstack_taster' do
-  compile_time true
-  version Chef::VERSION.to_i < 14 ? '< 2.0' : '>= 2.0'
-  options '--no-user-install'
-  clear_sources true
-  action :upgrade
-end
+# TODO: Remove this once we're completely done using this
+# chef_gem 'openstack_taster' do
+#   compile_time true
+#   version Chef::VERSION.to_i < 14 ? '< 2.0' : '>= 2.0'
+#   options '--no-user-install'
+#   clear_sources true
+#   action :upgrade
+# end
