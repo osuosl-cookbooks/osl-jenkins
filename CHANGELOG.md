@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.11.3 (2021-01-27)
+-------------------
+- Update to Jenkins 2.263.3 and all plugins
+
 2.11.2 (2021-01-13)
 -------------------
 - Temporarily disable installation of the openstack_taster gem
