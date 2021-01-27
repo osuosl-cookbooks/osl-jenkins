@@ -35,8 +35,8 @@ describe 'osl-jenkins::plugins' do
       end
       %w(
         structs:1.20
-        credentials:2.3.0
-        ssh-credentials:1.18
+        credentials:2.3.14
+        ssh-credentials:1.18.1
       ).each do |plugins_version|
         plugin, version = plugins_version.split(':')
         it do
@@ -51,93 +51,105 @@ describe 'osl-jenkins::plugins' do
       end
       %w(
         ace-editor:1.1
-        ant:1.8
-        antisamy-markup-formatter:1.3
-        apache-httpcomponents-client-4-api:4.5.10-2.0
-        authentication-tokens:1.3
+        ant:1.11
+        antisamy-markup-formatter:2.1
+        apache-httpcomponents-client-4-api:4.5.13-1.0
+        authentication-tokens:1.4
         authorize-project:1.3.0
-        bouncycastle-api:2.16.3
-        branch-api:2.0.8
-        build-token-root:1.4
-        cloudbees-folder:6.9
-        command-launcher:1.2
-        conditional-buildstep:1.3.1
-        copyartifact:1.41
-        credentials-binding:1.18
-        cvs:2.12
-        display-url-api:2.3.2
+        bootstrap4-api:4.5.3-2
+        bouncycastle-api:2.18
+        branch-api:2.6.2
+        build-token-root:1.7
+        cloudbees-folder:6.15
+        command-launcher:1.5
+        conditional-buildstep:1.4.1
+        copyartifact:1.46
+        checks-api:1.2.0
+        credentials-binding:1.24
+        cvs:2.17
+        display-url-api:2.3.4
         docker-build-publish:1.3.2
-        docker-commons:1.15
+        docker-commons:1.17
         docker-custom-build-environment:1.7.3
-        docker-workflow:1.18
-        durable-task:1.17
-        external-monitor-job:1.4
-        ghprb:1.42.0
-        git:4.0.0
-        git-client:3.0.0
-        github:1.29.2
-        github-api:1.90
-        github-branch-source:2.3.6
+        docker-workflow:1.25
+        durable-task:1.35
+        echarts-api:4.9.0-3
+        external-monitor-job:1.7
+        font-awesome-api:5.15.1-1
+        ghprb:1.42.1
+        git:4.5.2
+        git-client:3.6.0
+        github:1.32.0
+        github-api:1.122
+        github-branch-source:2.9.3
         github-oauth:0.33
         github-organization-folder:1.6
         gitlab-plugin:1.5.13
-        git-server:1.7
+        git-server:1.9
         handlebars:1.1.1
         icon-shim:2.0.3
-        instant-messaging:1.38
-        ircbot:2.31
-        jackson2-api:2.9.8
-        javadoc:1.3
+        instant-messaging:1.39
+        ircbot:2.33
+        jackson2-api:2.12.1
+        javadoc:1.6
+        jdk-tool:1.4
         jquery-detached:1.2.1
-        jsch:0.1.55.1
-        junit:1.26.1
-        ldap:1.12
-        mailer:1.30
-        mapdb-api:1.0.6.0
-        matrix-auth:2.5
-        matrix-project:1.14
-        maven-plugin:3.4
+        jquery3-api:3.5.1-2
+        jsch:0.1.55.2
+        junit:1.48
+        ldap:1.26
+        lockable-resources:2.10
+        mailer:1.32.1
+        mapdb-api:1.0.9.0
+        matrix-auth:2.6.5
+        matrix-project:1.18
+        maven-plugin:3.8
         momentjs:1.1.1
+        okhttp-api:3.14.9
         pam-auth:1.6
-        parameterized-trigger:2.35.1
-        pipeline-build-step:2.5.1
+        parameterized-trigger:2.39
+        pipeline-build-step:2.13
         pipeline-github-lib:1.0
-        pipeline-graph-analysis:1.3
-        pipeline-input-step:2.8
+        pipeline-graph-analysis:1.10
+        pipeline-input-step:2.12
         pipeline-milestone-step:1.3.1
-        pipeline-model-api:1.3.8
+        pipeline-model-api:1.7.2
         pipeline-model-declarative-agent:1.1.1
-        pipeline-model-definition:1.3.8
-        pipeline-model-extensions:1.3.8
-        pipeline-rest-api:2.6
-        pipeline-stage-step:2.3
-        pipeline-stage-tags-metadata:1.3.8
-        pipeline-stage-view:2.6
-        pipeline-utility-steps:1.4.0
-        plain-credentials:1.4
-        run-condition:1.0
-        scm-api:2.6.3
-        script-security:1.68
-        ssh-agent:1.16
-        ssh-slaves:1.28.1
-        subversion:2.10.3
-        text-finder:1.10
-        token-macro:2.10
+        pipeline-model-definition:1.7.2
+        pipeline-model-extensions:1.7.2
+        pipeline-rest-api:2.19
+        pipeline-stage-step:2.5
+        pipeline-stage-tags-metadata:1.7.2
+        pipeline-stage-view:2.19
+        pipeline-utility-steps:2.6.1
+        plain-credentials:1.7
+        plugin-util-api:1.6.1
+        popper-api:1.16.0-7
+        resource-disposer:0.14
+        run-condition:1.5
+        scm-api:2.6.4
+        script-security:1.75
+        snakeyaml-api:1.27.0
+        ssh-agent:1.20
+        ssh-slaves:1.31.5
+        subversion:2.14.0
+        text-finder:1.15
+        token-macro:2.13
         translation:1.16
-        trilead-api:1.0.5
-        windows-slaves:1.1
-        workflow-aggregator:2.5
-        workflow-api:2.33
-        workflow-basic-steps:2.6
-        workflow-cps:2.71
-        workflow-cps-global-lib:2.15
-        workflow-durable-task-step:2.18
-        workflow-job:2.26
-        workflow-multibranch:2.16
-        workflow-scm-step:2.9
-        workflow-step-api:2.20
-        workflow-support:3.3
-        ws-cleanup:0.28
+        trilead-api:1.0.13
+        windows-slaves:1.7
+        workflow-aggregator:2.6
+        workflow-api:2.41
+        workflow-basic-steps:2.23
+        workflow-cps:2.87
+        workflow-cps-global-lib:2.17
+        workflow-durable-task-step:2.37
+        workflow-job:2.40
+        workflow-multibranch:2.22
+        workflow-scm-step:2.11
+        workflow-step-api:2.23
+        workflow-support:3.7
+        ws-cleanup:0.38
       ).each do |plugins_version|
         plugin, version = plugins_version.split(':')
         it do

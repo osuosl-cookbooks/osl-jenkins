@@ -171,27 +171,20 @@ module OSLDocker
       # Convert docker image name into a more sensible jenkins label converting slashes and colons to dashes
       label = "docker-#{image.tr('/:', '-')}"
       <<-EOH
-          DockerTemplateBase #{var_name}_TemplateBase = new DockerTemplateBase(
-             '#{image}', // image
-            '',     // pullCredentialsId
-            '',     // dnsString
-            '',     // network
-            '',     // dockerCommand
-            'ccache:/var/cache/ccache', // volumesString
-            '',     // volumesFromString
-            'JENKINS_SLAVE_SSH_PUBKEY=#{docker_public_key}', // environmentsString
-            '',     // hostname
-            #{memory_limit},   // memoryLimit
-            #{memory_swap},   // memorySwap
-            #{cpu_shared},      // cpuShares
-            null,   // shmSize
-            '',     // bindPorts
-            false,  // bindAllPorts
-            false,  // privileged
-            false,  // tty
-            '',     // macAddress
-            ''      // extraHostsString
-          );
+          def #{var_name}_templateBaseParameters = [
+            image: '#{image}',
+            volumesString: 'ccache:/var/cache/ccache',
+            environmentsString: 'JENKINS_SLAVE_SSH_PUBKEY=#{docker_public_key}',
+            memoryLimit: #{memory_limit},
+            memorySwap: #{memory_swap},
+            cpuShares: #{cpu_shared},
+            privileged: false,
+            tty: false,
+          ]
+          DockerTemplateBase #{var_name}_TemplateBase = new DockerTemplateBase(#{var_name}_templateBaseParameters.image);
+          #{var_name}_templateBaseParameters.findAll{ it.key != "image" }.each { k, v ->
+            #{var_name}_TemplateBase."$k" = v
+          }
           DockerTemplate dk_#{var_name}_Template = new DockerTemplate(
             #{var_name}_TemplateBase, // dockerTemplateBase
             sshConnector,   // connector
@@ -199,27 +192,20 @@ module OSLDocker
             '',             // remoteFs
             '50',           // instanceCapStr
           )
-          DockerTemplateBase #{var_name}_privileged_TemplateBase = new DockerTemplateBase(
-             '#{image}', // image
-            '',     // pullCredentialsId
-            '',     // dnsString
-            '',     // network
-            '',     // dockerCommand
-            'ccache:/var/cache/ccache', // volumesString
-            '',     // volumesFromString
-            'JENKINS_SLAVE_SSH_PUBKEY=#{docker_public_key}', // environmentsString
-            '',     // hostname
-            #{memory_limit},   // memoryLimit
-            #{memory_swap},   // memorySwap
-            #{cpu_shared},      // cpuShares
-            null,   // shmSize
-            '',     // bindPorts
-            false,  // bindAllPorts
-            true,   // privileged
-            false,  // tty
-            '',     // macAddress
-            ''      // extraHostsString
-          );
+          def #{var_name}_privileged_templateBaseParameters = [
+            image: '#{image}',
+            volumesString: 'ccache:/var/cache/ccache',
+            environmentsString: 'JENKINS_SLAVE_SSH_PUBKEY=#{docker_public_key}',
+            memoryLimit: #{memory_limit},
+            memorySwap: #{memory_swap},
+            cpuShares: #{cpu_shared},
+            privileged: true,
+            tty: false,
+          ]
+          DockerTemplateBase #{var_name}_privileged_TemplateBase = new DockerTemplateBase(#{var_name}_privileged_templateBaseParameters.image);
+          #{var_name}_privileged_templateBaseParameters.findAll{ it.key != "image" }.each { k, v ->
+            #{var_name}_privileged_TemplateBase."$k" = v
+          }
           DockerTemplate dk_#{var_name}_privileged_Template = new DockerTemplate(
             #{var_name}_privileged_TemplateBase, // dockerTemplateBase
             sshConnector,   // connector
