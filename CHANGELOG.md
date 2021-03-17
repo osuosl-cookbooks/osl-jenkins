@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.12.0 (2021-03-17)
+-------------------
+- Bump yum-versionlock cookbook version
+
 2.11.3 (2021-01-27)
 -------------------
 - Update to Jenkins 2.263.3 and all plugins
