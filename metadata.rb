@@ -16,7 +16,7 @@ depends          'osl-haproxy'
 depends          'osl-docker'
 depends          'certificate'
 depends          'users'
-depends          'yum-plugin-versionlock'
+depends          'yum-plugin-versionlock', '>= 0.4.0'
 depends          'yum-qemu-ev'
 
 supports         'centos', '~> 7.0'
