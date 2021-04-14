@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.13.1 (2021-04-14)
+-------------------
+- Put a ceiling on users cookbook
+
 2.13.0 (2021-04-06)
 -------------------
 - Update Chef dependency to >= 16
