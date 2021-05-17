@@ -44,25 +44,25 @@ ruby_block 'Set jenkins username/password if needed' do
 end
 
 node.default['osl-jenkins']['plugins'].tap do |p|
-  p['ansicolor'] = '0.7.4'
+  p['ansicolor'] = '0.7.5'
   p['build-monitor-plugin'] = '1.12+build.201809061734'
   p['build-timeout'] = '1.20'
-  p['cloud-stats'] = '0.26'
-  p['config-file-provider'] = '3.7.0'
+  p['cloud-stats'] = '0.27'
+  p['config-file-provider'] = '3.8.0'
   p['disable-github-multibranch-status'] = '1.2'
   p['docker-java-api'] = '3.1.5.2'
   p['docker-plugin'] = '1.2.2'
-  p['email-ext'] = '2.81'
+  p['email-ext'] = '2.82'
   p['emailext-template'] = '1.2'
   p['embeddable-build-status'] = '2.0.3'
   p['extended-read-permission'] = '3.2'
   p['job-restrictions'] = '0.8'
   p['jquery'] = '1.12.4-1'
   p['label-linked-jobs'] = '6.0.1'
-  p['nodelabelparameter'] = '1.7.2'
+  p['nodelabelparameter'] = '1.8.1'
   p['pipeline-githubnotify-step'] = '1.0.5'
   p['pipeline-multibranch-defaults'] = '2.1'
-  p['resource-disposer'] = '0.14'
+  p['resource-disposer'] = '0.15'
 end
 
 include_recipe 'osl-jenkins::master'

@@ -13,101 +13,105 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     antisamy-markup-formatter:2.1
     apache-httpcomponents-client-4-api:4.5.13-1.0
     authentication-tokens:1.4
-    authorize-project:1.3.0
-    bootstrap4-api:4.5.3-2
-    bouncycastle-api:2.18
-    branch-api:2.6.2
+    authorize-project:1.4.0
+    bootstrap4-api:4.6.0-3
+    bouncycastle-api:2.20
+    branch-api:2.6.4
     build-token-root:1.7
+    checks-api:1.7.0
     cloudbees-folder:6.15
-    command-launcher:1.5
+    command-launcher:1.6
     conditional-buildstep:1.4.1
     copyartifact:1.46
-    checks-api:1.2.0
+    credentials:2.4.1
     credentials-binding:1.24
-    cvs:2.17
+    cvs:2.18
     display-url-api:2.3.4
-    docker-build-publish:1.3.2
+    docker-build-publish:1.3.3
     docker-commons:1.17
     docker-custom-build-environment:1.7.3
-    docker-workflow:1.25
-    durable-task:1.35
-    echarts-api:4.9.0-3
+    docker-workflow:1.26
+    durable-task:1.36
+    echarts-api:5.1.0-2
     external-monitor-job:1.7
-    font-awesome-api:5.15.1-1
-    ghprb:1.42.1
-    git:4.5.2
-    git-client:3.6.0
-    github:1.32.0
-    github-api:1.122
-    github-branch-source:2.9.3
+    font-awesome-api:5.15.3-2
+    ghprb:1.42.2
+    git:4.7.1
+    git-client:3.7.1
+    github:1.33.1
+    github-api:1.123
+    github-branch-source:2.10.4
     github-oauth:0.33
     github-organization-folder:1.6
-    gitlab-plugin:1.5.13
+    gitlab-plugin:1.5.20
     git-server:1.9
-    handlebars:1.1.1
-    icon-shim:2.0.3
-    instant-messaging:1.39
-    ircbot:2.33
-    jackson2-api:2.12.1
+    handlebars:3.0.8
+    icon-shim:3.0.0
+    instant-messaging:1.42
+    ircbot:2.36
+    jackson2-api:2.12.3
     javadoc:1.6
-    jdk-tool:1.4
+    jdk-tool:1.5
+    jjwt-api:0.11.2-9.c8b45b8bb173
+    jquery3-api:3.6.0-1
     jquery-detached:1.2.1
-    jquery3-api:3.5.1-2
     jsch:0.1.55.2
-    junit:1.48
-    ldap:1.26
+    junit:1.49
+    ldap:2.6
     lockable-resources:2.10
-    mailer:1.32.1
+    mailer:1.34
     mapdb-api:1.0.9.0
-    matrix-auth:2.6.5
+    matrix-auth:2.6.7
     matrix-project:1.18
-    maven-plugin:3.8
+    maven-plugin:3.10
     momentjs:1.1.1
     okhttp-api:3.14.9
     pam-auth:1.6
-    parameterized-trigger:2.39
+    parameterized-trigger:2.40
     pipeline-build-step:2.13
     pipeline-github-lib:1.0
     pipeline-graph-analysis:1.10
     pipeline-input-step:2.12
-    pipeline-milestone-step:1.3.1
-    pipeline-model-api:1.7.2
+    pipeline-milestone-step:1.3.2
+    pipeline-model-api:1.8.4
     pipeline-model-declarative-agent:1.1.1
-    pipeline-model-definition:1.7.2
-    pipeline-model-extensions:1.7.2
+    pipeline-model-definition:1.8.4
+    pipeline-model-extensions:1.8.4
     pipeline-rest-api:2.19
     pipeline-stage-step:2.5
-    pipeline-stage-tags-metadata:1.7.2
+    pipeline-stage-tags-metadata:1.8.4
     pipeline-stage-view:2.19
-    pipeline-utility-steps:2.6.1
+    pipeline-utility-steps:2.7.1
     plain-credentials:1.7
-    plugin-util-api:1.6.1
-    popper-api:1.16.0-7
-    resource-disposer:0.14
+    plugin-util-api:2.2.0
+    popper-api:1.16.1-2
+    resource-disposer:0.15
     run-condition:1.5
     scm-api:2.6.4
-    script-security:1.75
+    script-security:1.76
     snakeyaml-api:1.27.0
-    ssh-agent:1.20
+    ssh-agent:1.22
+    ssh-credentials:1.18.1
     ssh-slaves:1.31.5
-    subversion:2.14.0
+    structs:1.23
+    subversion:2.14.1
     text-finder:1.15
-    token-macro:2.13
+    token-macro:2.15
     translation:1.16
     trilead-api:1.0.13
-    windows-slaves:1.7
+    windows-slaves:1.8
     workflow-aggregator:2.6
-    workflow-api:2.41
+    workflow-api:2.42
     workflow-basic-steps:2.23
-    workflow-cps:2.87
-    workflow-cps-global-lib:2.17
-    workflow-durable-task-step:2.37
+    workflow-cps:2.91
+    workflow-cps-global-lib:2.19
+    workflow-durable-task-step:2.39
     workflow-job:2.40
-    workflow-multibranch:2.22
-    workflow-scm-step:2.11
+    workflow-multibranch:2.23
+    workflow-scm-step:2.12
     workflow-step-api:2.23
-    workflow-support:3.7
-    ws-cleanup:0.38
+    workflow-support:3.8
+    ws-cleanup:0.39
   ).each do |plugins_version|
     plugin, version = plugins_version.split(':')
     its('stdout') { should match(/^#{plugin}.*#{version}[\s\(]?/) }
