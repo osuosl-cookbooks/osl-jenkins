@@ -58,6 +58,13 @@ suites:
       - recipe[certificate::manage_by_attributes]
       - recipe[osl-jenkins::haproxy]
       - recipe[osl-haproxy::default]
+    verifier:
+      inspec_tests:
+        - name: osuosl-baseline
+          git: https://github.com/osuosl/osuosl-baseline.git
+      controls:
+        - jenkins-haproxy
+        - ssl-baseline
   - name: chef_backup
     run_list:
       - recipe[osl-jenkins::chef_backup]
