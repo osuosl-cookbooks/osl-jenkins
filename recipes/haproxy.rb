@@ -23,10 +23,7 @@ node.default['osl-haproxy']['frontend_extra_options'] = {
   'redirect' => ['scheme https if !{ ssl_fc }'],
 }
 
-node.default['osl-haproxy']['ssl_incoming_port'] = \
-  '443 ssl crt /etc/pki/tls/wildcard.pem ' \
-  'ciphers ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:' \
-  'ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:!MD5:!DSS no-sslv3'
+node.default['osl-haproxy']['ssl_incoming_port'] = '443 ssl crt /etc/pki/tls/wildcard.pem'
 
 node.default['osl-haproxy']['members'] = [
   {
