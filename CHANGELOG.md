@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.13.4 (2021-06-08)
+-------------------
+- Update to Jenkins 2.289.1
+
 2.13.3 (2021-05-24)
 -------------------
 - Disable DES-CBC3-SHA cipher (CVE-2016-2183)
