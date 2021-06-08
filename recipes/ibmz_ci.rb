@@ -44,7 +44,7 @@ ruby_block 'Set jenkins username/password if needed' do
 end
 
 node.default['osl-jenkins']['plugins'].tap do |p|
-  p['ansicolor'] = '0.7.5'
+  p['ansicolor'] = '1.0.0'
   p['build-monitor-plugin'] = '1.12+build.201809061734'
   p['build-timeout'] = '1.20'
   p['cloud-stats'] = '0.27'
@@ -52,7 +52,7 @@ node.default['osl-jenkins']['plugins'].tap do |p|
   p['disable-github-multibranch-status'] = '1.2'
   p['docker-java-api'] = '3.1.5.2'
   p['docker-plugin'] = '1.2.2'
-  p['email-ext'] = '2.82'
+  p['email-ext'] = '2.83'
   p['emailext-template'] = '1.2'
   p['embeddable-build-status'] = '2.0.3'
   p['extended-read-permission'] = '3.2'

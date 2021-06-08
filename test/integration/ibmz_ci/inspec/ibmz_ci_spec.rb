@@ -4,7 +4,7 @@ end
 
 describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localhost:8080/ list-plugins') do
   %w(
-    ansicolor:0.7.5
+    ansicolor:1.0.0
     build-monitor-plugin:1.12\+build.201809061734
     build-timeout:1.20
     cloud-stats:0.27
@@ -12,7 +12,7 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     disable-github-multibranch-status:1.2
     docker-java-api:3.1.5.2
     docker-plugin:1.2.2
-    email-ext:2.82
+    email-ext:2.83
     emailext-template:1.2
     embeddable-build-status:2.0.3
     extended-read-permission:3.2

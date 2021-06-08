@@ -41,7 +41,7 @@ describe 'osl-jenkins::powerci' do
         expect { chef_run }.to_not raise_error
       end
       %w(
-        ansicolor:0.7.5
+        ansicolor:1.0.0
         build-monitor-plugin:1.12+build.201809061734
         build-timeout:1.20
         cloud-stats:0.27
@@ -49,7 +49,7 @@ describe 'osl-jenkins::powerci' do
         disable-github-multibranch-status:1.2
         docker-java-api:3.1.5.2
         docker-plugin:1.2.2
-        email-ext:2.82
+        email-ext:2.83
         emailext-template:1.2
         embeddable-build-status:2.0.3
         extended-read-permission:3.2
@@ -57,7 +57,7 @@ describe 'osl-jenkins::powerci' do
         jquery:1.12.4-1
         label-linked-jobs:6.0.1
         nodelabelparameter:1.8.1
-        openstack-cloud:2.57
+        openstack-cloud:2.58
         pipeline-githubnotify-step:1.0.5
         pipeline-multibranch-defaults:2.1
         resource-disposer:0.15
@@ -77,8 +77,7 @@ describe 'osl-jenkins::powerci' do
         expect(chef_run).to install_jenkins_plugin('copy-to-slave').with(
           version: '1.4.4',
           install_deps: false,
-          source: 'http://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/copy-to-slave/' \
-                  '1.4.4/copy-to-slave-1.4.4.hpi'
+          source: 'https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/copy-to-slave/1.4.4/copy-to-slave-1.4.4.hpi'
         )
       end
       it do

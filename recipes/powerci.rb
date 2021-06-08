@@ -42,7 +42,7 @@ ruby_block 'Set jenkins username/password if needed' do
 end
 
 node.default['osl-jenkins']['plugins'].tap do |p|
-  p['ansicolor'] = '0.7.5'
+  p['ansicolor'] = '1.0.0'
   p['build-monitor-plugin'] = '1.12+build.201809061734'
   p['build-timeout'] = '1.20'
   p['cloud-stats'] = '0.27'
@@ -50,7 +50,7 @@ node.default['osl-jenkins']['plugins'].tap do |p|
   p['disable-github-multibranch-status'] = '1.2'
   p['docker-java-api'] = '3.1.5.2'
   p['docker-plugin'] = '1.2.2'
-  p['email-ext'] = '2.82'
+  p['email-ext'] = '2.83'
   p['emailext-template'] = '1.2'
   p['embeddable-build-status'] = '2.0.3'
   p['extended-read-permission'] = '3.2'
@@ -58,7 +58,7 @@ node.default['osl-jenkins']['plugins'].tap do |p|
   p['jquery'] = '1.12.4-1'
   p['label-linked-jobs'] = '6.0.1'
   p['nodelabelparameter'] = '1.8.1'
-  p['openstack-cloud'] = '2.57'
+  p['openstack-cloud'] = '2.58'
   p['pipeline-githubnotify-step'] = '1.0.5'
   p['pipeline-multibranch-defaults'] = '2.1'
   p['resource-disposer'] = '0.15'
@@ -68,7 +68,7 @@ include_recipe 'osl-jenkins::master'
 
 # Install directly from a URL since this doesn't appear to be included in the package data
 jenkins_plugin 'copy-to-slave' do
-  source 'http://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/copy-to-slave/1.4.4/copy-to-slave-1.4.4.hpi'
+  source 'https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/copy-to-slave/1.4.4/copy-to-slave-1.4.4.hpi'
   version '1.4.4'
   install_deps false
   notifies :execute, 'jenkins_command[safe-restart]', :immediately

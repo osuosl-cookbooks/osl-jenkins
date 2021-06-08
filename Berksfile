@@ -2,10 +2,10 @@ source 'https://supermarket.chef.io'
 solver :ruby, :required
 
 cookbook 'base', git: 'git@github.com:osuosl-cookbooks/base'
-cookbook 'firewall', git: 'git@github.com:osuosl-cookbooks/firewall'
 cookbook 'osl-acme', git: 'git@github.com:osuosl-cookbooks/osl-acme'
 cookbook 'osl-apache', git: 'git@github.com:osuosl-cookbooks/osl-apache'
 cookbook 'osl-docker', git: 'git@github.com:osuosl-cookbooks/osl-docker'
+cookbook 'osl-firewall', git: 'git@github.com:osuosl-cookbooks/osl-firewall'
 cookbook 'osl-git', git: 'git@github.com:osuosl-cookbooks/osl-git'
 cookbook 'osl-haproxy', git: 'git@github.com:osuosl-cookbooks/osl-haproxy'
 cookbook 'osl-nfs', git: 'git@github.com:osuosl-cookbooks/osl-nfs'

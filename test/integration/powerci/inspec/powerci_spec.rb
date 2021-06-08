@@ -4,7 +4,7 @@ end
 
 describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localhost:8080/ list-plugins') do
   %w(
-    ansicolor:0.7.5
+    ansicolor:1.0.0
     build-monitor-plugin:1.12\+build.201809061734
     build-timeout:1.20
     cloud-stats:0.27
@@ -13,14 +13,14 @@ describe command('java -jar /tmp/kitchen/cache/jenkins-cli.jar -s http://localho
     docker-java-api:3.1.5.2
     docker-plugin:1.2.2
     emailext-template:1.2
-    email-ext:2.82
+    email-ext:2.83
     embeddable-build-status:2.0.3
     extended-read-permission:3.2
     job-restrictions:0.8
     jquery:1.12.4-1
     label-linked-jobs:6.0.1
     nodelabelparameter:1.8.1
-    openstack-cloud:2.57
+    openstack-cloud:2.58
     pipeline-githubnotify-step:1.0.5
     pipeline-multibranch-defaults:2.1
     resource-disposer:0.15
