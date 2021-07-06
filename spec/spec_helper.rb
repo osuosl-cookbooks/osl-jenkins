@@ -36,6 +36,15 @@ shared_context 'data_bag_stubs' do
       ]
     )
 
+    stub_search('users', '*:*').and_return(
+      [{
+        id: 'alfred',
+        ssh_keys: [
+          'test_ssh_key',
+        ],
+      }]
+    )
+
     stub_data_bag_item('osl_jenkins', 'packer_pipeline_creds')
       .and_return(
         id: 'packer_pipeline_creds'
