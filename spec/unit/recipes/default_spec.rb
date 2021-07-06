@@ -15,7 +15,15 @@ describe 'osl-jenkins::default' do
         expect(chef_run).to install_openjdk_pkg_install('8')
       end
       it do
-        expect(chef_run).to create_users_manage('alfred').with(group_id: 10000)
+        expect(chef_run).to create_users_manage('alfred').with(
+          group_id: 10000,
+          users: [{
+            'id' => 'alfred',
+            'ssh_keys' => [
+              'test_ssh_key',
+            ],
+          }]
+        )
       end
     end
   end
