@@ -15,7 +15,7 @@ depends          'jenkins', '~> 8.0.2'
 depends          'osl-haproxy'
 depends          'osl-docker'
 depends          'certificate'
-depends          'users', '~> 7.0'
+depends          'users', '~> 8.0'
 depends          'yum-plugin-versionlock', '>= 0.4.0'
 depends          'yum-qemu-ev'
 
