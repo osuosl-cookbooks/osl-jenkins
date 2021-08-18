@@ -16,9 +16,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Sets up the slaves for packer_pipeline
+# Sets up the nodes for packer_pipeline
 
-# Setup the user and add an authorized key entry for the master
+# Setup the user and add an authorized key entry for the controller
 include_recipe 'osl-jenkins::default'
 
 # install dependencies for gem dependencies at compile time so that chef_gem can use them
