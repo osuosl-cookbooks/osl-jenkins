@@ -4,7 +4,7 @@ describe 'osl-jenkins::plugins' do
   ALL_PLATFORMS.each do |p|
     context "#{p[:platform]} #{p[:version]}" do
       cached(:chef_run) do
-        ChefSpec::SoloRunner.new(p).converge('osl-jenkins::master', described_recipe)
+        ChefSpec::SoloRunner.new(p).converge('osl-jenkins::controller', described_recipe)
       end
       include_context 'common_stubs'
       before do
@@ -22,7 +22,7 @@ describe 'osl-jenkins::plugins' do
       end
       context 'installed new plugin' do
         cached(:chef_run) do
-          ChefSpec::SoloRunner.new(p).converge('osl-jenkins::master', described_recipe)
+          ChefSpec::SoloRunner.new(p).converge('osl-jenkins::controller', described_recipe)
         end
         include_context 'common_stubs'
         before do

@@ -33,7 +33,7 @@ node.default['osl-jenkins']['cookbook_uploader'].tap do |conf|
 end
 node.default['osl-jenkins']['secrets_item'] = 'jenkins1'
 
-include_recipe 'osl-jenkins::master'
+include_recipe 'osl-jenkins::controller'
 include_recipe 'osl-jenkins::chef_ci_cookbook_template'
 include_recipe 'osl-jenkins::cookbook_uploader'
 include_recipe 'osl-jenkins::github_comment'

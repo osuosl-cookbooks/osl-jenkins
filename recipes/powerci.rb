@@ -64,7 +64,7 @@ node.default['osl-jenkins']['plugins'].tap do |p|
   p['resource-disposer'] = '0.15'
 end
 
-include_recipe 'osl-jenkins::master'
+include_recipe 'osl-jenkins::controller'
 
 # Install directly from a URL since this doesn't appear to be included in the package data
 jenkins_plugin 'copy-to-slave' do

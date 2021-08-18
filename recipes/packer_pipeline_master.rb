@@ -26,7 +26,7 @@ end
 
 # Sets up the master for packer_pipeline
 
-include_recipe 'osl-jenkins::master'
+include_recipe 'osl-jenkins::controller'
 
 # get attributes specific to this job
 bin_path = node['osl-jenkins']['bin_path']

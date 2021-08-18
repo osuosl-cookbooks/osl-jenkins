@@ -1,6 +1,6 @@
 require_relative '../../spec_helper'
 
-describe 'osl-jenkins::master' do
+describe 'osl-jenkins::controller' do
   ALL_PLATFORMS.each do |p|
     context "#{p[:platform]} #{p[:version]}" do
       cached(:chef_run) do

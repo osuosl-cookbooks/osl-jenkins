@@ -20,7 +20,7 @@
     compile_time true
   end
 end
-include_recipe 'osl-jenkins::master'
+include_recipe 'osl-jenkins::controller'
 
 bumpzone = node['osl-jenkins']['bumpzone']
 bin_path = node['osl-jenkins']['bin_path']

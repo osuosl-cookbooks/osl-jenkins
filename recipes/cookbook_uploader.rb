@@ -21,7 +21,7 @@
     compile_time true
   end
 end
-include_recipe 'osl-jenkins::master'
+include_recipe 'osl-jenkins::controller'
 
 org_name = node['osl-jenkins']['cookbook_uploader']['org']
 chef_repo = node['osl-jenkins']['cookbook_uploader']['chef_repo']
