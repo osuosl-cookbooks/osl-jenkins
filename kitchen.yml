@@ -70,7 +70,7 @@ suites:
       - recipe[osl-jenkins::chef_backup]
     attributes:
       jenkins:
-        controller:
+        master:
           user: centos
           group: centos
   - name: chef_ci_cookbook_template
@@ -129,7 +129,7 @@ suites:
               api_token: <%= ENV['JENKINS_PASS'] %>
               trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
       jenkins:
-        controller:
+        master:
           listen_address: '0.0.0.0'
   - name: jenkins1
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
