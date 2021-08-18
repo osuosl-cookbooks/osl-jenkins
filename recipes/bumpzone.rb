@@ -80,7 +80,7 @@ template update_zonefiles_xml do
   mode '440'
   variables(
     github_url: bumpzone['github_url'],
-    dns_master: bumpzone['dns_master']
+    dns_primary: bumpzone['dns_primary']
   )
 end
 
