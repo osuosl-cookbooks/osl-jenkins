@@ -59,7 +59,7 @@ Manages dependencies for the `chef-backup` Jenkins job.
 
 Installs the `knife-backup` gem for use by the chef\_client, and ensures
 the `/var/chef-backup-for-rdiff` directory exists and is owned by the
-jenkins master user and group.
+jenkins controller user and group.
 
 #### osl-jenkins::chef_ci_cookbook_template
 Manages dependencies for the `chef-ci-cookbook-template` Jenkins job.
@@ -96,8 +96,8 @@ To set up:
       ```
     - Add `osl-jenkins::cookbook_uploader` to the node's `run_list`
 
-#### osl-jenkins::packer_pipeline_master
-Sets up a Jenkins master to be able to run the packer pipeline described at
+#### osl-jenkins::packer_pipeline_controller
+Sets up a Jenkins controller to be able to run the packer pipeline described at
 [packer-templates/Jenkinsfile](https://github.com/osuosl/packer-templates/tree/master/Jenkinsfile)
 
 #### osl-jenkins::packer_pipeline_node
@@ -121,7 +121,7 @@ These environment variables are required on the following suites:
 - github-comment
 - ibmz-ci
 - jenkins1
-- packer-pipeline-master
+- packer-pipeline-controller
 - packer-pipeline-node
 - powerci
 - site-pr-builder

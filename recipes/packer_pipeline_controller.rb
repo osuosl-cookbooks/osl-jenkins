@@ -24,7 +24,7 @@
   end
 end
 
-# Sets up the master for packer_pipeline
+# Sets up the controller for packer_pipeline
 
 include_recipe 'osl-jenkins::controller'
 
