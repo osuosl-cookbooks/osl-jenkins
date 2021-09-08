@@ -1,6 +1,6 @@
 #
 # Cookbook:: osl-jenkins
-# Recipe:: master
+# Recipe:: controller
 #
 # Copyright:: 2015-2021, Oregon State University
 #

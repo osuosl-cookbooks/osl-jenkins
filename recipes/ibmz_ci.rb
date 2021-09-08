@@ -65,7 +65,7 @@ node.default['osl-jenkins']['plugins'].tap do |p|
   p['resource-disposer'] = '0.15'
 end
 
-include_recipe 'osl-jenkins::master'
+include_recipe 'osl-jenkins::controller'
 
 if Chef::Config[:solo] && !defined?(ChefSpec)
   Chef::Log.warn('This recipe uses search which Chef Solo does not support') if Chef::Config[:solo]

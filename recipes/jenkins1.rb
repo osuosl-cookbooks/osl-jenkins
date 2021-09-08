@@ -33,13 +33,13 @@ node.default['osl-jenkins']['cookbook_uploader'].tap do |conf|
 end
 node.default['osl-jenkins']['secrets_item'] = 'jenkins1'
 
-include_recipe 'osl-jenkins::master'
+include_recipe 'osl-jenkins::controller'
 include_recipe 'osl-jenkins::chef_ci_cookbook_template'
 include_recipe 'osl-jenkins::cookbook_uploader'
 include_recipe 'osl-jenkins::github_comment'
 include_recipe 'osl-jenkins::bumpzone'
 include_recipe 'osl-jenkins::site_pr_builder'
-include_recipe 'osl-jenkins::packer_pipeline_master'
+include_recipe 'osl-jenkins::packer_pipeline_controller'
 include_recipe 'base::python'
 
 # depends for sphinx compilation

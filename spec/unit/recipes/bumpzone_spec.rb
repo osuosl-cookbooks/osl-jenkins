@@ -90,7 +90,7 @@ describe 'osl-jenkins::bumpzone' do
             mode: '440',
             variables: {
               github_url: 'https://github.com/osuosl/zonefiles.git',
-              dns_master: 'dns_master',
+              dns_primary: 'dns_primary',
             }
           )
       end

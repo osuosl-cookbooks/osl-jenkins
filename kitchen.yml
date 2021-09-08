@@ -31,7 +31,7 @@ suites:
   - name: default
     run_list:
       - recipe[osl-jenkins::default]
-  - name: master
+  - name: controller
     driver:
     provisioner:
       name: chef_zero
@@ -42,7 +42,7 @@ suites:
         - default
         - github
     run_list:
-      - recipe[osl-jenkins::master]
+      - recipe[osl-jenkins::controller]
       - recipe[jenkins_test]
     attributes:
       osl-jenkins:
@@ -82,7 +82,7 @@ suites:
       enforce_idempotency: false
       multiple_converge: 1
     run_list:
-      - recipe[osl-jenkins::master]
+      - recipe[osl-jenkins::controller]
       - recipe[osl-jenkins::plugins]
       - recipe[jenkins_test]
   - name: ftp
@@ -95,7 +95,7 @@ suites:
       - recipe[jenkins_test]
     provisioner:
       name: chef_zero
-      # disabled due to osl-jenkins::master
+      # disabled due to osl-jenkins::controller
       enforce_idempotency: false
       multiple_converge: 1
     driver:
@@ -138,7 +138,7 @@ suites:
       - recipe[jenkins_test]
     provisioner:
       name: chef_zero
-      # disabled due to osl-jenkins::master
+      # disabled due to osl-jenkins::controller
       enforce_idempotency: false
       multiple_converge: 1
     driver:
@@ -201,7 +201,7 @@ suites:
       - recipe[jenkins_test]
     provisioner:
       name: chef_zero
-      # disabled due to osl-jenkins::master
+      # disabled due to osl-jenkins::controller
       enforce_idempotency: false
       multiple_converge: 1
     driver:
@@ -232,7 +232,7 @@ suites:
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     provisioner:
       name: chef_zero
-      # disabled due to osl-jenkins::master
+      # disabled due to osl-jenkins::controller
       enforce_idempotency: false
       multiple_converge: 1
     driver:
@@ -258,14 +258,14 @@ suites:
       jenkins:
         master:
           listen_address: '0.0.0.0'
-  - name: packer_pipeline_master
+  - name: packer_pipeline_controller
     run_list:
-      - recipe[osl-jenkins::packer_pipeline_master]
+      - recipe[osl-jenkins::packer_pipeline_controller]
       - recipe[jenkins_test]
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     provisioner:
       name: chef_zero
-      # disabled due to osl-jenkins::master
+      # disabled due to osl-jenkins::controller
       enforce_idempotency: false
       multiple_converge: 1
     driver:
@@ -296,7 +296,7 @@ suites:
     encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     provisioner:
       name: chef_zero
-      # disabled due to osl-jenkins::master
+      # disabled due to osl-jenkins::controller
       enforce_idempotency: false
       multiple_converge: 1
     driver:
@@ -326,7 +326,7 @@ suites:
     nodes_path: test/integration/nodes
     provisioner:
       name: chef_zero
-      # disabled due to osl-jenkis::master
+      # disabled due to osl-jenkis::controller
       enforce_idempotency: false
       multiple_converge: 1
     run_list:
@@ -359,7 +359,7 @@ suites:
     nodes_path: test/integration/nodes
     provisioner:
       name: chef_zero
-      # disabled due to osl-jenkins::master
+      # disabled due to osl-jenkins::controller
       enforce_idempotency: false
       multiple_converge: 1
     run_list:
