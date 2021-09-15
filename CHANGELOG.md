@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.15.0 (2021-09-15)
+-------------------
+- Update to users ~> 8.0
+
 2.14.0 (2021-09-08)
 -------------------
 - Initial terminology update
