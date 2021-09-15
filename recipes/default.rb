@@ -20,6 +20,8 @@
 # jenkins 1.612 and above requires java 7
 openjdk_pkg_install '8'
 
+user = search('users', '*:*')
 users_manage 'alfred' do
   group_id 10000
+  users user
 end
