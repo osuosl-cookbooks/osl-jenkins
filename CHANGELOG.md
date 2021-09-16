@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.15.2 (2021-09-16)
+-------------------
+- Fix regex
+
 2.15.1 (2021-09-16)
 -------------------
 - Add support for 'main' branches instead of 'master'
