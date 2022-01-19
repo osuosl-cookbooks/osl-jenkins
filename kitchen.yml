@@ -332,8 +332,6 @@ suites:
     run_list:
       - recipe[osl-jenkins::powerci]
       - recipe[jenkins_test]
-    excludes:
-      - centos-6
     attributes:
       osl-jenkins:
         powerci:
@@ -367,8 +365,6 @@ suites:
       - recipe[jenkins_test]
     driver_config:
       server_name: ibmz_ci
-    excludes:
-      - centos-6
     attributes:
       osl-jenkins:
         ibmz_ci:
@@ -400,8 +396,6 @@ suites:
     data_bags_path: test/integration/data_bags
     run_list:
       - recipe[osl-jenkins::packer_pipeline_node]
-    excludes:
-      - centos-6
     attributes:
       osl-jenkins:
         credentials:

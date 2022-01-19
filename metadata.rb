@@ -20,4 +20,4 @@ depends          'yum-plugin-versionlock', '>= 0.4.0'
 depends          'yum-qemu-ev'
 
 supports         'centos', '~> 7.0'
-supports         'centos', '~> 8.0'
+supports         'centos_stream', '~> 8.0'
