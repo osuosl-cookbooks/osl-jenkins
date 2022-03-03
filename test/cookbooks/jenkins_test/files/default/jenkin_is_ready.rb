@@ -4,7 +4,7 @@ require 'uri'
 require 'openssl'
 
 begin
-  open('https://localhost/whoAmI/', ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE)
+  URI.open('https://localhost/whoAmI/', ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE)
 rescue SocketError,
        Errno::ECONNREFUSED,
        Errno::ECONNRESET,

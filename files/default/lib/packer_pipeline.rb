@@ -130,7 +130,7 @@ class PackerPipeline
           final_status[t][:options][:description] = "All passed! #{final_results[arch][t]}"
         end
         # set status
-        @github.create_status(@repo_path, git_commit, final_status[t][:state], final_status[t][:options])
+        @github.create_status(@repo_path, git_commit, final_status[t][:state], **final_status[t][:options])
       end
     end
     final_status
