@@ -51,7 +51,7 @@ class CheckZone
       description: status_description[status],
     }
 
-    @github.create_status(@repo_path, git_commit, status, options)
+    @github.create_status(@repo_path, git_commit, status, **options)
   end
 
   def self.changed_files

@@ -23,7 +23,7 @@ node.default['osl-haproxy']['frontend_extra_options'] = {
   'redirect' => ['scheme https if !{ ssl_fc }'],
 }
 
-node.default['osl-haproxy']['ssl_incoming_port'] = '443 ssl crt /etc/pki/tls/wildcard.pem'
+node.default['osl-haproxy']['ssl_incoming_port'] = '443 ssl crt /etc/pki/tls/certs/wildcard.pem'
 
 node.default['osl-haproxy']['members'] = [
   {
