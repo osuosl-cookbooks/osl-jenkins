@@ -25,7 +25,7 @@ provisioner:
           combined_file: true
   enforce_idempotency: true
   multiple_converge: 2
-  deprecations_as_errors: true
+  deprecations_as_errors: false
 
 suites:
   - name: default

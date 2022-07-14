@@ -55,7 +55,12 @@ edit_resource(:package, 'jenkins') do
   flush_cache(before: true)
 end
 
-include_recipe 'certificate::manage_by_attributes'
+certificate_manage 'wildcard' do
+  cert_file 'wildcard.pem'
+  key_file 'wildcard.key'
+  chain_file 'wildcard-bundle.crt'
+  notifies :reload, 'service[apache2]'
+end
 include_recipe 'osl-jenkins::haproxy'
 include_recipe 'osl-haproxy::default'
 
