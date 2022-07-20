@@ -16,7 +16,7 @@ describe 'osl-jenkins::packer_pipeline_node' do
       before do
         stub_command('/opt/os-client/bin/pip -V | grep -q "^pip 9.0.1"').and_return(true)
         stub_command('/opt/os-client/bin/easy_install --version | grep -q "^setuptools 28.8.0"').and_return(true)
-        stub_command('/opt/os-client/bin/pip freeze | grep -q dogpile && /opt/os-client/bin/pip freeze | grep -q python-openstackclient==3.14.3').and_return(true)
+        stub_command('/opt/os-client/bin/pip freeze | grep -q dogpile && /opt/os-client/bin/pip freeze | grep -q python-openstackclient==4.0.2').and_return(true)
       end
 
       it 'converges successfully' do
@@ -79,12 +79,13 @@ describe 'osl-jenkins::packer_pipeline_node' do
         )
       end
 
+      # This was removed in recipes/packer_pipeline_node
       # it do
-      #   expect(chef_run).to upgrade_chef_gem('openstack_taster').with(
-      #     options: '--no-user-install',
-      #     version: '>= 2.0',
-      #     clear_sources: true
-      #   )
+      #  expect(chef_run).to upgrade_chef_gem('openstack_taster').with(
+      #    options: '--no-user-install',
+      #    version: '>= 2.0',
+      #    clear_sources: true
+      #  )
       # end
     end
   end

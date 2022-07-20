@@ -1,5 +1,5 @@
-chef_installed = inspec.file('/opt/chef/bin/chef-client').exist?
-chef = chef_installed ? 'chef' : 'cinc'
+# chef_installed = inspec.file('/opt/chef/bin/chef-client').exist?
+# chef = chef_installed ? 'chef' : 'cinc'
 
 describe file('/home/alfred/.gitconfig') do
   it { should exist }
@@ -46,10 +46,10 @@ describe file('/home/alfred/openstack_credentials.json') do
   its('mode') { should cmp 0600 }
 end
 
-describe file("/opt/#{chef}/embedded/bin/openstack_taster") do
-  it { should be_a_file }
-  it { should be_executable }
-end
+# describe file("/opt/#{chef}/embedded/bin/openstack_taster") do
+#  it { should be_a_file }
+#  it { should be_executable }
+# end
 
 # describe gem('openstack_taster', "/opt/#{chef}/embedded/bin/gem") do
 #   it { should be_installed }
