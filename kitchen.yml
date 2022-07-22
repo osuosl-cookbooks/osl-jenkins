@@ -15,14 +15,6 @@ provisioner:
   name: chef_solo
   encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
   data_bags_path: test/integration/data_bags
-  attributes:
-    certificate:
-      - snakeoil:
-          cert_path: "/etc/pki/tls"
-          cert_file: wildcard.pem
-          key_file: wildcard.key
-          chain_file: wildcard-bundle.crt
-          combined_file: true
   enforce_idempotency: true
   multiple_converge: 2
   deprecations_as_errors: true
