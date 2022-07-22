@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.16.1 (2022-07-22)
+-------------------
+- Initial removal of manage_by_attributes
+
 2.16.0 (2022-03-03)
 -------------------
 - Various fixes for Chef 17
