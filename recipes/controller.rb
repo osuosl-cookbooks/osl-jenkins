@@ -29,15 +29,6 @@ node.default['jenkins']['executor']['protocol'] = 'http'
 # https://github.com/chef-cookbooks/jenkins/blob/master/attributes/default.rb#L45-L53
 node.default['jenkins']['java'] = 'java'
 
-node.default['certificate'] = [{
-  'wildcard' => {
-    'cert_file' => 'wildcard.pem',
-    'key_file' => 'wildcard.key',
-    'chain_file' => 'wildcard-bundle.crt',
-    'combined_file' => true,
-  },
-}]
-
 include_recipe 'yum-plugin-versionlock'
 
 yum_version_lock 'jenkins' do
@@ -55,7 +46,14 @@ edit_resource(:package, 'jenkins') do
   flush_cache(before: true)
 end
 
-include_recipe 'certificate::manage_by_attributes'
+certificate_manage 'wildcard' do
+  cert_file 'wildcard.pem'
+  key_file 'wildcard.key'
+  chain_file 'wildcard-bundle.crt'
+  combined_file true
+  notifies :restart, 'haproxy_service[haproxy]'
+end
+
 include_recipe 'osl-jenkins::haproxy'
 include_recipe 'osl-haproxy::default'
 

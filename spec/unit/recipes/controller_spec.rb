@@ -25,6 +25,17 @@ describe 'osl-jenkins::controller' do
         expect(chef_run).to install_openjdk_pkg_install('8')
       end
       it do
+        expect(chef_run).to create_certificate_manage('wildcard').with(
+          cert_file: 'wildcard.pem',
+          key_file: 'wildcard.key',
+          chain_file: 'wildcard-bundle.crt',
+          combined_file: true
+        )
+      end
+      it do
+        expect(chef_run.certificate_manage('wildcard')).to notify('haproxy_service[haproxy]').to(:restart)
+      end
+      it do
         expect(chef_run).to create_cookbook_file('/var/lib/jenkins/.gitconfig')
           .with(
             source: 'gitconfig',
