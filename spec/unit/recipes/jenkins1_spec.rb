@@ -85,7 +85,7 @@ describe 'osl-jenkins::jenkins1' do
         )
       end
       it do
-        expect(chef_run).to include_recipe('base::python')
+        expect(chef_run).to install_osl_python('jenkins1')
       end
       it do
         expect(chef_run).to install_package('graphviz')
