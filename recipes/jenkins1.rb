@@ -40,7 +40,8 @@ include_recipe 'osl-jenkins::github_comment'
 include_recipe 'osl-jenkins::bumpzone'
 include_recipe 'osl-jenkins::site_pr_builder'
 include_recipe 'osl-jenkins::packer_pipeline_controller'
-include_recipe 'base::python'
+
+osl_python 'jenkins1'
 
 # depends for sphinx compilation
 package 'graphviz'
