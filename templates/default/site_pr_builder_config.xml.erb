@@ -89,6 +89,7 @@
 export PELICAN_SITE_URL="<%= @site_url %>"
 export RSYNC_TARGET_DIR="<%= @rsync_target %>"
 exec scripts/build.sh
+make lint_changed
       </command>
     </hudson.tasks.Shell>
   </builders>
