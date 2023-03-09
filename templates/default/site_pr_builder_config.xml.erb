@@ -88,8 +88,8 @@
       <command>
 export PELICAN_SITE_URL="<%= @site_url %>"
 export RSYNC_TARGET_DIR="<%= @rsync_target %>"
-exec scripts/build.sh
-make lint_changed
+export CHECK_LINT="1"
+bash scripts/build.sh
       </command>
     </hudson.tasks.Shell>
   </builders>
