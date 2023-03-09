@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.16.3 (2023-03-09)
+-------------------
+- Move linting command to script
+
 2.16.2 (2023-03-01)
 -------------------
 - Add lint checker to site_pr_builder
