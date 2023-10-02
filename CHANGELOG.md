@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.17.0 (2023-10-02)
+-------------------
+- Bump to java-11.2.2
+
 2.16.3 (2023-03-09)
 -------------------
 - Move linting command to script
