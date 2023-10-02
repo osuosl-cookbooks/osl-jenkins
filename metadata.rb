@@ -10,7 +10,7 @@ source_url       'https://github.com/osuosl-cookbooks/osl-jenkins'
 
 depends          'base', '>= 2.6.0'
 depends          'osl-git'
-depends          'java', '>= 8.1.0'
+depends          'java', '~> 11.2.2'
 depends          'jenkins', '~> 9.5.1'
 depends          'osl-haproxy'
 depends          'osl-docker'
