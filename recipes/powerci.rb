@@ -2,7 +2,7 @@
 # Cookbook:: osl-jenkins
 # Recipe:: powerci
 #
-# Copyright:: 2017-2023, Oregon State University
+# Copyright:: 2017-2024, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -67,12 +67,12 @@ end
 include_recipe 'osl-jenkins::controller'
 
 # Install directly from a URL since this doesn't appear to be included in the package data
-jenkins_plugin 'copy-to-slave' do
-  source 'https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/copy-to-slave/1.4.4/copy-to-slave-1.4.4.hpi'
-  version '1.4.4'
-  install_deps false
-  notifies :execute, 'jenkins_command[safe-restart]', :immediately
-end
+# jenkins_plugin 'copy-to-slave' do
+#   source 'https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/copy-to-slave/1.4.4/copy-to-slave-1.4.4.hpi'
+#   version '1.4.4'
+#   install_deps false
+#   notifies :execute, 'jenkins_command[safe-restart]', :immediately
+# end
 
 if Chef::Config[:solo] && !defined?(ChefSpec)
   Chef::Log.warn('This recipe uses search which Chef Solo does not support') if Chef::Config[:solo]

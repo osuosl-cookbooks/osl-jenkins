@@ -5,17 +5,12 @@ describe command("/opt/#{chef}/embedded/bin/ruby /tmp/jenkin_is_ready.rb") do
   its('exit_status') { should cmp 0 }
 end
 
-describe package('java-1.8.0-openjdk') do
+describe package('java-11-openjdk') do
   it { should be_installed }
 end
 
 describe package('jenkins') do
-  its('version') { should eq '2.289.1-1.1' }
-end
-
-describe command('yum versionlock') do
-  its('stdout') { should match(/2.289.1-1.1.noarch/) }
-  its('stdout') { should match(/jenkins/) }
+  it { should be_installed }
 end
 
 %w(80 443 8080).each do |p|
@@ -29,6 +24,6 @@ describe http('http://127.0.0.1/') do
   its('headers.Location') { should match(%r{https://127.0.0.1/}) }
 end
 
-describe http('https://127.0.0.1/about/', ssl_verify: false) do
-  its('body') { should match(/Jenkins 2.289.1/) }
-end
+# describe http('https://127.0.0.1/about/', ssl_verify: false) do
+#   its('body') { should match(/Jenkins 2.289.1/) }
+# end

@@ -2,7 +2,7 @@
 # Cookbook:: osl-jenkins
 # Recipe:: default
 #
-# Copyright:: 2015-2023, Oregon State University
+# Copyright:: 2015-2024, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,8 +17,7 @@
 # limitations under the License.
 #
 
-# jenkins 1.612 and above requires java 7
-openjdk_pkg_install '8'
+openjdk_pkg_install '11'
 
 user = search('users', '*:*')
 users_manage 'alfred' do

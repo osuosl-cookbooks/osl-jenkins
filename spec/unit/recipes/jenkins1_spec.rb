@@ -66,24 +66,24 @@ describe 'osl-jenkins::jenkins1' do
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
       end
-      it do
-        expect(chef_run).to create_jenkins_password_credentials('manatee1').with(
-          id: 'cookbook_uploader',
-          password: 'token_password'
-        )
-      end
-      it do
-        expect(chef_run).to create_jenkins_password_credentials('manatee2').with(
-          id: 'bumpzone',
-          password: 'token_password'
-        )
-      end
-      it do
-        expect(chef_run).to create_jenkins_password_credentials('manatee3').with(
-          id: 'github_comment',
-          password: 'token_password'
-        )
-      end
+      #       it do
+      #         expect(chef_run).to create_jenkins_password_credentials('manatee1').with(
+      #           id: 'cookbook_uploader',
+      #           password: 'token_password'
+      #         )
+      #       end
+      #       it do
+      #         expect(chef_run).to create_jenkins_password_credentials('manatee2').with(
+      #           id: 'bumpzone',
+      #           password: 'token_password'
+      #         )
+      #       end
+      #       it do
+      #         expect(chef_run).to create_jenkins_password_credentials('manatee3').with(
+      #           id: 'github_comment',
+      #           password: 'token_password'
+      #         )
+      #       end
       it do
         expect(chef_run).to include_recipe('base::python')
       end

@@ -2,7 +2,7 @@
 # Cookbook:: osl-jenkins
 # Recipe:: controller
 #
-# Copyright:: 2015-2023, Oregon State University
+# Copyright:: 2015-2024, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,27 +18,27 @@
 #
 
 # Don't automatically update jenkins
-node.override['yum-cron']['yum_parameter'] = '-x jenkins'
+# node.override['yum-cron']['yum_parameter'] = '-x jenkins'
 
-node.default['jenkins']['master']['version'] = '2.289.1-1.1'
-node.default['jenkins']['master']['listen_address'] = '127.0.0.1'
-node.default['jenkins']['executor']['protocol'] = 'http'
+# node.default['jenkins']['master']['version'] = '2.289.1-1.1'
+# node.default['jenkins']['master']['listen_address'] = '127.0.0.1'
+# node.default['jenkins']['executor']['protocol'] = 'http'
 
 # Manually set the jenkins java attribute to stop jenkins being restarted
 # every chef run due to logic in
 # https://github.com/chef-cookbooks/jenkins/blob/master/attributes/default.rb#L45-L53
 node.default['jenkins']['java'] = 'java'
 
-include_recipe 'yum-plugin-versionlock'
+# include_recipe 'yum-plugin-versionlock'
 
-yum_version_lock 'jenkins' do
-  version_split = node['jenkins']['master']['version'].split('-')
-  version version_split[0]
-  release version_split[1]
-  arch 'noarch'
-end
+# yum_version_lock 'jenkins' do
+#  version_split = node['jenkins']['master']['version'].split('-')
+#  version version_split[0]
+#  release version_split[1]
+#  arch 'noarch'
+# end
 
-openjdk_pkg_install '8'
+openjdk_pkg_install '11'
 
 include_recipe 'jenkins::master'
 
@@ -56,14 +56,13 @@ end
 
 include_recipe 'osl-jenkins::haproxy'
 include_recipe 'osl-haproxy::default'
-
 include_recipe 'osl-git'
 
-jenkins_command 'safe-restart' do
-  action :nothing
-end
+# jenkins_command 'safe-restart' do
+#   action :nothing
+# end
 
-include_recipe 'osl-jenkins::plugins'
+# include_recipe 'osl-jenkins::plugins'
 
 secrets = credential_secrets
 
@@ -72,21 +71,21 @@ node.run_state[:jenkins_username] = secrets['jenkins_username']
 node.run_state[:jenkins_password] = secrets['jenkins_password']
 
 # Add git credentials into Jenkins
-secrets['git'].to_a.each do |git_id, cred|
-  jenkins_password_credentials cred['user'] do
-    id git_id
-    password cred['token']
-  end
-end
+# secrets['git'].to_a.each do |git_id, cred|
+#   jenkins_password_credentials cred['user'] do
+#     id git_id
+#     password cred['token']
+#   end
+# end
 
 # Add ssh credentials into Jenkins
-secrets['ssh'].to_a.each do |ssh_id, cred|
-  jenkins_private_key_credentials cred['user'] do
-    id ssh_id
-    private_key cred['private_key']
-    passphrase cred['passphrase']
-  end
-end
+# secrets['ssh'].to_a.each do |ssh_id, cred|
+#   jenkins_private_key_credentials cred['user'] do
+#     id ssh_id
+#     private_key cred['private_key']
+#     passphrase cred['passphrase']
+#   end
+# end
 
 # Make a git config
 git_config_path = ::File.join(node['jenkins']['master']['home'], '.gitconfig')

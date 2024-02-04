@@ -2,7 +2,7 @@
 # Cookbook:: osl-jenkins
 # Recipe:: jenkins1
 #
-# Copyright:: 2017-2023, Oregon State University
+# Copyright:: 2017-2024, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -33,12 +33,12 @@ end
 node.default['osl-jenkins']['secrets_item'] = 'jenkins1'
 
 include_recipe 'osl-jenkins::controller'
-include_recipe 'osl-jenkins::chef_ci_cookbook_template'
-include_recipe 'osl-jenkins::cookbook_uploader'
-include_recipe 'osl-jenkins::github_comment'
-include_recipe 'osl-jenkins::bumpzone'
-include_recipe 'osl-jenkins::site_pr_builder'
-include_recipe 'osl-jenkins::packer_pipeline_controller'
+# include_recipe 'osl-jenkins::chef_ci_cookbook_template'
+# include_recipe 'osl-jenkins::cookbook_uploader'
+# include_recipe 'osl-jenkins::github_comment'
+# include_recipe 'osl-jenkins::bumpzone'
+# include_recipe 'osl-jenkins::site_pr_builder'
+# include_recipe 'osl-jenkins::packer_pipeline_controller'
 include_recipe 'base::python'
 
 # depends for sphinx compilation

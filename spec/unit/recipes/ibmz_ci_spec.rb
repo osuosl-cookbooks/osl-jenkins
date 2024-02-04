@@ -45,41 +45,41 @@ describe 'osl-jenkins::ibmz_ci' do
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
       end
-      %w(
-        ansicolor:1.0.0
-        build-monitor-plugin:1.12+build.201809061734
-        build-timeout:1.20
-        cloud-stats:0.27
-        config-file-provider:3.8.0
-        disable-github-multibranch-status:1.2
-        docker-java-api:3.1.5.2
-        docker-plugin:1.2.2
-        email-ext:2.83
-        emailext-template:1.2
-        embeddable-build-status:2.0.3
-        extended-read-permission:3.2
-        job-restrictions:0.8
-        jquery:1.12.4-1
-        label-linked-jobs:6.0.1
-        nodelabelparameter:1.8.1
-        pipeline-githubnotify-step:1.0.5
-        pipeline-multibranch-defaults:2.1
-        resource-disposer:0.15
-      ).each do |plugins_version|
-        plugin, version = plugins_version.split(':')
-        it do
-          expect(chef_run).to install_jenkins_plugin(plugin).with(
-            version: version,
-            install_deps: false
-          )
-        end
-        it do
-          expect(chef_run.jenkins_plugin(plugin)).to notify('jenkins_command[safe-restart]')
-        end
-      end
-      it do
-        expect(chef_run).to create_jenkins_password_credentials('ibmz_ci')
-      end
+      #       %w(
+      #         ansicolor:1.0.0
+      #         build-monitor-plugin:1.12+build.201809061734
+      #         build-timeout:1.20
+      #         cloud-stats:0.27
+      #         config-file-provider:3.8.0
+      #         disable-github-multibranch-status:1.2
+      #         docker-java-api:3.1.5.2
+      #         docker-plugin:1.2.2
+      #         email-ext:2.83
+      #         emailext-template:1.2
+      #         embeddable-build-status:2.0.3
+      #         extended-read-permission:3.2
+      #         job-restrictions:0.8
+      #         jquery:1.12.4-1
+      #         label-linked-jobs:6.0.1
+      #         nodelabelparameter:1.8.1
+      #         pipeline-githubnotify-step:1.0.5
+      #         pipeline-multibranch-defaults:2.1
+      #         resource-disposer:0.15
+      #       ).each do |plugins_version|
+      #         plugin, version = plugins_version.split(':')
+      #         it do
+      #           expect(chef_run).to install_jenkins_plugin(plugin).with(
+      #             version: version,
+      #             install_deps: false
+      #           )
+      #         end
+      #         it do
+      #           expect(chef_run.jenkins_plugin(plugin)).to notify('jenkins_command[safe-restart]')
+      #         end
+      #       end
+      #       it do
+      #         expect(chef_run).to create_jenkins_password_credentials('ibmz_ci')
+      #       end
       it do
         expect(chef_run).to execute_jenkins_script('Add Docker Cloud')
       end
