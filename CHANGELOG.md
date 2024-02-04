@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+2.18.0 (2024-02-04)
+-------------------
+- Allow for manual upgrades of Jenkins and plugins
+
 2.17.1 (2023-12-07)
 -------------------
 - Remove openstack_stein from default environments
