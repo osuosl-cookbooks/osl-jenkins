@@ -1,4 +1,4 @@
-describe package('java-1.8.0-openjdk') do
+describe package('java-11-openjdk') do
   it { should be_installed }
 end
 
