@@ -16,8 +16,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+include_recipe 'osl-repos::epel'
 
-openjdk_pkg_install '11'
+openjdk_pkg_install osl_jenkins_java_version do
+  pkg_names "java-#{osl_jenkins_java_version}-openjdk-headless"
+end
 
 user = search('users', '*:*')
 users_manage 'alfred' do

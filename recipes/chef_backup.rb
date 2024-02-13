@@ -16,13 +16,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 chef_gem 'knife-backup' do
-  action :install
   version '0.0.10'
 end
 
 directory '/var/chef-backup-for-rdiff' do
-  owner node['jenkins']['master']['user']
-  group node['jenkins']['master']['group']
+  owner 'jenkins'
+  group 'jenkins'
 end

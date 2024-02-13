@@ -15,42 +15,40 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-%w(git octokit faraday-http-cache).each do |p|
+%w(
+  faraday-http-cache
+  git
+  octokit
+).each do |p|
   chef_gem p do
     compile_time true
   end
 end
-include_recipe 'osl-jenkins::controller'
 
-bin_path = node['osl-jenkins']['bin_path']
-lib_path = node['osl-jenkins']['lib_path']
-
-cookbook_file ::File.join(bin_path, 'github_comment.rb') do
+cookbook_file ::File.join(osl_jenkins_bin_path, 'github_comment.rb') do
   source 'bin/github_comment.rb'
-  owner node['jenkins']['master']['user']
-  group node['jenkins']['master']['group']
+  owner 'jenkins'
+  group 'jenkins'
   mode '550'
 end
 
-cookbook_file ::File.join(lib_path, 'github_comment.rb') do
+cookbook_file ::File.join(osl_jenkins_lib_path, 'github_comment.rb') do
   source 'lib/github_comment.rb'
-  owner node['jenkins']['master']['user']
-  group node['jenkins']['master']['group']
+  owner 'jenkins'
+  group 'jenkins'
   mode '440'
 end
 
-github_comment_xml = ::File.join(Chef::Config[:file_cache_path], 'github_comment', 'config.xml')
-
-directory ::File.dirname(github_comment_xml) do
-  recursive true
+osl_jenkins_service 'github_comment' do
+  action :nothing
 end
 
-template github_comment_xml do
-  source 'github_comment.config.xml.erb'
-  mode '440'
+osl_jenkins_plugin 'ghprb' do
+  notifies :restart, 'osl_jenkins_service[github_comment]', :delayed
 end
 
-jenkins_job 'github_comment' do
-  config github_comment_xml
-  action :create
+osl_jenkins_job 'github_comment' do
+  source 'jobs/github_comment.groovy'
+  file true
+  notifies :restart, 'osl_jenkins_service[github_comment]', :delayed
 end

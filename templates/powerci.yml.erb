@@ -1,0 +1,114 @@
+jenkins:
+  securityRealm:
+    github:
+      clientID: "<%= @client_id %>"
+      clientSecret: "<%= @client_secret %>"
+      githubApiUri: "https://api.github.com"
+      githubWebUri: "https://github.com"
+      oauthScopes: "read:org"
+  authorizationStrategy:
+    projectMatrix:
+      entries:
+      - userOrGroup:
+          name: "anonymous"
+          permissions:
+          - "Overall/Read"
+      - userOrGroup:
+          name: "authenticated"
+          permissions:
+          - "Overall/Read"
+      # Normal Users
+      <% @normal_users.each do |user| -%>
+      - userOrGroup:
+          name: "<%= user %>"
+          permissions:
+          - "Credentials/Create"
+          - "Credentials/Delete"
+          - "Credentials/Update"
+          - "Credentials/View"
+          - "Job/Build"
+          - "Job/Cancel"
+          - "Job/Configure"
+          - "Job/Create"
+          - "Job/Delete"
+          - "Job/Discover"
+          - "Job/Read"
+          - "Job/ViewStatus"
+          - "Job/Workspace"
+      <% end -%>
+      # Admin Users
+      <% @admin_users.each do |user| -%>
+      - userOrGroup:
+          name: "<%= user %>"
+          permissions:
+          - "Agent/Build"
+          - "Agent/Configure"
+          - "Agent/Connect"
+          - "Agent/Create"
+          - "Agent/Delete"
+          - "Agent/Disconnect"
+          - "Credentials/Create"
+          - "Credentials/Delete"
+          - "Credentials/ManageDomains"
+          - "Credentials/Update"
+          - "Credentials/View"
+          - "Job/Build"
+          - "Job/Cancel"
+          - "Job/Configure"
+          - "Job/Create"
+          - "Job/Delete"
+          - "Job/Discover"
+          - "Job/Move"
+          - "Job/Read"
+          - "Job/ViewStatus"
+          - "Job/Workspace"
+          - "Overall/Administer"
+          - "Overall/Read"
+          - "Run/Delete"
+          - "Run/Replay"
+          - "Run/Update"
+          - "SCM/Tag"
+          - "View/Configure"
+          - "View/Create"
+          - "View/Delete"
+          - "View/Read"
+      <% end -%>
+  clouds:
+  - docker:
+    <% @docker_hosts.each do |host| -%>
+      containerCap: 400
+      dockerApi:
+        connectTimeout: 5
+        dockerHost:
+          uri: "tcp://<%= host['ipaddress'] %>:2375"
+        readTimeout: 600
+      name: "<%= host['fqdn'] %>"
+      templates:
+      <% @docker_images.each do |image| -%>
+      - connector:
+          ssh:
+            launchTimeoutSeconds: 600
+            sshKeyStrategy:
+              manuallyConfiguredSSHKey:
+                credentialsId: "powerci-docker"
+                sshHostKeyVerificationStrategy: "nonVerifyingKeyVerificationStrategy"
+        dockerTemplateBase:
+          environment:
+          - "JENKINS_SLAVE_SSH_PUBKEY=<%= @docker_public_key %>"
+          environmentsString: "JENKINS_SLAVE_SSH_PUBKEY=<%= @docker_public_key %>"
+          image: "<%= image %>"
+          mounts:
+          - "type=volume,source=ccache,destination=/var/cache/ccache"
+          mountsString: "type=volume,source=ccache,destination=/var/cache/ccache"
+          privileged: true
+        instanceCapStr: "50"
+        labelString: "docker-<%= image.tr('/:', '-') %>"
+    <% end -%>
+    <% end -%>
+unclassified:
+  email-ext:
+    mailAccount:
+      smtpHost: "smtp.osuosl.org"
+  mailer:
+    defaultSuffix: "@osuosl.org"
+    smtpHost: "smtp.osuosl.org"

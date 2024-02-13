@@ -15,86 +15,80 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-%w(git octokit faraday-http-cache).each do |p|
+%w(
+  faraday-http-cache
+  git
+  octokit
+).each do |p|
   chef_gem p do
     compile_time true
   end
 end
-include_recipe 'osl-jenkins::controller'
 
 bumpzone = node['osl-jenkins']['bumpzone']
-bin_path = node['osl-jenkins']['bin_path']
-lib_path = node['osl-jenkins']['lib_path']
+secrets = credential_secrets
+jenkins_cred = secrets['jenkins']['bumpzone']
 
 %w(bumpzone.rb checkzone.rb).each do |f|
-  cookbook_file ::File.join(bin_path, f) do
+  cookbook_file ::File.join(osl_jenkins_bin_path, f) do
     source "bin/#{f}"
-    owner node['jenkins']['master']['user']
-    group node['jenkins']['master']['group']
+    owner 'jenkins'
+    group 'jenkins'
     mode '550'
   end
 
-  cookbook_file ::File.join(lib_path, f) do
+  cookbook_file ::File.join(osl_jenkins_lib_path, f) do
     source "lib/#{f}"
-    owner node['jenkins']['master']['user']
-    group node['jenkins']['master']['group']
+    owner 'jenkins'
+    group 'jenkins'
     mode '440'
   end
 end
 
 package 'bind'
 
-secrets = credential_secrets
-jenkins_cred = secrets['jenkins']['bumpzone']
-
-bumpzone_xml = ::File.join(Chef::Config[:file_cache_path], 'bumpzone', 'config.xml')
-checkzone_xml = ::File.join(Chef::Config[:file_cache_path], 'checkzone', 'config.xml')
-update_zonefiles_xml = ::File.join(Chef::Config[:file_cache_path], 'update-zonefiles', 'config.xml')
-
-[bumpzone_xml, checkzone_xml, update_zonefiles_xml].each do |d|
-  directory ::File.dirname(d) do
-    recursive true
-  end
+osl_jenkins_service 'bumpzone' do
+  action :nothing
 end
 
-template bumpzone_xml do
-  source 'bumpzone.config.xml.erb'
-  mode '440'
+osl_jenkins_plugin 'slack' do
+  notifies :restart, 'osl_jenkins_service[bumpzone]', :delayed
+end
+
+osl_jenkins_password_credentials 'bumpzone' do
+  username secrets['git']['bumpzone']['user']
+  password secrets['git']['bumpzone']['token']
+  notifies :restart, 'osl_jenkins_service[bumpzone]', :delayed
+end
+
+osl_jenkins_job 'bumpzone' do
+  source 'jobs/bumpzone.groovy.erb'
+  template true
   variables(
     github_url: bumpzone['github_url'],
     trigger_token: jenkins_cred['trigger_token']
   )
+  sensitive true
+  notifies :restart, 'osl_jenkins_service[bumpzone]', :delayed
 end
 
-template checkzone_xml do
-  source 'checkzone.config.xml.erb'
-  mode '440'
+osl_jenkins_job 'checkzone' do
+  source 'jobs/checkzone.groovy.erb'
+  template true
   variables(
     github_url: bumpzone['github_url'],
     trigger_token: jenkins_cred['trigger_token']
   )
+  sensitive true
+  notifies :restart, 'osl_jenkins_service[bumpzone]', :delayed
 end
 
-template update_zonefiles_xml do
-  source 'update-zonefiles.config.xml.erb'
-  mode '440'
+osl_jenkins_job 'update-zonefiles' do
+  source 'jobs/update-zonefiles.groovy.erb'
+  template true
   variables(
     github_url: bumpzone['github_url'],
     dns_primary: bumpzone['dns_primary']
   )
-end
-
-jenkins_job 'bumpzone' do
-  config bumpzone_xml
-  action :create
-end
-
-jenkins_job 'checkzone' do
-  config checkzone_xml
-  action :create
-end
-
-jenkins_job 'update-zonefiles' do
-  config update_zonefiles_xml
-  action :create
+  notifies :restart, 'osl_jenkins_service[bumpzone]', :delayed
 end

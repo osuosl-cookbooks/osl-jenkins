@@ -1,0 +1,8 @@
+jobs:
+<% if @script -%>
+  - script: >
+<%= @script.gsub(/^/, '      ') -%>
+<% end -%>
+<% if @file || @template -%>
+  - file: casc_configs/groovy/job_<%= @name %>.groovy
+<% end -%>

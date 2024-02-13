@@ -59,11 +59,3 @@ default['osl-jenkins']['secrets_databag'] = 'osl_jenkins'
 
 # String; The name of the databag item to use.
 default['osl-jenkins']['secrets_item'] = 'secrets'
-
-###
-### Attributes that can be set separately in each recipe
-###
-
-# String: The paths of Jenkins binaries and libraries
-default['osl-jenkins']['bin_path'] =  ::File.join(node['jenkins']['master']['home'], 'bin')
-default['osl-jenkins']['lib_path'] = ::File.join(node['jenkins']['master']['home'], 'lib')

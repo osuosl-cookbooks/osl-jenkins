@@ -1,0 +1,3 @@
+#!/bin/bash
+export PLUGIN_DIR=/var/lib/jenkins/plugins
+exec java -jar /opt/jenkins-plugin-manager.jar "$@"
