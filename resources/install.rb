@@ -142,6 +142,7 @@ action :create do
       Environment="CASC_JENKINS_CONFIG=/var/lib/jenkins/casc_configs"
       Environment="JAVA_OPTS=-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"
       LimitNOFILE=8192
+      TimeoutStartSec=590
     EOF
   end
 end
