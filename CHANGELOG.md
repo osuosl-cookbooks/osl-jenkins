@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+3.0.2 (2024-02-20)
+------------------
+- Set TimeoutStartSec to just under 10 minutes
+
 3.0.1 (2024-02-20)
 ------------------
 - Remove credential setup with JCASC
