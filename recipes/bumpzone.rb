@@ -55,12 +55,6 @@ osl_jenkins_plugin 'slack' do
   notifies :restart, 'osl_jenkins_service[bumpzone]', :delayed
 end
 
-osl_jenkins_password_credentials 'bumpzone' do
-  username secrets['git']['bumpzone']['user']
-  password secrets['git']['bumpzone']['token']
-  notifies :restart, 'osl_jenkins_service[bumpzone]', :delayed
-end
-
 osl_jenkins_job 'bumpzone' do
   source 'jobs/bumpzone.groovy.erb'
   template true

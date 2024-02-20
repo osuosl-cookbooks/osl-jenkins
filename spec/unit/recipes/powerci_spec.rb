@@ -76,16 +76,6 @@ describe 'osl-jenkins::powerci' do
       it { is_expected.to enable_osl_jenkins_service 'powerci' }
       it { is_expected.to start_osl_jenkins_service 'powerci' }
       it do
-        is_expected.to create_osl_jenkins_private_key_credentials('powerci-docker').with(
-          username: 'jenkins',
-          private_key: 'powerci_private_key'
-        )
-      end
-      it do
-        expect(chef_run.osl_jenkins_private_key_credentials('powerci-docker')).to \
-          notify('osl_jenkins_service[powerci]').to(:restart).delayed
-      end
-      it do
         is_expected.to create_osl_jenkins_config('powerci').with(
           sensitive: true,
           variables: {

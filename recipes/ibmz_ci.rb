@@ -23,7 +23,6 @@ normal_users = secrets['normal_users']
 client_id = secrets['oauth']['ibmz_ci']['client_id']
 client_secret = secrets['oauth']['ibmz_ci']['client_secret']
 ibmz_ci = node['osl-jenkins']['ibmz_ci']
-docker_cert = data_bag_item(node['osl-docker']['data_bag'], "client-#{node['fqdn'].tr('.', '-')}")
 
 osl_jenkins_install 'ibmz-ci.osuosl.org' do
   admin_address 'nobody@osuosl.org'
@@ -64,20 +63,6 @@ ibmz_ci_docker = search(
     'fqdn' => ['fqdn'],
   }
 )
-
-osl_jenkins_private_key_credentials 'ibmz_ci-docker' do
-  username 'jenkins'
-  private_key secrets['ssh']['ibmz_ci-docker']['private_key']
-  notifies :restart, 'osl_jenkins_service[ibmz-ci]', :delayed
-end
-
-osl_jenkins_client_cert_credentials 'ibmz_ci_docker-server' do
-  description 'Docker client certificate'
-  cert docker_cert['cert']
-  key docker_cert['key']
-  chain docker_cert['chain']
-  notifies :restart, 'osl_jenkins_service[ibmz-ci]', :delayed
-end
 
 osl_jenkins_config 'ibmz-ci' do
   sensitive true

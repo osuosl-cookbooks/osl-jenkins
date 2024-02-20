@@ -61,16 +61,6 @@ describe 'osl-jenkins::bumpzone' do
       it do
         expect(chef_run.osl_jenkins_plugin('slack')).to notify('osl_jenkins_service[bumpzone]').to(:restart).delayed
       end
-      it do
-        is_expected.to create_osl_jenkins_password_credentials('bumpzone').with(
-          username: 'manatee',
-          password: 'token_password'
-        )
-      end
-      it do
-        expect(chef_run.osl_jenkins_password_credentials('bumpzone')).to \
-          notify('osl_jenkins_service[bumpzone]').to(:restart).delayed
-      end
     end
   end
 end

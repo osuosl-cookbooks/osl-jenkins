@@ -65,12 +65,6 @@ powerci_docker = search(
   }
 )
 
-osl_jenkins_private_key_credentials 'powerci-docker' do
-  username 'jenkins'
-  private_key secrets['ssh']['powerci-docker']['private_key']
-  notifies :restart, 'osl_jenkins_service[powerci]', :delayed
-end
-
 osl_jenkins_config 'powerci' do
   sensitive true
   variables(
