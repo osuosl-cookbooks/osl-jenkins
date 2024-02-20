@@ -3,8 +3,6 @@ verifier:
   name: inspec
 driver:
   flavor_ref: 'm1.medium'
-  network_ref:
-    - general_servers1
   security_groups:
     - default
     - github
@@ -12,7 +10,7 @@ driver_config:
   user_data: userdata.txt
 
 provisioner:
-  name: chef_solo
+  name: chef_infra
   encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
   data_bags_path: test/integration/data_bags
   enforce_idempotency: true
@@ -24,18 +22,8 @@ suites:
     run_list:
       - recipe[osl-jenkins::default]
   - name: controller
-    driver:
-    provisioner:
-      name: chef_zero
-      # disabled due to upstream issues
-      enforce_idempotency: false
-      multiple_converge: 1
-      security_groups:
-        - default
-        - github
     run_list:
-      - recipe[osl-jenkins::controller]
-      - recipe[jenkins_test]
+      - recipe[jenkins_test::controller]
     attributes:
       osl-jenkins:
         credentials:
@@ -44,56 +32,14 @@ suites:
               user: 'alfred'
               private_key: "-----BEGIN RSA PRIVATE KEY-----\nMIIBywIBAAJhAMSrk3a8XLZW0UdtDS49VdaPRskJtrCIPfJy9ZWMA5LyCob+e0DW\nRN33vA+x0wmw4hievTtpNDbntGpN+rnq5Xl/Nlpo+rxa+eLj3anU030gYYKFc0K0\nC7wu+EtZ6ZvKpQIDAQABAmA9cxKfTdl2C4hWVeeBZB627IuEcymG3PrmDy9Wq6nO\nNxw887SVHJ3l8OrsyHYVGBPwJXd2dfrFVwjdD6UeHXIqx2Lb9I1CzYVa7RkGL1ZU\nTAb1JdDf5vZFpELlkqczcp0CMQD2JfP/r55uRowVUs9+c7MN8J5Cg4YXDw6MQgpE\nE3+x92xM3TQzGM3PNeNpuby0fx8CMQDMiqsnoQQe8dEbAPetgBHZncA4TvS1w6KF\nq72HOwa2PW7DQXsiwuIN/wNhgALSMbsCMQCJJT5c8NnCMZZtbxVjLE3Qb4eOIb/9\naws9BLK5mW+llekGrp0d9yz8zdammrFUlBsCMF3qEZn5gVXf+/3lHNOp6Qg9OUPh\nZNSMRfQQHc6YmIVWgaPfTfVw+7AnddrvltwB/wIxAL+Q5ZXtglRrFFoYNdHplHb+\nBPgWsltlXXY1BmOEUWgAZLEs+tvSV8enIVlUSZ+Lxg==\n-----END RSA PRIVATE KEY-----"
 
-  - name: haproxy
-    encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
-    run_list:
-      - recipe[certificate::manage_by_attributes]
-      - recipe[osl-jenkins::haproxy]
-      - recipe[osl-haproxy::default]
-    verifier:
-      inspec_tests:
-        - name: osuosl-baseline
-          git: https://github.com/osuosl/osuosl-baseline.git
-      controls:
-        - jenkins-haproxy
-        - ssl-baseline
   - name: chef_backup
     run_list:
+      - recipe[jenkins_test::controller]
       - recipe[osl-jenkins::chef_backup]
-    attributes:
-      jenkins:
-        master:
-          user: centos
-          group: centos
-  - name: chef_ci_cookbook_template
-    run_list:
-      - recipe[osl-jenkins::chef_ci_cookbook_template]
-  - name: plugins
-    provisioner:
-      name: chef_zero
-      enforce_idempotency: false
-      multiple_converge: 1
-    run_list:
-      - recipe[osl-jenkins::controller]
-      - recipe[osl-jenkins::plugins]
-      - recipe[jenkins_test]
-  - name: ftp
-    run_list:
-      - recipe[osl-jenkins::ftp]
   - name: cookbook-uploader
-    encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     run_list:
+      - recipe[jenkins_test::controller]
       - recipe[osl-jenkins::cookbook_uploader]
-      - recipe[jenkins_test]
-    provisioner:
-      name: chef_zero
-      # disabled due to osl-jenkins::controller
-      enforce_idempotency: false
-      multiple_converge: 1
-    driver:
-      security_groups:
-        - default
-        - github
     attributes:
       osl-jenkins:
         cookbook_uploader:
@@ -119,23 +65,13 @@ suites:
               user: <%= ENV['JENKINS_USER'] %>
               api_token: <%= ENV['JENKINS_PASS'] %>
               trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
-      jenkins:
-        master:
-          listen_address: '0.0.0.0'
+    verifier:
+      inspec_tests:
+        - test/integration/controller
+        - test/integration/cookbook-uploader
   - name: jenkins1
-    encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     run_list:
       - recipe[osl-jenkins::jenkins1]
-      - recipe[jenkins_test]
-    provisioner:
-      name: chef_zero
-      # disabled due to osl-jenkins::controller
-      enforce_idempotency: false
-      multiple_converge: 1
-    driver:
-      security_groups:
-        - default
-        - github
     attributes:
       osl-jenkins:
         cookbook_uploader:
@@ -154,12 +90,6 @@ suites:
             github_comment:
               user: <%= ENV['GITHUB_USER'] %>
               token: <%= ENV['GITHUB_TOKEN'] %>
-            site_pr_builder:
-              user: <%= ENV['GITHUB_USER'] %>
-              token: <%= ENV['GITHUB_TOKEN'] %>
-            packer_pipeline:
-              user: <%= ENV['GITHUB_USER'] %>
-              token: <%= ENV['GITHUB_TOKEN'] %>
           jenkins:
             cookbook_uploader:
               user: <%= ENV['JENKINS_USER'] %>
@@ -173,32 +103,18 @@ suites:
               user: <%= ENV['JENKINS_USER'] %>
               api_token: <%= ENV['JENKINS_PASS'] %>
               trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
-            site_pr_builder:
-              user: <%= ENV['JENKINS_USER'] %>
-              api_token: <%= ENV['JENKINS_PASS'] %>
-              trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
-            packer_pipeline:
-              user: <%= ENV['JENKINS_USER'] %>
-              api_token: <%= ENV['JENKINS_PASS'] %>
-              trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
         secrets_item: test
-      jenkins:
-        master:
-          listen_address: '0.0.0.0'
+    verifier:
+      inspec_tests:
+        - test/integration/controller
   - name: bumpzone
-    encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
     run_list:
+      - recipe[jenkins_test::controller]
       - recipe[osl-jenkins::bumpzone]
-      - recipe[jenkins_test]
-    provisioner:
-      name: chef_zero
-      # disabled due to osl-jenkins::controller
-      enforce_idempotency: false
-      multiple_converge: 1
-    driver:
-      security_groups:
-        - default
-        - github
+    verifier:
+      inspec_tests:
+        - test/integration/controller
+        - test/integration/bumpzone
     attributes:
       osl-jenkins:
         bumpzone:
@@ -213,23 +129,10 @@ suites:
               user: <%= ENV['JENKINS_USER'] %>
               api_token: <%= ENV['JENKINS_PASS'] %>
               trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
-      jenkins:
-        master:
-          listen_address: '0.0.0.0'
   - name: github_comment
     run_list:
+      - recipe[jenkins_test::controller]
       - recipe[osl-jenkins::github_comment]
-      - recipe[jenkins_test]
-    encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
-    provisioner:
-      name: chef_zero
-      # disabled due to osl-jenkins::controller
-      enforce_idempotency: false
-      multiple_converge: 1
-    driver:
-      security_groups:
-        - default
-        - github
     attributes:
       osl-jenkins:
         github_comment:
@@ -246,83 +149,17 @@ suites:
               user: <%= ENV['JENKINS_USER'] %>
               api_token: <%= ENV['JENKINS_PASS'] %>
               trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
-      jenkins:
-        master:
-          listen_address: '0.0.0.0'
-  - name: packer_pipeline_controller
-    run_list:
-      - recipe[osl-jenkins::packer_pipeline_controller]
-      - recipe[jenkins_test]
-    encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
-    provisioner:
-      name: chef_zero
-      # disabled due to osl-jenkins::controller
-      enforce_idempotency: false
-      multiple_converge: 1
-    driver:
-      security_groups:
-        - default
-        - github
-    attributes:
-      osl-jenkins:
-        credentials:
-          git:
-            packer_pipeline:
-              user: <%= ENV['GITHUB_USER'] %>
-              token: <%= ENV['GITHUB_TOKEN'] %>
-          jenkins:
-            packer_pipeline:
-              user: <%= ENV['JENKINS_USER'] %>
-              api_token: <%= ENV['JENKINS_PASS'] %>
-              trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
-              public_key: 'ssh-rsa THIS_IS_A_PUBLIC_KEY'
-              private_key: "-----BEGIN RSA PRIVATE KEY-----\nMIIBywIBAAJhAMSrk3a8XLZW0UdtDS49VdaPRskJtrCIPfJy9ZWMA5LyCob+e0DW\nRN33vA+x0wmw4hievTtpNDbntGpN+rnq5Xl/Nlpo+rxa+eLj3anU030gYYKFc0K0\nC7wu+EtZ6ZvKpQIDAQABAmA9cxKfTdl2C4hWVeeBZB627IuEcymG3PrmDy9Wq6nO\nNxw887SVHJ3l8OrsyHYVGBPwJXd2dfrFVwjdD6UeHXIqx2Lb9I1CzYVa7RkGL1ZU\nTAb1JdDf5vZFpELlkqczcp0CMQD2JfP/r55uRowVUs9+c7MN8J5Cg4YXDw6MQgpE\nE3+x92xM3TQzGM3PNeNpuby0fx8CMQDMiqsnoQQe8dEbAPetgBHZncA4TvS1w6KF\nq72HOwa2PW7DQXsiwuIN/wNhgALSMbsCMQCJJT5c8NnCMZZtbxVjLE3Qb4eOIb/9\naws9BLK5mW+llekGrp0d9yz8zdammrFUlBsCMF3qEZn5gVXf+/3lHNOp6Qg9OUPh\nZNSMRfQQHc6YmIVWgaPfTfVw+7AnddrvltwB/wIxAL+Q5ZXtglRrFFoYNdHplHb+\nBPgWsltlXXY1BmOEUWgAZLEs+tvSV8enIVlUSZ+Lxg==\n-----END RSA PRIVATE KEY-----"
-        jenkins:
-          master:
-            listen_address: '0.0.0.0'
-  - name: site_pr_builder
-    run_list:
-      - recipe[osl-jenkins::site_pr_builder]
-      - recipe[jenkins_test]
-    encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
-    provisioner:
-      name: chef_zero
-      # disabled due to osl-jenkins::controller
-      enforce_idempotency: false
-      multiple_converge: 1
-    driver:
-      security_groups:
-        - default
-        - github
-    attributes:
-      osl-jenkins:
-        github_comment:
-          override_repos:
-            - test-cookbook
-          github_insecure_hook: true
-        credentials:
-          git:
-            site_pr_builder:
-              user: <%= ENV['GITHUB_USER'] %>
-              token: <%= ENV['GITHUB_TOKEN'] %>
-          jenkins:
-            site_pr_builder:
-              user: <%= ENV['JENKINS_USER'] %>
-              api_token: <%= ENV['JENKINS_PASS'] %>
-              trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
-      jenkins:
-        master:
-          listen_address: '0.0.0.0'
   - name: powerci
     nodes_path: test/integration/nodes
-    provisioner:
-      name: chef_zero
-      # disabled due to osl-jenkis::controller
-      enforce_idempotency: false
-      multiple_converge: 1
+    driver:
+      network_ref:
+        - general_servers1
     run_list:
       - recipe[osl-jenkins::powerci]
-      - recipe[jenkins_test]
+    verifier:
+      inspec_tests:
+        - test/integration/controller
+        - test/integration/powerci
     attributes:
       osl-jenkins:
         powerci:
@@ -346,14 +183,12 @@ suites:
               private_key: "-----BEGIN RSA PRIVATE KEY-----\nMIIEogIBAAKCAQEAqAickUPOP01HPxBnnceszXu3p6/HPkNCLCF4ZtEj6IUb+V23\nMDZk1U6ENnzri5Uxt9hfAqzF2fo5qfQKDGbaNp19EtbCIAWlm6fMkAPdJJn8wB/G\nVufUlaufW4F2jNK8Bcd3EFjy9OiJrfobvCV75vgb/mfvUhRrPbfMW8dhCU+egKP9\nH85d6hG0r3y26TaB0AZ3p1y/Px+m6ojUodCyqgsDxVH+qh/DdN1zw1jgSaiwedyJ\n/fSMZUUMyUkwou+oyUFbQANqjPFFxPND65ojKzgTPOG0SoDCCKoRXY/7pr6e+Eum\nlhurW1ZdVrLrBfRT2o6tFwYstVkN+uOraDaj6wIDAQABAoIBAAdq4eZztM4MjkGV\nas2HO/SSKohHdScldu1VyOfZAZnJDnQSk/yX2hmkbqetGgS+YER6U69dixpVNmhv\nMmZbv/Q7PYMwYb9iIG5fmOMemIt+FK8yd+HsN/Enc1BpxZ7vyocCyBm7o3X2MeWx\nLbo/eVm3yByR3/milx1RWL8QbRMpE0gTQkMMeBPNygRzKJecs6nY+VpNJ2f89lbx\ngjWQLswqZdFdLV0YSVuIbJHy+syTCo0c6fPcnQbjsWYm95wT+T18zDI54L3x/8BY\n5iyKTRVfDhy0de+/MG9Ty7SvDuQ/M6m08HaEkRE0PI16eWch5ge5YCzncBgt7DrG\nbf3ZoMkCgYEA1ILGhpKu9Dx6754t/0+SUdNsEZ8LqjIny7mOJjaGh+ge3D2yZmbv\n7orI82YGPqyZ05ry5+NBGc33yNQCpxnhMx5tMRRqQWQ6AFElubzsjvGKrcobHrt0\neV4THqMjqMZ978LPpkb4P9/bzAL8TfoJgCDldr5OtLVVJC1WRimLFAcCgYEAymu4\nnyQFYsBy8oew2Shv9EvVUJf6kL8QmrDcI5KiAVBI5JB5CZfm9v+w2mntmT8YrIq3\nzs+zR85d9uXB6aGENgCpAoZhxOqH3ieOT+raY1HSm4lg2mKdep4A9KHutM6L6I7k\n2KAahOYrkXDS8MrZ0pu3M9gWVF9nyB19C6sxH/0CgYAFSD7hB3Jb1ckEfb0M9JBh\ngkzUX0yt7VM56CHVZ1OOu0FRHiN6EiLynfaCvk13b1jffqF9DBQJLSp0jniGaMlF\nOQNjzesaNwCOE3ZJmJ2UrAJTcYudBvHNNn5pK4ruXgixVflNW8Q96jWPa5+T3Jwx\n2B98BRz1tvAn1wym789qLwKBgHTshFholjPUtpEhkCXgFcsngrBrGXFC7HRudLqX\nmLzpgzGDwmaoN+G1EJMZXQWITNhdyI7NquFvcxeK39f0VEpdV0L+HLuCPbk1YB8J\nqdx1BxKQ6EE9dXm+iw7D+v610FslL0tyL99UlRYN9crhYbEmAU0RJNTXxzrwzapP\n2LCBAoGAN+xSHVXIFLbADXnAJTU/tqi/7ZPGybX3TJEkLTzgw5aYB5PWFPWFKPgL\nOT4dGkaWOe55eVZ2Qz4WlhLc38fbjIcAl3/yAnK9SbvxBpvO7LEGj4XOzVzrzU6H\nlacuYndx6mBU0Ya5Ldx5sLpoZz7JU1j6Kl31kC45qLY0dVLCLCU=\n-----END RSA PRIVATE KEY-----"
   - name: ibmz_ci
     nodes_path: test/integration/nodes
-    provisioner:
-      name: chef_zero
-      # disabled due to osl-jenkins::controller
-      enforce_idempotency: false
-      multiple_converge: 1
     run_list:
       - recipe[osl-jenkins::ibmz_ci]
-      - recipe[jenkins_test]
+    verifier:
+      inspec_tests:
+        - test/integration/controller
+        - test/integration/ibmz_ci
     driver_config:
       server_name: ibmz_ci
     attributes:
@@ -376,24 +211,4 @@ suites:
           ssh:
             ibmz_ci-docker:
               user: 'jenkins'
-              private_key: "-----BEGIN RSA PRIVATE KEY-----\nMIIEogIBAAKCAQEAqAickUPOP01HPxBnnceszXu3p6/HPkNCLCF4ZtEj6IUb+V23\nMDZk1U6ENnzri5Uxt9hfAqzF2fo5qfQKDGbaNp19EtbCIAWlm6fMkAPdJJn8wB/G\nVufUlaufW4F2jNK8Bcd3EFjy9OiJrfobvCV75vgb/mfvUhRrPbfMW8dhCU+egKP9\nH85d6hG0r3y26TaB0AZ3p1y/Px+m6ojUodCyqgsDxVH+qh/DdN1zw1jgSaiwedyJ\n/fSMZUUMyUkwou+oyUFbQANqjPFFxPND65ojKzgTPOG0SoDCCKoRXY/7pr6e+Eum\nlhurW1ZdVrLrBfRT2o6tFwYstVkN+uOraDaj6wIDAQABAoIBAAdq4eZztM4MjkGV\nas2HO/SSKohHdScldu1VyOfZAZnJDnQSk/yX2hmkbqetGgS+YER6U69dixpVNmhv\nMmZbv/Q7PYMwYb9iIG5fmOMemIt+FK8yd+HsN/Enc1BpxZ7vyocCyBm7o3X2MeWx\nLbo/eVm3yByR3/milx1RWL8QbRMpE0gTQkMMeBPNygRzKJecs6nY+VpNJ2f89lbx\ngjWQLswqZdFdLV0YSVuIbJHy+syTCo0c6fPcnQbjsWYm95wT+T18zDI54L3x/8BY\n5iyKTRVfDhy0de+/MG9Ty7SvDuQ/M6m08HaEkRE0PI16eWch5ge5YCzncBgt7DrG\nbf3ZoMkCgYEA1ILGhpKu9Dx6754t/0+SUdNsEZ8LqjIny7mOJjaGh+ge3D2yZmbv\n7orI82YGPqyZ05ry5+NBGc33yNQCpxnhMx5tMRRqQWQ6AFElubzsjvGKrcobHrt0\neV4THqMjqMZ978LPpkb4P9/bzAL8TfoJgCDldr5OtLVVJC1WRimLFAcCgYEAymu4\nnyQFYsBy8oew2Shv9EvVUJf6kL8QmrDcI5KiAVBI5JB5CZfm9v+w2mntmT8YrIq3\nzs+zR85d9uXB6aGENgCpAoZhxOqH3ieOT+raY1HSm4lg2mKdep4A9KHutM6L6I7k\n2KAahOYrkXDS8MrZ0pu3M9gWVF9nyB19C6sxH/0CgYAFSD7hB3Jb1ckEfb0M9JBh\ngkzUX0yt7VM56CHVZ1OOu0FRHiN6EiLynfaCvk13b1jffqF9DBQJLSp0jniGaMlF\nOQNjzesaNwCOE3ZJmJ2UrAJTcYudBvHNNn5pK4ruXgixVflNW8Q96jWPa5+T3Jwx\n2B98BRz1tvAn1wym789qLwKBgHTshFholjPUtpEhkCXgFcsngrBrGXFC7HRudLqX\nmLzpgzGDwmaoN+G1EJMZXQWITNhdyI7NquFvcxeK39f0VEpdV0L+HLuCPbk1YB8J\nqdx1BxKQ6EE9dXm+iw7D+v610FslL0tyL99UlRYN9crhYbEmAU0RJNTXxzrwzapP\n2LCBAoGAN+xSHVXIFLbADXnAJTU/tqi/7ZPGybX3TJEkLTzgw5aYB5PWFPWFKPgL\nOT4dGkaWOe55eVZ2Qz4WlhLc38fbjIcAl3/yAnK9SbvxBpvO7LEGj4XOzVzrzU6H\nlacuYndx6mBU0Ya5Ldx5sLpoZz7JU1j6Kl31kC45qLY0dVLCLCU=\n-----END RSA PRIVATE KEY-----"
-  - name: packer_pipeline_node
-    provisioner:
-      name: chef_zero
-      # disabled due to ohai_plugin[ibm_power]
-      enforce_idempotency: false
-      multiple_converge: 1
-    encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
-    data_bags_path: test/integration/data_bags
-    run_list:
-      - recipe[osl-jenkins::packer_pipeline_node]
-    attributes:
-      osl-jenkins:
-        credentials:
-          jenkins:
-            packer_pipeline:
-              user: <%= ENV['JENKINS_USER'] %>
-              api_token: <%= ENV['JENKINS_PASS'] %>
-              trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
-              public_key: 'ssh-rsa THIS_IS_A_PUBLIC_KEY'
               private_key: "-----BEGIN RSA PRIVATE KEY-----\nMIIEogIBAAKCAQEAqAickUPOP01HPxBnnceszXu3p6/HPkNCLCF4ZtEj6IUb+V23\nMDZk1U6ENnzri5Uxt9hfAqzF2fo5qfQKDGbaNp19EtbCIAWlm6fMkAPdJJn8wB/G\nVufUlaufW4F2jNK8Bcd3EFjy9OiJrfobvCV75vgb/mfvUhRrPbfMW8dhCU+egKP9\nH85d6hG0r3y26TaB0AZ3p1y/Px+m6ojUodCyqgsDxVH+qh/DdN1zw1jgSaiwedyJ\n/fSMZUUMyUkwou+oyUFbQANqjPFFxPND65ojKzgTPOG0SoDCCKoRXY/7pr6e+Eum\nlhurW1ZdVrLrBfRT2o6tFwYstVkN+uOraDaj6wIDAQABAoIBAAdq4eZztM4MjkGV\nas2HO/SSKohHdScldu1VyOfZAZnJDnQSk/yX2hmkbqetGgS+YER6U69dixpVNmhv\nMmZbv/Q7PYMwYb9iIG5fmOMemIt+FK8yd+HsN/Enc1BpxZ7vyocCyBm7o3X2MeWx\nLbo/eVm3yByR3/milx1RWL8QbRMpE0gTQkMMeBPNygRzKJecs6nY+VpNJ2f89lbx\ngjWQLswqZdFdLV0YSVuIbJHy+syTCo0c6fPcnQbjsWYm95wT+T18zDI54L3x/8BY\n5iyKTRVfDhy0de+/MG9Ty7SvDuQ/M6m08HaEkRE0PI16eWch5ge5YCzncBgt7DrG\nbf3ZoMkCgYEA1ILGhpKu9Dx6754t/0+SUdNsEZ8LqjIny7mOJjaGh+ge3D2yZmbv\n7orI82YGPqyZ05ry5+NBGc33yNQCpxnhMx5tMRRqQWQ6AFElubzsjvGKrcobHrt0\neV4THqMjqMZ978LPpkb4P9/bzAL8TfoJgCDldr5OtLVVJC1WRimLFAcCgYEAymu4\nnyQFYsBy8oew2Shv9EvVUJf6kL8QmrDcI5KiAVBI5JB5CZfm9v+w2mntmT8YrIq3\nzs+zR85d9uXB6aGENgCpAoZhxOqH3ieOT+raY1HSm4lg2mKdep4A9KHutM6L6I7k\n2KAahOYrkXDS8MrZ0pu3M9gWVF9nyB19C6sxH/0CgYAFSD7hB3Jb1ckEfb0M9JBh\ngkzUX0yt7VM56CHVZ1OOu0FRHiN6EiLynfaCvk13b1jffqF9DBQJLSp0jniGaMlF\nOQNjzesaNwCOE3ZJmJ2UrAJTcYudBvHNNn5pK4ruXgixVflNW8Q96jWPa5+T3Jwx\n2B98BRz1tvAn1wym789qLwKBgHTshFholjPUtpEhkCXgFcsngrBrGXFC7HRudLqX\nmLzpgzGDwmaoN+G1EJMZXQWITNhdyI7NquFvcxeK39f0VEpdV0L+HLuCPbk1YB8J\nqdx1BxKQ6EE9dXm+iw7D+v610FslL0tyL99UlRYN9crhYbEmAU0RJNTXxzrwzapP\n2LCBAoGAN+xSHVXIFLbADXnAJTU/tqi/7ZPGybX3TJEkLTzgw5aYB5PWFPWFKPgL\nOT4dGkaWOe55eVZ2Qz4WlhLc38fbjIcAl3/yAnK9SbvxBpvO7LEGj4XOzVzrzU6H\nlacuYndx6mBU0Ya5Ldx5sLpoZz7JU1j6Kl31kC45qLY0dVLCLCU=\n-----END RSA PRIVATE KEY-----"

@@ -1,1 +1,0 @@
-../../helpers/inspec/00spec_helper.rb

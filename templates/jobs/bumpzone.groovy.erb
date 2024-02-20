@@ -1,0 +1,34 @@
+job('bumpzone') {
+  properties {
+    githubProjectUrl('<%= @github_url %>')
+  }
+  parameters {
+    stringParam('payload', '{}')
+  }
+  scm {
+    git {
+      remote {
+        refspec('+refs/heads/master:refs/remotes/origin/master')
+        url('<%= @github_url %>')
+        credentials('bumpzone')
+      }
+      branches('*/master')
+      extensions {
+        localBranch('master')
+      }
+    }
+  }
+  label('built-in')
+  authenticationToken('<%= @trigger_token %>')
+  steps {
+    shell('echo $payload | /var/lib/jenkins/bin/bumpzone.rb')
+  }
+  publishers {
+    textFinder('Not a merged PR, skipping...', '', true, false, true)
+  }
+  wrappers {
+    credentialsBinding {
+      usernamePassword('', 'GITHUB_TOKEN', 'bumpzone')
+    }
+  }
+}

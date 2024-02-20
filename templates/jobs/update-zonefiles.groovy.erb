@@ -1,0 +1,32 @@
+job('update-zonefiles') {
+  properties {
+    githubProjectUrl('<%= @github_url %>')
+  }
+  scm {
+    git {
+      remote {
+        url('<%= @github_url %>')
+        credentials('bumpzone')
+      }
+      branches('*/master')
+    }
+  }
+  triggers {
+    upstream('bumpzone', 'SUCCESS')
+  }
+  label('<%= @dns_primary %>')
+  steps {
+    shell('sudo /usr/local/sbin/update-zonefiles')
+  }
+  publishers {
+    slackNotifier {
+      notifySuccess(true)
+      notifyAborted(true)
+      notifyNotBuilt(true)
+      notifyUnstable(true)
+      notifyRegression(true)
+      notifyEveryFailure(true)
+      notifyBackToNormal(true)
+    }
+  }
+}

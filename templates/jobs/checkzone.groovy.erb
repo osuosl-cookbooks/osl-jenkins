@@ -1,0 +1,27 @@
+job('checkzone') {
+  properties {
+    githubProjectUrl('<%= @github_url %>')
+  }
+  parameters {
+    stringParam('payload', '{}')
+  }
+  scm {
+    git {
+      remote {
+        url('<%= @github_url %>')
+        credentials('bumpzone')
+      }
+      branches('**')
+    }
+  }
+  label('built-in')
+  authenticationToken('<%= @trigger_token %>')
+  steps {
+    shell('echo $payload | /var/lib/jenkins/bin/checkzone.rb')
+  }
+  wrappers {
+    credentialsBinding {
+      usernamePassword('', 'GITHUB_TOKEN', 'bumpzone')
+    }
+  }
+}

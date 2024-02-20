@@ -51,11 +51,6 @@ shared_context 'data_bag_stubs' do
       }]
     )
 
-    stub_data_bag_item('osl_jenkins', 'packer_pipeline_creds')
-      .and_return(
-        id: 'packer_pipeline_creds'
-      )
-
     stub_data_bag_item('osl_jenkins', 'jenkins1')
       .and_return(
         id: 'jenkins1',
@@ -74,6 +69,7 @@ shared_context 'data_bag_stubs' do
       )
   end
 end
+
 shared_context 'cookbook_uploader' do
   before do
     allow_any_instance_of(Chef::Recipe).to receive(:set_up_github_push)

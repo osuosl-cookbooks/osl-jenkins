@@ -1,0 +1,44 @@
+job('<%= @job_name %>') {
+  properties {
+    githubProjectUrl('<%= @github_url %>')
+  }
+  parameters {
+    stringParam('payload', '{}')
+  }
+  scm {
+    git {
+      remote {
+        url('<%= @github_url %>')
+        credentials('cookbook_uploader')
+      }
+      branches(':origin/(master|main)')
+    }
+  }
+  label('master')
+  authenticationToken('<%= @trigger_token %>')
+  steps {
+    shell('<%= @execute_shell %>')
+  }
+  configure { project ->
+    project / 'publishers' << 'hudson.plugins.parameterizedtrigger.BuildTrigger' {
+      configs {
+        BuildTriggerConfig << 'hudson.plugins.parameterizedtrigger.BuildTriggerConfig' {
+          configs {
+            FileBuildParameters << 'hudson.plugins.parameterizedtrigger.FileBuildParameters' {
+              propertiesFile('envvars')
+              failTriggerOnMissing(true)
+              useMatrixChild(false)
+              onlyExactRuns(false)
+            }
+          }
+          projects('environment-bumper-osuosl-chef-repo')
+          condition('SUCCESS')
+          triggerWithNoParameters(false)
+        }
+      }
+    }
+  }
+  publishers {
+    textFinder('<%= @non_bump_message %>', '', true, false, true)
+  }
+}

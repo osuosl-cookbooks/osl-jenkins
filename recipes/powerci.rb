@@ -17,12 +17,6 @@
 # limitations under the License.
 #
 
-class ::Chef::Recipe
-  include OSLDocker::Helper
-  include OSLOpenStack::Helper
-  include OSLGithubOauth::Helper
-end
-
 node.default['osl-jenkins']['secrets_item'] = 'powerci'
 secrets = credential_secrets
 admin_users = secrets['admin_users']
@@ -31,110 +25,62 @@ client_id = secrets['oauth']['powerci']['client_id']
 client_secret = secrets['oauth']['powerci']['client_secret']
 powerci = node['osl-jenkins']['powerci']
 
-ruby_block 'Set jenkins username/password if needed' do
-  block do
-    if ::File.exist?('/var/lib/jenkins/config.xml') &&
-       ::File.foreach('/var/lib/jenkins/config.xml').grep(/GithubSecurityRealm/).any?
-      node.run_state[:jenkins_username] = secrets['git']['powerci']['user']
-      node.run_state[:jenkins_password] = secrets['git']['powerci']['token']
-    end
-  end
-end
-
-node.default['osl-jenkins']['plugins'].tap do |p|
-  p['ansicolor'] = '1.0.0'
-  p['build-monitor-plugin'] = '1.12+build.201809061734'
-  p['build-timeout'] = '1.20'
-  p['cloud-stats'] = '0.27'
-  p['config-file-provider'] = '3.8.0'
-  p['disable-github-multibranch-status'] = '1.2'
-  p['docker-java-api'] = '3.1.5.2'
-  p['docker-plugin'] = '1.2.2'
-  p['email-ext'] = '2.83'
-  p['emailext-template'] = '1.2'
-  p['embeddable-build-status'] = '2.0.3'
-  p['extended-read-permission'] = '3.2'
-  p['job-restrictions'] = '0.8'
-  p['jquery'] = '1.12.4-1'
-  p['label-linked-jobs'] = '6.0.1'
-  p['nodelabelparameter'] = '1.8.1'
-  p['openstack-cloud'] = '2.58'
-  p['pipeline-githubnotify-step'] = '1.0.5'
-  p['pipeline-multibranch-defaults'] = '2.1'
-  p['resource-disposer'] = '0.15'
-end
-
-include_recipe 'osl-jenkins::controller'
-
-# Install directly from a URL since this doesn't appear to be included in the package data
-# jenkins_plugin 'copy-to-slave' do
-#   source 'https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/copy-to-slave/1.4.4/copy-to-slave-1.4.4.hpi'
-#   version '1.4.4'
-#   install_deps false
-#   notifies :execute, 'jenkins_command[safe-restart]', :immediately
-# end
-
-if Chef::Config[:solo] && !defined?(ChefSpec)
-  Chef::Log.warn('This recipe uses search which Chef Solo does not support') if Chef::Config[:solo]
-else
-  docker_hosts = "\n"
-  powerci_docker = search(
-    :node,
-    'roles:powerci_docker',
-    filter_result: {
-      'ipaddress' => ['ipaddress'],
-      'fqdn' => ['fqdn'],
-    }
+osl_jenkins_install 'powerci.osuosl.org' do
+  admin_address 'nobody@osuosl.org'
+  num_executors 0
+  plugins %w(
+    ansicolor
+    build-monitor-plugin
+    build-timeout
+    cloud-stats
+    config-file-provider
+    disable-github-multibranch-status
+    docker-java-api
+    docker-plugin
+    email-ext
+    emailext-template
+    embeddable-build-status
+    extended-read-permission
+    github-oauth
+    job-restrictions
+    jquery
+    label-linked-jobs
+    nodelabelparameter
+    pipeline-githubnotify-step
+    pipeline-multibranch-defaults
+    resource-disposer
   )
 end
 
-unless powerci_docker.nil?
-  powerci_docker.each do |host|
-    docker_hosts += add_docker_host(host['fqdn'], host['ipaddress'], nil)
-  end
+osl_jenkins_service 'powerci' do
+  action [:enable, :start]
 end
 
-docker_images = "\n"
-powerci['docker_images'].each do |image|
-  docker_images +=
-    add_docker_image(
-      image,
-      powerci['docker_public_key'],
-      powerci['docker']['memory_limit'],
-      powerci['docker']['memory_swap'],
-      powerci['docker']['cpu_shared']
-    )
+powerci_docker = search(
+  :node,
+  'roles:powerci_docker',
+  filter_result: {
+    'ipaddress' => ['ipaddress'],
+    'fqdn' => ['fqdn'],
+  }
+)
+
+osl_jenkins_private_key_credentials 'powerci-docker' do
+  username 'jenkins'
+  private_key secrets['ssh']['powerci-docker']['private_key']
+  notifies :restart, 'osl_jenkins_service[powerci]', :delayed
 end
 
-docker_cloud =
-  add_docker_cloud(
-    docker_images,
-    docker_hosts,
-    nil, nil, nil,
-    'powerci-docker',
-    nil
+osl_jenkins_config 'powerci' do
+  sensitive true
+  variables(
+    admin_users: admin_users,
+    client_id: client_id,
+    client_secret: client_secret,
+    docker_hosts: powerci_docker,
+    docker_images: powerci['docker_images'],
+    docker_public_key: powerci['docker_public_key'],
+    normal_users: normal_users
   )
-
-# openstack_cloud = add_openstack_cloud
-
-github_oauth =
-  add_github_oauth(
-    client_id,
-    client_secret,
-    admin_users,
-    normal_users
-  )
-
-jenkins_script 'Add Docker Cloud' do
-  command docker_cloud
-end
-
-# Disable code since we're not even using it and it may be causing other issues with Jenkins related to
-# https://support.osuosl.org/Ticket/Display.html?id=30194
-# jenkins_script 'Add OpenStack Cloud' do
-#   command openstack_cloud
-# end
-
-jenkins_script 'Add GitHub OAuth config' do
-  command github_oauth
+  notifies :restart, 'osl_jenkins_service[powerci]', :delayed
 end

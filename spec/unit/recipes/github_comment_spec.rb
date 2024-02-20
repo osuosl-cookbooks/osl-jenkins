@@ -22,14 +22,19 @@ describe 'osl-jenkins::github_comment' do
       end
       include_context 'common_stubs'
       include_context 'data_bag_stubs'
+
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
       end
-      %w(/var/lib/jenkins/bin /var/lib/jenkins/lib).each do |d|
-        it do
-          expect(chef_run).to create_directory(d).with(recursive: true)
-        end
+
+      %w(
+        faraday-http-cache
+        git
+        octokit
+      ).each do |g|
+        it { is_expected.to install_chef_gem(g).with(compile_time: true) }
       end
+
       it do
         expect(chef_run).to create_cookbook_file('/var/lib/jenkins/bin/github_comment.rb')
           .with(
@@ -39,6 +44,7 @@ describe 'osl-jenkins::github_comment' do
             mode: '550'
           )
       end
+
       it do
         expect(chef_run).to create_cookbook_file('/var/lib/jenkins/lib/github_comment.rb')
           .with(
@@ -48,28 +54,22 @@ describe 'osl-jenkins::github_comment' do
             mode: '440'
           )
       end
-      %w(git octokit faraday-http-cache).each do |g|
-        it do
-          expect(chef_run).to install_chef_gem(g).with(compile_time: true)
-        end
-      end
 
-      it 'creates the directory' do
-        expect(chef_run).to create_directory('/var/chef/cache/github_comment').with(recursive: true)
+      it { is_expected.to nothing_osl_jenkins_service 'github_comment' }
+      it { is_expected.to install_osl_jenkins_plugin 'ghprb' }
+      it do
+        expect(chef_run.osl_jenkins_plugin('ghprb')).to \
+          notify('osl_jenkins_service[github_comment]').to(:restart).delayed
       end
-
-      it 'creates the github_comment jenkins job' do
-        expect(chef_run).to create_jenkins_job('github_comment').with(
-          config: '/var/chef/cache/github_comment/config.xml'
+      it do
+        is_expected.to create_osl_jenkins_job('github_comment').with(
+          source: 'jobs/github_comment.groovy',
+          file: true
         )
       end
-
-      it 'creates the github pr job config file' do
-        expect(chef_run).to create_template('/var/chef/cache/github_comment/config.xml')
-          .with(
-            source: 'github_comment.config.xml.erb',
-            mode: '440'
-          )
+      it do
+        expect(chef_run.osl_jenkins_job('github_comment')).to \
+          notify('osl_jenkins_service[github_comment]').to(:restart).delayed
       end
     end
   end

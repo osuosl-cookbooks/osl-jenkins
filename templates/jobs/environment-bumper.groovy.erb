@@ -1,0 +1,25 @@
+job('<%= @job_name %>') {
+  properties {
+    githubProjectUrl('<%= @github_url %>')
+  }
+  parameters {
+		stringParam("cookbook", "", "The cookbook to bump.")
+		stringParam("version", "", "The version to bump to (not including the 'v' prefix, e.g. just '1.6.2').")
+		stringParam("envs", "", "A comma-delimited list of chef environments to bump in; a '<%= @all_environments_word %>' will bump all environments, while a '<%= @default_environments_word %>' will expand to the default set of environments (configurable via attributes).  Only environments with the cookbook already frozen will be modified.")
+		stringParam("pr_link", "", "A link to the PR that originally triggered this job, if applicable.")
+  }
+  scm {
+    git {
+      remote {
+        url('<%= @github_url %>')
+        credentials('cookbook_uploader')
+      }
+      branches(':origin/(master|main)')
+    }
+  }
+  label('master')
+  authenticationToken('<%= @trigger_token %>')
+  steps {
+    shell('<%= @execute_shell %>')
+  }
+}

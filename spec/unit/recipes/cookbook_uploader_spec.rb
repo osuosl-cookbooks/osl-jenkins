@@ -32,20 +32,21 @@ describe 'osl-jenkins::cookbook_uploader' do
       include_context 'common_stubs'
       include_context 'data_bag_stubs'
       include_context 'cookbook_uploader'
+
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
       end
-      %w(git octokit faraday-http-cache).each do |g|
-        it do
-          expect(chef_run).to install_chef_gem(g).with(compile_time: true)
-        end
-      end
-      it do
-        expect(chef_run).to create_directory('/var/lib/jenkins/bin').with(recursive: true)
+
+      %w(
+        faraday-http-cache
+        git
+        octokit
+      ).each do |g|
+        it { is_expected.to install_chef_gem(g).with(compile_time: true) }
       end
       %w(github_pr_comment_trigger.rb bump_environments.rb).each do |s|
         it do
-          expect(chef_run).to create_template(::File.join('/var/lib/jenkins/bin', s))
+          expect(chef_run).to create_template("/var/lib/jenkins/bin/#{s}")
             .with(
               variables: {
                 all_environments_word: '*',
@@ -62,42 +63,51 @@ describe 'osl-jenkins::cookbook_uploader' do
             )
         end
       end
+      it { is_expected.to nothing_osl_jenkins_service 'cookbook_uploader' }
       it do
-        expect(chef_run).to create_directory('/var/chef/cache/osuosl-cookbooks/test-cookbook').with(recursive: true)
+        is_expected.to create_osl_jenkins_password_credentials('cookbook_uploader').with(
+          username: 'manatee',
+          password: 'token_password'
+        )
       end
       it do
-        expect(chef_run).to create_template('/var/chef/cache/osuosl-cookbooks/test-cookbook/config.xml')
-          .with(
-            variables: {
-              execute_shell: 'echo $payload | /var/lib/jenkins/bin/github_pr_comment_trigger.rb',
-              github_url: 'https://github.com/osuosl-cookbooks/test-cookbook',
-              non_bump_message: 'Exiting because comment was not a bump request',
-              trigger_token: 'trigger_token',
-            }
-          )
+        expect(chef_run.osl_jenkins_password_credentials('cookbook_uploader')).to \
+          notify('osl_jenkins_service[cookbook_uploader]').to(:restart).delayed
       end
       it do
-        expect(chef_run).to create_jenkins_job('cookbook-uploader-osuosl-cookbooks-test-cookbook')
-          .with(config: '/var/chef/cache/osuosl-cookbooks/test-cookbook/config.xml')
+        is_expected.to create_osl_jenkins_job('environment-bumper-osuosl-chef-repo').with(
+          source: 'jobs/environment-bumper.groovy.erb',
+          template: true,
+          variables: {
+            all_environments_word: '*',
+            default_environments_word: '~',
+            execute_shell: '/var/lib/jenkins/bin/bump_environments.rb',
+            github_url: 'https://github.com/osuosl/chef-repo',
+            job_name: 'environment-bumper-osuosl-chef-repo',
+            trigger_token: 'trigger_token',
+          }
+        )
       end
       it do
-        expect(chef_run).to create_directory('/var/chef/cache/osuosl/chef-repo').with(recursive: true)
+        expect(chef_run.osl_jenkins_job('environment-bumper-osuosl-chef-repo')).to \
+          notify('osl_jenkins_service[cookbook_uploader]').to(:restart).delayed
       end
       it do
-        expect(chef_run).to create_template('/var/chef/cache/osuosl/chef-repo/config.xml')
-          .with(
-            variables: {
-              all_environments_word: '*',
-              default_environments_word: '~',
-              execute_shell: '/var/lib/jenkins/bin/bump_environments.rb',
-              github_url: 'https://github.com/osuosl/chef-repo',
-              trigger_token: 'trigger_token',
-            }
-          )
+        is_expected.to create_osl_jenkins_job('cookbook-uploader-osuosl-cookbooks-test-cookbook').with(
+          source: 'jobs/cookbook_uploader.groovy.erb',
+          template: true,
+          variables: {
+            execute_shell: 'echo $payload | /var/lib/jenkins/bin/github_pr_comment_trigger.rb',
+            github_url: 'https://github.com/osuosl-cookbooks/test-cookbook',
+            job_name: 'cookbook-uploader-osuosl-cookbooks-test-cookbook',
+            non_bump_message: 'Exiting because comment was not a bump request',
+            trigger_token: 'trigger_token',
+          }
+        )
       end
       it do
-        expect(chef_run).to create_jenkins_job('environment-bumper-osuosl-chef-repo')
-          .with(config: '/var/chef/cache/osuosl/chef-repo/config.xml')
+        expect(chef_run.osl_jenkins_job('cookbook-uploader-osuosl-cookbooks-test-cookbook')).to \
+          notify('osl_jenkins_service[cookbook_uploader]').to(:restart).delayed
       end
     end
   end

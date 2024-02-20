@@ -22,17 +22,22 @@ describe 'osl-jenkins::bumpzone' do
       end
       include_context 'common_stubs'
       include_context 'data_bag_stubs'
+
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
       end
-      %w(/var/lib/jenkins/bin /var/lib/jenkins/lib).each do |d|
-        it do
-          expect(chef_run).to create_directory(d).with(recursive: true)
-        end
+
+      %w(
+        faraday-http-cache
+        git
+        octokit
+      ).each do |g|
+        it { is_expected.to install_chef_gem(g).with(compile_time: true) }
       end
+
       %w(bumpzone.rb checkzone.rb).each do |f|
         it do
-          expect(chef_run).to create_cookbook_file("/var/lib/jenkins/bin/#{f}")
+          is_expected.to create_cookbook_file("/var/lib/jenkins/bin/#{f}")
             .with(
               source: "bin/#{f}",
               owner: 'jenkins',
@@ -41,7 +46,7 @@ describe 'osl-jenkins::bumpzone' do
             )
         end
         it do
-          expect(chef_run).to create_cookbook_file("/var/lib/jenkins/lib/#{f}")
+          is_expected.to create_cookbook_file("/var/lib/jenkins/lib/#{f}")
             .with(
               source: "lib/#{f}",
               owner: 'jenkins',
@@ -50,49 +55,21 @@ describe 'osl-jenkins::bumpzone' do
             )
         end
       end
+      it { is_expected.to install_package 'bind' }
+      it { is_expected.to nothing_osl_jenkins_service 'bumpzone' }
+      it { is_expected.to install_osl_jenkins_plugin 'slack' }
       it do
-        expect(chef_run).to install_package('bind')
-      end
-      %w(bumpzone checkzone update-zonefiles).each do |j|
-        it do
-          expect(chef_run).to create_directory("/var/chef/cache/#{j}").with(recursive: true)
-        end
-        it do
-          expect(chef_run).to create_jenkins_job(j).with(config: "/var/chef/cache/#{j}/config.xml")
-        end
+        expect(chef_run.osl_jenkins_plugin('slack')).to notify('osl_jenkins_service[bumpzone]').to(:restart).delayed
       end
       it do
-        expect(chef_run).to create_template('/var/chef/cache/bumpzone/config.xml')
-          .with(
-            source: 'bumpzone.config.xml.erb',
-            mode: '440',
-            variables: {
-              github_url: 'https://github.com/osuosl/zonefiles.git',
-              trigger_token: 'trigger_token',
-            }
-          )
+        is_expected.to create_osl_jenkins_password_credentials('bumpzone').with(
+          username: 'manatee',
+          password: 'token_password'
+        )
       end
       it do
-        expect(chef_run).to create_template('/var/chef/cache/checkzone/config.xml')
-          .with(
-            source: 'checkzone.config.xml.erb',
-            mode: '440',
-            variables: {
-              github_url: 'https://github.com/osuosl/zonefiles.git',
-              trigger_token: 'trigger_token',
-            }
-          )
-      end
-      it do
-        expect(chef_run).to create_template('/var/chef/cache/update-zonefiles/config.xml')
-          .with(
-            source: 'update-zonefiles.config.xml.erb',
-            mode: '440',
-            variables: {
-              github_url: 'https://github.com/osuosl/zonefiles.git',
-              dns_primary: 'dns_primary',
-            }
-          )
+        expect(chef_run.osl_jenkins_password_credentials('bumpzone')).to \
+          notify('osl_jenkins_service[bumpzone]').to(:restart).delayed
       end
     end
   end

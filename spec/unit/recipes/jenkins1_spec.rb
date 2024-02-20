@@ -53,43 +53,35 @@ describe 'osl-jenkins::jenkins1' do
                 'pass' => 'password',
                 'trigger_token' => 'trigger_token',
               },
-              'packer_pipeline' => {
-                'user' => 'manatee',
-                'api_token' => 'token_password',
-                'trigger_token' => 'trigger_token',
-                'public_key' => 'public key for openstack_taster goes here',
-                'private_key' => 'private key for openstack_taster goes here',
-              },
             }
           )
       end
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
       end
-      #       it do
-      #         expect(chef_run).to create_jenkins_password_credentials('manatee1').with(
-      #           id: 'cookbook_uploader',
-      #           password: 'token_password'
-      #         )
-      #       end
-      #       it do
-      #         expect(chef_run).to create_jenkins_password_credentials('manatee2').with(
-      #           id: 'bumpzone',
-      #           password: 'token_password'
-      #         )
-      #       end
-      #       it do
-      #         expect(chef_run).to create_jenkins_password_credentials('manatee3').with(
-      #           id: 'github_comment',
-      #           password: 'token_password'
-      #         )
-      #       end
       it do
-        expect(chef_run).to include_recipe('base::python')
+        is_expected.to create_osl_jenkins_install('jenkins.osuosl.org').with(
+          admin_address: 'manatee@osuosl.org',
+          num_executors: 4
+        )
       end
+      it { is_expected.to create_osl_jenkins_config('jenkins1') }
       it do
-        expect(chef_run).to install_package('graphviz')
+        expect(chef_run.osl_jenkins_config('jenkins1')).to \
+          notify('osl_jenkins_service[jenkins1]').to(:restart).delayed
       end
+      it { is_expected.to enable_osl_jenkins_service 'jenkins1' }
+      it { is_expected.to start_osl_jenkins_service 'jenkins1' }
+      %w(
+        base::cinc_workstation
+        osl-jenkins::cookbook_uploader
+        osl-jenkins::github_comment
+        osl-jenkins::bumpzone
+        base::python
+      ).each do |r|
+        it { is_expected.to include_recipe r }
+      end
+      it { expect(chef_run).to install_package 'graphviz' }
     end
   end
 end
