@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+3.0.1 (2024-02-20)
+------------------
+- Remove credential setup with JCASC
+
 3.0.0 (2024-02-20)
 ------------------
 - Major refactor
