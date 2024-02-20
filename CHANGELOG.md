@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+3.0.0 (2024-02-20)
+------------------
+- Major refactor
+
 2.18.0 (2024-02-04)
 -------------------
 - Allow for manual upgrades of Jenkins and plugins
