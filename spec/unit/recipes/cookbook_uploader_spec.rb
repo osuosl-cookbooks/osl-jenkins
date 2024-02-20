@@ -65,16 +65,6 @@ describe 'osl-jenkins::cookbook_uploader' do
       end
       it { is_expected.to nothing_osl_jenkins_service 'cookbook_uploader' }
       it do
-        is_expected.to create_osl_jenkins_password_credentials('cookbook_uploader').with(
-          username: 'manatee',
-          password: 'token_password'
-        )
-      end
-      it do
-        expect(chef_run.osl_jenkins_password_credentials('cookbook_uploader')).to \
-          notify('osl_jenkins_service[cookbook_uploader]').to(:restart).delayed
-      end
-      it do
         is_expected.to create_osl_jenkins_job('environment-bumper-osuosl-chef-repo').with(
           source: 'jobs/environment-bumper.groovy.erb',
           template: true,

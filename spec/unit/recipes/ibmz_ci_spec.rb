@@ -81,28 +81,6 @@ describe 'osl-jenkins::ibmz_ci' do
       it { is_expected.to enable_osl_jenkins_service 'ibmz-ci' }
       it { is_expected.to start_osl_jenkins_service 'ibmz-ci' }
       it do
-        is_expected.to create_osl_jenkins_private_key_credentials('ibmz_ci-docker').with(
-          username: 'jenkins',
-          private_key: 'ibmz_ci_private_key'
-        )
-      end
-      it do
-        expect(chef_run.osl_jenkins_private_key_credentials('ibmz_ci-docker')).to \
-          notify('osl_jenkins_service[ibmz-ci]').to(:restart).delayed
-      end
-      it do
-        is_expected.to create_osl_jenkins_client_cert_credentials('ibmz_ci_docker-server').with(
-          description: 'Docker client certificate',
-          cert: 'cert',
-          key: 'key',
-          chain: 'chain'
-        )
-      end
-      it do
-        expect(chef_run.osl_jenkins_client_cert_credentials('ibmz_ci_docker-server')).to \
-          notify('osl_jenkins_service[ibmz-ci]').to(:restart).delayed
-      end
-      it do
         is_expected.to create_osl_jenkins_config('ibmz-ci').with(
           sensitive: true,
           variables: {

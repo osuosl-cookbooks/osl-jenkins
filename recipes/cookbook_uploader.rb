@@ -69,12 +69,6 @@ osl_jenkins_service 'cookbook_uploader' do
   action :nothing
 end
 
-osl_jenkins_password_credentials 'cookbook_uploader' do
-  username secrets['git']['cookbook_uploader']['user']
-  password secrets['git']['cookbook_uploader']['token']
-  notifies :restart, 'osl_jenkins_service[cookbook_uploader]', :delayed
-end
-
 env_job_name = "environment-bumper-#{chef_repo.tr('/', '-')}"
 
 osl_jenkins_job env_job_name do
