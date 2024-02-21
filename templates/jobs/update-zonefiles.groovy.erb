@@ -20,6 +20,7 @@ job('update-zonefiles') {
   }
   publishers {
     slackNotifier {
+      commitInfoChoice('NONE')
       notifySuccess(true)
       notifyAborted(true)
       notifyNotBuilt(true)
