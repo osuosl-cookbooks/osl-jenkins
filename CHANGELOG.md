@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+3.0.4 (2024-02-26)
+------------------
+- Set label for github_comment job
+
 3.0.3 (2024-02-21)
 ------------------
 - Add missing commitInfoChoice option for slack notifier
