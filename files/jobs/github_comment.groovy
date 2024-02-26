@@ -5,6 +5,7 @@ job('github_comment') {
     stringParam("pr_id", "\"\"", "")
     stringParam("message", "\"\"", "")
   }
+  label('built-in')
   wrappers {
     ghprbUpstreamStatus {
       showMatrixStatus(false)
