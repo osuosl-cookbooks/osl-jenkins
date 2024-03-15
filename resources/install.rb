@@ -10,11 +10,7 @@ property :plugins, Array
 property :site_name, String, name_property: true
 
 action :create do
-  include_recipe 'osl-repos::epel'
-
-  openjdk_pkg_install osl_jenkins_java_version do
-    pkg_names "java-#{osl_jenkins_java_version}-openjdk-headless"
-  end
+  package "java-#{osl_jenkins_java_version}-openjdk-headless"
 
   yum_repository 'jenkins' do
     baseurl 'https://pkg.jenkins.io/redhat-stable'

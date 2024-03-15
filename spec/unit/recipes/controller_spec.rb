@@ -16,12 +16,11 @@ describe 'jenkins_test::controller' do
       end
 
       it { is_expected.to create_osl_jenkins_install('10.0.0.2').with(admin_address: 'noreply@example.org') }
-      it { is_expected.to include_recipe 'osl-repos::epel' }
       case p
       when CENTOS_7
-        it { is_expected.to install_openjdk_pkg_install('11').with(pkg_names: 'java-11-openjdk-headless') }
+        it { is_expected.to install_package 'java-11-openjdk-headless' }
       when ALMA_8
-        it { is_expected.to install_openjdk_pkg_install('latest').with(pkg_names: 'java-latest-openjdk-headless') }
+        it { is_expected.to install_package 'java-21-openjdk-headless' }
       end
 
       it do
