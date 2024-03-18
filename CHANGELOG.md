@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+3.1.0 (2024-03-18)
+------------------
+- Switch to java 21 instead of using latest
+
 3.0.4 (2024-02-26)
 ------------------
 - Set label for github_comment job
