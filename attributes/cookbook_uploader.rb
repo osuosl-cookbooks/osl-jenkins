@@ -56,6 +56,13 @@ default['osl-jenkins']['cookbook_uploader']['all_environments_word'] = '*'
 # GitHub organization.
 default['osl-jenkins']['cookbook_uploader']['override_repos'] = nil
 
+# Array<String>; If "nil", Jenkins automation will be remove up for all repos in
+# the above cookbook organization. If an array of repo names (not prefixed) is
+# given, only they will have the automation set up. This is useful if you wish
+# to test automation only on one or two repos before deploying to the entire
+# GitHub organization.
+default['osl-jenkins']['cookbook_uploader']['override_archived_repos'] = nil
+
 # Boolean; Whether to allow GitHub pushes to insecure URLs; useful for testing
 # on a local Jenkins instance that doesn't have a valid SSL cert.
 default['osl-jenkins']['cookbook_uploader']['github_insecure_hook'] = false

@@ -11,6 +11,7 @@ describe 'osl-jenkins::jenkins1' do
             'authorized_teams' => %w(osuosl-cookbooks/staff),
             'default_environments' => %w(production workstation),
             'override_repos' => %w(test-cookbook),
+            'override_archived_repos' => %w(archived-cookbook),
             'github_insecure_hook' => true,
             'do_not_upload_cookbooks' => true,
           }

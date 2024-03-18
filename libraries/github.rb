@@ -10,8 +10,8 @@ if defined?(Faraday::HttpCache)
   Octokit.middleware = stack
 end
 
-# Given a GitHub organization name and a GitHub API token with access to view
-# the repositories in that org, returns a list of all repo names in the org.
+# Given a GitHub organization name and a GitHub API token with access to view the repositories in that org, returns a
+# list of all repo names in the org that are not archived.
 #
 # @param github_token [String] GitHub API token with permissions to view
 #   repositories on the given repo.
@@ -21,7 +21,20 @@ def collect_github_repositories(github_token, org_name)
   github = Octokit::Client.new(access_token: github_token)
   github.auto_paginate = true
 
-  github.org_repos(org_name).map(&:name)
+  github.org_repos(org_name).reject(&:archived?).map(&:name)
+end
+
+# Given a GitHub organization name and a GitHub API token with access to view the repositories in that org, returns a
+# list of all repo names in the org that are archived.
+#
+# @param github_token [String] GitHub API token with permissions to view repositories on the given repo.
+# @param org_name [String] Name of GitHub organization.
+def collect_archived_github_repositories(github_token, org_name)
+  require 'octokit'
+  github = Octokit::Client.new(access_token: github_token)
+  github.auto_paginate = true
+
+  github.org_repos(org_name).select(&:archived?).map(&:name)
 end
 
 # Sets up a GitHub trigger for the Jenkins cookbook uploader job.  It will

@@ -4,6 +4,11 @@ control 'cookbook-uploader' do
     its('headers.X-Jenkins') { should_not eq nil }
   end
 
+  describe http('https://127.0.0.1/job/cookbook-uploader-osuosl-cookbooks-archived-cookbook/', ssl_verify: false) do
+    its('status') { should eq 404 }
+    its('headers.X-Jenkins') { should_not eq nil }
+  end
+
   describe http('https://127.0.0.1/job/environment-bumper-osuosl-chef-repo/', ssl_verify: false) do
     its('status') { should eq 200 }
     its('headers.X-Jenkins') { should_not eq nil }

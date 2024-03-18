@@ -11,6 +11,7 @@ describe 'osl-jenkins::cookbook_uploader' do
             'authorized_teams' => %w(osuosl-cookbooks/staff),
             'default_environments' => %w(production workstation),
             'override_repos' => %w(test-cookbook),
+            'override_archived_repos' => %w(archived-cookbook),
             'github_insecure_hook' => true,
             'do_not_upload_cookbooks' => true,
           }
@@ -97,6 +98,11 @@ describe 'osl-jenkins::cookbook_uploader' do
       end
       it do
         expect(chef_run.osl_jenkins_job('cookbook-uploader-osuosl-cookbooks-test-cookbook')).to \
+          notify('osl_jenkins_service[cookbook_uploader]').to(:restart).delayed
+      end
+      it { is_expected.to delete_osl_jenkins_job 'cookbook-uploader-osuosl-cookbooks-archived-cookbook' }
+      it do
+        expect(chef_run.osl_jenkins_job('cookbook-uploader-osuosl-cookbooks-archived-cookbook')).to \
           notify('osl_jenkins_service[cookbook_uploader]').to(:restart).delayed
       end
     end
