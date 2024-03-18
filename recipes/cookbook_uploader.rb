@@ -64,6 +64,8 @@ end
 execute_shell = 'echo $payload | ' + ::File.join(osl_jenkins_bin_path, 'github_pr_comment_trigger.rb')
 repo_names = node['osl-jenkins']['cookbook_uploader']['override_repos']
 repo_names = collect_github_repositories(git_cred['token'], org_name) if repo_names.nil? || repo_names.empty?
+archived_repo_names = node['osl-jenkins']['cookbook_uploader']['override_archived_repos']
+archived_repo_names = collect_archived_github_repositories(git_cred['token'], org_name) if archived_repo_names.nil? || archived_repo_names.empty?
 
 osl_jenkins_service 'cookbook_uploader' do
   action :nothing
@@ -113,5 +115,15 @@ repo_names.each do |repo_name|
     )
   rescue Octokit::InternalServerError, Octokit::BadGateway, Octokit::ServerError => e
     Chef::Log.warn("Unable to connect to Github: #{e}")
+  end
+end
+
+# Delete archived repositories from jenkins configs
+# NOTE: This will not remove it from the Jenkins server, just the JASC config
+archived_repo_names.each do |repo_name|
+  job_name = "cookbook-uploader-#{org_name}-#{repo_name}"
+  osl_jenkins_job job_name do
+    action :delete
+    notifies :restart, 'osl_jenkins_service[cookbook_uploader]', :delayed
   end
 end
