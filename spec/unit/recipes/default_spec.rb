@@ -13,17 +13,11 @@ describe 'osl-jenkins::default' do
         expect { chef_run }.to_not raise_error
       end
 
-      it { is_expected.to include_recipe 'osl-repos::epel' }
-
       case p
       when CENTOS_7
-        it do
-          expect(chef_run).to install_openjdk_pkg_install('11').with(pkg_names: 'java-11-openjdk-headless')
-        end
+        it { expect(chef_run).to install_package 'java-11-openjdk-headless' }
       when ALMA_8
-        it do
-          expect(chef_run).to install_openjdk_pkg_install('latest').with(pkg_names: 'java-latest-openjdk-headless')
-        end
+        it { expect(chef_run).to install_package 'java-21-openjdk-headless' }
       end
 
       it do

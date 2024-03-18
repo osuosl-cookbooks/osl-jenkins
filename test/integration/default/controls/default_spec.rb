@@ -1,4 +1,4 @@
-jdk_ver = os.release.to_i >= 8 ? 'latest' : '11'
+jdk_ver = os.release.to_i >= 8 ? '21' : '11'
 
 control 'default' do
   describe package("java-#{jdk_ver}-openjdk-headless") do

@@ -14,7 +14,7 @@ module OslJenkins
         when 7
           '11'
         when 8
-          'latest'
+          '21'
         end
       end
 
