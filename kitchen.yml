@@ -1,21 +1,30 @@
 ---
-verifier:
-  name: inspec
 driver:
-  flavor_ref: 'm1.medium'
+  name: vagrant
   security_groups:
     - default
     - github
 driver_config:
   user_data: userdata.txt
 
+verifier:
+  name: inspec
+
+transport:
+  name: rsync
+
 provisioner:
   name: chef_infra
+  product_name: cinc
+  product_version: '17'
   encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
   data_bags_path: test/integration/data_bags
   enforce_idempotency: true
   multiple_converge: 2
   deprecations_as_errors: true
+
+platforms:
+  - name: almalinux-8
 
 suites:
   - name: default
