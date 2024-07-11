@@ -80,7 +80,7 @@ jenkins:
       <% end -%>
   clouds:
   - docker:
-    <% @docker_hosts.each do |host| -%>
+    <% @docker_hosts.sort_by { |server| server['fqdn'] }.each do |host| -%>
       containerCap: 400
       dockerApi:
         connectTimeout: 5
