@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+3.2.1 (2024-07-11)
+------------------
+- Rename diskSpaceMonitor to diskSpace
+
 3.2.0 (2024-03-18)
 ------------------
 - Delete JASC configs for archived repositories
