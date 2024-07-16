@@ -13,15 +13,10 @@ describe 'osl-jenkins::default' do
         expect { chef_run }.to_not raise_error
       end
 
-      case p
-      when CENTOS_7
-        it { expect(chef_run).to install_package 'java-11-openjdk-headless' }
-      when ALMA_8
-        it { expect(chef_run).to install_package 'java-21-openjdk-headless' }
-      end
+      it { is_expected.to install_package 'java-21-openjdk-headless' }
 
       it do
-        expect(chef_run).to create_users_manage('alfred').with(
+        is_expected.to create_users_manage('alfred').with(
           group_id: 10000,
           users: [{
             'id' => 'alfred',

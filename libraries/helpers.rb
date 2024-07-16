@@ -10,12 +10,7 @@ module OslJenkins
       end
 
       def osl_jenkins_java_version
-        case node['platform_version'].to_i
-        when 7
-          '11'
-        when 8
-          '21'
-        end
+        '21'
       end
 
       def osl_jenkins_default_plugins
