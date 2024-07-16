@@ -1,4 +1,4 @@
-jdk_ver = os.release.to_i >= 8 ? '21' : '11'
+jdk_ver = '21'
 
 control 'controller' do
   %w(

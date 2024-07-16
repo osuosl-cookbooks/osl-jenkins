@@ -17,7 +17,6 @@ cookbook 'osl-resources', git: 'git@github.com:osuosl-cookbooks/osl-resources', 
 cookbook 'osl-rsync', git: 'git@github.com:osuosl-cookbooks/osl-rsync'
 cookbook 'osl-selinux', git: 'git@github.com:osuosl-cookbooks/osl-selinux'
 cookbook 'osl-syslog', git: 'git@github.com:osuosl-cookbooks/osl-syslog'
-cookbook 'yum-qemu-ev', git: 'git@github.com:osuosl-cookbooks/yum-qemu-ev'
 
 cookbook 'jenkins_test', path: 'test/cookbooks/jenkins_test'
 

@@ -15,7 +15,5 @@ depends          'osl-git'
 depends          'osl-haproxy'
 depends          'osl-repos'
 depends          'users', '~> 8.0'
-depends          'yum-qemu-ev'
 
-supports         'centos', '~> 7.0'
 supports         'almalinux', '~> 8.0'

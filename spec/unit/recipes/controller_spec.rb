@@ -16,12 +16,7 @@ describe 'jenkins_test::controller' do
       end
 
       it { is_expected.to create_osl_jenkins_install('10.0.0.2').with(admin_address: 'noreply@example.org') }
-      case p
-      when CENTOS_7
-        it { is_expected.to install_package 'java-11-openjdk-headless' }
-      when ALMA_8
-        it { is_expected.to install_package 'java-21-openjdk-headless' }
-      end
+      it { is_expected.to install_package 'java-21-openjdk-headless' }
 
       it do
         is_expected.to create_yum_repository('jenkins').with(
