@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+3.3.0 (2024-07-16)
+------------------
+- Remove support for CentOS 7
+
 3.2.2 (2024-07-11)
 ------------------
 - Sort docker hosts by fqdn
