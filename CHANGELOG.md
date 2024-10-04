@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+3.3.1 (2024-10-04)
+------------------
+- Additional Github plugins required for Jenkinsfile deployments
+
 3.3.0 (2024-07-16)
 ------------------
 - Remove support for CentOS 7

@@ -4,7 +4,7 @@ maintainer_email 'systems@osuosl.org'
 license          'Apache-2.0'
 chef_version     '>= 16.0'
 description      'Installs/Configures osl-jenkins'
-version          '3.3.0'
+version          '3.3.1'
 issues_url       'https://github.com/osuosl-cookbooks/osl-jenkins/issues'
 source_url       'https://github.com/osuosl-cookbooks/osl-jenkins'
 
