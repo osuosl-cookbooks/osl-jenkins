@@ -26,7 +26,9 @@ module OslJenkins
           embeddable-build-status
           git
           github
+          github-checks
           gitlab-plugin
+          github-pullrequest
           git-parameter
           ircbot
           job-dsl
@@ -36,7 +38,9 @@ module OslJenkins
           matrix-project
           pam-auth
           parameterized-trigger
+          pipeline-github
           pipeline-github-lib
+          pipeline-model-definition
           pipeline-stage-view
           ssh-agent
           ssh-credentials
