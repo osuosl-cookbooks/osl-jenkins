@@ -6,6 +6,7 @@ control 'ibmz-ci' do
   describe command '/usr/local/bin/jenkins-plugin-cli -l' do
     %w(
       ansicolor
+      basic-branch-build-strategies
       build-monitor-plugin
       build-timeout
       cloud-stats

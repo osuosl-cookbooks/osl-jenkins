@@ -30,6 +30,7 @@ osl_jenkins_install 'powerci.osuosl.org' do
   num_executors 0
   plugins %w(
     ansicolor
+    basic-branch-build-strategies
     build-monitor-plugin
     build-timeout
     cloud-stats
