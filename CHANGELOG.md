@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+3.3.3 (2025-02-06)
+------------------
+- Remove agentProtocols from jasc config
+
 3.3.2 (2024-12-05)
 ------------------
 - Add basic-branch-build-strategies plugin on powerci/ibmz-ci
