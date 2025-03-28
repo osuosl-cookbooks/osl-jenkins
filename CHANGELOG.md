@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+3.3.4 (2025-03-28)
+------------------
+- Add supermarket share to cookbook-uploader script
+
 3.3.3 (2025-02-06)
 ------------------
 - Remove agentProtocols from jasc config
