@@ -162,10 +162,11 @@ git.add_tag("v#{version}")
 # Push back to Github
 git.push(git.remote('origin'), base_branch, tags: true)
 
-# Upload to the Chef server, freezing, ignoring dependencies
+# Upload to the Chef server and supermarket, freezing, ignoring dependencies
 $stderr.puts "Uploading #{repo_name} cookbook to the Chef server..."
 unless <%= @do_not_upload_cookbooks %>
   `knife cookbook upload #{repo_name} --freeze -o ../`
+  `knife supermarket share #{repo_name} Other -m https://supermarket.osuosl.org -o ../`
 end
 
 # Close the PR
