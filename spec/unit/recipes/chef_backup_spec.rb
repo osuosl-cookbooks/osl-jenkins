@@ -11,6 +11,8 @@ describe 'osl-jenkins::chef_backup' do
         expect { chef_run }.to_not raise_error
       end
 
+      it { is_expected.to install_package('gcc') }
+
       it { is_expected.to install_chef_gem('knife-backup').with(version: '0.0.10') }
 
       it do
