@@ -3,6 +3,15 @@ osl-jenkins Cookbook
 
 Jenkins wrapper cookbook for OSL.
 
+Before testing, make sure you have set all the environment variables needed in `kitchen.yml`.
+
+Use these when creating an OAuth App on GitHub for the GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET variables:
+
+* Homepage URL: `https://10.1.100.100`
+* Authorization callback URL: `https://10.1.100.100/securityRealm/finishLogin`
+
+replacing 10.1.100.100 with the IP created by test-kitchen.
+
 Requirements
 ------------
 TODO: List your cookbook requirements. Be sure to include any requirements this cookbook has on platforms, libraries, other cookbooks, packages, operating systems, etc.
