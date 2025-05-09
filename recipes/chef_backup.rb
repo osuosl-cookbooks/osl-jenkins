@@ -16,6 +16,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+# Needed for installing knife-backup gem
+package 'gcc'
+
 chef_gem 'knife-backup' do
   version '0.0.10'
 end

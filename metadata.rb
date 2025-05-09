@@ -17,3 +17,4 @@ depends          'osl-repos'
 depends          'users', '~> 8.0'
 
 supports         'almalinux', '~> 8.0'
+supports         'almalinux', '~> 9.0'
