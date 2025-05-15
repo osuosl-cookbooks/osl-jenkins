@@ -18,7 +18,7 @@
 #
 
 # Needed for installing knife-backup gem
-package 'gcc'
+build_essential 'chef_backup'
 
 chef_gem 'knife-backup' do
   version '0.0.10'
