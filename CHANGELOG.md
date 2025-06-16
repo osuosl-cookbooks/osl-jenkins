@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+3.3.6 (2025-06-16)
+------------------
+- Update powerci images
+
 3.3.5 (2025-05-15)
 ------------------
 - Add AlmaLinux 9
