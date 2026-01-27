@@ -15,7 +15,7 @@ action :create do
   yum_repository 'jenkins' do
     baseurl 'https://pkg.jenkins.io/redhat-stable'
     description 'Jenkins-stable'
-    gpgkey 'https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key'
+    gpgkey 'https://pkg.jenkins.io/rpm-stable/repodata/repomd.xml.key'
     gpgcheck true
   end
 
