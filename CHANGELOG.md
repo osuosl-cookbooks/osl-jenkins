@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+3.3.8 (2026-01-27)
+------------------
+- Update yum repo key
+
 3.3.7 (2025-07-24)
 ------------------
 - Remove deprecated myViewsTabBar setting in config
