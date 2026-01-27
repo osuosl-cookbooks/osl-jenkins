@@ -22,7 +22,7 @@ describe 'jenkins_test::controller' do
         is_expected.to create_yum_repository('jenkins').with(
           baseurl: 'https://pkg.jenkins.io/redhat-stable',
           description: 'Jenkins-stable',
-          gpgkey: 'https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key',
+          gpgkey: 'https://pkg.jenkins.io/rpm-stable/repodata/repomd.xml.key',
           gpgcheck: true
         )
       end
