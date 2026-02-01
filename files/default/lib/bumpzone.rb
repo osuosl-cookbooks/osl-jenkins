@@ -112,6 +112,7 @@ class BumpZone
     d = JSON.parse(STDIN.read)
     BumpZone.pr_merged(d)
     BumpZone.changed_files(d).each do |f|
+      next if f.status == 'removed'
       BumpZone.bump(f.filename) if File.basename(f.filename) =~ /^db\..*/
     end
     BumpZone.git_push

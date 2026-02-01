@@ -247,7 +247,7 @@ describe CheckZone do
       ENV['GIT_COMMIT'] = 'sha1'
     end
     it 'checks a zone that passes' do
-      response_body = [double('Sawyer::Resource', filename: 'db.osuosl.org')]
+      response_body = [double('Sawyer::Resource', filename: 'db.osuosl.org', status: 'modified')]
       allow(github_mock).to receive(:create_status)
         .with(
           'osuosl/zonefiles-test',
@@ -291,7 +291,7 @@ describe CheckZone do
       end
     end
     it 'checks a zone that fails' do
-      response_body = [double('Sawyer::Resource', filename: 'db.osuosl.org')]
+      response_body = [double('Sawyer::Resource', filename: 'db.osuosl.org', status: 'modified')]
       allow(github_mock).to receive(:create_status)
         .with(
           'osuosl/zonefiles-test',
@@ -345,6 +345,33 @@ describe CheckZone do
         expect(CheckZone.syntax_error).to eq false
         expect(CheckZone.issue_msg).to match(/Zone syntax error\(s\) found:\n\n```/)
       end
+    end
+    it 'skips removed/deleted zone files' do
+      response_body = [double('Sawyer::Resource', filename: 'db.osuosl.org', status: 'removed')]
+      allow(github_mock).to receive(:create_status)
+        .with(
+          'osuosl/zonefiles-test',
+          'sha1',
+          'success',
+          context: 'checkzone',
+          target_url: 'http://jenkins.osuosl.org/job/checkzone/1/console',
+          description: 'named-checkzone has passed'
+        )
+      allow(github_mock).to receive(:pull_request_files).with('osuosl/zonefiles-test', 1).and_return(response_body)
+      allow(STDIN).to receive(:read).and_return(open_fixture('open_pr_payload.json'))
+      expect(Open3).to_not receive(:popen2)
+      expect(github_mock).to receive(:create_status)
+        .with(
+          'osuosl/zonefiles-test',
+          'sha1',
+          'success',
+          context: 'checkzone',
+          target_url: 'http://jenkins.osuosl.org/job/checkzone/1/console',
+          description: 'named-checkzone has passed'
+        )
+      CheckZone.reset
+      CheckZone.start
+      expect(CheckZone.syntax_error).to eq false
     end
   end
 end
