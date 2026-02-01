@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+3.3.9 (2026-02-01)
+------------------
+- Skip removed zonefiles in checkzone and bumpzone
+
 3.3.8 (2026-01-27)
 ------------------
 - Update yum repo key
