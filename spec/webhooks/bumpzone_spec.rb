@@ -239,7 +239,7 @@ EOF
     end
     it 'completes a whole bump operation with oneline soa' do
       file = tempfile(fixture_path('db.osuosl.org'))
-      response_body = [double('Sawyer::Resource', filename: file)]
+      response_body = [double('Sawyer::Resource', filename: file, status: 'modified')]
       allow(github_mock).to receive(:pull_request_files).with('osuosl/zonefiles-test', 1).and_return(response_body)
       allow(STDIN).to receive(:read).and_return(open_fixture('merge_payload.json'))
       BumpZone.start
@@ -248,7 +248,7 @@ EOF
     end
     it 'completes a whole bump operation with multiline soa' do
       file = tempfile(fixture_path('db.osuosl.net'))
-      response_body = [double('Sawyer::Resource', filename: file)]
+      response_body = [double('Sawyer::Resource', filename: file, status: 'modified')]
       allow(github_mock).to receive(:pull_request_files).with('osuosl/zonefiles-test', 1).and_return(response_body)
       allow(STDIN).to receive(:read).and_return(open_fixture('merge_payload.json'))
       BumpZone.start
@@ -257,11 +257,21 @@ EOF
     end
     it 'Skips file not named properly' do
       file = tempfile(fixture_path('oneline-soa'))
-      response_body = [double('Sawyer::Resource', filename: file)]
+      response_body = [double('Sawyer::Resource', filename: file, status: 'modified')]
       allow(github_mock).to receive(:pull_request_files).with('osuosl/zonefiles-test', 1).and_return(response_body)
       allow(STDIN).to receive(:read).and_return(open_fixture('merge_payload.json'))
       BumpZone.start
       file.rewind
+      expect(file.read).to_not match(/#{Time.new.strftime('%Y%m%d00').to_i}/)
+    end
+    it 'Skips removed/deleted zone files' do
+      file = tempfile(fixture_path('db.osuosl.org'))
+      response_body = [double('Sawyer::Resource', filename: file, status: 'removed')]
+      allow(github_mock).to receive(:pull_request_files).with('osuosl/zonefiles-test', 1).and_return(response_body)
+      allow(STDIN).to receive(:read).and_return(open_fixture('merge_payload.json'))
+      BumpZone.start
+      file.rewind
+      # File should not be modified since it was marked as removed
       expect(file.read).to_not match(/#{Time.new.strftime('%Y%m%d00').to_i}/)
     end
   end

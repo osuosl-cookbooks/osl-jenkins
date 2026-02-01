@@ -85,6 +85,7 @@ class CheckZone
     CheckZone.pr_updated(d)
     CheckZone.github_init(d)
     CheckZone.changed_files.each do |f|
+      next if f.status == 'removed'
       CheckZone.checkzone(f) if File.basename(f.filename) =~ /^db\..*/
     end
     CheckZone.post_msg if @syntax_error
