@@ -41,12 +41,6 @@ action :create do
   include_recipe 'osl-haproxy::install'
   include_recipe 'osl-haproxy::config'
 
-  with_run_context :root do
-    haproxy_service 'jenkins' do
-      subscribes :reload, 'template[/etc/haproxy/haproxy.cfg]', :delayed
-    end
-  end
-
   haproxy_frontend 'http' do
     default_backend 'jenkins'
     maxconn 2000
