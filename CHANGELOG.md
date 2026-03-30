@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+3.3.10 (2026-03-30)
+------------------
+- Pin gems for Ruby 3.1 compat with Cinc 18
+
 3.3.9 (2026-02-01)
 ------------------
 - Skip removed zonefiles in checkzone and bumpzone
