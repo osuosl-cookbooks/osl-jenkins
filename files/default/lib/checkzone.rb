@@ -1,4 +1,5 @@
 #!/opt/cinc/embedded/bin/ruby
+require_relative 'yajl_workaround'
 require 'git'
 require 'json'
 require 'octokit'

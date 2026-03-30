@@ -27,12 +27,18 @@ describe 'osl-jenkins::bumpzone' do
         expect { chef_run }.to_not raise_error
       end
 
-      %w(
-        faraday-http-cache
-        git
-        octokit
-      ).each do |g|
-        it { is_expected.to install_chef_gem(g).with(compile_time: true) }
+      it { is_expected.to install_chef_gem('faraday-http-cache').with(version: '< 2.6', compile_time: true) }
+      it { is_expected.to install_chef_gem('git').with(version: '< 4', compile_time: true) }
+      it { is_expected.to install_chef_gem('octokit').with(version: '< 10', compile_time: true) }
+
+      it do
+        is_expected.to create_cookbook_file('/var/lib/jenkins/lib/yajl_workaround.rb')
+          .with(
+            source: 'lib/yajl_workaround.rb',
+            owner: 'jenkins',
+            group: 'jenkins',
+            mode: '440'
+          )
       end
 
       %w(bumpzone.rb checkzone.rb).each do |f|
