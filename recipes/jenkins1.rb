@@ -15,13 +15,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-%w(
-  faraday-http-cache
-  git
-).each do |p|
-  chef_gem p do
-    compile_time true
-  end
+chef_gem 'faraday-http-cache' do
+  version '< 2.6'
+  compile_time true
+end
+
+chef_gem 'git' do
+  version '< 4'
+  compile_time true
 end
 
 node.default['osl-jenkins']['cookbook_uploader'].tap do |conf|

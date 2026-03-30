@@ -15,19 +15,31 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-%w(
-  faraday-http-cache
-  git
-  octokit
-).each do |p|
-  chef_gem p do
-    compile_time true
-  end
+chef_gem 'faraday-http-cache' do
+  version '< 2.6'
+  compile_time true
+end
+
+chef_gem 'git' do
+  version '< 4'
+  compile_time true
+end
+
+chef_gem 'octokit' do
+  version '< 10'
+  compile_time true
 end
 
 bumpzone = node['osl-jenkins']['bumpzone']
 secrets = credential_secrets
 jenkins_cred = secrets['jenkins']['bumpzone']
+
+cookbook_file ::File.join(osl_jenkins_lib_path, 'yajl_workaround.rb') do
+  source 'lib/yajl_workaround.rb'
+  owner 'jenkins'
+  group 'jenkins'
+  mode '440'
+end
 
 %w(bumpzone.rb checkzone.rb).each do |f|
   cookbook_file ::File.join(osl_jenkins_bin_path, f) do

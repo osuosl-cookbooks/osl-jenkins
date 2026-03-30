@@ -6,6 +6,7 @@
 # of them if no environments are specified) and creates a PR for it on Github.
 # Also optionally takes a link to the PR that triggered the version bump.
 
+require '/var/lib/jenkins/lib/yajl_workaround'
 require 'git'
 require 'json'
 require 'octokit'

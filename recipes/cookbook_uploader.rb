@@ -16,14 +16,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-%w(
-  faraday-http-cache
-  git
-  octokit
-).each do |p|
-  chef_gem p do
-    compile_time true
-  end
+chef_gem 'faraday-http-cache' do
+  version '< 2.6'
+  compile_time true
+end
+
+chef_gem 'git' do
+  version '< 4'
+  compile_time true
+end
+
+chef_gem 'octokit' do
+  version '< 10'
+  compile_time true
 end
 
 org_name = node['osl-jenkins']['cookbook_uploader']['org']
@@ -37,6 +42,14 @@ non_bump_message = 'Exiting because comment was not a bump request'.freeze
 secrets = credential_secrets
 git_cred = secrets['git']['cookbook_uploader']
 jenkins_cred = secrets['jenkins']['cookbook_uploader']
+
+# Deploy yajl workaround lib needed by scripts using octokit
+cookbook_file ::File.join(osl_jenkins_lib_path, 'yajl_workaround.rb') do
+  source 'lib/yajl_workaround.rb'
+  owner 'jenkins'
+  group 'jenkins'
+  mode '440'
+end
 
 # Copy over scripts for Jenkins to run
 %w(github_pr_comment_trigger.rb bump_environments.rb).each do |s|
