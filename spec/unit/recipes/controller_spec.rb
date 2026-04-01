@@ -50,7 +50,7 @@ describe 'jenkins_test::controller' do
       it do
         is_expected.to create_haproxy_frontend('http').with(
           default_backend: 'jenkins',
-          maxconn: 2000,
+          maxconn: '2000',
           extra_options: {
               'redirect' => 'scheme https if !{ ssl_fc }',
           }
@@ -60,7 +60,7 @@ describe 'jenkins_test::controller' do
       it do
         is_expected.to create_haproxy_frontend('https').with(
           default_backend: 'jenkins',
-          maxconn: 2000,
+          maxconn: '2000',
           bind: '0.0.0.0:443 ssl crt /etc/pki/tls/certs/wildcard.pem'
         )
       end
