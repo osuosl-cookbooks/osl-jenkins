@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+3.4.1 (2026-04-16)
+------------------
+- Remove excludeClientIPFromCrumb from CasC config
+
 3.4.0 (2026-04-01)
 ------------------
 - Add AlmaLinux 10 support and update for osl-haproxy changes
