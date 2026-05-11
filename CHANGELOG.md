@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+3.4.2 (2026-05-11)
+------------------
+- Guard eager Octokit middleware setup on Octokit being loaded
+
 3.4.1 (2026-04-16)
 ------------------
 - Remove excludeClientIPFromCrumb from CasC config
