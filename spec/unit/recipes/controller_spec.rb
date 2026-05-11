@@ -5,10 +5,10 @@ describe 'jenkins_test::controller' do
     context "#{p[:platform]} #{p[:version]}" do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(p.dup.merge(step_into: %w(
-          osl_jenkins_config
-          osl_jenkins_install
-          osl_jenkins_service
-        ))).converge(described_recipe)
+                                               osl_jenkins_config
+                                               osl_jenkins_install
+                                               osl_jenkins_service
+                                             ))).converge(described_recipe)
       end
       include_context 'common_stubs'
       it 'converges successfully' do
@@ -52,7 +52,7 @@ describe 'jenkins_test::controller' do
           default_backend: 'jenkins',
           maxconn: '2000',
           extra_options: {
-              'redirect' => 'scheme https if !{ ssl_fc }',
+            'redirect' => 'scheme https if !{ ssl_fc }',
           }
         )
       end
@@ -120,9 +120,9 @@ describe 'jenkins_test::controller' do
         is_expected.to create_osl_jenkins_config('default').with(
           cookbook: 'osl-jenkins',
           variables: {
-              site_name: '10.0.0.2',
-              admin_address: 'noreply@example.org',
-              num_executors: 2,
+            site_name: '10.0.0.2',
+            admin_address: 'noreply@example.org',
+            num_executors: 2,
           }
         )
       end

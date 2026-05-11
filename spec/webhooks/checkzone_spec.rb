@@ -134,7 +134,7 @@ describe CheckZone do
       CheckZone.reset
       CheckZone.github_init(open_json('sync_multifile_payload.json'))
       files = CheckZone.changed_files
-      expect(files[0].filename).to match(/db.osuosl.org/)
+      expect(files.first.filename).to match(/db.osuosl.org/)
       expect(files[1].filename).to match(/db.osuosl.com/)
     end
   end

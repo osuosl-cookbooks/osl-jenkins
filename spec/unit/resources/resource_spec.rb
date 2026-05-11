@@ -5,13 +5,13 @@ describe 'jenkins_test::resources' do
     context "#{p[:platform]} #{p[:version]}" do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(p.dup.merge(step_into: %w(
-          osl_jenkins_client_cert_credentials
-          osl_jenkins_job
-          osl_jenkins_password_credentials
-          osl_jenkins_plugin
-          osl_jenkins_private_key_credentials
-          osl_jenkins_secret
-        ))).converge(described_recipe)
+                                               osl_jenkins_client_cert_credentials
+                                               osl_jenkins_job
+                                               osl_jenkins_password_credentials
+                                               osl_jenkins_plugin
+                                               osl_jenkins_private_key_credentials
+                                               osl_jenkins_secret
+                                             ))).converge(described_recipe)
       end
       include_context 'common_stubs'
 
