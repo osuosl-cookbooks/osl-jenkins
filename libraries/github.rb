@@ -9,7 +9,7 @@ def patch_yajl_workaround
   Sawyer::Serializer.define_singleton_method(:yajl) do
     require 'yajl'
     new(Yajl)
-  rescue LoadError, NameError
+  rescue LoadError, NameError # rubocop:disable Lint/SuppressedException -- intentional: fall through so MultiJson selects a different adapter
   end
 
   require 'multi_json'
