@@ -9,7 +9,7 @@ def patch_yajl_workaround
   Sawyer::Serializer.define_singleton_method(:yajl) do
     require 'yajl'
     new(Yajl)
-  rescue LoadError, NameError
+  rescue LoadError, NameError # rubocop:disable Lint/SuppressedException -- intentional: fall through so MultiJson selects a different adapter
   end
 
   require 'multi_json'
@@ -18,7 +18,10 @@ def patch_yajl_workaround
   @_yajl_patched = true
 end
 
-if defined?(Faraday::HttpCache)
+# Configure Octokit's middleware stack at load time so all clients pick up HTTP caching. Both gems must already be
+# loaded — guard on both constants since chefspec/berkshelf can load Faraday::HttpCache transitively without loading
+# Octokit, in which case this block previously raised NameError and aborted loading of the rest of the library.
+if defined?(Faraday::HttpCache) && defined?(Octokit)
   require 'faraday-http-cache'
 
   # Github API caching
@@ -76,7 +79,6 @@ end
 # @param auth_token [String] Jenkins user api token for authentication with
 #   Jenkins server
 #
-# rubocop:disable Metrics/ParameterLists
 def set_up_github_push(github_token, org_name, repo_name, job_name,
                        trigger_token, insecure_hook, auth_user = nil,
                        auth_token = nil)

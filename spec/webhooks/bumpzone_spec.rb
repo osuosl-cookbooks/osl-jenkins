@@ -80,7 +80,7 @@ describe BumpZone do
       ]
       allow(github_mock).to receive(:pull_request_files).with('osuosl/zonefiles-test', 1).and_return(response_body)
       files = BumpZone.changed_files(open_json('merge_payload.json'))
-      expect(files[0].filename).to match(/db.osuosl.org/)
+      expect(files.first.filename).to match(/db.osuosl.org/)
       expect(files[1].filename).to match(/db.bak/)
     end
   end
