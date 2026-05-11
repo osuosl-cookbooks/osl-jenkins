@@ -18,7 +18,10 @@ def patch_yajl_workaround
   @_yajl_patched = true
 end
 
-if defined?(Faraday::HttpCache)
+# Configure Octokit's middleware stack at load time so all clients pick up HTTP caching. Both gems must already be
+# loaded — guard on both constants since chefspec/berkshelf can load Faraday::HttpCache transitively without loading
+# Octokit, in which case this block previously raised NameError and aborted loading of the rest of the library.
+if defined?(Faraday::HttpCache) && defined?(Octokit)
   require 'faraday-http-cache'
 
   # Github API caching
