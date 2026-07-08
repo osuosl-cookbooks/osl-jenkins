@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+3.5.1 (2026-07-08)
+------------------
+- Do not manage cookbook_uploader credential via JCasC
+
 3.5.0 (2026-07-08)
 ------------------
 - Add org-folder CI for cookbook repos via cookbook-pipelines
