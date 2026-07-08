@@ -87,13 +87,13 @@ end
 # Cookbook CI: a GitHub Organization Folder discovers every repo in the org
 # with a Jenkinsfile and runs its PRs/branches through the osl-pipelines
 # shared library (replaces the hand-managed GHPRB linter jobs).
+#
+# NOTE: the 'cookbook_uploader' Jenkins credential this job and shared library
+# reference is created out-of-band (Jenkins UI), NOT via JCasC. Do not add an
+# osl_jenkins_password_credentials resource here: JCasC's credentials
+# configurator is authoritative over the entire global credential store and
+# would delete every out-of-band credential on the server on the next restart.
 osl_jenkins_plugin 'github-branch-source' do
-  notifies :restart, 'osl_jenkins_service[cookbook_uploader]', :delayed
-end
-
-osl_jenkins_password_credentials 'cookbook_uploader' do
-  username git_cred['user']
-  password git_cred['token']
   notifies :restart, 'osl_jenkins_service[cookbook_uploader]', :delayed
 end
 
