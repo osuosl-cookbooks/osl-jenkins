@@ -45,6 +45,18 @@ default['osl-jenkins']['cookbook_uploader']['default_environments_word'] = '~'
 # when used in the !bump command.
 default['osl-jenkins']['cookbook_uploader']['all_environments_word'] = '*'
 
+# String; Git URL of the cookbook-pipelines repo, which holds the shared
+# pipeline library (cookbook CI) and the uploader pipeline definitions.
+default['osl-jenkins']['cookbook_uploader']['pipelines_repo'] = 'https://github.com/osuosl/cookbook-pipelines.git'
+
+# String; Branch of the cookbook-pipelines repo that Jenkins runs from.
+default['osl-jenkins']['cookbook_uploader']['pipelines_branch'] = 'main'
+
+# String; Regex of repo names the CI organization folder will consider. Repos
+# not matching are ignored entirely, even if they contain a Jenkinsfile.
+# Useful for canarying CI on one or two repos before an org-wide rollout.
+default['osl-jenkins']['cookbook_uploader']['ci_repo_filter'] = '.*'
+
 ###
 ### Attributes that are mainly for testing:
 ###

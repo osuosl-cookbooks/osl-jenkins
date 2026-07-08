@@ -1,0 +1,13 @@
+unclassified:
+  globalLibraries:
+    libraries:
+      - name: osl-pipelines
+        defaultVersion: <%= @branch %>
+        implicit: false
+        allowVersionOverride: false
+        retriever:
+          modernSCM:
+            scm:
+              git:
+                remote: <%= @repo %>
+                credentialsId: cookbook_uploader

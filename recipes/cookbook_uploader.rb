@@ -84,6 +84,39 @@ osl_jenkins_service 'cookbook_uploader' do
   action :nothing
 end
 
+# Cookbook CI: a GitHub Organization Folder discovers every repo in the org
+# with a Jenkinsfile and runs its PRs/branches through the osl-pipelines
+# shared library (replaces the hand-managed GHPRB linter jobs).
+osl_jenkins_plugin 'github-branch-source' do
+  notifies :restart, 'osl_jenkins_service[cookbook_uploader]', :delayed
+end
+
+osl_jenkins_password_credentials 'cookbook_uploader' do
+  username git_cred['user']
+  password git_cred['token']
+  notifies :restart, 'osl_jenkins_service[cookbook_uploader]', :delayed
+end
+
+osl_jenkins_config 'shared_library' do
+  source 'shared_library.yml.erb'
+  variables(
+    branch: node['osl-jenkins']['cookbook_uploader']['pipelines_branch'],
+    repo: node['osl-jenkins']['cookbook_uploader']['pipelines_repo']
+  )
+  notifies :restart, 'osl_jenkins_service[cookbook_uploader]', :delayed
+end
+
+osl_jenkins_job org_name do
+  source 'jobs/cookbook_ci.groovy.erb'
+  template true
+  variables(
+    job_name: org_name,
+    org: org_name,
+    repo_filter: node['osl-jenkins']['cookbook_uploader']['ci_repo_filter']
+  )
+  notifies :restart, 'osl_jenkins_service[cookbook_uploader]', :delayed
+end
+
 env_job_name = "environment-bumper-#{chef_repo.tr('/', '-')}"
 
 osl_jenkins_job env_job_name do

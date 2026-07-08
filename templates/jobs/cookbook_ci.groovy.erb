@@ -1,0 +1,50 @@
+organizationFolder('<%= @job_name %>') {
+  description('CI for all <%= @org %> cookbooks. Managed by Chef (osl-jenkins) - do not edit in Jenkins.')
+  organizations {
+    github {
+      repoOwner('<%= @org %>')
+      apiUri('https://api.github.com')
+      credentialsId('cookbook_uploader')
+      traits {
+        // Only repos matching this regex are considered (canary control via
+        // the ci_repo_filter attribute).
+        sourceRegexFilter {
+          regex('<%= @repo_filter %>')
+        }
+        gitHubExcludeArchivedRepositories()
+        gitHubBranchDiscovery {
+          // 1 = only branches that are not also filed as PRs
+          strategyId(1)
+        }
+        gitHubPullRequestDiscovery {
+          // 1 = merge the PR with the target branch before building
+          strategyId(1)
+        }
+        gitHubForkDiscovery {
+          strategyId(1)
+          trust {
+            // Only build fork PRs from users with write permission without
+            // manual approval - PR code runs on our infrastructure.
+            gitHubTrustPermissions()
+          }
+        }
+      }
+    }
+  }
+  projectFactories {
+    workflowMultiBranchProjectFactory {
+      scriptPath('Jenkinsfile')
+    }
+  }
+  orphanedItemStrategy {
+    discardOldItems {
+      daysToKeep(7)
+    }
+  }
+  triggers {
+    // Webhooks drive builds; the periodic scan is a safety net.
+    periodicFolderTrigger {
+      interval('1d')
+    }
+  }
+}
