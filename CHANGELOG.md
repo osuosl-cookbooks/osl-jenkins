@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+3.5.0 (2026-07-08)
+------------------
+- Add org-folder CI for cookbook repos via cookbook-pipelines
+
 3.4.2 (2026-05-11)
 ------------------
 - Guard eager Octokit middleware setup on Octokit being loaded
