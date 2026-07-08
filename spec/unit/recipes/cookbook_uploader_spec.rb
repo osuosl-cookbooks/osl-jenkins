@@ -74,12 +74,10 @@ describe 'osl-jenkins::cookbook_uploader' do
       end
       it { is_expected.to nothing_osl_jenkins_service 'cookbook_uploader' }
       it { is_expected.to install_osl_jenkins_plugin 'github-branch-source' }
-      it do
-        is_expected.to create_osl_jenkins_password_credentials('cookbook_uploader').with(
-          username: 'manatee',
-          password: 'token_password'
-        )
-      end
+      # The cookbook_uploader credential is intentionally NOT managed by JCasC
+      # (it is created out-of-band); a JCasC credentials block would wipe the
+      # server's entire credential store on restart.
+      it { is_expected.to_not create_osl_jenkins_password_credentials('cookbook_uploader') }
       it do
         is_expected.to create_osl_jenkins_config('shared_library').with(
           source: 'shared_library.yml.erb',
