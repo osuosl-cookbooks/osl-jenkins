@@ -14,6 +14,27 @@ control 'cookbook-uploader' do
     its('headers.X-Jenkins') { should_not eq nil }
   end
 
+  describe http('https://127.0.0.1/job/osuosl-cookbooks/', ssl_verify: false) do
+    its('status') { should eq 200 }
+    its('headers.X-Jenkins') { should_not eq nil }
+  end
+
+  describe file('/var/lib/jenkins/casc_configs/shared_library.yml') do
+    its('owner') { should eq 'jenkins' }
+    its('content') { should match(/name: osl-pipelines/) }
+    its('content') { should match(%r{remote: https://github.com/osuosl/cookbook-pipelines.git}) }
+  end
+
+  describe file('/var/lib/jenkins/casc_configs/groovy/job_osuosl-cookbooks.groovy') do
+    its('owner') { should eq 'jenkins' }
+    its('content') { should match(/organizationFolder\('osuosl-cookbooks'\)/) }
+    its('content') { should match(/gitHubTrustPermissions/) }
+  end
+
+  describe file('/var/lib/jenkins/plugins.txt') do
+    its('content') { should match(/^github-branch-source/) }
+  end
+
   describe file('/var/lib/jenkins/bin/github_pr_comment_trigger.rb') do
     its('mode') { should cmp 0550 }
     its('owner') { should eq 'jenkins' }
