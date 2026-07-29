@@ -97,6 +97,16 @@ osl_jenkins_plugin 'github-branch-source' do
   notifies :restart, 'osl_jenkins_service[cookbook_uploader]', :delayed
 end
 
+osl_jenkins_plugin 'generic-webhook-trigger' do
+  notifies :restart, 'osl_jenkins_service[cookbook_uploader]', :delayed
+end
+
+# readJSON for the uploader pipeline; not in the default plugin set, and its
+# absence only surfaces at runtime, after a release is already published.
+osl_jenkins_plugin 'pipeline-utility-steps' do
+  notifies :restart, 'osl_jenkins_service[cookbook_uploader]', :delayed
+end
+
 osl_jenkins_config 'shared_library' do
   source 'shared_library.yml.erb'
   variables(
@@ -117,6 +127,56 @@ osl_jenkins_job org_name do
   notifies :restart, 'osl_jenkins_service[cookbook_uploader]', :delayed
 end
 
+# Label-driven release pipeline: one webhook-driven job for every repo in the
+# org. Coexists with the per-repo freestyle jobs until cutover.
+osl_jenkins_job 'cookbook-uploader' do
+  source 'jobs/cookbook_uploader_pipeline.groovy.erb'
+  template true
+  variables(
+    chef_repo: chef_repo,
+    default_environments: node['osl-jenkins']['cookbook_uploader']['default_environments'].join(','),
+    do_not_upload: node['osl-jenkins']['cookbook_uploader']['do_not_upload_cookbooks'].to_s,
+    job_name: 'cookbook-uploader',
+    org: org_name,
+    pipelines_branch: node['osl-jenkins']['cookbook_uploader']['pipelines_branch'],
+    pipelines_repo: node['osl-jenkins']['cookbook_uploader']['pipelines_repo'],
+    trigger_token: jenkins_cred['trigger_token']
+  )
+  notifies :restart, 'osl_jenkins_service[cookbook_uploader]', :delayed
+end
+
+osl_jenkins_job 'environment-bumper' do
+  source 'jobs/environment_bumper_pipeline.groovy.erb'
+  template true
+  variables(
+    chef_repo: chef_repo,
+    default_environments: node['osl-jenkins']['cookbook_uploader']['default_environments'].join(','),
+    job_name: 'environment-bumper',
+    pipelines_branch: node['osl-jenkins']['cookbook_uploader']['pipelines_branch'],
+    pipelines_repo: node['osl-jenkins']['cookbook_uploader']['pipelines_repo']
+  )
+  notifies :restart, 'osl_jenkins_service[cookbook_uploader]', :delayed
+end
+
+# Reconciles GitHub labels/webhooks org-wide on a schedule instead of during
+# converge. Requires the out-of-band 'cookbook_uploader_trigger' secret-text
+# credential — UI-created, never via JCasC (which wipes the credential store).
+osl_jenkins_job 'github-sync' do
+  source 'jobs/github_sync_pipeline.groovy.erb'
+  template true
+  variables(
+    default_environments: node['osl-jenkins']['cookbook_uploader']['default_environments'].join(','),
+    insecure_hook: node['osl-jenkins']['cookbook_uploader']['github_insecure_hook'].to_s,
+    job_name: 'github-sync',
+    org: org_name,
+    pipelines_branch: node['osl-jenkins']['cookbook_uploader']['pipelines_branch'],
+    pipelines_repo: node['osl-jenkins']['cookbook_uploader']['pipelines_repo'],
+    repos: (node['osl-jenkins']['cookbook_uploader']['override_repos'] || []).join(','),
+    webhook_endpoint: "https://#{public_address}/generic-webhook-trigger/invoke"
+  )
+  notifies :restart, 'osl_jenkins_service[cookbook_uploader]', :delayed
+end
+
 env_job_name = "environment-bumper-#{chef_repo.tr('/', '-')}"
 
 osl_jenkins_job env_job_name do
@@ -133,22 +193,35 @@ osl_jenkins_job env_job_name do
   notifies :restart, 'osl_jenkins_service[cookbook_uploader]', :delayed
 end
 
+# A repo with a Jenkinsfile has migrated to the label-driven pipeline: drop
+# its legacy job config instead of creating it. Its legacy webhooks are
+# removed by github-sync. (The leftover job on the Jenkins server itself
+# still needs a one-time manual delete, as with archived repos.)
 repo_names.each do |repo_name|
   job_name = "cookbook-uploader-#{org_name}-#{repo_name}"
-  osl_jenkins_job job_name do
-    source 'jobs/cookbook_uploader.groovy.erb'
-    template true
-    variables(
-      execute_shell: execute_shell,
-      github_url: "https://github.com/#{org_name}/#{repo_name}",
-      job_name: job_name,
-      non_bump_message: non_bump_message,
-      trigger_token: jenkins_cred['trigger_token']
-    )
-    notifies :restart, 'osl_jenkins_service[cookbook_uploader]', :delayed
-  end
 
   begin
+    if repo_has_jenkinsfile?(git_cred['token'], org_name, repo_name)
+      osl_jenkins_job job_name do
+        action :delete
+        notifies :restart, 'osl_jenkins_service[cookbook_uploader]', :delayed
+      end
+      next
+    end
+
+    osl_jenkins_job job_name do
+      source 'jobs/cookbook_uploader.groovy.erb'
+      template true
+      variables(
+        execute_shell: execute_shell,
+        github_url: "https://github.com/#{org_name}/#{repo_name}",
+        job_name: job_name,
+        non_bump_message: non_bump_message,
+        trigger_token: jenkins_cred['trigger_token']
+      )
+      notifies :restart, 'osl_jenkins_service[cookbook_uploader]', :delayed
+    end
+
     set_up_github_push(
       git_cred['token'],
       org_name,
@@ -159,8 +232,11 @@ repo_names.each do |repo_name|
       jenkins_cred['user'],
       jenkins_cred['api_token']
     )
-  rescue Octokit::InternalServerError, Octokit::BadGateway, Octokit::ServerError => e
-    Chef::Log.warn("Unable to connect to Github: #{e}")
+  # Compile-phase GitHub call: degrade any API error to a warning so it can
+  # never abort the converge; the loop is idempotent. On error the legacy job
+  # is kept, never half-removed.
+  rescue Octokit::Error => e
+    Chef::Log.warn("GitHub setup for #{org_name}/#{repo_name} failed: #{e}")
   end
 end
 

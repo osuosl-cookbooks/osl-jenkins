@@ -79,5 +79,6 @@ end
 shared_context 'cookbook_uploader' do
   before do
     allow_any_instance_of(Chef::Recipe).to receive(:set_up_github_push)
+    allow_any_instance_of(Chef::Recipe).to receive(:repo_has_jenkinsfile?).and_return(false)
   end
 end

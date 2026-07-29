@@ -19,6 +19,30 @@ control 'cookbook-uploader' do
     its('headers.X-Jenkins') { should_not eq nil }
   end
 
+  describe http('https://127.0.0.1/job/cookbook-uploader/', ssl_verify: false) do
+    its('status') { should eq 200 }
+    its('headers.X-Jenkins') { should_not eq nil }
+  end
+
+  describe http('https://127.0.0.1/job/environment-bumper/', ssl_verify: false) do
+    its('status') { should eq 200 }
+    its('headers.X-Jenkins') { should_not eq nil }
+  end
+
+  describe http('https://127.0.0.1/job/github-sync/', ssl_verify: false) do
+    its('status') { should eq 200 }
+    its('headers.X-Jenkins') { should_not eq nil }
+  end
+
+  describe file('/var/lib/jenkins/casc_configs/groovy/job_cookbook-uploader.groovy') do
+    its('owner') { should eq 'jenkins' }
+    its('content') { should match(/pipelineJob\('cookbook-uploader'\)/) }
+    its('content') { should match(/genericTrigger/) }
+    its('content') { should match(%r{\^labeled:bump/\(major\|minor\|patch\)\$}) }
+    # The comment path must stay off while the legacy freestyle jobs exist.
+    its('content') { should_not match(/gh_comment/) }
+  end
+
   describe file('/var/lib/jenkins/casc_configs/shared_library.yml') do
     its('owner') { should eq 'jenkins' }
     its('content') { should match(/name: osl-pipelines/) }
@@ -33,6 +57,8 @@ control 'cookbook-uploader' do
 
   describe file('/var/lib/jenkins/plugins.txt') do
     its('content') { should match(/^github-branch-source/) }
+    its('content') { should match(/^generic-webhook-trigger/) }
+    its('content') { should match(/^pipeline-utility-steps/) }
   end
 
   describe file('/var/lib/jenkins/bin/github_pr_comment_trigger.rb') do

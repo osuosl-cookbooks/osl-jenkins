@@ -1,0 +1,59 @@
+pipelineJob('<%= @job_name %>') {
+  description('Label/comment-driven cookbook release pipeline for all <%= @org %> repos. Managed by Chef (osl-jenkins) - do not edit in Jenkins.')
+  parameters {
+    stringParam('GITHUB_ORG', '<%= @org %>', 'GitHub organization containing the cookbooks.')
+    stringParam('CHEF_REPO', '<%= @chef_repo %>', 'org/name of the chef-repo.')
+    stringParam('DEFAULT_ENVIRONMENTS', '<%= @default_environments %>', 'Comma list expanded by the env/default label.')
+    stringParam('DO_NOT_UPLOAD', '<%= @do_not_upload %>', "Set to 'true' to skip knife uploads (testing).")
+  }
+  definition {
+    cpsScm {
+      scm {
+        git {
+          remote {
+            url('<%= @pipelines_repo %>')
+            credentials('cookbook_uploader')
+          }
+          branches('*/<%= @pipelines_branch %>')
+        }
+      }
+      scriptPath('pipelines/cookbook-uploader.Jenkinsfile')
+      lightweight(true)
+    }
+  }
+  properties {
+    pipelineTriggers {
+      triggers {
+        genericTrigger {
+          genericVariables {
+            genericVariable {
+              key('payload')
+              value('$')
+              expressionType('JSONPath')
+            }
+            genericVariable {
+              key('gh_action')
+              value('$.action')
+              expressionType('JSONPath')
+            }
+            genericVariable {
+              key('gh_label')
+              value('$.label.name')
+              expressionType('JSONPath')
+            }
+          }
+          token('<%= @trigger_token %>')
+          printContributedVariables(false)
+          printPostContent(false)
+          silentResponse(true)
+          // Build only when a bump/* label is added. Anchored because the
+          // plugin matches with find() and 'unlabeled' payloads still carry
+          // the label. No !bump comment path until cutover: the legacy jobs
+          // own issue_comment and matching it here would double-release.
+          regexpFilterText('$gh_action:$gh_label')
+          regexpFilterExpression('^labeled:bump/(major|minor|patch)$')
+        }
+      }
+    }
+  }
+}

@@ -93,3 +93,8 @@ Vagrantfile
 # Travis #
 ##########
 .travis.yml
+
+# Local agent settings #
+########################
+.claude
+*/.claude
