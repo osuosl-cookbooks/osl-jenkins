@@ -51,7 +51,7 @@ pipelineJob('<%= @job_name %>') {
           // the label. No !bump comment path until cutover: the legacy jobs
           // own issue_comment and matching it here would double-release.
           regexpFilterText('$gh_action:$gh_label')
-          regexpFilterExpression('^labeled:bump/(major|minor|patch)$')
+          regexpFilterExpression('^labeled:bump/(major|minor|patch|skip)$')
         }
       }
     }

@@ -38,7 +38,7 @@ control 'cookbook-uploader' do
     its('owner') { should eq 'jenkins' }
     its('content') { should match(/pipelineJob\('cookbook-uploader'\)/) }
     its('content') { should match(/genericTrigger/) }
-    its('content') { should match(%r{\^labeled:bump/\(major\|minor\|patch\)\$}) }
+    its('content') { should match(%r{\^labeled:bump/\(major\|minor\|patch\|skip\)\$}) }
     # The comment path must stay off while the legacy freestyle jobs exist.
     its('content') { should_not match(/gh_comment/) }
   end
