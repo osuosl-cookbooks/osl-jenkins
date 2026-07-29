@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+3.6.0 (2026-07-29)
+------------------
+- Add label-driven cookbook release pipelines and github-sync job
+
 3.5.1 (2026-07-08)
 ------------------
 - Do not manage cookbook_uploader credential via JCasC
