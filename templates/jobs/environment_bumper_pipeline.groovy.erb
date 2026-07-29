@@ -1,0 +1,26 @@
+pipelineJob('<%= @job_name %>') {
+  description('Pins cookbook versions in chef-repo environments and opens/updates a PR. Managed by Chef (osl-jenkins) - do not edit in Jenkins.')
+  parameters {
+    stringParam('cookbooks', '', "Comma list of name:version pins, e.g. 'osl-postfix:2.1.0,postfix:6.1.8'.")
+    stringParam('envs', '', "Comma list of chef environments; 'all' updates existing pins in every environment, 'default' expands to the default set. Named environments (and the default set) also gain missing pins.")
+    stringParam('chain', '', 'Optional chain name; bumps sharing a chain accumulate in one chef-repo PR.')
+    stringParam('pr_link', '', 'Optional link to the PR that triggered this bump.')
+    stringParam('CHEF_REPO', '<%= @chef_repo %>', 'org/name of the chef-repo.')
+    stringParam('DEFAULT_ENVIRONMENTS', '<%= @default_environments %>', "Comma list expanded by the 'default' env word.")
+  }
+  definition {
+    cpsScm {
+      scm {
+        git {
+          remote {
+            url('<%= @pipelines_repo %>')
+            credentials('cookbook_uploader')
+          }
+          branches('*/<%= @pipelines_branch %>')
+        }
+      }
+      scriptPath('pipelines/environment-bumper.Jenkinsfile')
+      lightweight(true)
+    }
+  }
+}

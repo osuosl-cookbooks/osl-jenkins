@@ -74,6 +74,65 @@ describe 'osl-jenkins::cookbook_uploader' do
       end
       it { is_expected.to nothing_osl_jenkins_service 'cookbook_uploader' }
       it { is_expected.to install_osl_jenkins_plugin 'github-branch-source' }
+      it { is_expected.to install_osl_jenkins_plugin 'generic-webhook-trigger' }
+      it { is_expected.to install_osl_jenkins_plugin 'pipeline-utility-steps' }
+      it do
+        is_expected.to create_osl_jenkins_job('cookbook-uploader').with(
+          source: 'jobs/cookbook_uploader_pipeline.groovy.erb',
+          template: true,
+          variables: {
+            chef_repo: 'osuosl/chef-repo',
+            default_environments: 'production,workstation',
+            do_not_upload: 'true',
+            job_name: 'cookbook-uploader',
+            org: 'osuosl-cookbooks',
+            pipelines_branch: 'main',
+            pipelines_repo: 'https://github.com/osuosl/cookbook-pipelines.git',
+            trigger_token: 'trigger_token',
+          }
+        )
+      end
+      it do
+        expect(chef_run.osl_jenkins_job('cookbook-uploader')).to \
+          notify('osl_jenkins_service[cookbook_uploader]').to(:restart).delayed
+      end
+      it do
+        is_expected.to create_osl_jenkins_job('environment-bumper').with(
+          source: 'jobs/environment_bumper_pipeline.groovy.erb',
+          template: true,
+          variables: {
+            chef_repo: 'osuosl/chef-repo',
+            default_environments: 'production,workstation',
+            job_name: 'environment-bumper',
+            pipelines_branch: 'main',
+            pipelines_repo: 'https://github.com/osuosl/cookbook-pipelines.git',
+          }
+        )
+      end
+      it do
+        expect(chef_run.osl_jenkins_job('environment-bumper')).to \
+          notify('osl_jenkins_service[cookbook_uploader]').to(:restart).delayed
+      end
+      it do
+        is_expected.to create_osl_jenkins_job('github-sync').with(
+          source: 'jobs/github_sync_pipeline.groovy.erb',
+          template: true,
+          variables: {
+            default_environments: 'production,workstation',
+            insecure_hook: 'true',
+            job_name: 'github-sync',
+            org: 'osuosl-cookbooks',
+            pipelines_branch: 'main',
+            pipelines_repo: 'https://github.com/osuosl/cookbook-pipelines.git',
+            repos: 'test-cookbook',
+            webhook_endpoint: 'https://jenkins.osuosl.org/generic-webhook-trigger/invoke',
+          }
+        )
+      end
+      it do
+        expect(chef_run.osl_jenkins_job('github-sync')).to \
+          notify('osl_jenkins_service[cookbook_uploader]').to(:restart).delayed
+      end
       # The cookbook_uploader credential is intentionally NOT managed by JCasC
       # (it is created out-of-band); a JCasC credentials block would wipe the
       # server's entire credential store on restart.
@@ -138,6 +197,41 @@ describe 'osl-jenkins::cookbook_uploader' do
           notify('osl_jenkins_service[cookbook_uploader]').to(:restart).delayed
       end
       it { is_expected.to delete_osl_jenkins_job 'cookbook-uploader-osuosl-cookbooks-archived-cookbook' }
+
+      # A Jenkinsfile marks a repo as migrated to the label-driven pipeline:
+      # its legacy job config and webhook are removed instead of created.
+      context 'when the repo has migrated (Jenkinsfile present)' do
+        cached(:migrated_run) do
+          ChefSpec::SoloRunner.new(p) do |node|
+            node.normal['osl-jenkins']['cookbook_uploader'] = {
+              'org' => 'osuosl-cookbooks',
+              'chef_repo' => 'osuosl/chef-repo',
+              'default_environments' => %w(production workstation),
+              'override_repos' => %w(test-cookbook),
+              'override_archived_repos' => %w(archived-cookbook),
+              'ci_repo_filter' => 'test-cookbook',
+              'do_not_upload_cookbooks' => true,
+            }
+            node.normal['osl-jenkins']['credentials']['git'] = {
+              'cookbook_uploader' => { user: 'manatee', token: 'token_password' },
+            }
+            node.normal['osl-jenkins']['credentials']['jenkins'] = {
+              'cookbook_uploader' => {
+                user: 'manatee', api_token: 'api_token', trigger_token: 'trigger_token'
+              },
+            }
+          end.converge(described_recipe, 'osl-jenkins::default')
+        end
+
+        before do
+          allow_any_instance_of(Chef::Recipe).to receive(:repo_has_jenkinsfile?).and_return(true)
+        end
+
+        it 'deletes the legacy job config and skips the legacy webhook setup' do
+          expect_any_instance_of(Chef::Recipe).to_not receive(:set_up_github_push)
+          expect(migrated_run).to delete_osl_jenkins_job('cookbook-uploader-osuosl-cookbooks-test-cookbook')
+        end
+      end
       it do
         expect(chef_run.osl_jenkins_job('cookbook-uploader-osuosl-cookbooks-archived-cookbook')).to \
           notify('osl_jenkins_service[cookbook_uploader]').to(:restart).delayed

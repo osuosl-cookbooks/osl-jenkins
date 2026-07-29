@@ -62,6 +62,29 @@ def collect_archived_github_repositories(github_token, org_name)
   github.org_repos(org_name).select(&:archived?).map(&:name)
 end
 
+# Bump/env labels and uploader webhooks are managed by the scheduled
+# github-sync Jenkins job (cookbook-pipelines), not at converge time: doing
+# it here hit GitHub's rate limits and slowed every chef run.
+
+# A Jenkinsfile in the repo root marks a repo as migrated to the label-driven
+# pipeline: its legacy per-repo uploader job config is then deleted instead of
+# generated. (The legacy webhooks are removed by the github-sync job, which
+# owns all GitHub-side state.)
+#
+# @param github_token [String] GitHub API token.
+# @param org_name [String] Name of GitHub organization.
+# @param repo_name [String] Name of GitHub repo within the organization.
+def repo_has_jenkinsfile?(github_token, org_name, repo_name)
+  patch_yajl_workaround
+  require 'octokit'
+
+  github = Octokit::Client.new(access_token: github_token)
+  github.contents("#{org_name}/#{repo_name}", path: 'Jenkinsfile')
+  true
+rescue Octokit::NotFound
+  false
+end
+
 # Sets up a GitHub trigger for the Jenkins cookbook uploader job.  It will
 # trigger whenever a comment is made on a PR/issue and will send a JSON payload
 # of the comment to the specified Jenkins job, using the given trigger token to

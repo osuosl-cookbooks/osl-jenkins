@@ -1,0 +1,37 @@
+pipelineJob('<%= @job_name %>') {
+  description('Seeds bump/env labels and the uploader webhook across all <%= @org %> repos. Managed by Chef (osl-jenkins) - do not edit in Jenkins.')
+  parameters {
+    stringParam('GITHUB_ORG', '<%= @org %>', 'GitHub organization whose repos are synced.')
+    stringParam('DEFAULT_ENVIRONMENTS', '<%= @default_environments %>', 'Comma list; each gets an env/<name> label.')
+    stringParam('REPOS', '<%= @repos %>', 'Comma list of repos to sync; empty means every non-archived repo in the org.')
+    booleanParam('DRY_RUN', false, 'Report what would change without writing to GitHub.')
+    stringParam('PROTECT_BRANCHES', 'true', "Set to 'false' to skip restricting default-branch merges to the bot account.")
+    stringParam('WEBHOOK_ENDPOINT', '<%= @webhook_endpoint %>', 'generic-webhook-trigger invoke URL (token appended from the credential).')
+    stringParam('INSECURE_HOOK', '<%= @insecure_hook %>', "Set to 'true' to allow insecure SSL on the webhook (testing only).")
+  }
+  properties {
+    pipelineTriggers {
+      triggers {
+        cron {
+          // Every 30 minutes, offset from the chef-client interval.
+          spec('15,45 * * * *')
+        }
+      }
+    }
+  }
+  definition {
+    cpsScm {
+      scm {
+        git {
+          remote {
+            url('<%= @pipelines_repo %>')
+            credentials('cookbook_uploader')
+          }
+          branches('*/<%= @pipelines_branch %>')
+        }
+      }
+      scriptPath('pipelines/github-sync.Jenkinsfile')
+      lightweight(true)
+    }
+  }
+}
