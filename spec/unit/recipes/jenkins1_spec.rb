@@ -33,10 +33,6 @@ describe 'osl-jenkins::jenkins1' do
                 'user' => 'manatee2',
                 'token' => 'token_password',
               },
-              'github_comment' => {
-                'user' => 'manatee3',
-                'token' => 'token_password',
-              },
             },
             'jenkins' => {
               'cookbook_uploader' => {
@@ -47,11 +43,6 @@ describe 'osl-jenkins::jenkins1' do
               'bumpzone' => {
                 'user' => 'manatee',
                 'api_token' => 'api_token',
-                'trigger_token' => 'trigger_token',
-              },
-              'github_comment' => {
-                'user' => 'manatee',
-                'pass' => 'password',
                 'trigger_token' => 'trigger_token',
               },
             }
@@ -76,11 +67,16 @@ describe 'osl-jenkins::jenkins1' do
       %w(
         base::cinc_workstation
         osl-jenkins::cookbook_uploader
-        osl-jenkins::github_comment
         osl-jenkins::bumpzone
         base::python
       ).each do |r|
         it { is_expected.to include_recipe r }
+      end
+
+      it { is_expected.to delete_osl_jenkins_job 'github_comment' }
+      it do
+        expect(chef_run.osl_jenkins_job('github_comment')).to \
+          notify('osl_jenkins_service[jenkins1]').to(:restart).delayed
       end
       it { expect(chef_run).to install_package 'graphviz' }
     end

@@ -26,4 +26,8 @@ osl_jenkins_job 'file' do
   file true
 end
 
+osl_jenkins_job 'deleted' do
+  action :delete
+end
+
 osl_jenkins_plugin 'github'

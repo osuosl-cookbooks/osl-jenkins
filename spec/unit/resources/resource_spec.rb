@@ -144,6 +144,12 @@ describe 'jenkins_test::resources' do
           mode: '0400'
         )
       end
+      # :delete must remove BOTH casc files even though delete callers never
+      # set the file/template creation-mode properties (regression: the
+      # groovy deletion used to be guarded on them and left files behind).
+      it { is_expected.to delete_osl_jenkins_job 'deleted' }
+      it { is_expected.to delete_file('/var/lib/jenkins/casc_configs/groovy/job_deleted.groovy') }
+      it { is_expected.to delete_file('/var/lib/jenkins/casc_configs/job_deleted.yml') }
       it { is_expected.to install_osl_jenkins_plugin 'github' }
       it do
         is_expected.to create_directory('/var/lib/jenkins').with(

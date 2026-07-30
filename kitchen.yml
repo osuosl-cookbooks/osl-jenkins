@@ -97,19 +97,12 @@ suites:
             bumpzone:
               user: <%= ENV['GITHUB_USER'] %>
               token: <%= ENV['GITHUB_TOKEN'] %>
-            github_comment:
-              user: <%= ENV['GITHUB_USER'] %>
-              token: <%= ENV['GITHUB_TOKEN'] %>
           jenkins:
             cookbook_uploader:
               user: <%= ENV['JENKINS_USER'] %>
               api_token: <%= ENV['JENKINS_PASS'] %>
               trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
             bumpzone:
-              user: <%= ENV['JENKINS_USER'] %>
-              api_token: <%= ENV['JENKINS_PASS'] %>
-              trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
-            github_comment:
               user: <%= ENV['JENKINS_USER'] %>
               api_token: <%= ENV['JENKINS_PASS'] %>
               trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
@@ -136,26 +129,6 @@ suites:
               token: <%= ENV['GITHUB_TOKEN'] %>
           jenkins:
             bumpzone:
-              user: <%= ENV['JENKINS_USER'] %>
-              api_token: <%= ENV['JENKINS_PASS'] %>
-              trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
-  - name: github_comment
-    run_list:
-      - recipe[jenkins_test::controller]
-      - recipe[osl-jenkins::github_comment]
-    attributes:
-      osl-jenkins:
-        github_comment:
-          override_repos:
-            - test-cookbook
-          github_insecure_hook: true
-        credentials:
-          git:
-            github_comment:
-              user: <%= ENV['GITHUB_USER'] %>
-              token: <%= ENV['GITHUB_TOKEN'] %>
-          jenkins:
-            github_comment:
               user: <%= ENV['JENKINS_USER'] %>
               api_token: <%= ENV['JENKINS_PASS'] %>
               trigger_token: <%= ENV['TRIGGER_TOKEN'] %>
