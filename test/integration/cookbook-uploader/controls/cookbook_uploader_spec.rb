@@ -1,6 +1,9 @@
 control 'cookbook-uploader' do
+  # test-cookbook has migrated to the label-driven pipeline (Jenkinsfile in
+  # the repo), so its legacy freestyle job is deleted instead of created and
+  # must not exist on a fresh install.
   describe http('https://127.0.0.1/job/cookbook-uploader-osuosl-cookbooks-test-cookbook/', ssl_verify: false) do
-    its('status') { should eq 200 }
+    its('status') { should eq 404 }
     its('headers.X-Jenkins') { should_not eq nil }
   end
 
