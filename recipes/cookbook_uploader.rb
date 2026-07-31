@@ -173,6 +173,38 @@ osl_jenkins_job 'chef-repo' do
   notifies :restart, 'osl_jenkins_service[cookbook_uploader]', :delayed
 end
 
+# CI + deploy for the private data_bags repo on GitLab: validates every
+# branch/MR, uploads bags from the primary branch. Replaces the
+# gitlab-plugin data_bags freestyle job. The server config manages the
+# GitLab webhook; both credentials it references (API token, SSH checkout
+# key) are out-of-band (UI-created), never JCasC.
+osl_jenkins_plugin 'gitlab-branch-source' do
+  notifies :restart, 'osl_jenkins_service[cookbook_uploader]', :delayed
+end
+
+osl_jenkins_config 'gitlab_server' do
+  source 'gitlab_server.yml.erb'
+  variables(
+    name: node['osl-jenkins']['cookbook_uploader']['gitlab_server_name'],
+    url: node['osl-jenkins']['cookbook_uploader']['gitlab_server_url'],
+    credential_id: node['osl-jenkins']['cookbook_uploader']['gitlab_api_credential']
+  )
+  notifies :restart, 'osl_jenkins_service[cookbook_uploader]', :delayed
+end
+
+osl_jenkins_job 'data-bags' do
+  source 'jobs/data_bags_pipeline.groovy.erb'
+  template true
+  variables(
+    checkout_credential: node['osl-jenkins']['cookbook_uploader']['data_bags_credential'],
+    job_name: 'data-bags',
+    project_owner: node['osl-jenkins']['cookbook_uploader']['data_bags_project'].split('/').first,
+    project_path: node['osl-jenkins']['cookbook_uploader']['data_bags_project'],
+    server_name: node['osl-jenkins']['cookbook_uploader']['gitlab_server_name']
+  )
+  notifies :restart, 'osl_jenkins_service[cookbook_uploader]', :delayed
+end
+
 # Reconciles GitHub labels/webhooks org-wide on a schedule instead of during
 # converge. Requires the out-of-band 'cookbook_uploader_trigger' secret-text
 # credential — UI-created, never via JCasC (which wipes the credential store).

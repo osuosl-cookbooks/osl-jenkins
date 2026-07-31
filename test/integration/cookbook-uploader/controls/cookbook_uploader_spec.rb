@@ -39,6 +39,11 @@ control 'cookbook-uploader' do
     its('headers.X-Jenkins') { should_not eq nil }
   end
 
+  describe http('https://127.0.0.1/job/data-bags/', ssl_verify: false) do
+    its('status') { should eq 200 }
+    its('headers.X-Jenkins') { should_not eq nil }
+  end
+
   describe file('/var/lib/jenkins/casc_configs/groovy/job_cookbook-uploader.groovy') do
     its('owner') { should eq 'jenkins' }
     its('content') { should match(/pipelineJob\('cookbook-uploader'\)/) }
@@ -64,6 +69,21 @@ control 'cookbook-uploader' do
     its('content') { should match(/^github-branch-source/) }
     its('content') { should match(/^generic-webhook-trigger/) }
     its('content') { should match(/^pipeline-utility-steps/) }
+    its('content') { should match(/^gitlab-branch-source/) }
+  end
+
+  describe file('/var/lib/jenkins/casc_configs/gitlab_server.yml') do
+    its('owner') { should eq 'jenkins' }
+    its('content') { should match(/name: git.osuosl.org/) }
+    its('content') { should match(%r{serverUrl: https://git.osuosl.org}) }
+    its('content') { should match(/manageWebHooks: true/) }
+  end
+
+  describe file('/var/lib/jenkins/casc_configs/groovy/job_data-bags.groovy') do
+    its('owner') { should eq 'jenkins' }
+    its('content') { should match(/multibranchPipelineJob\('data-bags'\)/) }
+    its('content') { should match(/serverName\('git.osuosl.org'\)/) }
+    its('content') { should match(/gitLabSshCheckout/) }
   end
 
   describe file('/var/lib/jenkins/bin/github_pr_comment_trigger.rb') do
