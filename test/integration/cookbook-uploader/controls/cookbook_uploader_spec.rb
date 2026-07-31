@@ -34,6 +34,11 @@ control 'cookbook-uploader' do
     its('headers.X-Jenkins') { should_not eq nil }
   end
 
+  describe http('https://127.0.0.1/job/chef-repo/', ssl_verify: false) do
+    its('status') { should eq 200 }
+    its('headers.X-Jenkins') { should_not eq nil }
+  end
+
   describe file('/var/lib/jenkins/casc_configs/groovy/job_cookbook-uploader.groovy') do
     its('owner') { should eq 'jenkins' }
     its('content') { should match(/pipelineJob\('cookbook-uploader'\)/) }

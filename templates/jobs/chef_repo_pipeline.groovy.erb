@@ -1,0 +1,47 @@
+multibranchPipelineJob('<%= @job_name %>') {
+  description('CI and deploy for <%= @repo_owner %>/<%= @repo_name %>: validates every branch/PR via the Jenkinsfile in the repo and uploads roles/environments from the primary branch. Managed by Chef (osl-jenkins) - do not edit in Jenkins.')
+  branchSources {
+    branchSource {
+      source {
+        github {
+          id('<%= @job_name %>')
+          repoOwner('<%= @repo_owner %>')
+          repository('<%= @repo_name %>')
+          repositoryUrl('https://github.com/<%= @repo_owner %>/<%= @repo_name %>')
+          configuredByUrl(false)
+          credentialsId('cookbook_uploader')
+          traits {
+            gitHubBranchDiscovery {
+              // 1 = only branches that are not also filed as PRs
+              strategyId(1)
+            }
+            gitHubPullRequestDiscovery {
+              // 1 = merge the PR with the target branch before building
+              strategyId(1)
+            }
+            // No fork discovery: the repo is private and is never forked,
+            // and PR builds can reach the chef server deploy credentials on
+            // this controller - only same-repo branches/PRs may build.
+          }
+        }
+      }
+    }
+  }
+  factory {
+    workflowBranchProjectFactory {
+      scriptPath('Jenkinsfile')
+    }
+  }
+  orphanedItemStrategy {
+    discardOldItems {
+      daysToKeep(7)
+    }
+  }
+  // Webhooks normally trigger scans; the daily rescan is a fallback so a
+  // missed delivery can't leave a branch/PR unbuilt indefinitely.
+  triggers {
+    periodicFolderTrigger {
+      interval('1d')
+    }
+  }
+}

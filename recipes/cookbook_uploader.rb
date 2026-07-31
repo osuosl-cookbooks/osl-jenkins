@@ -158,6 +158,21 @@ osl_jenkins_job 'environment-bumper' do
   notifies :restart, 'osl_jenkins_service[cookbook_uploader]', :delayed
 end
 
+# CI + deploy for the chef-repo itself: a multibranch pipeline discovers the
+# Jenkinsfile in osuosl/chef-repo, validates every branch/PR with native
+# commit statuses and uploads roles/environments from the primary branch.
+# Replaces the GHPRB chef-repo-validator and chef-production freestyle jobs.
+osl_jenkins_job 'chef-repo' do
+  source 'jobs/chef_repo_pipeline.groovy.erb'
+  template true
+  variables(
+    job_name: 'chef-repo',
+    repo_owner: chef_repo.split('/').first,
+    repo_name: chef_repo.split('/').last
+  )
+  notifies :restart, 'osl_jenkins_service[cookbook_uploader]', :delayed
+end
+
 # Reconciles GitHub labels/webhooks org-wide on a schedule instead of during
 # converge. Requires the out-of-band 'cookbook_uploader_trigger' secret-text
 # credential — UI-created, never via JCasC (which wipes the credential store).

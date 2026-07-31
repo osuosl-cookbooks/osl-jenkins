@@ -114,6 +114,21 @@ describe 'osl-jenkins::cookbook_uploader' do
           notify('osl_jenkins_service[cookbook_uploader]').to(:restart).delayed
       end
       it do
+        is_expected.to create_osl_jenkins_job('chef-repo').with(
+          source: 'jobs/chef_repo_pipeline.groovy.erb',
+          template: true,
+          variables: {
+            job_name: 'chef-repo',
+            repo_owner: 'osuosl',
+            repo_name: 'chef-repo',
+          }
+        )
+      end
+      it do
+        expect(chef_run.osl_jenkins_job('chef-repo')).to \
+          notify('osl_jenkins_service[cookbook_uploader]').to(:restart).delayed
+      end
+      it do
         is_expected.to create_osl_jenkins_job('github-sync').with(
           source: 'jobs/github_sync_pipeline.groovy.erb',
           template: true,
