@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+3.7.0 (2026-07-31)
+------------------
+- Retire GHPRB and legacy deploy jobs: chef-repo + data-bags multibranch pipelines
+
 3.6.1 (2026-07-29)
 ------------------
 - Trigger the uploader pipeline on bump/skip as well
