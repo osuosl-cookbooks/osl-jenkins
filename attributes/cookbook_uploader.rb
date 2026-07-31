@@ -57,6 +57,26 @@ default['osl-jenkins']['cookbook_uploader']['pipelines_branch'] = 'main'
 # Useful for canarying CI on one or two repos before an org-wide rollout.
 default['osl-jenkins']['cookbook_uploader']['ci_repo_filter'] = '.*'
 
+# String; Display name and URL of the GitLab server (gitlab-branch-source),
+# used by the data-bags multibranch pipeline. The server name is what job
+# definitions reference.
+default['osl-jenkins']['cookbook_uploader']['gitlab_server_name'] = 'git.osuosl.org'
+default['osl-jenkins']['cookbook_uploader']['gitlab_server_url'] = 'https://git.osuosl.org'
+
+# String; ID of the 'GitLab Personal Access Token' credential the server
+# config uses for API calls and webhook management (api scope, maintainer on
+# the projects). Created out-of-band in the Jenkins UI, never via JCasC
+# (which would wipe the credential store).
+default['osl-jenkins']['cookbook_uploader']['gitlab_api_credential'] = 'gitlab-api-token'
+
+# String; Full GitLab path of the private data_bags repo, deployed to the
+# chef server by the data-bags multibranch pipeline.
+default['osl-jenkins']['cookbook_uploader']['data_bags_project'] = 'osuosl-chef/data_bags'
+
+# String; ID of the Jenkins SSH credential used to clone the data_bags repo.
+# Created out-of-band in the Jenkins UI, never via JCasC.
+default['osl-jenkins']['cookbook_uploader']['data_bags_credential'] = '5e204eb3-1907-4a36-8640-fa7ae3cacbf2'
+
 ###
 ### Attributes that are mainly for testing:
 ###

@@ -46,11 +46,15 @@ action :create do
   end
 end
 
+# Deletes both casc files unconditionally: delete callers don't set the
+# file/template creation-mode properties, so guarding the groovy deletion on
+# them (as this used to) left every job's groovy file behind. Deleting an
+# absent file is a no-op.
 action :delete do
   file "/var/lib/jenkins/casc_configs/groovy/job_#{new_resource.name}.groovy" do
     sensitive new_resource.sensitive
     action :delete
-  end if new_resource.file || new_resource.template
+  end
 
   file "/var/lib/jenkins/casc_configs/job_#{new_resource.name}.yml" do
     sensitive new_resource.sensitive

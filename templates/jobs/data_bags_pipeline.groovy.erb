@@ -1,0 +1,51 @@
+multibranchPipelineJob('<%= @job_name %>') {
+  description('CI and deploy for the private data_bags repo on git.osuosl.org: validates every branch/MR via the Jenkinsfile in the repo and uploads the bags to the chef server from the primary branch. Managed by Chef (osl-jenkins) - do not edit in Jenkins.')
+  branchSources {
+    branchSource {
+      source {
+        gitlab {
+          id('<%= @job_name %>')
+          serverName('<%= @server_name %>')
+          projectOwner('<%= @project_owner %>')
+          projectPath('<%= @project_path %>')
+          traits {
+            gitLabBranchDiscovery {
+              // 1 = only branches that are not also filed as MRs
+              strategyId(1)
+            }
+            gitLabOriginDiscovery {
+              // 1 = merge the MR with the target branch before building
+              strategyId(1)
+            }
+            // No fork MR discovery: the repo is private and never forked,
+            // and builds can reach the chef server credentials on this
+            // controller. Checkout happens over SSH with the same key the
+            // old freestyle job used; the API token is only for the GitLab
+            // API and webhook management.
+            gitLabSshCheckout {
+              credentialsId('<%= @checkout_credential %>')
+            }
+          }
+        }
+      }
+    }
+  }
+  factory {
+    workflowBranchProjectFactory {
+      scriptPath('Jenkinsfile')
+    }
+  }
+  orphanedItemStrategy {
+    discardOldItems {
+      daysToKeep(7)
+    }
+  }
+  // Webhooks (managed via the gitlab server config) trigger scans; the
+  // daily rescan is a fallback so a missed delivery can't leave a
+  // branch/MR unbuilt indefinitely.
+  triggers {
+    periodicFolderTrigger {
+      interval('1d')
+    }
+  }
+}

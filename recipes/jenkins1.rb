@@ -53,8 +53,15 @@ end
 
 include_recipe 'base::cinc_workstation'
 include_recipe 'osl-jenkins::cookbook_uploader'
-include_recipe 'osl-jenkins::github_comment'
 include_recipe 'osl-jenkins::bumpzone'
+
+# Retired: unused since 2024 and the last GHPRB wrapper consumer. Config
+# cleanup only; the server-side job is deleted by hand. Drop this resource
+# once it has converged everywhere.
+osl_jenkins_job 'github_comment' do
+  action :delete
+  notifies :restart, 'osl_jenkins_service[jenkins1]', :delayed
+end
 include_recipe 'base::python'
 
 # depends for sphinx compilation

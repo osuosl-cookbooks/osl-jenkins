@@ -114,6 +114,49 @@ describe 'osl-jenkins::cookbook_uploader' do
           notify('osl_jenkins_service[cookbook_uploader]').to(:restart).delayed
       end
       it do
+        is_expected.to create_osl_jenkins_job('chef-repo').with(
+          source: 'jobs/chef_repo_pipeline.groovy.erb',
+          template: true,
+          variables: {
+            job_name: 'chef-repo',
+            repo_owner: 'osuosl',
+            repo_name: 'chef-repo',
+          }
+        )
+      end
+      it do
+        expect(chef_run.osl_jenkins_job('chef-repo')).to \
+          notify('osl_jenkins_service[cookbook_uploader]').to(:restart).delayed
+      end
+      it { is_expected.to install_osl_jenkins_plugin 'gitlab-branch-source' }
+      it do
+        is_expected.to create_osl_jenkins_config('gitlab_server').with(
+          source: 'gitlab_server.yml.erb',
+          variables: {
+            name: 'git.osuosl.org',
+            url: 'https://git.osuosl.org',
+            credential_id: 'gitlab-api-token',
+          }
+        )
+      end
+      it do
+        is_expected.to create_osl_jenkins_job('data-bags').with(
+          source: 'jobs/data_bags_pipeline.groovy.erb',
+          template: true,
+          variables: {
+            checkout_credential: '5e204eb3-1907-4a36-8640-fa7ae3cacbf2',
+            job_name: 'data-bags',
+            project_owner: 'osuosl-chef',
+            project_path: 'osuosl-chef/data_bags',
+            server_name: 'git.osuosl.org',
+          }
+        )
+      end
+      it do
+        expect(chef_run.osl_jenkins_job('data-bags')).to \
+          notify('osl_jenkins_service[cookbook_uploader]').to(:restart).delayed
+      end
+      it do
         is_expected.to create_osl_jenkins_job('github-sync').with(
           source: 'jobs/github_sync_pipeline.groovy.erb',
           template: true,
