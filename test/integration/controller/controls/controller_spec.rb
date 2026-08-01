@@ -40,4 +40,19 @@ control 'controller' do
   describe http('https://127.0.0.1/about/', ssl_verify: false) do
     its('headers.X-Jenkins') { should match(/2.[0-9]+/) }
   end
+
+  # Content Security Policy is enforced on every controller (csp_enforce
+  # attribute); the header must reach the browser on classic UI pages.
+  describe file('/var/lib/jenkins/casc_configs/default.yml') do
+    its('content') { should match(/contentSecurityPolicy:/) }
+    its('content') { should match(/enforce: true/) }
+  end
+
+  describe http('https://127.0.0.1/login', ssl_verify: false) do
+    its('headers.Content-Security-Policy') { should_not eq nil }
+  end
+
+  describe file('/var/lib/jenkins/plugins.txt') do
+    its('content') { should match(/^csp/) }
+  end
 end

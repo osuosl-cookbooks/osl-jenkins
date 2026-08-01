@@ -20,6 +20,7 @@ module OslJenkins
           conditional-buildstep
           configuration-as-code
           copyartifact
+          csp
           credentials-binding
           dark-theme
           email-ext
