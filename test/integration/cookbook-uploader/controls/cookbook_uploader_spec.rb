@@ -54,6 +54,8 @@ control 'cookbook-uploader' do
     its('owner') { should eq 'jenkins' }
     its('content') { should match(/name: osl-pipelines/) }
     its('content') { should match(%r{remote: https://github.com/osuosl/cookbook-pipelines.git}) }
+    # 'git' is an obsolete casc symbol for modernSCM sources.
+    its('content') { should match(/gitSource:/) }
   end
 
   describe file('/var/lib/jenkins/casc_configs/groovy/job_github-sync.groovy') do
