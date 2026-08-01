@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+3.8.1 (2026-08-01)
+------------------
+- data-bags: build only the default branch
+
 3.8.0 (2026-08-01)
 ------------------
 - Retire the legacy uploader; controller cleanup (plugins, CSP, casc)
