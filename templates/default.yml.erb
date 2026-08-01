@@ -37,6 +37,8 @@ security:
     creationOfLegacyTokenEnabled: false
     tokenGenerationOnCreationEnabled: false
     usageStatisticsEnabled: true
+  contentSecurityPolicy:
+    enforce: <%= @csp_enforce %>
   copyartifact:
     mode: PRODUCTION
   gitHooks:

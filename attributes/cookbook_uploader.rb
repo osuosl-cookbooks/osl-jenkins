@@ -12,38 +12,8 @@ default['osl-jenkins']['cookbook_uploader']['org'] = ''
 # the organization name and a slash, e.g. 'myorg/chef-repo'.
 default['osl-jenkins']['cookbook_uploader']['chef_repo'] = ''
 
-# Array<String>; List of GitHub users that are allowed to use the !bump
-# command. If a user is in this list, they have permission regardless of the
-# org or team lists.
-default['osl-jenkins']['cookbook_uploader']['authorized_users'] = []
-
-# Array<String>; List of GitHub organizations that are allowed to use the !bump
-# command. If a user is a member of any org in this list, they have permission
-# regardless of the user or team lists.
-default['osl-jenkins']['cookbook_uploader']['authorized_orgs'] = []
-
-# Array<String>; List of GitHub teams that are allowed to use the !bump
-# command, prefixed with the organization name and a slash, e.g.
-# 'myorg/myteam'. Case-sensitive. If a user is a member of any team in this
-# list, they have permission regardless of the user or org lists.
-default['osl-jenkins']['cookbook_uploader']['authorized_teams'] = []
-
-# WARNING: If no authorized users, orgs, or teams are set, then permissions are
-# disabled and *anyone* can trigger bumps.
-
-# Array<String>; A set of Chef environments that usually need to be bumped when
-# using the !bump command. This set can be called rather than listing
-# environments individually by using the below `default_environments_word`,
-# which is '~' by default, e.g. '!bump patch ~'.
+# Array<String>; The set of Chef environments the env/default label bumps.
 default['osl-jenkins']['cookbook_uploader']['default_environments'] = []
-
-# String; The keyword that indicates that the default set of environments
-# specified above should be bumped when used in the !bump command.
-default['osl-jenkins']['cookbook_uploader']['default_environments_word'] = '~'
-
-# String; The keyword that indicates that all environments should be bumped
-# when used in the !bump command.
-default['osl-jenkins']['cookbook_uploader']['all_environments_word'] = '*'
 
 # String; Git URL of the cookbook-pipelines repo, which holds the shared
 # pipeline library (cookbook CI) and the uploader pipeline definitions.
@@ -87,13 +57,6 @@ default['osl-jenkins']['cookbook_uploader']['data_bags_credential'] = '5e204eb3-
 # to test automation only on one or two repos before deploying to the entire
 # GitHub organization.
 default['osl-jenkins']['cookbook_uploader']['override_repos'] = nil
-
-# Array<String>; If "nil", Jenkins automation will be remove up for all repos in
-# the above cookbook organization. If an array of repo names (not prefixed) is
-# given, only they will have the automation set up. This is useful if you wish
-# to test automation only on one or two repos before deploying to the entire
-# GitHub organization.
-default['osl-jenkins']['cookbook_uploader']['override_archived_repos'] = nil
 
 # Boolean; Whether to allow GitHub pushes to insecure URLs; useful for testing
 # on a local Jenkins instance that doesn't have a valid SSL cert.

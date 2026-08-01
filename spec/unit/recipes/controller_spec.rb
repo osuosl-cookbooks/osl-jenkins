@@ -122,6 +122,7 @@ describe 'jenkins_test::controller' do
           variables: {
             site_name: '10.0.0.2',
             admin_address: 'noreply@example.org',
+            csp_enforce: true,
             num_executors: 2,
           }
         )
@@ -133,6 +134,7 @@ describe 'jenkins_test::controller' do
           variables: {
             site_name: '10.0.0.2',
             admin_address: 'noreply@example.org',
+            csp_enforce: true,
             num_executors: 2,
           },
           owner: 'jenkins',

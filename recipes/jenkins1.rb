@@ -26,7 +26,6 @@ chef_gem 'git' do
 end
 
 node.default['osl-jenkins']['cookbook_uploader'].tap do |conf|
-  conf['authorized_teams'] = %w(osuosl-cookbooks/staff)
   conf['chef_repo'] = 'osuosl/chef-repo'
   conf['default_environments'] = %w(
     phpbb
@@ -55,13 +54,13 @@ include_recipe 'base::cinc_workstation'
 include_recipe 'osl-jenkins::cookbook_uploader'
 include_recipe 'osl-jenkins::bumpzone'
 
-# Retired: unused since 2024 and the last GHPRB wrapper consumer. Config
-# cleanup only; the server-side job is deleted by hand. Drop this resource
-# once it has converged everywhere.
-osl_jenkins_job 'github_comment' do
-  action :delete
-  notifies :restart, 'osl_jenkins_service[jenkins1]', :delayed
+osl_jenkins_deprecated_plugins.each do |plugin|
+  osl_jenkins_plugin plugin do
+    action :remove
+    notifies :restart, 'osl_jenkins_service[jenkins1]', :delayed
+  end
 end
+
 include_recipe 'base::python'
 
 # depends for sphinx compilation

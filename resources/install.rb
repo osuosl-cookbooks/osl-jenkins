@@ -121,6 +121,7 @@ action :create do
     variables(
       site_name: new_resource.site_name,
       admin_address: new_resource.admin_address,
+      csp_enforce: node['osl-jenkins']['csp_enforce'],
       num_executors: new_resource.num_executors
     )
   end

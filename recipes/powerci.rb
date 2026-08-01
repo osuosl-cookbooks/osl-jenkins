@@ -79,3 +79,14 @@ osl_jenkins_config 'powerci' do
   )
   notifies :restart, 'osl_jenkins_service[powerci]', :delayed
 end
+
+# Removed for their security issues even though some jobs still reference
+# them (ghprb: OpenBLAS, pipcook-ppc64le-linux; copy-to-slave: the pytorch
+# jobs). Those jobs keep loading but lose the plugin-provided trigger/steps
+# (flagged under Manage Old Data) and stop triggering/working until migrated.
+osl_jenkins_deprecated_plugins.each do |plugin|
+  osl_jenkins_plugin plugin do
+    action :remove
+    notifies :restart, 'osl_jenkins_service[powerci]', :delayed
+  end
+end

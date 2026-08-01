@@ -13,8 +13,8 @@ pipelineJob('<%= @job_name %>') {
     pipelineTriggers {
       triggers {
         cron {
-          // Every 30 minutes, offset from the chef-client interval.
-          spec('15,45 * * * *')
+          // Every 4 hours, offset from the chef-client interval.
+          spec('15 */4 * * *')
         }
       }
     }

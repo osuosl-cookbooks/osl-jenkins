@@ -55,6 +55,12 @@ default['osl-jenkins']['credentials']['jenkins'] = []
 ###
 
 # String; The name of the databag to use.
+# Boolean; Whether Jenkins enforces Content Security Policy on the classic
+# UI. Escape hatch: if a plugin page breaks under enforcement, flip this off
+# (or relax the offending rule via the csp plugin) - violations show up
+# under Manage Jenkins -> Content Security Policy Report either way.
+default['osl-jenkins']['csp_enforce'] = true
+
 default['osl-jenkins']['secrets_databag'] = 'osl_jenkins'
 
 # String; The name of the databag item to use.
