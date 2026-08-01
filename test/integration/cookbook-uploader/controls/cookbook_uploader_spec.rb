@@ -56,6 +56,11 @@ control 'cookbook-uploader' do
     its('content') { should match(%r{remote: https://github.com/osuosl/cookbook-pipelines.git}) }
   end
 
+  describe file('/var/lib/jenkins/casc_configs/groovy/job_github-sync.groovy') do
+    its('owner') { should eq 'jenkins' }
+    its('content') { should match(%r{spec\('15 \*/4 \* \* \*'\)}) }
+  end
+
   # The legacy freestyle environment bumper's casc config is cleaned up.
   %w(
     /var/lib/jenkins/casc_configs/job_environment-bumper-osuosl-chef-repo.yml
