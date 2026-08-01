@@ -1,19 +1,13 @@
 control 'cookbook-uploader' do
-  # test-cookbook has migrated to the label-driven pipeline (Jenkinsfile in
-  # the repo), so its legacy freestyle job is deleted instead of created and
-  # must not exist on a fresh install.
+  # The legacy per-repo freestyle jobs and the freestyle environment bumper
+  # are retired: none of them may exist on a fresh install.
   describe http('https://127.0.0.1/job/cookbook-uploader-osuosl-cookbooks-test-cookbook/', ssl_verify: false) do
     its('status') { should eq 404 }
     its('headers.X-Jenkins') { should_not eq nil }
   end
 
-  describe http('https://127.0.0.1/job/cookbook-uploader-osuosl-cookbooks-archived-cookbook/', ssl_verify: false) do
-    its('status') { should eq 404 }
-    its('headers.X-Jenkins') { should_not eq nil }
-  end
-
   describe http('https://127.0.0.1/job/environment-bumper-osuosl-chef-repo/', ssl_verify: false) do
-    its('status') { should eq 200 }
+    its('status') { should eq 404 }
     its('headers.X-Jenkins') { should_not eq nil }
   end
 
@@ -62,6 +56,16 @@ control 'cookbook-uploader' do
     its('content') { should match(%r{remote: https://github.com/osuosl/cookbook-pipelines.git}) }
   end
 
+  # The legacy freestyle environment bumper's casc config is cleaned up.
+  %w(
+    /var/lib/jenkins/casc_configs/job_environment-bumper-osuosl-chef-repo.yml
+    /var/lib/jenkins/casc_configs/groovy/job_environment-bumper-osuosl-chef-repo.groovy
+  ).each do |f|
+    describe file(f) do
+      it { should_not exist }
+    end
+  end
+
   describe file('/var/lib/jenkins/casc_configs/groovy/job_osuosl-cookbooks.groovy') do
     its('owner') { should eq 'jenkins' }
     its('content') { should match(/organizationFolder\('osuosl-cookbooks'\)/) }
@@ -89,32 +93,12 @@ control 'cookbook-uploader' do
     its('content') { should match(/gitLabSshCheckout/) }
   end
 
+  # The legacy trigger scripts are retired along with the freestyle jobs.
   describe file('/var/lib/jenkins/bin/github_pr_comment_trigger.rb') do
-    its('mode') { should cmp 0550 }
-    its('owner') { should eq 'jenkins' }
-    its('group') { should eq 'jenkins' }
+    it { should_not exist }
   end
 
   describe file('/var/lib/jenkins/bin/bump_environments.rb') do
-    its('mode') { should cmp 0550 }
-    its('owner') { should eq 'jenkins' }
-    its('group') { should eq 'jenkins' }
-  end
-
-  describe command('/opt/cinc/embedded/bin/gem list --local') do
-    %w(
-      faraday-http-cache
-      git
-      octokit
-    ).each do |g|
-      its('stdout') { should match(/^#{g}/) }
-    end
-    its('stdout') { should_not match(/^faraday-http-cache \(2\.[6-9]|^faraday-http-cache \([3-9]/) }
-    its('stdout') { should_not match(/^git \([4-9]\./) }
-    its('stdout') { should_not match(/^octokit \(1[0-9]/) }
-  end
-
-  describe command("/opt/cinc/embedded/bin/ruby -e \"require 'octokit'\"") do
-    its('exit_status') { should eq 0 }
+    it { should_not exist }
   end
 end

@@ -53,8 +53,6 @@ suites:
     attributes:
       osl-jenkins:
         cookbook_uploader:
-          authorized_teams:
-            - 'osuosl-cookbooks/staff'
           chef_repo: 'osuosl/chef-repo'
           default_environments:
             - phpbb

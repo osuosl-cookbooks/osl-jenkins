@@ -8,17 +8,14 @@ describe 'osl-jenkins::jenkins1' do
           node.normal['osl-jenkins']['cookbook_uploader'] = {
             'org' => 'osuosl-cookbooks',
             'chef_repo' => 'osuosl/chef-repo',
-            'authorized_teams' => %w(osuosl-cookbooks/staff),
             'default_environments' => %w(production workstation),
             'override_repos' => %w(test-cookbook),
-            'override_archived_repos' => %w(archived-cookbook),
             'github_insecure_hook' => true,
             'do_not_upload_cookbooks' => true,
           }
         end.converge(described_recipe)
       end
       include_context 'common_stubs'
-      include_context 'cookbook_uploader'
       include_context 'data_bag_stubs'
       before do
         stub_data_bag_item('osl_jenkins', 'jenkins1')
@@ -73,11 +70,6 @@ describe 'osl-jenkins::jenkins1' do
         it { is_expected.to include_recipe r }
       end
 
-      it { is_expected.to delete_osl_jenkins_job 'github_comment' }
-      it do
-        expect(chef_run.osl_jenkins_job('github_comment')).to \
-          notify('osl_jenkins_service[jenkins1]').to(:restart).delayed
-      end
       it { expect(chef_run).to install_package 'graphviz' }
     end
   end
