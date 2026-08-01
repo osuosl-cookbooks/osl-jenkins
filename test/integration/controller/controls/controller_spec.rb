@@ -55,4 +55,32 @@ control 'controller' do
   describe file('/var/lib/jenkins/plugins.txt') do
     its('content') { should match(/^csp/) }
   end
+
+  # Deprecated plugins are removed on every controller; none may leave
+  # files behind (osl_jenkins_deprecated_plugins).
+  %w(
+    ace-editor
+    bootstrap4-api
+    copy-to-slave
+    ghprb
+    github-organization-folder
+    handlebars
+    icon-shim
+    jquery-detached
+    momentjs
+    pipeline-model-declarative-agent
+    popper-api
+    popper2-api
+    translation
+    windows-slaves
+    workflow-cps-global-lib
+  ).each do |plugin|
+    describe file("/var/lib/jenkins/plugins/#{plugin}.jpi") do
+      it { should_not exist }
+    end
+
+    describe file("/var/lib/jenkins/plugins/#{plugin}") do
+      it { should_not exist }
+    end
+  end
 end

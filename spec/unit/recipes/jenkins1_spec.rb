@@ -70,6 +70,30 @@ describe 'osl-jenkins::jenkins1' do
         it { is_expected.to include_recipe r }
       end
 
+      %w(
+        ace-editor
+        bootstrap4-api
+        copy-to-slave
+        ghprb
+        github-organization-folder
+        handlebars
+        icon-shim
+        jquery-detached
+        momentjs
+        pipeline-model-declarative-agent
+        popper-api
+        popper2-api
+        translation
+        windows-slaves
+        workflow-cps-global-lib
+      ).each do |plugin|
+        it { is_expected.to remove_osl_jenkins_plugin plugin }
+      end
+      it do
+        expect(chef_run.osl_jenkins_plugin('ghprb')).to \
+          notify('osl_jenkins_service[jenkins1]').to(:restart).delayed
+      end
+
       it { expect(chef_run).to install_package 'graphviz' }
     end
   end

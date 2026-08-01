@@ -13,6 +13,31 @@ module OslJenkins
         '21'
       end
 
+      # Deprecated plugins Jenkins flags on the dashboard: hand-installed
+      # relics and former dependencies that current plugin versions no longer
+      # pull in. None are in the managed plugin set, so they only linger as
+      # leftover files until removed. Before adding a controller or a plugin
+      # here, verify nothing depends on or uses it (preflight-check.groovy).
+      def osl_jenkins_deprecated_plugins
+        %w(
+          ace-editor
+          bootstrap4-api
+          copy-to-slave
+          ghprb
+          github-organization-folder
+          handlebars
+          icon-shim
+          jquery-detached
+          momentjs
+          pipeline-model-declarative-agent
+          popper-api
+          popper2-api
+          translation
+          windows-slaves
+          workflow-cps-global-lib
+        )
+      end
+
       def osl_jenkins_default_plugins
         %w(
           antisamy-markup-formatter

@@ -78,3 +78,13 @@ osl_jenkins_config 'ibmz-ci' do
   )
   notifies :restart, 'osl_jenkins_service[ibmz-ci]', :delayed
 end
+
+# Removed for their security issues even though HELICS still references
+# ghprb. The job keeps loading but loses its PR trigger (flagged under
+# Manage Old Data) and stops triggering until migrated.
+osl_jenkins_deprecated_plugins.each do |plugin|
+  osl_jenkins_plugin plugin do
+    action :remove
+    notifies :restart, 'osl_jenkins_service[ibmz-ci]', :delayed
+  end
+end

@@ -54,6 +54,13 @@ include_recipe 'base::cinc_workstation'
 include_recipe 'osl-jenkins::cookbook_uploader'
 include_recipe 'osl-jenkins::bumpzone'
 
+osl_jenkins_deprecated_plugins.each do |plugin|
+  osl_jenkins_plugin plugin do
+    action :remove
+    notifies :restart, 'osl_jenkins_service[jenkins1]', :delayed
+  end
+end
+
 include_recipe 'base::python'
 
 # depends for sphinx compilation
