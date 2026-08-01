@@ -1,5 +1,5 @@
 multibranchPipelineJob('<%= @job_name %>') {
-  description('CI and deploy for the private data_bags repo on git.osuosl.org: validates every branch/MR via the Jenkinsfile in the repo and uploads the bags to the chef server from the primary branch. Managed by Chef (osl-jenkins) - do not edit in Jenkins.')
+  description('Deploy pipeline for the private data_bags repo on git.osuosl.org: builds only the default branch, validating and uploading the bags to the chef server on every merge. MRs are validated by GitLab CI, not here. Managed by Chef (osl-jenkins) - do not edit in Jenkins.')
   branchSources {
     branchSource {
       source {
@@ -10,18 +10,20 @@ multibranchPipelineJob('<%= @job_name %>') {
           projectPath('<%= @project_path %>')
           traits {
             gitLabBranchDiscovery {
-              // 1 = only branches that are not also filed as MRs
-              strategyId(1)
+              // 3 = all branches; the regex filter below narrows discovery
+              // to the default branch, so nothing else ever builds here
+              strategyId(3)
             }
-            gitLabOriginDiscovery {
-              // 1 = merge the MR with the target branch before building
-              strategyId(1)
+            // Jenkins only deploys merged work; MR validation belongs to
+            // GitLab CI (which runs the same check.rb). Covers both names
+            // so a master -> main rename needs no change here.
+            headRegexFilter {
+              regex('master|main')
             }
-            // No fork MR discovery: the repo is private and never forked,
-            // and builds can reach the chef server credentials on this
-            // controller. Checkout happens over SSH with the same key the
-            // old freestyle job used; the API token is only for the GitLab
-            // API and webhook management.
+            // No MR discovery at all, and builds can reach the chef server
+            // credentials on this controller. Checkout happens over SSH
+            // with the same key the old freestyle job used; the API token
+            // is only for the GitLab API and webhook management.
             gitLabSshCheckout {
               credentialsId('<%= @checkout_credential %>')
             }

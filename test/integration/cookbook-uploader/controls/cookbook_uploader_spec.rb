@@ -98,6 +98,9 @@ control 'cookbook-uploader' do
     its('content') { should match(/multibranchPipelineJob\('data-bags'\)/) }
     its('content') { should match(/serverName\('git.osuosl.org'\)/) }
     its('content') { should match(/gitLabSshCheckout/) }
+    # Only the default branch builds; MRs are validated by GitLab CI.
+    its('content') { should match(/headRegexFilter/) }
+    its('content') { should_not match(/gitLabOriginDiscovery/) }
   end
 
   # The legacy trigger scripts are retired along with the freestyle jobs.
