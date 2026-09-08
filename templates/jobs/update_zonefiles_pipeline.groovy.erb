@@ -1,0 +1,23 @@
+// THE JOB NAME IS LOAD BEARING: osl-dns rsyncs from a job of this name's
+// workspace. Renaming it means changing node['osl-dns']['jenkins_workspace'].
+pipelineJob('<%= @job_name %>') {
+  description('Deploys the zone files to the hidden DNS primary: rsync into /var/named/primary, named-checkconf -z, rndc reload. Triggered by zone-bumper. Managed by Chef (osl-jenkins) - do not edit in Jenkins.')
+  parameters {
+    stringParam('DNS_AGENT_LABEL', '<%= @dns_primary %>', 'Jenkins agent label of the hidden DNS primary.')
+  }
+  definition {
+    cpsScm {
+      scm {
+        git {
+          remote {
+            url('<%= @github_url %>')
+            credentials('bumpzone')
+          }
+          branches('*/<%= @pipelines_branch %>')
+        }
+      }
+      scriptPath('scripts/ci/Jenkinsfile.deploy')
+      lightweight(true)
+    }
+  }
+}

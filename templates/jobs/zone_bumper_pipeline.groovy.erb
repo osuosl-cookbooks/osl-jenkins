@@ -1,0 +1,56 @@
+pipelineJob('<%= @job_name %>') {
+  description('Bumps SOA serials on the zones a merged PR touched and deploys them. Replaces the freestyle bumpzone job. Managed by Chef (osl-jenkins) - do not edit in Jenkins.')
+  parameters {
+    stringParam('ZONEFILES_REPO', '<%= @repo %>', 'org/name of the zone file repo this job may act on.')
+  }
+  definition {
+    cpsScm {
+      scm {
+        git {
+          remote {
+            url('<%= @github_url %>')
+            credentials('bumpzone')
+          }
+          branches('*/<%= @pipelines_branch %>')
+        }
+      }
+      scriptPath('scripts/ci/Jenkinsfile.bump')
+      // The declarative agent still checks the repo out on the node; only the
+      // Jenkinsfile fetch is lightweight.
+      lightweight(true)
+    }
+  }
+  properties {
+    pipelineTriggers {
+      triggers {
+        genericTrigger {
+          genericVariables {
+            genericVariable {
+              key('payload')
+              value('$')
+              expressionType('JSONPath')
+            }
+            genericVariable {
+              key('gh_action')
+              value('$.action')
+              expressionType('JSONPath')
+            }
+            genericVariable {
+              key('gh_merged')
+              value('$.pull_request.merged')
+              expressionType('JSONPath')
+            }
+          }
+          token('<%= @trigger_token %>')
+          printContributedVariables(false)
+          printPostContent(false)
+          silentResponse(true)
+          // Build only for a PR that actually merged. Anchored because the
+          // plugin matches with find(); the pipeline re-checks this itself.
+          regexpFilterText('$gh_action:$gh_merged')
+          regexpFilterExpression('^closed:true$')
+        }
+      }
+    }
+  }
+}
