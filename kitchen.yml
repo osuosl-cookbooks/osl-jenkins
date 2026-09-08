@@ -119,6 +119,7 @@ suites:
     attributes:
       osl-jenkins:
         bumpzone:
+          repo: 'osuosl/zonefiles-test'
           github_url: 'https://github.com/osuosl/zonefiles-test.git'
         credentials:
           git:

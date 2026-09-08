@@ -1,0 +1,46 @@
+multibranchPipelineJob('<%= @job_name %>') {
+  description('CI for <%= @repo_owner %>/<%= @repo_name %>: runs named-checkzone over every zone on each branch and PR, reported as native commit statuses. Managed by Chef (osl-jenkins) - do not edit in Jenkins.')
+  branchSources {
+    branchSource {
+      source {
+        github {
+          id('<%= @job_name %>')
+          repoOwner('<%= @repo_owner %>')
+          repository('<%= @repo_name %>')
+          repositoryUrl('https://github.com/<%= @repo_owner %>/<%= @repo_name %>')
+          configuredByUrl(false)
+          credentialsId('bumpzone')
+          traits {
+            gitHubBranchDiscovery {
+              // 1 = only branches that are not also filed as PRs
+              strategyId(1)
+            }
+            gitHubPullRequestDiscovery {
+              // 1 = merge the PR with the target branch before building
+              strategyId(1)
+            }
+            // No fork discovery: PR builds run on the controller, which holds
+            // the credential that can push to this repo.
+          }
+        }
+      }
+    }
+  }
+  factory {
+    workflowBranchProjectFactory {
+      scriptPath('scripts/ci/Jenkinsfile')
+    }
+  }
+  orphanedItemStrategy {
+    discardOldItems {
+      daysToKeep(7)
+    }
+  }
+  // Webhooks normally trigger scans; the daily rescan is a fallback so a
+  // missed delivery can't leave a branch/PR unbuilt indefinitely.
+  triggers {
+    periodicFolderTrigger {
+      interval('1d')
+    }
+  }
+}

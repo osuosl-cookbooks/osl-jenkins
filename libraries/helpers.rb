@@ -38,6 +38,8 @@ module OslJenkins
         )
       end
 
+      # slack lives here, not in one recipe: chef-repo's Jenkinsfile and the
+      # zone deploy pipeline both call slackSend.
       def osl_jenkins_default_plugins
         %w(
           antisamy-markup-formatter
@@ -68,6 +70,7 @@ module OslJenkins
           pipeline-github-lib
           pipeline-model-definition
           pipeline-stage-view
+          slack
           ssh-agent
           ssh-credentials
           ssh-slaves
