@@ -4,6 +4,10 @@ osl-jenkins CHANGELOG
 This file is used to list changes made in each version of the
 osl-jenkins cookbook.
 
+3.9.0 (2026-09-08)
+------------------
+- Modernize the DNS zone jobs into pipelines
+
 3.8.1 (2026-08-01)
 ------------------
 - data-bags: build only the default branch
